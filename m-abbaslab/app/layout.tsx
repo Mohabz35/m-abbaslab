@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { Inter, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
@@ -96,7 +97,9 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} text-white bg-[#030014] selection:bg-[#00f0ff]/30 selection:text-[#00f0ff]`}>
-        <Analytics gaId={personalConfig.googleAnalyticsId || ''} />
+        <Suspense fallback={null}>
+          <Analytics gaId={personalConfig.googleAnalyticsId || ''} />
+        </Suspense>
         <ErrorBoundary>
           <Scene3D />
 
