@@ -681,6 +681,6 @@ export const personalConfig = {
       { id: 'innovation', title: 'Innovation', desc: 'Creative Problem Solving', icon: 'Zap' }
     ]
   }
-} as const
+}
 
 export type PersonalConfig = typeof personalConfig

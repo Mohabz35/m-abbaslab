@@ -19,9 +19,9 @@ import { personalConfig } from '@/config/personal'
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState('overview')
-  const [projects, setProjects] = useState(personalConfig.projects)
-  const [articles, setArticles] = useState(personalConfig.articles)
-  const [titles, setTitles] = useState(personalConfig.modelingTitles)
+  const [projects, setProjects] = useState<any[]>(personalConfig.projects as any[])
+  const [articles, setArticles] = useState<any[]>(personalConfig.articles as any[])
+  const [titles, setTitles] = useState<any[]>(personalConfig.modelingTitles as any[])
 
   // Stats
   const stats = [
@@ -40,9 +40,9 @@ export default function AdminDashboardPage() {
       technologies: ['Technology'],
       github_url: '#',
       live_url: '#',
-      category: 'software',
+      category: 'technology',
       featured: false,
-      status: 'Draft',
+      status: 'Planning Phase',
       year: '2024'
     }
     setProjects([...projects, newProject])
@@ -95,8 +95,8 @@ export default function AdminDashboardPage() {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 font-medium capitalize border-b-2 transition-colors ${activeTab === tab
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
                 }`}
             >
               {tab}
@@ -162,8 +162,8 @@ export default function AdminDashboardPage() {
                       <button
                         onClick={() => handlePublishToggle('project', project.id)}
                         className={`px-3 py-1 text-sm rounded ${project.featured
-                            ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400'
-                            : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
+                          ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400'
+                          : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
                           }`}
                       >
                         {project.featured ? 'Featured' : 'Feature'}
@@ -226,8 +226,8 @@ export default function AdminDashboardPage() {
                           <button
                             onClick={() => handlePublishToggle('project', project.id)}
                             className={`px-3 py-1 text-sm rounded ${project.featured
-                                ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400'
-                                : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
+                              ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400'
+                              : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
                               }`}
                           >
                             {project.featured ? 'Featured' : 'Feature'}

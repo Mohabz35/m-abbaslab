@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import ContactForm from '@/components/ContactForm'
+import '@testing-library/jest-dom'
 
 // Mock fetch for form submission
 // @ts-ignore
