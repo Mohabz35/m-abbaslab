@@ -2,14 +2,14 @@
 'use client'
 
 import { useState } from 'react'
-import { 
-  FileText, 
-  Briefcase, 
-  User, 
-  Settings, 
-  Plus, 
-  Edit, 
-  Image, 
+import {
+  FileText,
+  Briefcase,
+  User,
+  Settings,
+  Plus,
+  Edit,
+  Image,
   BarChart,
   Upload,
   Save,
@@ -36,6 +36,7 @@ export default function AdminDashboardPage() {
       id: `project-${Date.now()}`,
       title: 'New Project',
       description: 'Project description...',
+      longDescription: 'Extended project details...',
       technologies: ['Technology'],
       github_url: '#',
       live_url: '#',
@@ -49,11 +50,11 @@ export default function AdminDashboardPage() {
 
   const handlePublishToggle = (type: 'project' | 'article', id: string) => {
     if (type === 'project') {
-      setProjects(projects.map(p => 
+      setProjects(projects.map(p =>
         p.id === id ? { ...p, featured: !p.featured } : p
       ))
     } else {
-      setArticles(articles.map(a => 
+      setArticles(articles.map(a =>
         a.id === id ? { ...a, published: !a.published } : a
       ))
     }
@@ -93,11 +94,10 @@ export default function AdminDashboardPage() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 font-medium capitalize border-b-2 transition-colors ${
-                activeTab === tab
+              className={`px-4 py-2 font-medium capitalize border-b-2 transition-colors ${activeTab === tab
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                   : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
-              }`}
+                }`}
             >
               {tab}
             </button>
@@ -111,7 +111,7 @@ export default function AdminDashboardPage() {
           <>
             {/* Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <button 
+              <button
                 onClick={handleAddProject}
                 className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700"
               >
@@ -123,7 +123,7 @@ export default function AdminDashboardPage() {
                   <p className="text-sm text-gray-500">Create new project entry</p>
                 </div>
               </button>
-              
+
               <button className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700">
                 <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
                   <FileText className="w-5 h-5 text-green-600 dark:text-green-400" />
@@ -133,7 +133,7 @@ export default function AdminDashboardPage() {
                   <p className="text-sm text-gray-500">Publish new article</p>
                 </div>
               </button>
-              
+
               <button className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700">
                 <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
                   <Image className="w-5 h-5 text-purple-600 dark:text-purple-400" />
@@ -159,13 +159,12 @@ export default function AdminDashboardPage() {
                       <button className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded">
                         <Edit className="w-4 h-4" />
                       </button>
-                      <button 
+                      <button
                         onClick={() => handlePublishToggle('project', project.id)}
-                        className={`px-3 py-1 text-sm rounded ${
-                          project.featured 
+                        className={`px-3 py-1 text-sm rounded ${project.featured
                             ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400'
                             : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
-                        }`}
+                          }`}
                       >
                         {project.featured ? 'Featured' : 'Feature'}
                       </button>
@@ -181,7 +180,7 @@ export default function AdminDashboardPage() {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-bold">Projects ({projects.length})</h2>
-              <button 
+              <button
                 onClick={handleAddProject}
                 className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
               >
@@ -189,7 +188,7 @@ export default function AdminDashboardPage() {
                 Add Project
               </button>
             </div>
-            
+
             <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
               <table className="w-full">
                 <thead className="bg-gray-50 dark:bg-gray-700">
@@ -214,9 +213,8 @@ export default function AdminDashboardPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <span className={`w-2 h-2 rounded-full ${
-                            project.featured ? 'bg-green-500' : 'bg-gray-300'
-                          }`}></span>
+                          <span className={`w-2 h-2 rounded-full ${project.featured ? 'bg-green-500' : 'bg-gray-300'
+                            }`}></span>
                           <span>{project.status}</span>
                         </div>
                       </td>
@@ -225,13 +223,12 @@ export default function AdminDashboardPage() {
                           <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                             <Edit className="w-4 h-4" />
                           </button>
-                          <button 
+                          <button
                             onClick={() => handlePublishToggle('project', project.id)}
-                            className={`px-3 py-1 text-sm rounded ${
-                              project.featured 
+                            className={`px-3 py-1 text-sm rounded ${project.featured
                                 ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400'
                                 : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
-                            }`}
+                              }`}
                           >
                             {project.featured ? 'Featured' : 'Feature'}
                           </button>
@@ -248,23 +245,23 @@ export default function AdminDashboardPage() {
         {activeTab === 'settings' && (
           <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-xl font-bold mb-6">Site Settings</h2>
-            
+
             <div className="space-y-6">
               <div>
                 <h3 className="font-medium mb-3">General Settings</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Site Title</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       defaultValue="M-AbbasLab"
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">Admin Email</label>
-                    <input 
-                      type="email" 
+                    <input
+                      type="email"
                       defaultValue="mohammedabbasofficial100@gmail.com"
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900"
                     />

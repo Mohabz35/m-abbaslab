@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import ContactForm from '@/components/ContactForm'
 
 // Mock fetch for form submission
+// @ts-ignore
 global.fetch = jest.fn()
 
 describe('ContactForm', () => {
