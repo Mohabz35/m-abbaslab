@@ -9,12 +9,13 @@ import {
   Target,
   Brain,
   GraduationCap,
-  Briefcase
+  Briefcase,
+  Zap
 } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'About Mohammed Abbas',
-  description: 'Learn about Mohammed Abbas - Student, Engineer, Researcher, and Model. Exploring the intersection of economics, technology, and fashion.',
+  description: 'Mohammed Abbas — Founder of SkillFinch and Asia Connect. Research Scientist and Fashion Technologist building the future of African digital economies.',
 }
 
 export default function AboutPage() {
@@ -37,9 +38,9 @@ export default function AboutPage() {
         </div>
 
         {/* Identity Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-12">
           {personalConfig.roles.map((role, index) => {
-            const icons = [GraduationCap, Code, BookOpen, Users]
+            const icons = [Users, Brain, Code, BarChart3, Zap]
             const Icon = icons[index] || Users
             return (
               <div key={role} className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow">
@@ -48,10 +49,11 @@ export default function AboutPage() {
                 </div>
                 <h3 className="font-bold text-lg mb-2">{role}</h3>
                 <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  {index === 0 && "Chuka University • Knowledge Is Wealth"}
-                  {index === 1 && "Full-Stack Development • Modern Web"}
-                  {index === 2 && "Independent Research • Academic Focus"}
-                  {index === 3 && "Commercial • Editorial • Portfolio"}
+                  {index === 0 && "Strategic Leadership • SkillFinch • Asia Connect"}
+                  {index === 1 && "Intelligence Systems • Academic Innovation"}
+                  {index === 2 && "System Architecture • Scalable Platforms"}
+                  {index === 3 && "Economic Modeling • Financial Data"}
+                  {index === 4 && "Digital Style • WebGL • Marketplaces"}
                 </p>
               </div>
             )

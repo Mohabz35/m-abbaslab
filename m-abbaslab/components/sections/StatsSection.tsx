@@ -2,19 +2,19 @@
 
 import { motion } from 'framer-motion'
 import { Users, FileText, Code, Globe } from 'lucide-react'
-
-const stats = [
-  { icon: FileText, value: '25+', label: 'Publications', suffix: 'Articles' },
-  { icon: Code, value: '50+', label: 'Projects', suffix: 'Built' },
-  { icon: Users, value: '100+', label: 'Collaborations', suffix: 'Global' },
-  { icon: Globe, value: '5', label: 'Years', suffix: 'Experience' },
-]
+import { personalConfig } from '@/config/personal'
 
 export default function StatsSection() {
+  const stats = [
+    { icon: FileText, value: personalConfig.articles.length, label: 'Scientific Output', suffix: 'Articles' },
+    { icon: Code, value: personalConfig.projects.length, label: 'Digital Assets', suffix: 'Projects' },
+    { icon: Users, value: '3+', label: 'Strategic Entities', suffix: 'Global' },
+    { icon: Globe, value: '2026', label: 'Ecosystem', suffix: 'Foundation' },
+  ]
   return (
     <section className="py-20 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-50/30 to-transparent" />
-      
+
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0 }}
@@ -41,15 +41,15 @@ export default function StatsSection() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ scale: 1.05 }}
-                className="text-center p-8 rounded-3xl bg-white/80 backdrop-blur-sm border border-gray-200/50 shadow-lg hover:shadow-2xl transition-all duration-300"
+                className="text-center p-8 rounded-3xl bg-[#030014]/40 backdrop-blur-xl border border-white/5 hover:border-[#00f0ff]/30 transition-all duration-300"
               >
-                <div className="inline-flex p-4 rounded-2xl bg-blue-50 mb-4">
-                  <Icon className="w-8 h-8 text-blue-600" />
+                <div className="inline-flex p-4 rounded-2xl bg-[#00f0ff]/10 mb-4 border border-[#00f0ff]/20">
+                  <Icon className="w-8 h-8 text-[#00f0ff]" />
                 </div>
-                <div className="text-5xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <div className="text-5xl font-bold mb-2 bg-gradient-to-r from-[#00f0ff] to-[#7000ff] bg-clip-text text-transparent">
                   {stat.value}
                 </div>
-                <div className="text-lg font-semibold text-gray-800 mb-1">
+                <div className="text-lg font-semibold text-white mb-1">
                   {stat.label}
                 </div>
                 <div className="text-sm text-gray-500">

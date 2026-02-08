@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 const navItems = [
   { name: 'Home', href: '/', icon: Home },
   { name: 'About', href: '/about', icon: User },
+  { name: 'Services', href: '/services', icon: Sparkles },
   {
     name: 'Work',
     href: '/work',
@@ -73,8 +74,8 @@ export default function Navbar() {
         animate={{ y: 0 }}
         transition={{ duration: 0.5, type: "spring" }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-            ? 'glass-panel border-b border-white/10 py-3 shadow-[0_0_20px_rgba(0,240,255,0.15)]'
-            : 'bg-transparent py-5'
+          ? 'glass-panel border-b border-white/10 py-3 shadow-[0_0_20px_rgba(0,240,255,0.15)]'
+          : 'bg-transparent py-5'
           }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -127,8 +128,8 @@ export default function Navbar() {
                     <Link
                       href={item.href}
                       className={`relative px-5 py-2.5 rounded-xl group transition-all duration-300 flex items-center space-x-2 ${active
-                          ? 'text-[#00f0ff]'
-                          : 'text-gray-300 hover:text-white'
+                        ? 'text-[#00f0ff]'
+                        : 'text-gray-300 hover:text-white'
                         }`}
                       aria-current={active ? 'page' : undefined}
                     >
@@ -243,8 +244,8 @@ export default function Navbar() {
                       <Link
                         href={item.href}
                         className={`flex items-center space-x-3 px-4 py-3.5 rounded-xl w-full transition-colors ${active
-                            ? 'bg-blue-500/10 text-[#00f0ff] border border-[#00f0ff]/30'
-                            : 'hover:bg-white/5 text-gray-300'
+                          ? 'bg-blue-500/10 text-[#00f0ff] border border-[#00f0ff]/30'
+                          : 'hover:bg-white/5 text-gray-300'
                           }`}
                         onClick={() => {
                           if (!hasDropdown) setIsOpen(false)

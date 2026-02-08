@@ -47,7 +47,7 @@ export default function ContactForm() {
     }
 
     try {
-      // Post directly to Web3Forms from the client to bypass Cloudflare server-side blocks
+      // 1. Post to Web3Forms for email notification
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: {
@@ -64,6 +64,22 @@ export default function ContactForm() {
       })
 
       const data = await response.json()
+
+      // 2. Also save to Supabase for the Message Center dashboard
+      const { supabase } = await import('@/lib/supabase')
+      const { error: supabaseError } = await supabase
+        .from('messages')
+        .insert([{
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject || '(No Subject)',
+          message: formData.message,
+          status: 'unread'
+        }])
+
+      if (supabaseError) {
+        console.warn('Supabase storing failed, but Web3Forms might have succeeded:', supabaseError)
+      }
 
       if (!data.success) {
         throw new Error(data.message || 'Failed to send message')
