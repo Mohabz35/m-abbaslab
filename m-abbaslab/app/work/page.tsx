@@ -21,11 +21,10 @@ export default function WorkPage() {
   // Dynamic category generation based on available projects
   const categories = [
     { id: 'all', name: 'All Projects', count: personalConfig.projects.length },
-    { id: 'ecosystem', name: 'Ecosystem', count: personalConfig.projects.filter(p => p.category === 'ecosystem').length },
-    { id: 'founder', name: 'Founder', count: personalConfig.projects.filter(p => p.category === 'founder').length },
     { id: 'research', name: 'Research', count: personalConfig.projects.filter(p => p.category === 'research').length },
+    { id: 'technology', name: 'Technology', count: personalConfig.projects.filter(p => p.category === 'technology').length },
+    { id: 'analysis', name: 'Analysis', count: personalConfig.projects.filter(p => p.category === 'analysis').length },
     { id: 'platform', name: 'Platform', count: personalConfig.projects.filter(p => p.category === 'platform').length },
-    { id: 'fashion-tech', name: 'Fashion Tech', count: personalConfig.projects.filter(p => p.category === 'fashion-tech').length },
   ]
 
   return (

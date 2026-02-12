@@ -2,33 +2,13 @@
 
 import { personalConfig } from '@/config/personal'
 import { motion } from 'framer-motion'
-import { Shield, Activity, Database, Server, Cpu, Users, FileText, Briefcase, Lock, Mail, Camera, AlertCircle } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { Shield, Activity, Database, Server, Cpu, Users, FileText, Briefcase, Lock } from 'lucide-react'
 
 export default function AdminPage() {
-  const [dbStatus, setDbStatus] = useState<'LOADING' | 'CONNECTED' | 'DISCONNECTED'>('LOADING')
-  const [unreadMessages, setUnreadMessages] = useState(0)
-
-  useEffect(() => {
-    async function checkStatus() {
-      try {
-        const { count, error } = await supabase.from('messages').select('*', { count: 'exact', head: true }).eq('status', 'unread')
-        if (error) throw error
-        setDbStatus('CONNECTED')
-        setUnreadMessages(count || 0)
-      } catch (err) {
-        setDbStatus('DISCONNECTED')
-      }
-    }
-    checkStatus()
-  }, [])
-
   const stats = [
     { label: 'Total Articles', value: personalConfig.articles.length, icon: FileText, color: 'text-blue-400' },
     { label: 'Projects', value: personalConfig.projects.length, icon: Briefcase, color: 'text-purple-400' },
-    { label: 'Unread Messages', value: unreadMessages, icon: Mail, color: unreadMessages > 0 ? 'text-red-400' : 'text-green-400' },
+    { label: 'Fashion Titles', value: personalConfig.fashion.titles.length, icon: Users, color: 'text-pink-400' },
     { label: 'System Status', value: 'Online', icon: Activity, color: 'text-green-400' },
   ]
 
@@ -100,17 +80,11 @@ export default function AdminPage() {
               </div>
               <div className="flex items-center justify-between p-4 bg-black/40 rounded-lg border border-white/5">
                 <div className="flex items-center">
-                  <div className={`w-2 h-2 rounded-full mr-3 ${dbStatus === 'CONNECTED' ? 'bg-green-500' :
-                      dbStatus === 'DISCONNECTED' ? 'bg-red-500' : 'bg-yellow-500'
-                    }`} />
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full mr-3" />
                   <span>Database Connection</span>
                 </div>
                 <span className="text-xs font-mono text-gray-500">Supabase</span>
-                <span className={`px-2 py-1 text-xs rounded ${dbStatus === 'CONNECTED' ? 'bg-green-500/10 text-green-400' :
-                    dbStatus === 'DISCONNECTED' ? 'bg-red-500/10 text-red-400' : 'bg-yellow-500/10 text-yellow-400'
-                  }`}>
-                  {dbStatus}
-                </span>
+                <span className="px-2 py-1 bg-yellow-500/10 text-yellow-400 text-xs rounded">STANDBY</span>
               </div>
             </div>
           </div>
@@ -124,17 +98,12 @@ export default function AdminPage() {
               To update content, edit the configuration files directly. The platform will auto-deploy changes.
             </p>
             <div className="space-y-3">
-              <Link href="/" className="block w-full text-center py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors font-semibold">
+              <a href="/" className="block w-full text-center py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors font-semibold">
                 View Live Site
-              </Link>
-              <Link href="/admin/messages" className="block w-full text-center py-3 bg-white/5 hover:bg-white/10 text-[#00f0ff] rounded-lg transition-colors border border-[#00f0ff]/30 flex items-center justify-center">
-                <Mail className="w-4 h-4 mr-2" />
-                Message Center ({unreadMessages})
-              </Link>
-              <Link href="/admin/gallery" className="block w-full text-center py-3 bg-white/5 hover:bg-white/10 text-pink-400 rounded-lg transition-colors border border-pink-500/30 flex items-center justify-center">
-                <Camera className="w-4 h-4 mr-2" />
-                Virtual Gallery Admin
-              </Link>
+              </a>
+              <button className="block w-full text-center py-3 bg-white/5 hover:bg-white/10 text-gray-300 rounded-lg transition-colors border border-white/10">
+                View Analytics (Coming Soon)
+              </button>
             </div>
           </div>
         </div>

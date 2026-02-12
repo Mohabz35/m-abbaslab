@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Camera, Play, Grid, Image as ImageIcon, X, ChevronLeft, Film } from 'lucide-react'
 import Link from 'next/link'
@@ -57,34 +57,9 @@ const galleryItems = [
 
 export default function GalleryPage() {
     const [filter, setFilter] = useState('all')
-    const [dynamicMedia, setDynamicMedia] = useState<any[]>([])
-    const [selectedItem, setSelectedItem] = useState<any | null>(null)
+    const [selectedItem, setSelectedItem] = useState<typeof galleryItems[0] | null>(null)
 
-    useEffect(() => {
-        async function fetchDynamicMedia() {
-            const { supabase } = await import('@/lib/supabase')
-            const { data, error } = await supabase
-                .from('media')
-                .select('*')
-                .order('created_at', { ascending: false })
-
-            if (data && !error) {
-                const formatted = data.map(item => ({
-                    id: `db-${item.id}`,
-                    type: item.type,
-                    src: item.url,
-                    category: item.category || 'Portfolio',
-                    title: item.caption || 'Untitled Asset',
-                    isDynamic: true
-                }))
-                setDynamicMedia(formatted)
-            }
-        }
-        fetchDynamicMedia()
-    }, [])
-
-    const allItems = [...dynamicMedia, ...galleryItems]
-    const filteredItems = allItems.filter(item => filter === 'all' || item.type === filter || item.category === filter)
+    const filteredItems = galleryItems.filter(item => filter === 'all' || item.type === filter || item.category === filter)
 
     return (
         <div className="min-h-screen bg-black text-white relative overflow-x-hidden">

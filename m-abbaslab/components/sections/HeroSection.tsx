@@ -1,6 +1,5 @@
 'use client'
 
-import { personalConfig } from '@/config/personal'
 import { ArrowRight, Sparkles, Cpu, LineChart, Code, Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -152,12 +151,11 @@ function FeatureCard({
 }
 
 export default function HeroSection() {
-  const { tagline, intro } = personalConfig
   const features = [
-    { icon: Cpu, title: 'Intelligence', desc: 'AI & Research Systems' },
-    { icon: LineChart, title: 'Ecosystem', desc: 'Founder & Infrastructure' },
-    { icon: Code, title: 'Fashion Tech', desc: 'Innovation & Digital Style' },
-    { icon: Zap, title: 'Global Mobility', desc: 'Asia Connect & Health Tech' },
+    { icon: Cpu, title: 'Research', desc: 'Economics & Data Analysis' },
+    { icon: LineChart, title: 'Modeling', desc: 'Statistical & Predictive' },
+    { icon: Code, title: 'Technology', desc: 'Full-Stack Development' },
+    { icon: Zap, title: 'Innovation', desc: 'Creative Problem Solving' },
   ]
 
   return (
@@ -185,11 +183,11 @@ export default function HeroSection() {
             </motion.div>
 
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-white font-[family-name:var(--font-geist-mono)] relative z-10">
-              <span className="block mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-500">
-                Building the Future of
+              <span className="block mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+                Mohammed
               </span>
               <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f0ff] via-[#7000ff] to-[#00f0ff] bg-[length:200%_auto] animate-[gradient_3s_linear_infinite]">
-                <DecodingText text={tagline} />
+                <DecodingText text="Abbas Lab" />
               </div>
             </h1>
 
@@ -209,9 +207,11 @@ export default function HeroSection() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="text-xl text-gray-400 max-w-2xl mb-10 leading-relaxed"
+              className="text-xl text-gray-400 max-w-xl mb-10 leading-relaxed"
             >
-              {intro}
+              A living platform where <span className="font-semibold text-[#00f0ff] drop-shadow-[0_0_5px_rgba(0,240,255,0.8)]">Research</span>,{' '}
+              <span className="font-semibold text-[#7000ff] drop-shadow-[0_0_5px_rgba(112,0,255,0.8)]">Economics</span>, and{' '}
+              <span className="font-semibold text-pink-500 drop-shadow-[0_0_5px_rgba(236,72,153,0.8)]">Technology</span> converge.
             </motion.p>
 
             <motion.div
