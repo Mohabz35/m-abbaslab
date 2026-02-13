@@ -1,30 +1,66 @@
 ﻿'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Calendar, Clock, Tag, User, BookOpen, Search, TrendingUp } from 'lucide-react'
+import { Calendar, Clock, Tag, User, BookOpen, Search, TrendingUp, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { personalConfig } from '@/config/personal'
-
-const articles = personalConfig.articles
-
-const categories = [
-  { id: 'all', name: 'All Articles', count: articles.length },
-  { id: 'research', name: 'Research Papers', count: articles.filter((a: any) => a.category === 'research').length },
-  { id: 'technical', name: 'Technical Guides', count: articles.filter((a: any) => a.category === 'technical').length },
-  { id: 'fashion-tech', name: 'Fashion Tech', count: articles.filter((a: any) => a.category === 'fashion-tech').length },
-  { id: 'economics', name: 'Economics', count: articles.filter((a: any) => a.category === 'economics').length },
-]
+import { supabase } from '@/lib/supabase'
 
 export default function ArticlesPage() {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [dynamicArticles, setDynamicArticles] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const filteredArticles = articles.filter((article: any) => {
+  // Fetch dynamic articles
+  useEffect(() => {
+    const fetchArticles = async () => {
+      // Small artificial delay to prevent hydration mismatch if using mock
+      if (!supabase) {
+        setLoading(false)
+        return
+      }
+
+      const { data, error } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('published', true)
+        .order('published_at', { ascending: false })
+
+      if (data) {
+        setDynamicArticles(data)
+      }
+      setLoading(false)
+    }
+
+    fetchArticles()
+  }, [])
+
+  // Merge articles
+  const allArticles = [
+    ...dynamicArticles,
+    ...personalConfig.articles
+  ]
+
+  // Calculate stats
+  const totalArticles = allArticles.length
+  const featuredCount = allArticles.filter((a: any) => a.featured).length
+
+  // Update categories with dynamic counts
+  const categories = [
+    { id: 'all', name: 'All Articles', count: totalArticles },
+    { id: 'research', name: 'Research Papers', count: allArticles.filter((a: any) => a.category === 'research').length },
+    { id: 'technical', name: 'Technical Guides', count: allArticles.filter((a: any) => a.category === 'technical').length },
+    { id: 'fashion-tech', name: 'Fashion Tech', count: allArticles.filter((a: any) => a.category === 'fashion-tech').length },
+    { id: 'economics', name: 'Economics', count: allArticles.filter((a: any) => a.category === 'economics').length },
+  ]
+
+  const filteredArticles = allArticles.filter((article: any) => {
     const matchesCategory = selectedCategory === 'all' || article.category === selectedCategory
     const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.tags.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      (article.tags && article.tags.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase())))
     return matchesCategory && matchesSearch
   })
 
@@ -73,12 +109,14 @@ export default function ArticlesPage() {
           {/* Stats */}
           <div className="flex items-center space-x-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-[#00f0ff] drop-shadow-[0_0_5px_rgba(0,240,255,0.5)]">{articles.length}</div>
+              <div className="text-2xl font-bold text-[#00f0ff] drop-shadow-[0_0_5px_rgba(0,240,255,0.5)]">
+                {loading ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : totalArticles}
+              </div>
               <div className="text-sm text-gray-500">Total Articles</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-[#7000ff] drop-shadow-[0_0_5px_rgba(112,0,255,0.5)]">
-                {articles.filter((a: any) => a.featured).length}
+                {featuredCount}
               </div>
               <div className="text-sm text-gray-500">Featured</div>
             </div>
@@ -145,12 +183,12 @@ export default function ArticlesPage() {
                     <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-[#00f0ff] transition-colors shadow-black drop-shadow-md">
                       {article.title}
                     </h3>
-                    <p className="text-gray-400 mb-6 leading-relaxed">
+                    <p className="text-gray-400 mb-6 leading-relaxed line-clamp-3">
                       {article.excerpt}
                     </p>
 
                     <div className="flex flex-wrap gap-2 mb-6">
-                      {article.tags.map((tag: string) => (
+                      {article.tags && article.tags.map((tag: string) => (
                         <span
                           key={tag}
                           className="px-3 py-1.5 bg-white/5 text-gray-300 rounded-full text-sm font-medium flex items-center border border-white/5 group-hover:border-[#00f0ff]/20 transition-colors"
@@ -217,7 +255,7 @@ export default function ArticlesPage() {
                     </span>
                   </div>
 
-                  <h3 className="text-xl font-bold mb-3 text-white group-hover:text-[#7000ff] transition-colors">
+                  <h3 className="text-xl font-bold mb-3 text-white group-hover:text-[#7000ff] transition-colors line-clamp-2">
                     {article.title}
                   </h3>
                   <p className="text-gray-400 mb-4 text-sm line-clamp-3">
