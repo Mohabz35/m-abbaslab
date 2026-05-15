@@ -1,5 +1,4 @@
-// config/personal.ts - AUTOMATICALLY UPDATED BY ADMIN PANEL
-export const personalConfig = {
+{
   "name": "Mohammed Abbas",
   "brandName": "M-AbbasLab",
   "title": "Economist | Statistician | Data Scientist | Fashion Model",
@@ -33,30 +32,6 @@ export const personalConfig = {
     "Web Systems"
   ],
   "projects": [
-    {
-      "id": "m-abbas-ai",
-      "title": "M-Abbas AI — Interactive Cyborg",
-      "description": "A biomimetic android that is an exact physical replica of me, powered by a multimodal large action model, motion capture movement library, and compliant robotic actuators.",
-      "longDescription": "The M-Abbas AI is a conceptual blueprint for a biomimetic android — an exact physical replica, created from a full 3D body scan. It features a flexible silicone skin with hyper-realistic micro-expressions, high-resolution camera eyes with natural saccadic movement, and a cloned voice with natural prosody.\n\nThe structure uses series elastic actuators (SEAs) for compliant, human-like movement, a full motion-capture library of my personal gestures and gait, and a dynamic balancing engine for natural walking and recovery.\n\nThe intelligence layer fuses multimodal sensory data — vision (facial expression tracking), audio (emotion detection), and tactile (touch force sensing) — into a central Large Action Model that generates linguistically, prosodically, and kinesically synchronized responses. The system learns continuously from every interaction.",
-      "technologies": [
-        "Robotics",
-        "Series Elastic Actuators",
-        "Motion Capture",
-        "Computer Vision",
-        "NLP / Voice Cloning",
-        "Large Action Models",
-        "Multimodal AI",
-        "Tactile Sensing",
-        "Carbon Fiber / Silicone",
-        "Continuous Learning"
-      ],
-      "github_url": "#",
-      "live_url": "/work/m-abbas-ai",
-      "category": "technology",
-      "featured": true,
-      "status": "Concept & Blueprint",
-      "year": "2026"
-    },
     {
       "id": "project-1771435761631",
       "title": "New Project",
@@ -329,6 +304,149 @@ export const personalConfig = {
     }
   ],
   "articles": [
+    {
+      "id": "article-1771439893189",
+      "title": "New Growth Strategy",
+      "excerpt": "Exploring new frontiers in AI and finance...",
+      "publishDate": "2026-02-18",
+      "readTime": "5 min",
+      "category": "research",
+      "published": false,
+      "tags": [
+        "AI",
+        "Finance"
+      ]
+    },
+    {
+      "id": "article-1771436151726",
+      "title": "New Growth Strategy",
+      "excerpt": "Exploring new frontiers in AI and finance...",
+      "publishDate": "2026-02-18",
+      "readTime": "5 min",
+      "category": "research",
+      "published": false,
+      "tags": [
+        "AI",
+        "Finance"
+      ]
+    },
+    {
+      "id": "article-1771436151504",
+      "title": "New Growth Strategy",
+      "excerpt": "Exploring new frontiers in AI and finance...",
+      "publishDate": "2026-02-18",
+      "readTime": "5 min",
+      "category": "research",
+      "published": false,
+      "tags": [
+        "AI",
+        "Finance"
+      ]
+    },
+    {
+      "id": "article-1771436151013",
+      "title": "New Growth Strategy",
+      "excerpt": "Exploring new frontiers in AI and finance...",
+      "publishDate": "2026-02-18",
+      "readTime": "5 min",
+      "category": "research",
+      "published": false,
+      "tags": [
+        "AI",
+        "Finance"
+      ]
+    },
+    {
+      "id": "article-1771436150601",
+      "title": "New Growth Strategy",
+      "excerpt": "Exploring new frontiers in AI and finance...",
+      "publishDate": "2026-02-18",
+      "readTime": "5 min",
+      "category": "research",
+      "published": false,
+      "tags": [
+        "AI",
+        "Finance"
+      ]
+    },
+    {
+      "id": "article-1771436148576",
+      "title": "New Growth Strategy",
+      "excerpt": "Exploring new frontiers in AI and finance...",
+      "publishDate": "2026-02-18",
+      "readTime": "5 min",
+      "category": "research",
+      "published": false,
+      "tags": [
+        "AI",
+        "Finance"
+      ]
+    },
+    {
+      "id": "article-1771435831360",
+      "title": "New Growth Strategy",
+      "excerpt": "Exploring new frontiers in AI and finance...",
+      "publishDate": "2026-02-18",
+      "readTime": "5 min",
+      "category": "research",
+      "published": false,
+      "tags": [
+        "AI",
+        "Finance"
+      ]
+    },
+    {
+      "id": "article-1771435827754",
+      "title": "New Growth Strategy",
+      "excerpt": "Exploring new frontiers in AI and finance...",
+      "publishDate": "2026-02-18",
+      "readTime": "5 min",
+      "category": "research",
+      "published": false,
+      "tags": [
+        "AI",
+        "Finance"
+      ]
+    },
+    {
+      "id": "article-1771435825062",
+      "title": "New Growth Strategy",
+      "excerpt": "Exploring new frontiers in AI and finance...",
+      "publishDate": "2026-02-18",
+      "readTime": "5 min",
+      "category": "research",
+      "published": false,
+      "tags": [
+        "AI",
+        "Finance"
+      ]
+    },
+    {
+      "id": "article-1771435784764",
+      "title": "New Growth Strategy",
+      "excerpt": "Exploring new frontiers in AI and finance...",
+      "publishDate": "2026-02-18",
+      "readTime": "5 min",
+      "category": "research",
+      "published": false,
+      "tags": [
+        "AI",
+        "Finance"
+      ]
+    },
+    {
+      "id": "article-1771435778322",
+      "title": "New Growth Strategy",
+      "excerpt": "Exploring new frontiers in AI and finance...",
+      "publishDate": "2026-02-18",
+      "readTime": "5 min",
+      "category": "research",
+      "published": false,
+      "tags": [
+        "AI",
+        "Finance"
+      ]
+    },
     {
       "id": "nextjs-14-guide",
       "title": "Getting Started with Next.js 14: Complete Guide",
@@ -1034,5 +1152,3 @@ export const personalConfig = {
     }
   }
 }
-
-export type PersonalConfig = typeof personalConfig

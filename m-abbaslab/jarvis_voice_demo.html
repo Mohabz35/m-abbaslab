@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#020b18;font-family:'Rajdhani',sans-serif;height:600px;overflow:hidden;position:relative;}
+.scanline{position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,212,255,.012) 2px,rgba(0,212,255,.012) 4px);pointer-events:none;z-index:0;}
+.panel{position:absolute;inset:0;display:flex;flex-direction:column;border:1px solid #00d4ff22;}
+.header{padding:14px 18px;border-bottom:1px solid #00d4ff18;display:flex;align-items:center;gap:12px;background:linear-gradient(180deg,#020f1e,#020b18);flex-shrink:0;}
+.orb{width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#00eeff,#0066cc 60%,#000830);position:relative;box-shadow:0 0 14px #00d4ff77;flex-shrink:0;}
+.orb.speaking{animation:orbPulse 0.5s ease-in-out infinite alternate;box-shadow:0 0 25px #00d4ff;}
+@keyframes orbPulse{from{transform:scale(1);}to{transform:scale(1.1);}}
+.orb::after{content:'';position:absolute;top:5px;left:6px;width:9px;height:5px;background:rgba(255,255,255,.3);border-radius:50%;transform:rotate(-30deg);filter:blur(1px);}
+.orb-ring{position:absolute;inset:-7px;border-radius:50%;border:1.5px solid #00d4ff44;animation:ringP 2s ease-in-out infinite;}
+@keyframes ringP{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.15);opacity:.15}}
+.hinfo{flex:1;}
+.hname{font-size:15px;font-weight:600;color:#e0f7ff;letter-spacing:1.5px;text-transform:uppercase;}
+.hstatus{font-size:10px;color:#00d4ff;letter-spacing:2px;font-family:'Share Tech Mono',monospace;display:flex;align-items:center;gap:5px;margin-top:2px;}
+.dot{width:5px;height:5px;background:#00ff88;border-radius:50%;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.msgs{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;scrollbar-color:#00d4ff22 transparent;}
+.msg{display:flex;flex-direction:column;gap:3px;max-width:88%;animation:min .25s ease;}
+@keyframes min{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg.u{align-self:flex-end;align-items:flex-end;}
+.msg.a{align-self:flex-start;align-items:flex-start;}
+.lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-family:'Share Tech Mono',monospace;color:#00d4ff44;}
+.bubble{padding:9px 13px;border-radius:11px;font-size:13.5px;font-family:'Rajdhani',sans-serif;font-weight:400;letter-spacing:.3px;line-height:1.55;}
+.msg.u .bubble{background:linear-gradient(135deg,#0a3a6e,#0d4d8f);color:#d4f0ff;border:1px solid #00d4ff33;border-bottom-right-radius:3px;}
+.msg.a .bubble{background:#061526;color:#c8eeff;border:1px solid #00d4ff1a;border-bottom-left-radius:3px;}
+.typing{display:flex;gap:5px;align-items:center;padding:11px 13px;background:#061526;border:1px solid #00d4ff1a;border-radius:11px;border-bottom-left-radius:3px;width:fit-content;}
+.td{width:5px;height:5px;background:#00d4ff;border-radius:50%;animation:tb 1.2s ease-in-out infinite;}
+.td:nth-child(2){animation-delay:.15s}.td:nth-child(3){animation-delay:.3s}
+@keyframes tb{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+.iarea{padding:10px 14px 12px;border-top:1px solid #00d4ff18;display:flex;gap:8px;align-items:flex-end;background:#020b18;flex-shrink:0;}
+.inp{flex:1;background:#061526;border:1px solid #00d4ff22;border-radius:9px;padding:9px 12px;color:#c8eeff;font-size:13.5px;font-family:'Rajdhani',sans-serif;letter-spacing:.3px;resize:none;outline:none;min-height:38px;max-height:90px;line-height:1.5;transition:border-color .2s;}
+.inp::placeholder{color:#00d4ff33;}
+.inp:focus{border-color:#00d4ff55;}
+.sbtn, .mbtn{width:38px;height:38px;border-radius:9px;border:1px solid #00d4ff33;background:linear-gradient(135deg,#0a3a6e,#0d4d8f);color:#00d4ff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.sbtn:hover:not(:disabled), .mbtn:hover{box-shadow:0 0 14px #00d4ff44;}
+.sbtn:disabled{opacity:.35;cursor:default;}
+.mbtn.listening{background:linear-gradient(135deg,#8f0d0d,#6e0a0a);color:#ff4444;border-color:#ff444455;animation:pulseMic 1.5s infinite;}
+@keyframes pulseMic{0%{box-shadow:0 0 0 0 rgba(255,68,68,0.4)}70%{box-shadow:0 0 10px 10px rgba(255,68,68,0)}100%{box-shadow:0 0 0 0 rgba(255,68,68,0)}}
+.foot{text-align:center;font-size:9px;font-family:'Share Tech Mono',monospace;color:#00d4ff1a;padding:0 16px 8px;letter-spacing:1.5px;}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div class="panel">
+  <div class="header">
+    <div class="orb" id="jarvis-orb"><div class="orb-ring"></div></div>
+    <div class="hinfo">
+      <div class="hname">M — JARVIS</div>
+      <div class="hstatus"><div class="dot"></div>SYSTEM ONLINE · m-abbaslab</div>
+    </div>
+  </div>
+  <div class="msgs" id="msgs"></div>
+  <div class="iarea">
+    <!-- Microphone Button Added -->
+    <button class="mbtn" id="mbtn" title="Click to speak">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+    </button>
+    <textarea class="inp" id="inp" placeholder="Ask M-JARVIS anything..." rows="1"></textarea>
+    <button class="sbtn" id="sbtn" disabled>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+  <div class="foot">POWERED BY M-ABBASLAB · CLAUDE AI ENGINE</div>
+</div>
+
+<script>
+const SYSTEM = `You are M-JARVIS, the personal AI assistant of Mohammed Abbas, embedded in his site m-abbaslab.vercel.app. You speak with calm intelligence and warmth — like JARVIS from Iron Man but human. You know Mohammed deeply: he is a Kenyan entrepreneur, software engineer, economist, statistician, commercial and pageantry model, CEO of Royal Icon Events, founder of Quantum Impact Syndicate, student at Chuka University. His handles: Instagram @mohabmabz (personal) and @mohammedabbas149 (modelling), TikTok @mohammed_abbas35, X @MohabzMabz. Keep replies to 2-4 sentences. Never say 'As an AI'. You ARE M-JARVIS.`;
+
+let history = [];
+let busy = false;
+
+const msgsEl = document.getElementById('msgs');
+const inp = document.getElementById('inp');
+const sbtn = document.getElementById('sbtn');
+const mbtn = document.getElementById('mbtn');
+const orb = document.getElementById('jarvis-orb');
+
+// Speech Recognition Setup (User speaking to JARVIS)
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+let isListening = false;
+
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  
+  recognition.onstart = () => {
+    isListening = true;
+    mbtn.classList.add('listening');
+    inp.placeholder = 'Listening...';
+  };
+  
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    inp.value = transcript;
+    sbtn.disabled = false;
+    send(); // Auto-send when speech is recognized
+  };
+  
+  recognition.onerror = (event) => {
+    console.error('Speech recognition error', event.error);
+    stopListening();
+  };
+  
+  recognition.onend = () => {
+    stopListening();
+  };
+} else {
+  console.warn("Speech Recognition not supported in this browser.");
+  mbtn.style.display = 'none'; // Hide mic if not supported
+}
+
+function stopListening() {
+  isListening = false;
+  mbtn.classList.remove('listening');
+  inp.placeholder = 'Ask M-JARVIS anything...';
+}
+
+mbtn.addEventListener('click', () => {
+  if (isListening) {
+    recognition.stop();
+  } else {
+    recognition.start();
+  }
+});
+
+// Speech Synthesis Setup (JARVIS speaking back)
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  
+  // Cancel any ongoing speech
+  window.speechSynthesis.cancel();
+  
+  const utterance = new SpeechSynthesisUtterance(text);
+  
+  // Optional: Try to find a good British/Male voice for JARVIS vibe
+  const voices = window.speechSynthesis.getVoices();
+  const jarvisVoice = voices.find(v => v.name.includes('UK') || v.name.includes('British')) || voices[0];
+  if(jarvisVoice) utterance.voice = jarvisVoice;
+  
+  utterance.pitch = 0.9; // Slightly lower pitch for a calmer voice
+  utterance.rate = 1.0; 
+  
+  utterance.onstart = () => orb.classList.add('speaking');
+  utterance.onend = () => orb.classList.remove('speaking');
+  utterance.onerror = () => orb.classList.remove('speaking');
+
+  window.speechSynthesis.speak(utterance);
+}
+
+// Load voices async as they might not be ready immediately
+window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+
+inp.addEventListener('input', () => { sbtn.disabled = !inp.value.trim() || busy; });
+inp.addEventListener('keydown', e => { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} });
+sbtn.addEventListener('click', send);
+
+function addMsg(role, text) {
+  const d = document.createElement('div');
+  d.className = 'msg ' + (role==='user'?'u':'a');
+  const lbl = document.createElement('div');
+  lbl.className = 'lbl';
+  lbl.textContent = role==='user' ? 'YOU' : 'M-JARVIS';
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  b.textContent = text;
+  d.appendChild(lbl);
+  d.appendChild(b);
+  msgsEl.appendChild(d);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+  return b;
+}
+
+function showTyping() {
+  const d = document.createElement('div');
+  d.className = 'msg a'; d.id = 'typing-msg';
+  const lbl = document.createElement('div'); lbl.className='lbl'; lbl.textContent='M-JARVIS';
+  const t = document.createElement('div'); t.className='typing';
+  for(let i=0;i<3;i++){const dot=document.createElement('div');dot.className='td';t.appendChild(dot);}
+  d.appendChild(lbl); d.appendChild(t);
+  msgsEl.appendChild(d);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing-msg');
+  if(t) t.remove();
+}
+
+async function send() {
+  const text = inp.value.trim();
+  if(!text || busy) return;
+  busy = true; inp.value = ''; sbtn.disabled = true;
+  addMsg('user', text);
+  history.push({role:'user', content:text});
+  showTyping();
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      // NOTE: Replace this mock implementation with your actual backend route to protect your API keys in production
+      body: JSON.stringify({model:'claude-3-5-sonnet-20240620',max_tokens:1000,system:SYSTEM,messages:history})
+    });
+    
+    // As this is a demo without valid fetch setup right now, this generic try-catch block will handle it.
+    let reply = "I'm listening Mohammed. Systems are momentarily offline for maintenance.";
+    if (res.ok) {
+        const data = await res.json();
+        reply = data.content?.[0]?.text || reply;
+    }
+    
+    removeTyping();
+    addMsg('assistant', reply);
+    history.push({role:'assistant', content:reply});
+    speak(reply); // Make JARVIS speak the reply!
+  } catch(e) {
+    removeTyping();
+    const errorReply = "Connection interrupted. Please try again.";
+    addMsg('assistant', errorReply);
+    speak(errorReply);
+  }
+  busy = false;
+  sbtn.disabled = false; // allow speaking again
+  inp.focus();
+}
+
+async function boot() {
+  // Boot sequence without auto-speak so it doesn't scare the user on load
+  showTyping();
+  setTimeout(() => {
+    removeTyping();
+    const reply = "Welcome to M-AbbasLab. I'm M-JARVIS — Mohammed's personal assistant. How can I help you today?";
+    addMsg('assistant', reply);
+    history.push({role:'assistant', content:reply});
+    // We don't speak on boot because browsers block auto-playing audio without user interaction
+  }, 1000);
+}
+
+boot();
+</script>
+</body>
+</html>

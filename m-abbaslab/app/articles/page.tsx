@@ -5,41 +5,14 @@ import { motion } from 'framer-motion'
 import { Calendar, Clock, Tag, User, BookOpen, Search, TrendingUp, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { personalConfig } from '@/config/personal'
-import { supabase } from '@/lib/supabase'
 
 export default function ArticlesPage() {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
-  const [dynamicArticles, setDynamicArticles] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
-  // Fetch dynamic articles
-  useEffect(() => {
-    const fetchArticles = async () => {
-      // Small artificial delay to prevent hydration mismatch if using mock
-      if (!supabase) {
-        setLoading(false)
-        return
-      }
-
-      const { data, error } = await supabase
-        .from('articles')
-        .select('*')
-        .eq('published', true)
-        .order('published_at', { ascending: false })
-
-      if (data) {
-        setDynamicArticles(data)
-      }
-      setLoading(false)
-    }
-
-    fetchArticles()
-  }, [])
-
-  // Merge articles
+  // All articles from local config
   const allArticles = [
-    ...dynamicArticles,
     ...personalConfig.articles
   ]
 

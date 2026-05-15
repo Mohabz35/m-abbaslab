@@ -2,13 +2,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Lock, Loader2, CheckCircle } from 'lucide-react'
+import { Lock, Loader2, CheckCircle, Eye, EyeOff } from 'lucide-react'
 
 const ADMIN_EMAIL = 'mohammedabbasofficial100@gmail.com'
 
 export default function AdminAuth({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [showPassword, setShowPassword] = useState(false)
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
@@ -21,7 +22,7 @@ export default function AdminAuth({ children }: { children: React.ReactNode }) {
       }
       setIsLoading(false)
     }
-    
+
     checkAuth()
   }, [])
 
@@ -29,8 +30,15 @@ export default function AdminAuth({ children }: { children: React.ReactNode }) {
     e.preventDefault()
     setError('')
 
+    const trimmedPassword = password.trim()
     // Simple password check (you can enhance this later)
-    if (password === 'admin123' || password === 'M-AbbasLab2024') {
+    if (
+      trimmedPassword === 'admin123' ||
+      trimmedPassword === 'M-AbbasLab2024' ||
+      trimmedPassword === 'Mohab@35' ||
+      trimmedPassword === 'Mohabz35' ||
+      trimmedPassword === 'Mohammed Abbas'
+    ) {
       localStorage.setItem('admin_auth', 'authenticated')
       setIsAuthenticated(true)
     } else {
@@ -83,14 +91,24 @@ export default function AdminAuth({ children }: { children: React.ReactNode }) {
               <label className="block text-sm font-medium mb-2">
                 Admin Password
               </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter admin password"
-                required
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  id="admin-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12"
+                  placeholder="Enter admin password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
             </div>
 
             <button
@@ -123,13 +141,13 @@ export default function AdminAuth({ children }: { children: React.ReactNode }) {
                 <p className="text-xs text-gray-500">Content Management System</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-4">
               <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-green-50 dark:bg-green-900/30 rounded-full">
                 <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
                 <span className="text-sm text-green-700 dark:text-green-400">Admin Mode</span>
               </div>
-              
+
               <button
                 onClick={handleLogout}
                 className="px-4 py-2 text-sm bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/50"

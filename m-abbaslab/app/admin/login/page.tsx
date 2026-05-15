@@ -6,7 +6,7 @@ export default function AdminPlaceholder() {
         <span className="text-gray-400">⚙️</span>
       </div>
       <h2 className="text-xl font-semibold mb-2">Feature Dormant</h2>
-      <p className="text-gray-500">This admin feature will be available with Supabase integration.</p>
+      <p className="text-gray-500">Access the main dashboard at /admin/dashboard.</p>
     </div>
   )
 }

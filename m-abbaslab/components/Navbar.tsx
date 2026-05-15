@@ -15,6 +15,9 @@ const navItems = [
     icon: Briefcase,
     dropdown: [
       { name: 'All Projects', href: '/work' },
+      { name: 'Academic (ILMS)', href: '/work/academic/ilms' },
+      { name: 'SkillSync Intel', href: '/work/academic/skillsync' },
+      { name: 'Economic Forecast', href: '/work/academic/economics' },
       { name: 'Research', href: '/work?category=research' },
       { name: 'Technology', href: '/work?category=technology' },
       { name: 'Analysis', href: '/work?category=analysis' },

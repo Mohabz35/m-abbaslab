@@ -5,37 +5,15 @@ import { motion } from 'framer-motion'
 import { Plus, Edit, Trash2, Search, FileText, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import { personalConfig } from '@/config/personal'
-import { supabase } from '@/lib/supabase'
 
 export default function AdminArticlesPage() {
     const [activeTab, setActiveTab] = useState<'all' | 'published' | 'drafts'>('all')
     const [searchQuery, setSearchQuery] = useState('')
-    const [dynamicArticles, setDynamicArticles] = useState<any[]>([])
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
 
-    // Fetch dynamic articles from Supabase
-    useEffect(() => {
-        const fetchArticles = async () => {
-            if (!supabase) return
-
-            const { data, error } = await supabase
-                .from('articles')
-                .select('*')
-                .order('created_at', { ascending: false })
-
-            if (data) {
-                setDynamicArticles(data)
-            }
-            setLoading(false)
-        }
-
-        fetchArticles()
-    }, [])
-
-    // Combine static and dynamic articles
+    // All articles from local config
     const allArticles = [
-        ...personalConfig.articles.map(a => ({ ...a, source: 'static', status: 'published' })),
-        ...dynamicArticles.map(a => ({ ...a, source: 'database', status: a.published ? 'published' : 'draft' }))
+        ...personalConfig.articles.map(a => ({ ...a, source: 'static', status: a.published ? 'published' : 'draft' })),
     ]
 
     const filteredArticles = allArticles.filter(article => {

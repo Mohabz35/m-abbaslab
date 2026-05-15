@@ -3,9 +3,9 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Save, ArrowLeft, Image as ImageIcon, Sparkles } from 'lucide-react'
+import { Save, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import { supabase } from '@/lib/supabase'
+import { personalConfig } from '@/config/personal'
 
 export default function NewArticlePage() {
     const router = useRouter()
@@ -27,24 +27,69 @@ export default function NewArticlePage() {
         setError(null)
 
         try {
-            if (!supabase) throw new Error('Supabase client not initialized')
+            // 1. Load latest config from API (if available), otherwise fall back to static personalConfig
+            let baseConfig: any = personalConfig
+            try {
+                const res = await fetch('/api/admin/config')
+                if (res.ok) {
+                    baseConfig = await res.json()
+                }
+            } catch {
+                // ignore and use personalConfig fallback
+            }
 
-            const { data, error: insertError } = await supabase
-                .from('articles')
-                .insert([
-                    {
-                        ...formData,
-                        tags: formData.tags.split(',').map(t => t.trim()),
-                        published: true, // Auto-publish for now
-                        published_at: new Date().toISOString(),
-                        created_at: new Date().toISOString()
-                    }
-                ])
-                .select()
+            // 2. Build article object matching existing schema
+            const tagsArray = formData.tags
+                .split(',')
+                .map(tag => tag.trim())
+                .filter(Boolean)
 
-            if (insertError) throw insertError
+            const nowIso = new Date().toISOString()
+            const slug =
+                formData.slug ||
+                formData.title
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/(^-|-$)+/g, '')
 
-            // Redirect to admin list
+            const newArticle = {
+                id: slug || `article-${Date.now()}`,
+                title: formData.title,
+                slug,
+                excerpt: formData.excerpt,
+                content: formData.content,
+                category: formData.category,
+                read_time: formData.read_time,
+                published: true,
+                published_at: nowIso,
+                tags: tagsArray,
+                featured: false
+            }
+
+            const updatedConfig = {
+                ...baseConfig,
+                articles: [newArticle, ...(baseConfig.articles || [])]
+            }
+
+            // 3. Persist via existing file-based CMS endpoint
+            const saveRes = await fetch('/api/admin/config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedConfig)
+            })
+
+            if (!saveRes.ok) {
+                let message = 'Failed to save configuration'
+                try {
+                    const data = await saveRes.json()
+                    if (data?.error) message = data.error
+                } catch {
+                    // ignore
+                }
+                throw new Error(message)
+            }
+
+            alert('Article created and saved to config. It will appear on the site after the next build.')
             router.push('/admin/articles')
         } catch (err: any) {
             console.error('Error creating article:', err)

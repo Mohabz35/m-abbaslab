@@ -4,17 +4,16 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { 
-  LayoutDashboard, 
-  Briefcase, 
-  FileText, 
-  User, 
+import {
+  LayoutDashboard,
+  Briefcase,
+  FileText,
+  User,
   Settings,
   LogOut,
   Menu,
   X
 } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
 import { personalConfig } from '@/config/personal'
 
 const navItems = [
@@ -30,8 +29,7 @@ export default function AdminSidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    window.location.href = '/admin/login'
+    window.location.href = '/admin'
   }
 
   return (
@@ -91,10 +89,10 @@ export default function AdminSidebar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive 
-                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' 
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
+                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
                   : 'hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
+                  }`}
               >
                 {item.icon}
                 <span>{item.name}</span>
@@ -146,10 +144,10 @@ export default function AdminSidebar() {
                   key={item.name}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-4 rounded-lg ${isActive 
-                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' 
+                  className={`flex items-center gap-3 px-4 py-4 rounded-lg ${isActive
+                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
                     : 'hover:bg-gray-100 dark:hover:bg-gray-700'
-                  }`}
+                    }`}
                 >
                   {item.icon}
                   <span>{item.name}</span>

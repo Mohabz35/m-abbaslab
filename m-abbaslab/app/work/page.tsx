@@ -22,6 +22,7 @@ export default function WorkPage() {
   const categories = [
     { id: 'all', name: 'All Projects', count: personalConfig.projects.length },
     { id: 'research', name: 'Research', count: personalConfig.projects.filter(p => p.category === 'research').length },
+    { id: 'academic', name: 'Academic', count: personalConfig.projects.filter(p => p.category === 'academic').length },
     { id: 'technology', name: 'Technology', count: personalConfig.projects.filter(p => p.category === 'technology').length },
     { id: 'analysis', name: 'Analysis', count: personalConfig.projects.filter(p => p.category === 'analysis').length },
     { id: 'platform', name: 'Platform', count: personalConfig.projects.filter(p => p.category === 'platform').length },

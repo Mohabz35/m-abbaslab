@@ -5,40 +5,20 @@ import { motion } from 'framer-motion'
 import { ArrowRight, FileText, Calendar, Clock } from 'lucide-react'
 import Link from 'next/link'
 import { personalConfig } from '@/config/personal'
-import { supabase } from '@/lib/supabase'
 
 export default function LatestArticles() {
     const [articles, setArticles] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const fetchArticles = async () => {
-            let dynamicArticles: any[] = []
+        // Load from local config, sort by date, take top 3
+        const allArticles = [...personalConfig.articles]
+            .sort((a, b) => {
+                return new Date(b.published_at || 0).getTime() - new Date(a.published_at || 0).getTime()
+            }).slice(0, 3)
 
-            if (supabase) {
-                const { data } = await supabase
-                    .from('articles')
-                    .select('*')
-                    .eq('published', true)
-                    .order('published_at', { ascending: false })
-                    .limit(3)
-
-                if (data) dynamicArticles = data
-            }
-
-            // Combine with static articles and sort by date
-            const allArticles = [
-                ...dynamicArticles,
-                ...personalConfig.articles
-            ].sort((a, b) => {
-                return new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
-            }).slice(0, 3) // Take top 3 most recent
-
-            setArticles(allArticles)
-            setLoading(false)
-        }
-
-        fetchArticles()
+        setArticles(allArticles)
+        setLoading(false)
     }, [])
 
     return (
@@ -97,7 +77,7 @@ export default function LatestArticles() {
                                 <div className="flex items-center space-x-3">
                                     <div className="flex items-center">
                                         <Calendar className="w-3 h-3 mr-1" />
-                                        {new Date(article.published_at).getFullYear()}
+                                        {new Date(article.published_at || Date.now()).getFullYear()}
                                     </div>
                                     <div className="flex items-center">
                                         <Clock className="w-3 h-3 mr-1" />

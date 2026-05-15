@@ -2,14 +2,14 @@
 
 import { personalConfig } from '@/config/personal'
 import { motion } from 'framer-motion'
-import { Shield, Activity, Database, Server, Cpu, Users, FileText, Briefcase, Lock } from 'lucide-react'
+import { Shield, Activity, Database, Server, Cpu, Users, FileText, Briefcase, Lock, Brain, LayoutDashboard } from 'lucide-react'
 
 export default function AdminPage() {
   const stats = [
     { label: 'Total Articles', value: personalConfig.articles.length, icon: FileText, color: 'text-blue-400' },
     { label: 'Projects', value: personalConfig.projects.length, icon: Briefcase, color: 'text-purple-400' },
     { label: 'Fashion Titles', value: personalConfig.fashion.titles.length, icon: Users, color: 'text-pink-400' },
-    { label: 'System Status', value: 'Online', icon: Activity, color: 'text-green-400' },
+    { label: 'World Quant Alphas', value: (personalConfig as any).worldQuant?.statistics?.totalAlphas || 0, icon: Brain, color: 'text-indigo-400' },
   ]
 
   return (
@@ -100,6 +100,10 @@ export default function AdminPage() {
             <div className="space-y-3">
               <a href="/" className="block w-full text-center py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors font-semibold">
                 View Live Site
+              </a>
+              <a href="/admin/dashboard" className="block w-full text-center py-3 bg-white hover:bg-gray-100 text-black rounded-lg transition-colors font-bold flex items-center justify-center gap-2">
+                <LayoutDashboard className="w-5 h-5" />
+                Launch Full Dashboard
               </a>
               <button className="block w-full text-center py-3 bg-white/5 hover:bg-white/10 text-gray-300 rounded-lg transition-colors border border-white/10">
                 View Analytics (Coming Soon)
