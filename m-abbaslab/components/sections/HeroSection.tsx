@@ -1,9 +1,10 @@
 'use client'
 
 import { ArrowRight, Sparkles, Cpu, LineChart, Code, Zap } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
+import JarvisChat from '@/components/ui/JarvisChat'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Float, MeshDistortMaterial, Sphere } from '@react-three/drei'
 import { useState, useEffect } from 'react'
@@ -267,6 +268,7 @@ export default function HeroSection() {
 function InteractiveAvatar() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
@@ -374,6 +376,23 @@ function InteractiveAvatar() {
 
               {/* Scanning Line Effect */}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/10 to-transparent h-[20%] w-full animate-scan pointer-events-none z-30" />
+
+              {/* Chat Initialization Overlay */}
+              {!isChatOpen && (
+                <div className="absolute inset-0 z-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-sm">
+                  <button 
+                    onClick={() => setIsChatOpen(true)}
+                    className="px-6 py-3 border border-[#00d4ff] bg-[#00d4ff]/20 text-[#00d4ff] font-mono text-sm tracking-widest rounded-lg hover:bg-[#00d4ff]/40 transition-colors shadow-[0_0_20px_rgba(0,212,255,0.3)] backdrop-blur-md"
+                  >
+                    INITIALIZE JARVIS
+                  </button>
+                </div>
+              )}
+
+              {/* Jarvis Chat UI */}
+              <AnimatePresence>
+                {isChatOpen && <JarvisChat isActive={isChatOpen} onClose={() => setIsChatOpen(false)} />}
+              </AnimatePresence>
             </div>
           </motion.div>
         </motion.div>

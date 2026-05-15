@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'M-AbbasLab | Personal Operating Platform',
+    default: 'Mohammed Abbas | M-AbbasLab | Personal Operating Platform',
     template: '%s | M-AbbasLab',
   },
   description: 'Research · Economics · Technology · Creation - The digital workspace of Mohammed Abbas. Explore innovative solutions at the intersection of economics, technology, and research.',
