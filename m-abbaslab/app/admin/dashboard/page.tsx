@@ -1,4 +1,4 @@
-﻿// app/admin/dashboard/page.tsx
+// app/admin/dashboard/page.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -49,6 +49,7 @@ import {
   Trash2
 } from 'lucide-react'
 import { personalConfig } from '@/config/personal'
+import FinanceTracker from '@/components/admin/FinanceTracker'
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -63,6 +64,8 @@ export default function AdminDashboardPage() {
   // Site Settings State
   const [adminName, setAdminName] = useState(personalConfig.name)
   const [adminEmail, setAdminEmail] = useState(personalConfig.email)
+  const [adminUsername, setAdminUsername] = useState((personalConfig as any).adminCredentials?.username || 'ceo')
+  const [adminPassword, setAdminPassword] = useState((personalConfig as any).adminCredentials?.password || 'admin123')
   const [siteFeatures, setSiteFeatures] = useState(personalConfig.site.features)
 
   // Load from API (File-Based CMS) with LocalStorage fallback
@@ -78,6 +81,8 @@ export default function AdminDashboardPage() {
           setAlphas(config.worldQuant?.alphas || [])
           setAdminName(config.name || personalConfig.name)
           setAdminEmail(config.email || personalConfig.email)
+          setAdminUsername(config.adminCredentials?.username || (personalConfig as any).adminCredentials?.username || 'ceo')
+          setAdminPassword(config.adminCredentials?.password || (personalConfig as any).adminCredentials?.password || 'admin123')
           setSiteFeatures(config.site?.features || personalConfig.site.features)
           setIsLoaded(true)
           return
@@ -109,6 +114,10 @@ export default function AdminDashboardPage() {
         ...personalConfig,
         name: adminName,
         email: adminEmail,
+        adminCredentials: {
+          username: adminUsername,
+          password: adminPassword
+        },
         projects,
         articles,
         fashion: {
@@ -500,7 +509,7 @@ export default function AdminDashboardPage() {
       {/* Tabs */}
       <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
         <div className="flex gap-6 overflow-x-auto pb-2 scrollbar-hide">
-          {['overview', 'projects', 'articles', 'modeling', 'world-quant', 'social-media', 'comms-hub', 'system-integrity', 'skills', 'settings'].map((tab) => (
+          {['overview', 'finance-tracker', 'projects', 'articles', 'modeling', 'world-quant', 'social-media', 'comms-hub', 'system-integrity', 'skills', 'settings'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -593,6 +602,12 @@ export default function AdminDashboardPage() {
               </div>
             </div>
           </>
+        )}
+
+        {activeTab === 'finance-tracker' && (
+          <div className="space-y-4">
+            <FinanceTracker />
+          </div>
         )}
 
         {activeTab === 'projects' && (
@@ -1649,6 +1664,33 @@ export default function AdminDashboardPage() {
                       value={adminEmail}
                       onChange={(e) => setAdminEmail(e.target.value)}
                       className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none font-medium"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-bold mb-4 flex items-center gap-2">
+                  <Lock className="w-4 h-4 text-rose-500" />
+                  ADMIN CREDENTIALS
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-rose-500/5 border border-rose-500/10 rounded-xl">
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Username</label>
+                    <input
+                      type="text"
+                      value={adminUsername}
+                      onChange={(e) => setAdminUsername(e.target.value)}
+                      className="w-full px-4 py-2 border border-rose-200 dark:border-rose-900/30 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-rose-500 outline-none font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Password</label>
+                    <input
+                      type="text"
+                      value={adminPassword}
+                      onChange={(e) => setAdminPassword(e.target.value)}
+                      className="w-full px-4 py-2 border border-rose-200 dark:border-rose-900/30 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-rose-500 outline-none font-medium"
                     />
                   </div>
                 </div>

@@ -6,6 +6,10 @@ export const personalConfig = {
   "tagline": "A multidisciplinary builder combining economics, statistics, software engineering, and research to create intelligent systems, digital platforms, and applied academic tools.",
   "googleAnalyticsId": "383249712",
   "email": "mohammedabbasofficial100@gmail.com",
+  "adminCredentials": {
+    "username": "ceo",
+    "password": "admin123"
+  },
   "social": {
     "github": "https://github.com/Mohabz35",
     "linkedin": "https://www.linkedin.com/in/mohammed-abbas-490385369",
