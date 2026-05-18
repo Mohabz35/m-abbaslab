@@ -253,7 +253,7 @@ export default function CVGenerator() {
       const element = document.getElementById('printable-cv-area')
       
       const opt = {
-        margin: [0.5, 0.5],
+        margin: [0.5, 0.5] as [number, number],
         filename: `Mohammed_Abbas_CV_${category}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true },
