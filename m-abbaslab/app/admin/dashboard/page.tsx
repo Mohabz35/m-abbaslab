@@ -464,6 +464,51 @@ export default function AdminDashboardPage() {
     const status = enabled ? 'ACTIVATED' : 'DEACTIVATED'
     setCommsLogs(prev => [{ id: Date.now(), type: 'social', msg: `Social Intelligence Auto-Engagement ${status}.`, time: new Date().toLocaleTimeString() }, ...prev])
   }
+  const [isUploading, setIsUploading] = useState(false)
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, targetField: 'project' | 'article') => {
+    if (!e.target.files || e.target.files.length === 0) return
+    const file = e.target.files[0]
+    setIsUploading(true)
+
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData
+      })
+      const data = await res.json()
+
+      if (data.success) {
+        // Construct markdown link (e.g., [document.pdf](/uploads/document.pdf))
+        const isImage = file.type.startsWith('image/')
+        const markdownLink = `${isImage ? '!' : ''}[${file.name}](${data.url})\n`
+
+        if (targetField === 'project' && selectedEditProject) {
+          setSelectedEditProject({
+            ...selectedEditProject,
+            longDescription: (selectedEditProject.longDescription || '') + '\n' + markdownLink
+          })
+        } else if (targetField === 'article' && selectedEditArticle) {
+          setSelectedEditArticle({
+            ...selectedEditArticle,
+            content: (selectedEditArticle.content || '') + '\n' + markdownLink
+          })
+        }
+        setSentinelLogs(prev => [{ id: Date.now(), type: 'success', msg: `File ${file.name} uploaded successfully.`, time: new Date().toLocaleTimeString() }, ...prev])
+      } else {
+        alert('Upload failed: ' + data.error)
+      }
+    } catch (error) {
+      alert('Error uploading file')
+    } finally {
+      setIsUploading(false)
+      // Reset input
+      e.target.value = ''
+    }
+  }
 
   return (
     <div>
@@ -1927,7 +1972,14 @@ export default function AdminDashboardPage() {
 
               {/* Long Description (Extended Project Documentation) */}
               <div>
-                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Extended Project Documentation / Technical Specs (Markdown Supported)</label>
+                <div className="flex justify-between items-center mb-2">
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase">Extended Project Documentation / Technical Specs (Markdown Supported)</label>
+                  <label className="cursor-pointer px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-md text-[10px] font-bold uppercase hover:bg-blue-200 transition-colors flex items-center gap-1">
+                    <FileUp className="w-3 h-3" />
+                    {isUploading ? 'UPLOADING...' : 'UPLOAD DOC/MEDIA'}
+                    <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'project')} />
+                  </label>
+                </div>
                 <textarea
                   rows={8}
                   value={selectedEditProject.longDescription || ''}
@@ -2024,7 +2076,14 @@ export default function AdminDashboardPage() {
 
               {/* Article Content */}
               <div>
-                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Complete Article Content (Markdown Supported)</label>
+                <div className="flex justify-between items-center mb-2">
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase">Complete Article Content (Markdown Supported)</label>
+                  <label className="cursor-pointer px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-md text-[10px] font-bold uppercase hover:bg-green-200 transition-colors flex items-center gap-1">
+                    <FileUp className="w-3 h-3" />
+                    {isUploading ? 'UPLOADING...' : 'UPLOAD DOC/MEDIA'}
+                    <input type="file" className="hidden" onChange={(e) => handleFileUpload(e, 'article')} />
+                  </label>
+                </div>
                 <textarea
                   rows={12}
                   value={selectedEditArticle.content || ''}
