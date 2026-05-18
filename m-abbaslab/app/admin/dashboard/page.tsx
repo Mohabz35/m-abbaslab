@@ -59,6 +59,8 @@ export default function AdminDashboardPage() {
   const [titles, setTitles] = useState<any[]>([])
   const [alphas, setAlphas] = useState<any[]>([])
   const [editingItem, setEditingItem] = useState<{ type: string, id: string, field?: string } | null>(null)
+  const [selectedEditProject, setSelectedEditProject] = useState<any | null>(null)
+  const [selectedEditArticle, setSelectedEditArticle] = useState<any | null>(null)
   const [isLoaded, setIsLoaded] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 
@@ -692,7 +694,11 @@ export default function AdminDashboardPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex gap-2">
-                          <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-blue-500">
+                          <button
+                            onClick={() => setSelectedEditProject(project)}
+                            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-blue-500"
+                            title="Edit Project & Documentation"
+                          >
                             <Edit className="w-4 h-4" />
                           </button>
                           <button
@@ -794,8 +800,9 @@ export default function AdminDashboardPage() {
                       <td className="px-6 py-4">
                         <div className="flex gap-2">
                           <button
-                            onClick={() => setEditingItem({ type: 'article', id: article.id, field: 'title' })}
+                            onClick={() => setSelectedEditArticle(article)}
                             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-blue-500"
+                            title="Edit Article Content"
                           >
                             <Edit className="w-4 h-4" />
                           </button>
@@ -1810,6 +1817,244 @@ export default function AdminDashboardPage() {
           </div>
         )}
       </div>
+
+      {/* Project Edit Modal */}
+      {selectedEditProject && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-white dark:bg-gray-800 z-10">
+              <div>
+                <h3 className="text-lg font-bold font-mono uppercase">Edit Project Documentation</h3>
+                <p className="text-xs text-gray-500">Configure parameters and developer docs for this system</p>
+              </div>
+              <button 
+                onClick={() => setSelectedEditProject(null)} 
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Title & Category */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Project Title</label>
+                  <input
+                    type="text"
+                    value={selectedEditProject.title}
+                    onChange={(e) => setSelectedEditProject({ ...selectedEditProject, title: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none font-medium"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Category</label>
+                  <input
+                    type="text"
+                    value={selectedEditProject.category}
+                    onChange={(e) => setSelectedEditProject({ ...selectedEditProject, category: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none font-medium text-xs uppercase"
+                  />
+                </div>
+              </div>
+
+              {/* Status & Year */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Development Status</label>
+                  <input
+                    type="text"
+                    value={selectedEditProject.status}
+                    onChange={(e) => setSelectedEditProject({ ...selectedEditProject, status: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none font-medium"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Deployment/Launch Year</label>
+                  <input
+                    type="text"
+                    value={selectedEditProject.year}
+                    onChange={(e) => setSelectedEditProject({ ...selectedEditProject, year: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none font-medium"
+                  />
+                </div>
+              </div>
+
+              {/* GitHub & Live URL */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">GitHub Repository URL</label>
+                  <input
+                    type="text"
+                    value={selectedEditProject.github_url}
+                    onChange={(e) => setSelectedEditProject({ ...selectedEditProject, github_url: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none font-mono text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Live Demo / Production URL</label>
+                  <input
+                    type="text"
+                    value={selectedEditProject.live_url}
+                    onChange={(e) => setSelectedEditProject({ ...selectedEditProject, live_url: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none font-mono text-xs"
+                  />
+                </div>
+              </div>
+
+              {/* Short Description */}
+              <div>
+                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Short Description (Intro)</label>
+                <input
+                  type="text"
+                  value={selectedEditProject.description}
+                  onChange={(e) => setSelectedEditProject({ ...selectedEditProject, description: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+                />
+              </div>
+
+              {/* Technologies */}
+              <div>
+                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Technologies / Skills Fused (Comma separated)</label>
+                <input
+                  type="text"
+                  value={Array.isArray(selectedEditProject.technologies) ? selectedEditProject.technologies.join(', ') : selectedEditProject.technologies || ''}
+                  onChange={(e) => setSelectedEditProject({ ...selectedEditProject, technologies: e.target.value.split(',').map((t: string) => t.trim()) })}
+                  className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none text-xs font-mono"
+                  placeholder="React, Next.js, AI, Statistics"
+                />
+              </div>
+
+              {/* Long Description (Extended Project Documentation) */}
+              <div>
+                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Extended Project Documentation / Technical Specs (Markdown Supported)</label>
+                <textarea
+                  rows={8}
+                  value={selectedEditProject.longDescription || ''}
+                  onChange={(e) => setSelectedEditProject({ ...selectedEditProject, longDescription: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono resize-y"
+                  placeholder="Provide deep technical architecture, files built, expected improvements, hard-coded parameters, and APIs integrated..."
+                />
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex justify-end gap-3 sticky bottom-0 z-10">
+              <button
+                onClick={() => setSelectedEditProject(null)}
+                className="px-5 py-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-sm transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setProjects(projects.map(p => p.id === selectedEditProject.id ? selectedEditProject : p))
+                  setSelectedEditProject(null)
+                }}
+                className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-bold hover:shadow-lg transition-all text-sm"
+              >
+                Apply Updates
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Article Edit Modal */}
+      {selectedEditArticle && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-white dark:bg-gray-800 z-10">
+              <div>
+                <h3 className="text-lg font-bold font-mono uppercase">Write & Edit Article</h3>
+                <p className="text-xs text-gray-500">Draft rich editorial, technical posts, or mathematical analysis</p>
+              </div>
+              <button 
+                onClick={() => setSelectedEditArticle(null)} 
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Title & Category */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Article Title</label>
+                  <input
+                    type="text"
+                    value={selectedEditArticle.title}
+                    onChange={(e) => setSelectedEditArticle({ ...selectedEditArticle, title: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Category</label>
+                  <input
+                    type="text"
+                    value={selectedEditArticle.category}
+                    onChange={(e) => setSelectedEditArticle({ ...selectedEditArticle, category: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none font-medium text-xs uppercase"
+                  />
+                </div>
+              </div>
+
+              {/* Excerpt */}
+              <div>
+                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Short Excerpt (Summary)</label>
+                <input
+                  type="text"
+                  value={selectedEditArticle.excerpt}
+                  onChange={(e) => setSelectedEditArticle({ ...selectedEditArticle, excerpt: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+                />
+              </div>
+
+              {/* Tags */}
+              <div>
+                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Tags / Hashtags (Comma separated)</label>
+                <input
+                  type="text"
+                  value={Array.isArray(selectedEditArticle.tags) ? selectedEditArticle.tags.join(', ') : selectedEditArticle.tags || ''}
+                  onChange={(e) => setSelectedEditArticle({ ...selectedEditArticle, tags: e.target.value.split(',').map((t: string) => t.trim()) })}
+                  className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none text-xs font-mono"
+                  placeholder="Economics, Statistics, AI, Machine Learning"
+                />
+              </div>
+
+              {/* Article Content */}
+              <div>
+                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Complete Article Content (Markdown Supported)</label>
+                <textarea
+                  rows={12}
+                  value={selectedEditArticle.content || ''}
+                  onChange={(e) => setSelectedEditArticle({ ...selectedEditArticle, content: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono resize-y"
+                  placeholder="Write your article body here. You can use headings, lists, links, code snippets..."
+                />
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex justify-end gap-3 sticky bottom-0 z-10">
+              <button
+                onClick={() => setSelectedEditArticle(null)}
+                className="px-5 py-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-sm transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setArticles(articles.map(a => a.id === selectedEditArticle.id ? selectedEditArticle : a))
+                  setSelectedEditArticle(null)
+                }}
+                className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-bold hover:shadow-lg transition-all text-sm"
+              >
+                Apply Updates
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -7,7 +7,7 @@ import {
   Edit2, Trash2, TrendingUp, TrendingDown,
   CheckCircle2, Clock, FileText, AlertCircle,
   Twitter, Linkedin, MessageCircle, RefreshCw,
-  Plus
+  Plus, Github, Instagram, Facebook, Youtube, Music
 } from 'lucide-react'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -33,7 +33,13 @@ interface ScheduledPost {
 const PLATFORMS = [
   { id: 'twitter', label: 'X (Twitter)', color: '#1DA1F2', Icon: Twitter },
   { id: 'linkedin', label: 'LinkedIn', color: '#0A66C2', Icon: Linkedin },
+  { id: 'instagram', label: 'Instagram', color: '#E4405F', Icon: Instagram },
+  { id: 'tiktok', label: 'TikTok', color: '#00F2FE', Icon: Music },
+  { id: 'facebook', label: 'Facebook', color: '#1877F2', Icon: Facebook },
+  { id: 'youtube', label: 'YouTube', color: '#FF0000', Icon: Youtube },
   { id: 'whatsapp', label: 'WhatsApp', color: '#25D366', Icon: MessageCircle },
+  { id: 'telegram', label: 'Telegram', color: '#0088cc', Icon: Send },
+  { id: 'github', label: 'GitHub', color: '#24292F', Icon: Github }
 ]
 
 const STATUS_CONFIG: Record<PostStatus, { color: string; label: string; Icon: any }> = {
@@ -218,7 +224,7 @@ export default function ContentScheduler() {
             <Send className="w-5 h-5 text-blue-500" />
             Content Scheduler
           </h2>
-          <p className="text-xs text-gray-400 mt-0.5">X · LinkedIn · WhatsApp — automated</p>
+          <p className="text-xs text-gray-400 mt-0.5">X · LinkedIn · Instagram · TikTok · Facebook · YouTube · WhatsApp · Telegram · GitHub — automated</p>
         </div>
         <button
           onClick={fetchPosts}
