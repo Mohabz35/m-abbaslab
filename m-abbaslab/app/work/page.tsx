@@ -48,7 +48,6 @@ export default function WorkPage() {
           Each project represents a unique challenge and innovative solution.
         </p>
       </motion.div>
-      </motion.div>
 
       {/* Strategic Portals (Quick Links) */}
       <motion.div
