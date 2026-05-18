@@ -6,8 +6,8 @@
   "googleAnalyticsId": "383249712",
   "email": "mohammedabbasofficial100@gmail.com",
   "adminCredentials": {
-    "username": "ceo",
-    "password": "admin123"
+    "username": "MOHAMMED",
+    "password": "Mohab@35*"
   },
   "social": {
     "github": "https://github.com/Mohabz35",
@@ -308,6 +308,19 @@
     }
   ],
   "articles": [
+    {
+      "id": "article-1779098856689",
+      "title": "New Growth Strategy",
+      "excerpt": "Exploring new frontiers in AI and finance...",
+      "publishDate": "2026-05-18",
+      "readTime": "5 min",
+      "category": "research",
+      "published": false,
+      "tags": [
+        "AI",
+        "Finance"
+      ]
+    },
     {
       "id": "article-1771439893189",
       "title": "New Growth Strategy",
