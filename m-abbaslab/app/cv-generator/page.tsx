@@ -248,22 +248,27 @@ export default function CVGenerator() {
   const handleDownloadPDF = async () => {
     setIsGeneratingPdf(true)
     try {
-      // Dynamically import html2pdf so it only runs on the client
-      const html2pdf = (await import('html2pdf.js')).default
       const element = document.getElementById('printable-cv-area')
-      
-      const opt = {
-        margin: [0.5, 0.5] as [number, number],
-        filename: `Mohammed_Abbas_CV_${category}.pdf`,
-        image: { type: 'jpeg' as const, quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'in' as const, format: 'a4' as const, orientation: 'portrait' as const }
-      }
-      
-      await html2pdf().set(opt).from(element).save()
+      if (!element) throw new Error('CV element not found')
+
+      // Dynamic import — bypass strict types for untyped library
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const html2pdfModule = await import('html2pdf.js' as any)
+      const html2pdf = html2pdfModule.default || html2pdfModule
+
+      // @ts-ignore — html2pdf.js types are incomplete
+      await html2pdf()
+        .set({
+          margin: 0.5,
+          filename: `Mohammed_Abbas_CV_${category}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        })
+        .from(element)
+        .save()
     } catch (err) {
-      console.error("PDF generation failed:", err)
-      // Fallback to browser print if library fails
+      console.error('PDF generation failed:', err)
       window.print()
     } finally {
       setIsGeneratingPdf(false)
