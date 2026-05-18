@@ -4,8 +4,9 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Plus, List, BarChart3, Target, Check, Trash2, 
-  TrendingUp, TrendingDown, DollarSign, Wallet 
+  TrendingUp, TrendingDown, DollarSign, Wallet, Cloud, CloudOff, AlertTriangle
 } from 'lucide-react'
+import { supabase, hasSupabaseKeys } from '@/lib/supabase'
 
 // Types
 type EntryType = 'expense' | 'income'
@@ -46,26 +47,78 @@ export default function FinanceTracker() {
   const [goalName, setGoalName] = useState('')
   const [goalTarget, setGoalTarget] = useState('')
 
+  const [isSyncing, setIsSyncing] = useState(false)
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'success' | 'error'>('idle')
+
   // Load Data
   useEffect(() => {
-    try {
-      const savedEntries = localStorage.getItem('ceo_finance_entries')
-      if (savedEntries) setEntries(JSON.parse(savedEntries))
-      
-      const savedGoals = localStorage.getItem('ceo_finance_goals')
-      if (savedGoals) setGoals(JSON.parse(savedGoals))
-    } catch (e) {
-      console.error('Failed to load finance data', e)
+    const loadData = async () => {
+      try {
+        let loadedEntries = null
+        let loadedGoals = null
+
+        // Try Supabase first if keys exist
+        if (hasSupabaseKeys) {
+          const { data: dbEntries, error: eErr } = await supabase.from('finance_entries').select('*')
+          const { data: dbGoals, error: gErr } = await supabase.from('finance_goals').select('*')
+          
+          if (!eErr && dbEntries && dbEntries.length > 0) loadedEntries = dbEntries
+          if (!gErr && dbGoals && dbGoals.length > 0) loadedGoals = dbGoals
+        }
+
+        // Fallback to localStorage
+        if (!loadedEntries) {
+          const savedEntries = localStorage.getItem('ceo_finance_entries')
+          if (savedEntries) loadedEntries = JSON.parse(savedEntries)
+        }
+        if (!loadedGoals) {
+          const savedGoals = localStorage.getItem('ceo_finance_goals')
+          if (savedGoals) loadedGoals = JSON.parse(savedGoals)
+        }
+
+        if (loadedEntries) setEntries(loadedEntries)
+        if (loadedGoals) setGoals(loadedGoals)
+      } catch (e) {
+        console.error('Failed to load finance data', e)
+      } finally {
+        setIsLoaded(true)
+      }
     }
-    setIsLoaded(true)
+    loadData()
   }, [])
 
-  // Save Data
+  // Auto-save to localStorage (Cloud save is manual via Sync button to prevent rate limits)
   useEffect(() => {
     if (!isLoaded) return
     localStorage.setItem('ceo_finance_entries', JSON.stringify(entries))
     localStorage.setItem('ceo_finance_goals', JSON.stringify(goals))
   }, [entries, goals, isLoaded])
+
+  // Sync to Supabase Cloud
+  const handleCloudSync = async () => {
+    if (!hasSupabaseKeys) {
+      alert("Supabase keys not configured. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to your .env.local file. Data is only saving locally.")
+      return
+    }
+
+    setIsSyncing(true)
+    setSyncStatus('idle')
+    try {
+      // Upsert entries
+      const { error: eErr } = await supabase.from('finance_entries').upsert(entries)
+      const { error: gErr } = await supabase.from('finance_goals').upsert(goals)
+      
+      if (eErr || gErr) throw new Error("Sync Failed")
+      
+      setSyncStatus('success')
+      setTimeout(() => setSyncStatus('idle'), 3000)
+    } catch (error) {
+      console.error(error)
+      setSyncStatus('error')
+    } finally {
+      setIsSyncing(false)
+    }
+  }
 
   // Calculations
   const { totalIncome, totalExpense, balance } = useMemo(() => {
@@ -140,18 +193,38 @@ export default function FinanceTracker() {
 
   return (
     <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm font-sans w-full max-w-5xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+      {/* Cloud Sync Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-gray-200 dark:border-gray-800 pb-6">
+        <div>
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <Wallet className="text-blue-500 w-7 h-7" />
+            CEO Finance Tracker
+          </h2>
+          <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest font-bold">Encrypted Ledger Analytics</p>
+        </div>
+        
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl">
-            <Wallet className="w-6 h-6" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">CEO Finance Tracker</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              {new Date().toLocaleDateString('en-KE', { month: 'long', year: 'numeric' })}
-            </p>
-          </div>
+          {!hasSupabaseKeys && (
+            <div className="px-3 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-bold rounded-md flex items-center gap-1 uppercase tracking-wider">
+              <AlertTriangle className="w-3 h-3" /> Local Storage Only
+            </div>
+          )}
+          <button 
+            onClick={handleCloudSync} 
+            disabled={isSyncing}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
+              syncStatus === 'success' ? 'bg-green-500/10 text-green-500 border border-green-500/30' :
+              syncStatus === 'error' ? 'bg-red-500/10 text-red-500 border border-red-500/30' :
+              hasSupabaseKeys ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20' :
+              'bg-gray-100 dark:bg-gray-800 text-gray-400 border border-gray-200 dark:border-gray-700 cursor-not-allowed'
+            }`}
+            title={hasSupabaseKeys ? "Sync data to Supabase Cloud" : "Requires Supabase Keys in .env"}
+          >
+            {isSyncing ? <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" /> : 
+             syncStatus === 'success' ? <Check className="w-4 h-4" /> :
+             hasSupabaseKeys ? <Cloud className="w-4 h-4" /> : <CloudOff className="w-4 h-4" />}
+            {isSyncing ? 'Syncing...' : syncStatus === 'success' ? 'Synced to Cloud' : 'Cloud Sync'}
+          </button>
         </div>
       </div>
 

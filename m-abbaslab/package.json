@@ -15,6 +15,7 @@
     "@anthropic-ai/sdk": "^0.96.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
+    "@supabase/supabase-js": "^2.105.4",
     "@types/three": "^0.182.0",
     "framer-motion": "^12.29.2",
     "lucide-react": "^0.563.0",

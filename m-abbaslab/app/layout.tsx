@@ -1,5 +1,6 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Suspense } from 'react'
+import PWAStatusBar from '@/components/PWAStatusBar'
 import { Inter, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
@@ -30,10 +31,16 @@ export const metadata: Metadata = {
   authors: [{ name: 'Mohammed Abbas' }],
   creator: 'Mohammed Abbas',
   publisher: 'M-AbbasLab',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'AbbasLab',
+  },
   formatDetection: {
+    telephone: false,
     email: false,
     address: false,
-    telephone: false,
   },
   metadataBase: new URL('https://m-abbaslab.com'),
   alternates: {
@@ -62,6 +69,24 @@ export const metadata: Metadata = {
     creator: '@m_abbas_official',
     images: ['/og-image.jpg'],
   },
+  icons: {
+    icon: [
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/icons/icon-152x152.png', sizes: '152x152', type: 'image/png' },
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+    ],
+  },
+}
+
+export const viewport: Viewport = {
+  themeColor: '#0a0a0f',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 }
 
 export default function RootLayout({
@@ -97,6 +122,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} text-white bg-[#030014] selection:bg-[#00f0ff]/30 selection:text-[#00f0ff]`}>
+        <PWAStatusBar />
         <Suspense fallback={null}>
           <Analytics gaId={personalConfig.googleAnalyticsId || ''} />
         </Suspense>
