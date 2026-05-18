@@ -1,15 +1,27 @@
-// middleware.ts — Route protection for /admin/* using httpOnly session cookie
-// Note: Next.js 16 shows a deprecation warning but middleware still works.
-// The new "proxy" API is not yet stable — keeping this as-is is correct.
-
+// middleware.ts — Route protection for /admin/* using JWT httpOnly session cookie
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { jwtVerify } from 'jose'
 
-export function middleware(request: NextRequest) {
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || 'fallback_secret_abbaslab_2026_change_in_production'
+)
+
+export async function middleware(request: NextRequest) {
   const session = request.cookies.get('admin_session')
   const { pathname } = request.nextUrl
 
-  const isAuthenticated = session?.value === 'authenticated'
+  let isAuthenticated = false
+
+  if (session?.value) {
+    try {
+      // Verify JWT signature and expiration
+      await jwtVerify(session.value, JWT_SECRET)
+      isAuthenticated = true
+    } catch (error) {
+      console.warn("JWT verification failed:", error)
+    }
+  }
 
   // Allow login page through always
   if (pathname.startsWith('/admin/login')) {
@@ -25,7 +37,10 @@ export function middleware(request: NextRequest) {
     if (!isAuthenticated) {
       const loginUrl = new URL('/admin/login', request.url)
       loginUrl.searchParams.set('from', pathname)
-      return NextResponse.redirect(loginUrl)
+      // Delete invalid cookie if it exists
+      const response = NextResponse.redirect(loginUrl)
+      if (session) response.cookies.delete('admin_session')
+      return response
     }
   }
 
