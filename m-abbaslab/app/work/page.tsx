@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -47,6 +47,49 @@ export default function WorkPage() {
           A collection of projects at the intersection of economics, technology, and research.
           Each project represents a unique challenge and innovative solution.
         </p>
+      </motion.div>
+      </motion.div>
+
+      {/* Strategic Portals (Quick Links) */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.05 }}
+        className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16"
+      >
+        <a 
+          href="/quantum-impact-syndicate"
+          className="group relative overflow-hidden rounded-3xl p-8 border border-[#00f0ff]/30 bg-gradient-to-br from-[#00f0ff]/10 to-black hover:border-[#00f0ff] transition-all duration-500"
+        >
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#00f0ff]/10 rounded-full blur-3xl group-hover:bg-[#00f0ff]/30 transition-all duration-500" />
+          <div className="relative z-10">
+            <div className="inline-flex px-3 py-1 rounded-full border border-[#00f0ff]/30 bg-[#00f0ff]/10 text-[#00f0ff] text-[10px] font-bold uppercase tracking-widest mb-4">
+              Member Portal
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 group-hover:text-[#00f0ff] transition-colors">Quantum Impact Syndicate</h2>
+            <p className="text-sm text-gray-400 mb-6">Access the elite research collective, PEFM Engine alpha frameworks, and exclusive venture architecture workspace.</p>
+            <div className="inline-flex items-center gap-2 text-sm font-bold text-[#00f0ff]">
+              Initialize QIS Gateway <span>→</span>
+            </div>
+          </div>
+        </a>
+
+        <a 
+          href="/cv-generator"
+          className="group relative overflow-hidden rounded-3xl p-8 border border-[#7000ff]/30 bg-gradient-to-br from-[#7000ff]/10 to-black hover:border-[#7000ff] transition-all duration-500"
+        >
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#7000ff]/10 rounded-full blur-3xl group-hover:bg-[#7000ff]/30 transition-all duration-500" />
+          <div className="relative z-10">
+            <div className="inline-flex px-3 py-1 rounded-full border border-[#7000ff]/30 bg-[#7000ff]/10 text-[#7000ff] text-[10px] font-bold uppercase tracking-widest mb-4">
+              Automated Utility
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 group-hover:text-[#7000ff] transition-colors">CV Architect Generator</h2>
+            <p className="text-sm text-gray-400 mb-6">Dynamically generate categorized, professional Curriculum Vitae tailored for academia, tech, fashion, or analysis.</p>
+            <div className="inline-flex items-center gap-2 text-sm font-bold text-[#7000ff]">
+              Access CV Utility <span>→</span>
+            </div>
+          </div>
+        </a>
       </motion.div>
 
       {/* Category Filter */}

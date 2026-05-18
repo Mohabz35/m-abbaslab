@@ -21,6 +21,28 @@ export default function QuantumImpactSyndicate() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [selectedTier, setSelectedTier] = useState<string | null>(null)
 
+  // Portal States
+  const [activeTab, setActiveTab] = useState<'signup' | 'signin'>('signup')
+  const [loginUsername, setLoginUsername] = useState('')
+  const [loginPassword, setLoginPassword] = useState('')
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [loginError, setLoginError] = useState(false)
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setLoginError(false)
+    setTimeout(() => {
+      // Mockup login - typically you'd check this against a real DB
+      if (loginUsername === 'ceo' && loginPassword === 'admin123') {
+        setIsAuthenticated(true)
+      } else {
+        setLoginError(true)
+      }
+      setLoading(false)
+    }, 1000)
+  }
+
   const handleRequest = (e: React.FormEvent) => {
     e.preventDefault()
     if (!email || !accredited || !ndaAgreed) return
@@ -238,66 +260,157 @@ export default function QuantumImpactSyndicate() {
           </div>
         </div>
 
-        {/* Application Portal */}
-        <div className="max-w-2xl mx-auto p-8 md:p-12 border border-white/10 rounded-3xl bg-black/60 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
-          <h2 className="text-2xl font-bold text-center text-white mb-2 uppercase tracking-wide">Request Syndicate Association</h2>
-          <p className="text-xs text-gray-500 text-center uppercase tracking-widest mb-8">Access Restricted to Accredited Collaborators & Venture Entities</p>
+        {/* QIS Member Portal — Sign In / Sign Up */}
+        <div className="max-w-2xl mx-auto border border-white/10 rounded-3xl bg-black/60 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
 
-          <AnimatePresence mode="wait">
-            {!invited ? (
-              <motion.form key="form" onSubmit={handleRequest} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-5">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Full Legal Name</label>
-                    <input type="text" value={name} onChange={e => setName(e.target.value)} required placeholder="Your full name"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-blue-500/50 transition-all" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Your Role / Discipline</label>
-                    <input type="text" value={role} onChange={e => setRole(e.target.value)} required placeholder="e.g. Economist, AI Engineer"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-blue-500/50 transition-all" />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Professional Email Address</label>
-                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="entity@institution.domain"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-blue-500/50 transition-all" />
-                </div>
-                <div className="space-y-3 p-4 border border-white/5 rounded-xl bg-white/2">
-                  <label className="flex items-start gap-3 cursor-pointer">
-                    <input type="checkbox" checked={accredited} onChange={e => setAccredited(e.target.checked)} required
-                      className="w-4 h-4 mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 bg-white/5" />
-                    <span className="text-xs text-gray-400">I confirm that I represent a research institution, accredited venture pool, or creative entity, and that I meet the membership accreditation criteria.</span>
-                  </label>
-                  <label className="flex items-start gap-3 cursor-pointer">
-                    <input type="checkbox" checked={ndaAgreed} onChange={e => setNdaAgreed(e.target.checked)} required
-                      className="w-4 h-4 mt-0.5 rounded border-gray-300 text-purple-600 focus:ring-purple-500 bg-white/5" />
-                    <span className="text-xs text-gray-400">I understand that gaining Core Member access requires execution of the <span className="text-gray-200 font-semibold">QIS Non-Disclosure Agreement</span> and acceptance of the QIS Penalty & Reward Scheme.</span>
-                  </label>
-                </div>
-                <button type="submit" disabled={loading || !accredited || !ndaAgreed}
-                  className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                  {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <><span>Transmit Request</span><Send className="w-4 h-4" /></>}
+          {/* Portal Header */}
+          <div className="p-8 pb-0 text-center">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/20 bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase tracking-widest mb-4">
+              <Lock className="w-3 h-3" /> QIS Member Portal
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-1 uppercase tracking-wide">Syndicate Access Gateway</h2>
+            <p className="text-xs text-gray-500 mb-6">Existing members sign in. New applicants request association below.</p>
+
+            {/* Tabs */}
+            {!isAuthenticated && !invited && (
+              <div className="flex rounded-xl border border-white/10 overflow-hidden mb-8">
+                <button
+                  onClick={() => setActiveTab('signin')}
+                  className={`flex-1 py-3 text-xs font-bold uppercase tracking-widest transition-all ${
+                    activeTab === 'signin'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  Sign In
                 </button>
-              </motion.form>
-            ) : (
-              <motion.div key="success" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center py-6 space-y-4">
-                <div className="w-16 h-16 bg-blue-500/10 border border-blue-500/30 rounded-full flex items-center justify-center mx-auto text-blue-400">
-                  <ShieldCheck className="w-8 h-8" />
-                </div>
-                <h3 className="text-lg font-bold text-white">Transmission Successful</h3>
-                <p className="text-sm text-gray-400 max-w-sm mx-auto leading-relaxed">
-                  Your credentials have been queued. Chief Strategist <span className="text-white font-semibold">Mohammed Abbas</span> will contact your entity directly with next steps and NDA documentation.
-                </p>
-                <a href="https://wa.me/254702894309" target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 bg-green-500/10 hover:bg-green-500/20 border border-green-500/30 text-green-400 rounded-xl text-xs font-bold transition-all">
-                  <Zap className="w-4 h-4" />
-                  Direct Priority Contact via WhatsApp
-                </a>
-              </motion.div>
+                <button
+                  onClick={() => setActiveTab('signup')}
+                  className={`flex-1 py-3 text-xs font-bold uppercase tracking-widest transition-all ${
+                    activeTab === 'signup'
+                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  Request Access
+                </button>
+              </div>
             )}
-          </AnimatePresence>
+          </div>
+
+          <div className="p-8 pt-0">
+            <AnimatePresence mode="wait">
+
+              {/* ===== AUTHENTICATED STATE ===== */}
+              {isAuthenticated && (
+                <motion.div key="authenticated" initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center py-8 space-y-5">
+                  <div className="w-20 h-20 bg-blue-500/10 border-2 border-blue-500/40 rounded-full flex items-center justify-center mx-auto">
+                    <ShieldCheck className="w-10 h-10 text-blue-400" />
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-blue-400 font-bold uppercase tracking-widest mb-1">Access Granted</div>
+                    <h3 className="text-xl font-bold text-white">Welcome, Chief Strategist</h3>
+                    <p className="text-sm text-gray-400 mt-2">You have full syndicate access. Member administration panel coming soon.</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 max-w-xs mx-auto">
+                    <a href="/admin/dashboard" className="py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold text-center transition-all">Admin Panel</a>
+                    <button onClick={() => { setIsAuthenticated(false); setLoginUsername(''); setLoginPassword('') }}
+                      className="py-3 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:border-white/30 text-xs font-bold transition-all">
+                      Sign Out
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* ===== SIGN IN TAB ===== */}
+              {!isAuthenticated && activeTab === 'signin' && (
+                <motion.form key="signin" onSubmit={handleLogin} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Username</label>
+                    <input type="text" value={loginUsername} onChange={e => setLoginUsername(e.target.value)} required placeholder="Your syndicate username"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-blue-500/50 transition-all" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Password</label>
+                    <input type="password" value={loginPassword} onChange={e => setLoginPassword(e.target.value)} required placeholder="••••••••"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-blue-500/50 transition-all" />
+                  </div>
+                  {loginError && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-xs">
+                      <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                      Invalid credentials. Access denied. Contact the Chief Strategist if locked out.
+                    </motion.div>
+                  )}
+                  <button type="submit" disabled={loading}
+                    className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-50">
+                    {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <><ShieldCheck className="w-4 h-4" /><span>Authenticate</span></>}
+                  </button>
+                  <p className="text-center text-xs text-gray-600">Not a member yet?{' '}
+                    <button type="button" onClick={() => setActiveTab('signup')} className="text-blue-400 hover:text-blue-300 font-semibold">Request access →</button>
+                  </p>
+                </motion.form>
+              )}
+
+              {/* ===== SIGN UP / REQUEST ACCESS TAB ===== */}
+              {!isAuthenticated && activeTab === 'signup' && !invited && (
+                <motion.form key="signup" onSubmit={handleRequest} initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Full Legal Name</label>
+                      <input type="text" value={name} onChange={e => setName(e.target.value)} required placeholder="Your full name"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-purple-500/50 transition-all" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Role / Discipline</label>
+                      <input type="text" value={role} onChange={e => setRole(e.target.value)} required placeholder="e.g. Economist, AI Engineer"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-purple-500/50 transition-all" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Professional Email</label>
+                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="entity@institution.domain"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-purple-500/50 transition-all" />
+                  </div>
+                  <div className="space-y-3 p-4 border border-white/5 rounded-xl">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input type="checkbox" checked={accredited} onChange={e => setAccredited(e.target.checked)} required className="w-4 h-4 mt-0.5 rounded border-gray-600 bg-white/5" />
+                      <span className="text-xs text-gray-400">I represent a research institution, venture pool, or creative entity meeting QIS accreditation criteria.</span>
+                    </label>
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input type="checkbox" checked={ndaAgreed} onChange={e => setNdaAgreed(e.target.checked)} required className="w-4 h-4 mt-0.5 rounded border-gray-600 bg-white/5" />
+                      <span className="text-xs text-gray-400">I understand that Core Member access requires execution of the <span className="text-gray-200 font-semibold">QIS NDA</span> and acceptance of the Penalty & Reward Scheme.</span>
+                    </label>
+                  </div>
+                  <button type="submit" disabled={loading || !accredited || !ndaAgreed}
+                    className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <><Send className="w-4 h-4" /><span>Transmit Association Request</span></>}
+                  </button>
+                  <p className="text-center text-xs text-gray-600">Already a member?{' '}
+                    <button type="button" onClick={() => setActiveTab('signin')} className="text-blue-400 hover:text-blue-300 font-semibold">Sign in →</button>
+                  </p>
+                </motion.form>
+              )}
+
+              {/* ===== SUCCESS STATE ===== */}
+              {!isAuthenticated && invited && (
+                <motion.div key="success" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center py-8 space-y-4">
+                  <div className="w-16 h-16 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center mx-auto">
+                    <ShieldCheck className="w-8 h-8 text-green-400" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white">Request Transmitted</h3>
+                  <p className="text-sm text-gray-400 max-w-sm mx-auto leading-relaxed">
+                    Your credentials have been queued for review. Chief Strategist <span className="text-white font-semibold">Mohammed Abbas</span> will contact you with NDA documentation and next steps.
+                  </p>
+                  <a href="https://wa.me/254702894309" target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-green-500/10 hover:bg-green-500/20 border border-green-500/30 text-green-400 rounded-xl text-xs font-bold transition-all">
+                    <Zap className="w-4 h-4" /> Direct Priority Contact via WhatsApp
+                  </a>
+                </motion.div>
+              )}
+
+            </AnimatePresence>
+          </div>
         </div>
 
       </div>
