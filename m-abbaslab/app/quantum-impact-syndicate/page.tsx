@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
   ShieldAlert, Sparkles, Send, BrainCircuit, Globe, 
   Terminal, ShieldCheck, TrendingUp, Cpu, Award, 
-  ArrowRight, Users, Briefcase, Zap
+  ArrowRight, Users, Briefcase, Zap, RefreshCw
 } from 'lucide-react'
 import { personalConfig } from '@/config/personal'
 
