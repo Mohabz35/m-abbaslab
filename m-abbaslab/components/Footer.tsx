@@ -1,6 +1,6 @@
 'use client'
 
-import { Github, Linkedin, Twitter, Mail, Heart, Instagram, Facebook, Youtube, MessageCircle, Send } from 'lucide-react'
+import { Github, Linkedin, Twitter, Mail, Heart, Instagram, Facebook, Youtube, MessageCircle, Send, Music } from 'lucide-react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { personalConfig } from '@/config/personal'
@@ -23,7 +23,7 @@ const socialIconMap: Record<string, React.ComponentType<{ className?: string }>>
   instagram: Instagram,
   facebook: Facebook,
   youtube: Youtube,
-  tiktok: MessageCircle, // Using placeholder for TikTok
+  tiktok: Music, // Using Music icon for TikTok consistency
   whatsapp: MessageCircle,
   telegram: Send,
 }

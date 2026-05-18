@@ -15,6 +15,8 @@ const navItems = [
     icon: Briefcase,
     dropdown: [
       { name: 'All Projects', href: '/work' },
+      { name: 'QIS Syndicate', href: '/quantum-impact-syndicate' },
+      { name: 'CV Generator', href: '/cv-generator' },
       { name: 'Academic (ILMS)', href: '/work/academic/ilms' },
       { name: 'SkillSync Intel', href: '/work/academic/skillsync' },
       { name: 'Economic Forecast', href: '/work/academic/economics' },

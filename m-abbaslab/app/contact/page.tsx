@@ -1,4 +1,4 @@
-﻿// app/contact/page.tsx
+// app/contact/page.tsx
 'use client'
 
 import type { Metadata } from 'next'
@@ -14,7 +14,8 @@ import {
   Send,
   MapPin,
   Clock,
-  Zap
+  Zap,
+  Music
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import ContactForm from '@/components/ContactForm'
@@ -25,6 +26,7 @@ export default function ContactPage() {
     { name: 'LinkedIn', icon: Linkedin, url: personalConfig.social.linkedin },
     { name: 'Twitter', icon: Twitter, url: personalConfig.social.twitter },
     { name: 'Instagram', icon: Instagram, url: personalConfig.social.instagram },
+    { name: 'TikTok', icon: Music, url: personalConfig.social.tiktok },
     { name: 'Facebook', icon: Facebook, url: personalConfig.social.facebook },
   ]
 
@@ -88,6 +90,39 @@ export default function ContactPage() {
               <p className="mt-4 text-sm text-gray-500 flex items-center gap-2">
                 <Clock className="w-4 h-4" />
                 Typically responds within 24 hours
+              </p>
+            </motion.div>
+
+            {/* WhatsApp Direct Card */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="glass-panel rounded-2xl p-8 border border-white/10 hover:border-green-500/30 transition-all duration-300 group"
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <MessageSquare className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-xl text-white">WhatsApp</h3>
+                  <p className="text-gray-400">Immediate response / Auto-assistant</p>
+                </div>
+              </div>
+
+              <a
+                href={personalConfig.social.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-green-500/10 border border-green-500/20 text-green-400 rounded-lg hover:bg-green-500/20 hover:border-green-500/50 hover:shadow-[0_0_20px_rgba(34,197,94,0.2)] transition-all duration-300"
+              >
+                <MessageSquare className="w-4 h-4" />
+                +254 702 894 309
+              </a>
+
+              <p className="mt-4 text-sm text-gray-500 flex items-center gap-2">
+                <Zap className="w-4 h-4 text-green-500 animate-pulse" />
+                Online Now — AI-Assistant Autonomously replying
               </p>
             </motion.div>
 
