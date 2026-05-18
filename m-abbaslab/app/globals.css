@@ -116,3 +116,47 @@ html {
 .perspective-1000 {
   perspective: 1000px;
 }
+
+/* ── CV Print / PDF Export Styles ─────────────────────────────────────────── */
+@media print {
+  /* Hide everything on the page */
+  body * { visibility: hidden !important; }
+
+  /* Show only the printable CV area */
+  #printable-cv-area,
+  #printable-cv-area * {
+    visibility: visible !important;
+  }
+
+  /* Position the CV to fill the whole page */
+  #printable-cv-area {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 1.5cm !important;
+    margin: 0 !important;
+    background: white !important;
+    color: black !important;
+    font-size: 11pt !important;
+    z-index: 9999 !important;
+    overflow: visible !important;
+  }
+
+  /* Prevent page breaks inside sections */
+  #printable-cv-area h2,
+  #printable-cv-area h3,
+  #printable-cv-area h4 {
+    page-break-after: avoid;
+  }
+
+  /* Page setup */
+  @page {
+    size: A4 portrait;
+    margin: 1cm;
+  }
+}
