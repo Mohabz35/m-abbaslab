@@ -7,7 +7,7 @@ import {
   Download, Sparkles, RefreshCw, Layers, Award, 
   Briefcase, GraduationCap, CheckCircle2, ChevronRight, 
   Wand2, BrainCircuit, ShieldCheck, Mail, Phone, MapPin, 
-  Globe, FileText
+  Globe, FileText, MessageSquare
 } from 'lucide-react'
 import { personalConfig } from '@/config/personal'
 
@@ -405,10 +405,15 @@ export default function CVGenerator() {
                 
                 {/* Contact Badges */}
                 <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-4 text-xs text-gray-600 font-medium">
-                  <span className="flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-blue-600" />
-                    {BASE_INFO.phone}
-                  </span>
+                  <a
+                    href={personalConfig.social.whatsapp}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 hover:text-green-600 transition-colors"
+                  >
+                    <MessageSquare className="w-3.5 h-3.5 text-green-600" />
+                    WhatsApp Chat (Private)
+                  </a>
                   <span className="flex items-center gap-1.5">
                     <Mail className="w-3.5 h-3.5 text-blue-600" />
                     {BASE_INFO.email}

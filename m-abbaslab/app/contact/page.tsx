@@ -117,7 +117,7 @@ export default function ContactPage() {
                 className="inline-flex items-center gap-2 px-6 py-3 bg-green-500/10 border border-green-500/20 text-green-400 rounded-lg hover:bg-green-500/20 hover:border-green-500/50 hover:shadow-[0_0_20px_rgba(34,197,94,0.2)] transition-all duration-300"
               >
                 <MessageSquare className="w-4 h-4" />
-                +254 702 894 309
+                Send Instant WhatsApp DM
               </a>
 
               <p className="mt-4 text-sm text-gray-500 flex items-center gap-2">
