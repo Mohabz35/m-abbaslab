@@ -1,3 +1,7 @@
+// middleware.ts — Route protection for /admin/* using httpOnly session cookie
+// Note: Next.js 16 shows a deprecation warning but middleware still works.
+// The new "proxy" API is not yet stable — keeping this as-is is correct.
+
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -5,21 +9,24 @@ export function middleware(request: NextRequest) {
   const session = request.cookies.get('admin_session')
   const { pathname } = request.nextUrl
 
-  // Protect all /admin/* routes except /admin/login
-  if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
-    if (!session || session.value !== 'authenticated') {
-      const loginUrl = new URL('/admin/login', request.url)
-      return NextResponse.redirect(loginUrl)
+  const isAuthenticated = session?.value === 'authenticated'
+
+  // Allow login page through always
+  if (pathname.startsWith('/admin/login')) {
+    // If already logged in, redirect to dashboard
+    if (isAuthenticated) {
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url))
     }
+    return NextResponse.next()
   }
 
-  // Redirect /admin to /admin/dashboard
-  if (pathname === '/admin') {
-     if (!session || session.value !== 'authenticated') {
+  // Protect all other /admin/* routes
+  if (pathname.startsWith('/admin')) {
+    if (!isAuthenticated) {
       const loginUrl = new URL('/admin/login', request.url)
+      loginUrl.searchParams.set('from', pathname)
       return NextResponse.redirect(loginUrl)
     }
-    return NextResponse.redirect(new URL('/admin/dashboard', request.url))
   }
 
   return NextResponse.next()

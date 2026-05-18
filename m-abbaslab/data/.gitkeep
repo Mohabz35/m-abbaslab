@@ -1,0 +1,2 @@
+# This file ensures the data/ directory is tracked by git
+# scheduled-posts.json is gitignored (runtime data)

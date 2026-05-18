@@ -1,16 +1,18 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Lock, User, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react'
 
-export default function AdminLogin() {
+function LoginForm() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const from = searchParams.get('from') || '/admin/dashboard'
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -20,21 +22,19 @@ export default function AdminLogin() {
     try {
       const res = await fetch('/api/admin/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       })
 
       if (res.ok) {
-        router.push('/admin/dashboard')
+        router.push(from)
         router.refresh()
       } else {
         const data = await res.json()
         setError(data.error || 'Invalid credentials')
       }
-    } catch (err) {
-      setError('An error occurred during authentication')
+    } catch {
+      setError('Connection error — please try again')
     } finally {
       setIsLoading(false)
     }
@@ -42,7 +42,7 @@ export default function AdminLogin() {
 
   return (
     <div className="min-h-screen bg-[#050508] flex items-center justify-center p-4 relative overflow-hidden font-sans">
-      {/* Background Effects */}
+      {/* Ambient glows */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-900/20 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-900/20 blur-[120px] pointer-events-none" />
 
@@ -53,7 +53,7 @@ export default function AdminLogin() {
         className="w-full max-w-md"
       >
         <div className="bg-black/60 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl p-8 relative overflow-hidden">
-          {/* Top Edge Highlight */}
+          {/* Top edge shimmer */}
           <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
 
           <div className="text-center mb-8">
@@ -66,10 +66,11 @@ export default function AdminLogin() {
               <ShieldCheck className="w-8 h-8 text-blue-400" />
             </motion.div>
             <h1 className="text-2xl font-bold text-white tracking-tight">Admin Portal</h1>
-            <p className="text-sm text-gray-400 mt-2 font-mono uppercase tracking-wider">Restricted Access</p>
+            <p className="text-sm text-gray-400 mt-1 font-mono uppercase tracking-wider">Restricted Access</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-5">
+            {/* Username */}
             <div className="space-y-1">
               <label className="text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">Username</label>
               <div className="relative group">
@@ -83,10 +84,12 @@ export default function AdminLogin() {
                   className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all"
                   placeholder="Enter administrator username"
                   required
+                  autoComplete="username"
                 />
               </div>
             </div>
 
+            {/* Password */}
             <div className="space-y-1">
               <label className="text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">Password</label>
               <div className="relative group">
@@ -100,28 +103,27 @@ export default function AdminLogin() {
                   className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all"
                   placeholder="••••••••••••"
                   required
+                  autoComplete="current-password"
                 />
               </div>
             </div>
 
+            {/* Error */}
             {error && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="flex items-center gap-2 text-red-400 bg-red-400/10 border border-red-400/20 p-3 rounded-lg text-sm"
+                className="flex items-center gap-2 text-rose-400 bg-rose-400/10 border border-rose-400/20 p-3 rounded-xl text-sm"
               >
                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
                 <p>{error}</p>
               </motion.div>
             )}
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full relative group mt-2"
-            >
+            {/* Submit */}
+            <button type="submit" disabled={isLoading} className="w-full relative group mt-2">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl blur opacity-30 group-hover:opacity-60 transition duration-500" />
-              <div className="relative flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-medium py-3 px-4 rounded-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed">
+              <div className="relative flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold py-3 px-4 rounded-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed">
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
@@ -134,15 +136,28 @@ export default function AdminLogin() {
             </button>
           </form>
 
-          {/* Secure System Badge */}
           <div className="mt-8 pt-6 border-t border-white/10 flex justify-center">
-            <div className="flex items-center gap-2 opacity-50">
+            <div className="flex items-center gap-2 opacity-40">
               <Lock className="w-3 h-3 text-white" />
-              <span className="text-[10px] uppercase tracking-widest text-white font-mono">256-Bit Encrypted Session</span>
+              <span className="text-[10px] uppercase tracking-widest text-white font-mono">
+                256-Bit Encrypted Session
+              </span>
             </div>
           </div>
         </div>
       </motion.div>
     </div>
+  )
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#050508] flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }
