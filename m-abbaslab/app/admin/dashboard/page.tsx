@@ -51,6 +51,8 @@ import {
 import { personalConfig } from '@/config/personal'
 import FinanceTracker from '@/components/admin/FinanceTracker'
 import ContentScheduler from '@/components/admin/ContentScheduler'
+import ZapierPanel from '@/components/admin/ZapierPanel'
+import JarvisInbox from '@/components/admin/JarvisInbox'
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -557,7 +559,7 @@ export default function AdminDashboardPage() {
       {/* Tabs */}
       <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
         <div className="flex gap-6 overflow-x-auto pb-2 scrollbar-hide">
-          {['overview', 'finance-tracker', 'content-scheduler', 'projects', 'articles', 'modeling', 'world-quant', 'social-media', 'comms-hub', 'system-integrity', 'skills', 'settings'].map((tab) => (
+          {['overview', 'jarvis-inbox', 'zapier-automations', 'finance-tracker', 'content-scheduler', 'projects', 'articles', 'modeling', 'world-quant', 'social-media', 'comms-hub', 'system-integrity', 'skills', 'settings'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -574,6 +576,8 @@ export default function AdminDashboardPage() {
 
       {/* Tab Content */}
       <div className="space-y-6">
+        {activeTab === 'jarvis-inbox' && <JarvisInbox />}
+        {activeTab === 'zapier-automations' && <ZapierPanel />}
         {activeTab === 'overview' && (
           <>
             {/* Quick Actions */}
