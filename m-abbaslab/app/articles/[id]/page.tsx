@@ -1,18 +1,51 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useParams, notFound } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Calendar, Clock, Tag, ArrowLeft, Share2, Bookmark } from 'lucide-react'
+import { Calendar, Clock, Tag, ArrowLeft, Share2, Bookmark, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { personalConfig } from '@/config/personal'
 
 export default function ArticleDetailPage() {
     const params = useParams()
     const id = params.id as string
+    const [article, setArticle] = useState<any | null>(null)
+    const [loading, setLoading] = useState(true)
+    const [missing, setMissing] = useState(false)
 
-    const article = (personalConfig.articles as any[]).find((a: any) => a.id === id)
+    useEffect(() => {
+        const load = async () => {
+            try {
+                const res = await fetch(`/api/public/articles/${id}`, { cache: 'no-store' })
+                if (res.ok) {
+                    setArticle(await res.json())
+                    setLoading(false)
+                    return
+                }
+            } catch {
+                /* fallback */
+            }
+            const fallback = (personalConfig.articles as any[]).find((a) => a.id === id)
+            if (fallback?.published !== false) {
+                setArticle(fallback)
+            } else {
+                setMissing(true)
+            }
+            setLoading(false)
+        }
+        load()
+    }, [id])
 
-    if (!article) {
+    if (loading) {
+        return (
+            <div className="max-w-4xl mx-auto px-4 py-20 flex justify-center text-gray-400">
+                <Loader2 className="w-8 h-8 animate-spin" />
+            </div>
+        )
+    }
+
+    if (missing || !article) {
         notFound()
     }
 

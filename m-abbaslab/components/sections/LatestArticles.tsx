@@ -11,14 +11,32 @@ export default function LatestArticles() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        // Load from local config, sort by date, take top 3
-        const allArticles = [...personalConfig.articles]
-            .sort((a, b) => {
-                return new Date(b.published_at || 0).getTime() - new Date(a.published_at || 0).getTime()
-            }).slice(0, 3)
-
-        setArticles(allArticles)
-        setLoading(false)
+        const load = async () => {
+            try {
+                const res = await fetch('/api/public/articles', { cache: 'no-store' })
+                const list = res.ok
+                    ? await res.json()
+                    : personalConfig.articles.filter((a: { published?: boolean }) => a.published !== false)
+                const sorted = [...list].sort(
+                    (a, b) =>
+                        new Date(b.published_at || 0).getTime() - new Date(a.published_at || 0).getTime(),
+                )
+                setArticles(sorted.slice(0, 3))
+            } catch {
+                const fallback = personalConfig.articles
+                    .filter((a: { published?: boolean }) => a.published !== false)
+                    .sort(
+                        (a, b) =>
+                            new Date(b.published_at || 0).getTime() -
+                            new Date(a.published_at || 0).getTime(),
+                    )
+                    .slice(0, 3)
+                setArticles(fallback)
+            } finally {
+                setLoading(false)
+            }
+        }
+        load()
     }, [])
 
     return (

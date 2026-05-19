@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
@@ -9,12 +9,30 @@ import { personalConfig } from '@/config/personal'
 export default function ArticlesPage() {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [allArticles, setAllArticles] = useState<any[]>([])
 
-  // All articles from local config
-  const allArticles = [
-    ...personalConfig.articles
-  ]
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch('/api/public/articles', { cache: 'no-store' })
+        if (res.ok) {
+          setAllArticles(await res.json())
+        } else {
+          setAllArticles(
+            personalConfig.articles.filter((a: { published?: boolean }) => a.published !== false),
+          )
+        }
+      } catch {
+        setAllArticles(
+          personalConfig.articles.filter((a: { published?: boolean }) => a.published !== false),
+        )
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [])
 
   // Calculate stats
   const totalArticles = allArticles.length
