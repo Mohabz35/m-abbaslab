@@ -413,51 +413,110 @@ export default function AdminDashboardPage() {
     }, 2000)
   }
 
-  const handleAssistantSubmit = (e?: React.FormEvent) => {
+  const [isAssistantTyping, setIsAssistantTyping] = useState(false)
+
+  const handleAssistantSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault()
-    if (!assistantMessage.trim()) return
+    if (!assistantMessage.trim() || isAssistantTyping) return
 
-    const newUserMsg = { role: 'user', text: assistantMessage }
-    setChatHistory(prev => [...prev, newUserMsg])
-
-    const input = assistantMessage.toLowerCase()
-    let response = "I'm processing your request, Commander. For technical tasks, please use the specific tabs in the Mission Control center."
-
-    if (input.includes('post') || input.includes('share')) {
-      response = "I have drafted social content based on your latest projects. Please select a source in the Social Media tab to review and publish."
-      setActiveTab('social-media')
-    } else if (input.includes('scan') || input.includes('integrity') || input.includes('check system')) {
-      response = "Understood. Initializing Sentinel Diagnostic Scan now. Please monitor the System Integrity tab for live results."
-      setActiveTab('system-integrity')
-      handleRunSentinelScan()
-    } else if (input.includes('fix') || input.includes('remediate') || input.includes('patch')) {
-      response = "Engaging Autonomous Core. Sentinel is now applying identified patches to the codebase. Check the log for remediation status."
-      setActiveTab('system-integrity')
-      handleTriggerAutoFix()
-    } else if (input.includes('quant') || input.includes('alpha')) {
-      response = "Diverting power to the Quant Research Lab. Alpha expression simulation engine is ready."
-      setActiveTab('world-quant')
-    } else if (input.includes('social') || input.includes('post') || input.includes('tiktok')) {
-      response = "Social Media Automator active. Select a project or article to begin content generation."
-      setActiveTab('social-media')
-    } else if (input.includes('whatsapp') || input.includes('comms') || input.includes('chat') || input.includes('train')) {
-      response = "Communications Hub online. Loading personality profiles and social trends. I'm maintaining a High Professionalism score across all channels."
-      setActiveTab('comms-hub')
-      if (input.includes('train')) handleTrainAI()
-    } else if (input.includes('trend')) {
-      response = "Analyzing global social trends... Most growth detected in #SelfHealingCode and #FashionAI."
-      setActiveTab('comms-hub')
-    } else if (input.includes('emergency')) {
-      response = "Scanning all channels for priority interventions..."
-      setActiveTab('comms-hub')
-      handleSimulateEmergency()
-    }
-
+    const userText = assistantMessage
     setAssistantMessage('')
-    setTimeout(() => {
-      setChatHistory(prev => [...prev, { role: 'assistant', text: response }])
-    }, 1000)
+
+    // Append user message
+    const newUserMsg = { role: 'user', text: userText }
+    setChatHistory(prev => [...prev, newUserMsg])
+    setIsAssistantTyping(true)
+
+    try {
+      const statePayload = {
+        activeTab,
+        projectsCount: projects.length,
+        projectsList: projects.map(p => ({ id: p.id, title: p.title, category: p.category, status: p.status })),
+        titlesList: titles.map(t => ({ id: t.id, title: t.title, year: t.year, achievement: t.achievement }))
+      }
+
+      const res = await fetch('/api/admin/jarvis-copilot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userText,
+          history: chatHistory.slice(-10),
+          state: statePayload
+        })
+      })
+
+      if (!res.ok) {
+        throw new Error(`Operational gateway offline (${res.status})`)
+      }
+
+      const data = await res.json()
+      
+      // Append Jarvis response text
+      if (data.text) {
+        setChatHistory(prev => [...prev, { role: 'assistant', text: data.text }])
+      }
+
+      // Execute staged dashboard actions
+      if (Array.isArray(data.actions)) {
+        for (const action of data.actions) {
+          console.log('[JARVIS ACTION]', action)
+          
+          if (action.type === 'NAVIGATE' && action.tab) {
+            setActiveTab(action.tab)
+          } 
+          else if (action.type === 'ADD_PROJECT' && action.project) {
+            const newProj = {
+              id: `project-${Date.now()}`,
+              title: action.project.title || 'Untitled Staged System',
+              description: action.project.description || 'System parameters pending documentation...',
+              longDescription: action.project.longDescription || 'Staged AI system parameters.',
+              technologies: action.project.technologies || ['Next.js', 'AI'],
+              github_url: action.project.github_url || '#',
+              live_url: action.project.live_url || '#',
+              category: action.project.category || 'technology',
+              featured: false,
+              status: action.project.status || 'In Progress',
+              year: action.project.year || new Date().getFullYear().toString()
+            }
+            setProjects(prev => [newProj, ...prev])
+          }
+          else if (action.type === 'DELETE_PROJECT' && action.id) {
+            setProjects(prev => prev.filter(p => p.id !== action.id))
+          }
+          else if (action.type === 'ADD_TITLE' && action.title) {
+            const newT = {
+              id: `title-${Date.now()}`,
+              title: action.title.title || 'New Achievement',
+              year: action.title.year || new Date().getFullYear().toString(),
+              description: action.title.description || 'Recognition of excellence...',
+              achievement: action.title.achievement || 'Winner',
+              category: action.title.category || 'fashion',
+              featured: false
+            }
+            setTitles(prev => [newT, ...prev])
+          }
+          else if (action.type === 'TRIGGER_ZAPIER' && action.eventName) {
+            // Trigger external automation sequence via endpoint
+            fetch('/api/admin/zapier', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ eventName: action.eventName, payload: action.payload || {} })
+            }).then(r => console.log('[ZAPIER AUTO-TRIGGER]', r.status))
+          }
+        }
+      }
+
+    } catch (err: any) {
+      console.error(err)
+      setChatHistory(prev => [...prev, { 
+        role: 'assistant', 
+        text: `Commander Abbas, my neural uplink is encountering atmospheric interference: ${err.message || 'Unknown discrepancy'}. Please ensure the OpenRouter API key is stages correctly in production environments.` 
+      }])
+    } finally {
+      setIsAssistantTyping(false)
+    }
   }
+
 
   const handleSimulateEmergency = () => {
     const alerts = [
@@ -1851,6 +1910,18 @@ export default function AdminDashboardPage() {
                   </div>
                 </div>
               ))}
+              {isAssistantTyping && (
+                <div className="flex justify-start">
+                  <div className="max-w-[80%] p-3 rounded-2xl text-xs bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-tl-none shadow-sm flex items-center gap-2">
+                    <div className="flex gap-1">
+                      <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                      <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                      <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    </div>
+                    <span className="text-gray-400 italic text-[10px]">Neural uplink active...</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="p-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
