@@ -53,6 +53,7 @@ import FinanceTracker from '@/components/admin/FinanceTracker'
 import ContentScheduler from '@/components/admin/ContentScheduler'
 import ZapierPanel from '@/components/admin/ZapierPanel'
 import JarvisInbox from '@/components/admin/JarvisInbox'
+import JarvisBrain from '@/components/admin/JarvisBrain'
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -60,6 +61,7 @@ export default function AdminDashboardPage() {
   const [articles, setArticles] = useState<any[]>([])
   const [titles, setTitles] = useState<any[]>([])
   const [alphas, setAlphas] = useState<any[]>([])
+  const [jarvisTrainingRules, setJarvisTrainingRules] = useState<any[]>([])
   const [editingItem, setEditingItem] = useState<{ type: string, id: string, field?: string } | null>(null)
   const [selectedEditProject, setSelectedEditProject] = useState<any | null>(null)
   const [selectedEditArticle, setSelectedEditArticle] = useState<any | null>(null)
@@ -84,6 +86,7 @@ export default function AdminDashboardPage() {
           setArticles(config.articles || [])
           setTitles(config.fashion?.titles || [])
           setAlphas(config.worldQuant?.alphas || [])
+          setJarvisTrainingRules(config.jarvisTraining || (personalConfig as any).jarvisTraining || [])
           setAdminName(config.name || personalConfig.name)
           setAdminEmail(config.email || personalConfig.email)
           setAdminUsername(config.adminCredentials?.username || (personalConfig as any).adminCredentials?.username || 'ceo')
@@ -101,11 +104,13 @@ export default function AdminDashboardPage() {
       const savedArticles = localStorage.getItem('admin_articles')
       const savedTitles = localStorage.getItem('admin_titles')
       const savedAlphas = localStorage.getItem('admin_alphas')
+      const savedJarvisTraining = localStorage.getItem('admin_jarvis_training')
 
       setProjects(savedProjects ? JSON.parse(savedProjects) : personalConfig.projects)
       setArticles(savedArticles ? JSON.parse(savedArticles) : personalConfig.articles)
       setTitles(savedTitles ? JSON.parse(savedTitles) : (personalConfig as any).fashion?.titles || [])
       setAlphas(savedAlphas ? JSON.parse(savedAlphas) : (personalConfig as any).worldQuant?.alphas || [])
+      setJarvisTrainingRules(savedJarvisTraining ? JSON.parse(savedJarvisTraining) : (personalConfig as any).jarvisTraining || [])
       setIsLoaded(true)
     }
 
@@ -136,7 +141,8 @@ export default function AdminDashboardPage() {
         site: {
           ...personalConfig.site,
           features: siteFeatures
-        }
+        },
+        jarvisTraining: jarvisTrainingRules
       }
 
       const response = await fetch('/api/admin/config', {
@@ -164,8 +170,9 @@ export default function AdminDashboardPage() {
       localStorage.setItem('admin_articles', JSON.stringify(articles))
       localStorage.setItem('admin_titles', JSON.stringify(titles))
       localStorage.setItem('admin_alphas', JSON.stringify(alphas))
+      localStorage.setItem('admin_jarvis_training', JSON.stringify(jarvisTrainingRules))
     }
-  }, [projects, articles, titles, alphas, isLoaded])
+  }, [projects, articles, titles, alphas, jarvisTrainingRules, isLoaded])
 
   // Quant Lab State
   const [alphaExpression, setAlphaExpression] = useState('rank(close_price) / sum(volume, 20)')
@@ -559,7 +566,7 @@ export default function AdminDashboardPage() {
       {/* Tabs */}
       <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
         <div className="flex gap-6 overflow-x-auto pb-2 scrollbar-hide">
-          {['overview', 'jarvis-inbox', 'zapier-automations', 'finance-tracker', 'content-scheduler', 'projects', 'articles', 'modeling', 'world-quant', 'social-media', 'comms-hub', 'system-integrity', 'skills', 'settings'].map((tab) => (
+          {['overview', 'jarvis-inbox', 'jarvis-brain', 'zapier-automations', 'finance-tracker', 'content-scheduler', 'projects', 'articles', 'modeling', 'world-quant', 'social-media', 'comms-hub', 'system-integrity', 'skills', 'settings'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -577,6 +584,7 @@ export default function AdminDashboardPage() {
       {/* Tab Content */}
       <div className="space-y-6">
         {activeTab === 'jarvis-inbox' && <JarvisInbox />}
+        {activeTab === 'jarvis-brain' && <JarvisBrain rules={jarvisTrainingRules} onChange={setJarvisTrainingRules} />}
         {activeTab === 'zapier-automations' && <ZapierPanel />}
         {activeTab === 'overview' && (
           <>

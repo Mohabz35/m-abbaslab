@@ -1168,7 +1168,21 @@ export const personalConfig = {
       "acceptedAlphas": 0,
       "globalRank": 34397
     }
-  }
+  },
+  "jarvisTraining": [
+    {
+      "keyword": "royal icon events",
+      "response": "Royal Icon Events is Mohammed's premium event planning company, organizing outstanding pageantry, modeling runways, and Chuka University events."
+    },
+    {
+      "keyword": "chuka university",
+      "response": "Mohammed studies Economics & Statistics at Chuka University (2024-2028), organizing elite events like the Chuka Royals Awards."
+    },
+    {
+      "keyword": "economics",
+      "response": "Mohammed bridges advanced economic forecasting, econometrics, and quantitative market sentiment tools with software engineering."
+    }
+  ]
 }
 
 export type PersonalConfig = typeof personalConfig
