@@ -157,3 +157,15 @@ async function startJarvis() {
 }
 
 startJarvis().catch(console.error)
+
+// ─── Render Port Binding (prevents boot timeouts) ───────────────────────────
+const http = require('http')
+const PORT = process.env.PORT || 3000
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' })
+  res.end('M-JARVIS WhatsApp Engine is online and running!')
+})
+
+server.listen(PORT, () => {
+  console.log(`[M-JARVIS] Health check server listening on port ${PORT}`)
+})
