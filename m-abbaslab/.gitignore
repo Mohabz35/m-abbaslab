@@ -42,3 +42,8 @@ next-env.d.ts
 
 # runtime data — auto-generated, do not commit
 data/scheduled-posts.json
+
+# WhatsApp Engine credentials and runtime data
+jarvis-whatsapp-engine/auth_state/
+jarvis-whatsapp-engine/node_modules/
+jarvis-whatsapp-engine/.env

@@ -74,18 +74,34 @@ async function logMessageToSupabase(sender, senderName, message, reply) {
 async function startJarvis() {
   const { state, saveCreds } = await useMultiFileAuthState('./auth_state')
   const logger = pino({ level: 'silent' })
+  const usePairingCode = Boolean(process.env.PHONE_NUMBER)
 
   const sock = makeWASocket({
     auth: state,
     logger,
     printQRInTerminal: false,
-    browser: ['M-JARVIS', 'Chrome', '1.0.0']
+    browser: ['Ubuntu', 'Chrome', '20.0.04']
   })
 
   sock.ev.on('creds.update', saveCreds)
 
+  // Request Pairing Code if phone number is provided and session is not authenticated
+  if (usePairingCode && !sock.authState.creds.registered) {
+    const phoneNumber = process.env.PHONE_NUMBER.replace(/[^0-9]/g, '')
+    console.log(`[M-JARVIS] Requesting pairing code for phone number: ${phoneNumber}...`)
+    setTimeout(async () => {
+      try {
+        let code = await sock.requestPairingCode(phoneNumber)
+        code = code?.match(/.{1,4}/g)?.join('-') || code
+        console.log(`\n🔑 [M-JARVIS] YOUR PAIRING CODE IS: ${code}\n`)
+      } catch (err) {
+        console.error('[M-JARVIS] Failed to request pairing code:', err)
+      }
+    }, 3000)
+  }
+
   sock.ev.on('connection.update', ({ connection, lastDisconnect, qr }) => {
-    if (qr) {
+    if (qr && !usePairingCode) {
       console.log('\n[M-JARVIS] Scan this QR Code with your WhatsApp:\n')
       qrcode.generate(qr, { small: true })
     }

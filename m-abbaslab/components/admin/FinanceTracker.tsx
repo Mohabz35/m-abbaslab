@@ -87,14 +87,50 @@ export default function FinanceTracker() {
     loadData()
   }, [])
 
-  // Auto-save to localStorage (Cloud save is manual via Sync button to prevent rate limits)
+  // Auto-save to localStorage
   useEffect(() => {
     if (!isLoaded) return
     localStorage.setItem('ceo_finance_entries', JSON.stringify(entries))
     localStorage.setItem('ceo_finance_goals', JSON.stringify(goals))
   }, [entries, goals, isLoaded])
 
-  // Sync to Supabase Cloud
+  // Auto-sync to Supabase Cloud whenever data changes (debounced by 1.5s)
+  useEffect(() => {
+    if (!isLoaded || !hasSupabaseKeys) return
+
+    // Don't auto-sync if we have nothing to sync yet (optional safeguard)
+    if (entries.length === 0 && goals.length === 0) return
+
+    const autoSync = async () => {
+      setIsSyncing(true)
+      setSyncStatus('idle')
+      try {
+        const { error: eErr } = await supabase.from('finance_entries').upsert(entries)
+        const { error: gErr } = await supabase.from('finance_goals').upsert(goals)
+        
+        if (eErr || gErr) {
+          console.error("Supabase Auto-Sync Failed:", { entriesError: eErr, goalsError: gErr })
+          setSyncStatus('error')
+        } else {
+          setSyncStatus('success')
+          setTimeout(() => setSyncStatus('idle'), 3000)
+        }
+      } catch (err) {
+        console.error("Auto-sync exception:", err)
+        setSyncStatus('error')
+      } finally {
+        setIsSyncing(false)
+      }
+    }
+
+    const timer = setTimeout(() => {
+      autoSync()
+    }, 1500)
+
+    return () => clearTimeout(timer)
+  }, [entries, goals, isLoaded])
+
+  // Sync to Supabase Cloud (Manual trigger / retry)
   const handleCloudSync = async () => {
     if (!hasSupabaseKeys) {
       alert("Supabase keys not configured. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to your .env.local file. Data is only saving locally.")
@@ -104,16 +140,18 @@ export default function FinanceTracker() {
     setIsSyncing(true)
     setSyncStatus('idle')
     try {
-      // Upsert entries
       const { error: eErr } = await supabase.from('finance_entries').upsert(entries)
       const { error: gErr } = await supabase.from('finance_goals').upsert(goals)
       
-      if (eErr || gErr) throw new Error("Sync Failed")
+      if (eErr || gErr) {
+        console.error("Supabase Sync Failed:", { entriesError: eErr, goalsError: gErr })
+        throw new Error(`Sync Failed: ${eErr?.message || gErr?.message || "Unknown DB Error"}`)
+      }
       
       setSyncStatus('success')
       setTimeout(() => setSyncStatus('idle'), 3000)
-    } catch (error) {
-      console.error(error)
+    } catch (error: any) {
+      console.error("Cloud Sync Error details:", error)
       setSyncStatus('error')
     } finally {
       setIsSyncing(false)

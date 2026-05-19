@@ -34,3 +34,8 @@ next-env.d.ts
 
 # logs
 *.log
+
+# WhatsApp Engine credentials and runtime data
+m-abbaslab/jarvis-whatsapp-engine/auth_state/
+m-abbaslab/jarvis-whatsapp-engine/node_modules/
+m-abbaslab/jarvis-whatsapp-engine/.env
