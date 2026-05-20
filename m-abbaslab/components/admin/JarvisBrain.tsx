@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Brain, Plus, Trash2, Edit, Save, CheckCircle, HelpCircle } from 'lucide-react'
+import { Brain, Plus, Trash2, Edit, Save, CheckCircle, HelpCircle, Clock } from 'lucide-react'
 
 interface Rule {
   keyword: string
@@ -11,9 +11,26 @@ interface Rule {
 interface JarvisBrainProps {
   rules: Rule[]
   onChange: (rules: Rule[]) => void
+  schedule?: {
+    type: 'always' | 'working' | 'non-working' | 'disabled'
+    workingHoursStart: string
+    workingHoursEnd: string
+    timezone: string
+  }
+  onScheduleChange?: (schedule: any) => void
 }
 
-export default function JarvisBrain({ rules = [], onChange }: JarvisBrainProps) {
+export default function JarvisBrain({
+  rules = [],
+  onChange,
+  schedule = {
+    type: 'always',
+    workingHoursStart: '08:00',
+    workingHoursEnd: '17:00',
+    timezone: 'Africa/Nairobi'
+  },
+  onScheduleChange
+}: JarvisBrainProps) {
   const [newKeyword, setNewKeyword] = useState('')
   const [newResponse, setNewResponse] = useState('')
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
@@ -191,6 +208,83 @@ export default function JarvisBrain({ rules = [], onChange }: JarvisBrainProps) 
               <Plus className="w-4 h-4" />
               Train New Rule
             </button>
+          </div>
+
+          {/* Chatbot Scheduling Panel */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400 flex items-center gap-2">
+              <Clock className="w-4 h-4 text-blue-500" />
+              WhatsApp Engine Scheduling
+            </h3>
+            
+            <div className="bg-gray-50 dark:bg-black/40 border border-gray-150 dark:border-white/5 rounded-2xl p-5 space-y-4 shadow-sm">
+              <div>
+                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Active Mode</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { id: 'always', label: '24/7 Always', desc: 'Active always' },
+                    { id: 'working', label: 'Working Hours', desc: 'Active 08:00 - 17:00' },
+                    { id: 'non-working', label: 'Non-Working', desc: 'Active outside work' },
+                    { id: 'disabled', label: 'Disabled', desc: 'Engine offline' }
+                  ].map((mode) => (
+                    <button
+                      key={mode.id}
+                      onClick={() => onScheduleChange && onScheduleChange({ ...schedule, type: mode.id })}
+                      className={`p-2.5 rounded-xl border text-xs font-medium text-left transition-all ${
+                        schedule.type === mode.id
+                          ? 'bg-blue-500/15 border-blue-500/50 text-blue-600 dark:text-blue-400 shadow-sm'
+                          : 'bg-white dark:bg-black/20 border-gray-200 dark:border-white/5 text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:border-white/10'
+                      }`}
+                    >
+                      <div className="font-bold">{mode.label}</div>
+                      <div className="text-[9px] text-gray-400 dark:text-gray-500 mt-0.5 leading-tight">{mode.desc}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {schedule.type !== 'always' && schedule.type !== 'disabled' && (
+                <div className="grid grid-cols-2 gap-3 p-3 bg-white/50 dark:bg-black/20 rounded-xl border border-gray-150 dark:border-white/5 animate-fadeIn">
+                  <div>
+                    <label className="block text-[10px] text-gray-400 uppercase font-bold mb-1">Start Time</label>
+                    <input
+                      type="time"
+                      value={schedule.workingHoursStart || '08:00'}
+                      onChange={(e) => onScheduleChange && onScheduleChange({ ...schedule, workingHoursStart: e.target.value })}
+                      className="w-full bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-blue-500/50 text-gray-800 dark:text-gray-200 font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-gray-400 uppercase font-bold mb-1">End Time</label>
+                    <input
+                      type="time"
+                      value={schedule.workingHoursEnd || '17:00'}
+                      onChange={(e) => onScheduleChange && onScheduleChange({ ...schedule, workingHoursEnd: e.target.value })}
+                      className="w-full bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-blue-500/50 text-gray-800 dark:text-gray-200 font-mono"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Timezone</label>
+                <select
+                  value={schedule.timezone || 'Africa/Nairobi'}
+                  onChange={(e) => onScheduleChange && onScheduleChange({ ...schedule, timezone: e.target.value })}
+                  className="w-full bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-500/50 text-gray-700 dark:text-gray-300"
+                >
+                  <option value="Africa/Nairobi">Africa/Nairobi (EAT, UTC+3)</option>
+                  <option value="UTC">Coordinated Universal Time (UTC)</option>
+                  <option value="Europe/London">Europe/London (GMT/BST)</option>
+                  <option value="America/New_York">America/New_York (EST/EDT)</option>
+                  <option value="Asia/Dubai">Asia/Dubai (GST, UTC+4)</option>
+                </select>
+                <div className="mt-1 flex items-center gap-1 text-[9px] text-gray-400 dark:text-gray-500">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                  Active timezone synced with WhatsApp Daemon.
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Quick Guide */}

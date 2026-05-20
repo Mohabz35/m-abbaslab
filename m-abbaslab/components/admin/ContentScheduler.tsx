@@ -7,7 +7,7 @@ import {
   Edit2, Trash2, TrendingUp, TrendingDown,
   CheckCircle2, Clock, FileText, AlertCircle,
   Twitter, Linkedin, MessageCircle, RefreshCw,
-  Plus, Github, Instagram, Facebook, Youtube, Music
+  Plus, Github, Instagram, Facebook, Youtube, Music, Sparkles
 } from 'lucide-react'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -70,6 +70,8 @@ export default function ContentScheduler() {
   const [mode, setMode] = useState<ScheduleMode>('now')
   const [scheduledAt, setScheduledAt] = useState('')
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [generationTopic, setGenerationTopic] = useState('')
   const [queueFilter, setQueueFilter] = useState<'all' | PostStatus>('all')
 
   const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
@@ -111,6 +113,56 @@ export default function ContentScheduler() {
     setMode('now')
     setScheduledAt('')
     setEditingId(null)
+  }
+
+  const handleGenerateContent = async () => {
+    if (!generationTopic.trim()) {
+      showToast('Enter a topic to generate content.', 'error')
+      return
+    }
+    if (platforms.length === 0) {
+      showToast('Select at least one platform first.', 'error')
+      return
+    }
+
+    setIsGenerating(true)
+    try {
+      const res = await fetch('/api/admin/generate-post', {
+        method: 'POST',
+        headers: apiHeaders(),
+        body: JSON.stringify({
+          topic: generationTopic.trim(),
+          platforms,
+          tone: 'professional',
+          length: 'medium',
+        }),
+      })
+
+      const data = await res.json()
+
+      if (data.success && data.content) {
+        const firstPlatform = platforms[0]
+        const generatedText =
+          data.content[firstPlatform] ||
+          Object.values(data.content).find((value) => typeof value === 'string') ||
+          ''
+
+        if (!generatedText) {
+          showToast('Generation returned empty content. Try another topic.', 'error')
+          return
+        }
+
+        setContent(String(generatedText))
+        setGenerationTopic('')
+        showToast('Content generated. Review and edit before posting.')
+      } else {
+        showToast(data.error || 'Failed to generate content.', 'error')
+      }
+    } catch {
+      showToast('Generation failed. Check your API keys.', 'error')
+    } finally {
+      setIsGenerating(false)
+    }
   }
 
   const handleSubmit = async () => {
@@ -297,6 +349,29 @@ export default function ContentScheduler() {
               </div>
 
               {/* Content area */}
+              <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl">
+                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                  Generate with AI
+                </label>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    type="text"
+                    value={generationTopic}
+                    onChange={(e) => setGenerationTopic(e.target.value)}
+                    placeholder="e.g., New AI research findings in economics"
+                    className="flex-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                  />
+                  <button
+                    onClick={handleGenerateContent}
+                    disabled={isGenerating || !generationTopic.trim() || platforms.length === 0}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-xs uppercase disabled:opacity-50 flex items-center justify-center gap-2 transition-all"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    {isGenerating ? 'Generating...' : 'Generate'}
+                  </button>
+                </div>
+              </div>
+
               <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
                 Content
               </label>

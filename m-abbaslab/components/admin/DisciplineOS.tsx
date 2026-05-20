@@ -1,0 +1,986 @@
+'use client'
+
+import { useState, useEffect, useCallback } from 'react'
+import {
+  Target, Flame, Brain, DollarSign, Heart, Shield, Zap,
+  TrendingUp, BookOpen, Calendar, ChevronDown, ChevronUp,
+  CheckSquare, Square, Save, RefreshCcw, Award, Star,
+  Clock, Sun, Moon, Coffee, Dumbbell, Laptop, Users,
+  AlertCircle, Plus, Trash2, BarChart2, Activity
+} from 'lucide-react'
+
+// ── Types ──────────────────────────────────────────────────────────────────────
+
+type HourCategory = 'sleep' | 'deep-work' | 'shallow-work' | 'learning' | 'exercise' | 'recovery' | 'social' | 'admin' | 'wasted' | 'unset'
+
+interface HourBlock {
+  hour: number
+  category: HourCategory
+  note?: string
+}
+
+interface Pillar {
+  id: string
+  label: string
+  icon: any
+  color: string
+  score: number
+  note: string
+}
+
+interface Goal {
+  id: string
+  name: string
+  status: 'planning' | 'active' | 'done' | 'paused'
+  metric: string
+  note: string
+}
+
+interface GoalCategory {
+  id: string
+  label: string
+  color: string
+  goals: Goal[]
+}
+
+interface DayData {
+  date: string
+  hours: HourBlock[]
+  pillars: { [key: string]: { score: number; note: string } }
+  wins: string[]
+  losses: string[]
+  gratitude: string
+  tomorrow: string
+}
+
+interface Review {
+  id: string
+  type: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly'
+  date: string
+  answers: string[]
+}
+
+// ── Constants ──────────────────────────────────────────────────────────────────
+
+const HOUR_CATEGORIES: Record<HourCategory, { label: string; color: string; bg: string; icon: any }> = {
+  'sleep':        { label: 'Sleep',       color: 'text-indigo-400',  bg: 'bg-indigo-500/30',  icon: Moon },
+  'deep-work':    { label: 'Deep Work',   color: 'text-cyan-400',    bg: 'bg-cyan-500/30',    icon: Laptop },
+  'shallow-work': { label: 'Shallow',     color: 'text-blue-400',    bg: 'bg-blue-500/30',    icon: Coffee },
+  'learning':     { label: 'Learning',    color: 'text-emerald-400', bg: 'bg-emerald-500/30', icon: BookOpen },
+  'exercise':     { label: 'Exercise',    color: 'text-orange-400',  bg: 'bg-orange-500/30',  icon: Dumbbell },
+  'recovery':     { label: 'Recovery',    color: 'text-purple-400',  bg: 'bg-purple-500/30',  icon: Heart },
+  'social':       { label: 'Social',      color: 'text-pink-400',    bg: 'bg-pink-500/30',    icon: Users },
+  'admin':        { label: 'Admin',       color: 'text-yellow-400',  bg: 'bg-yellow-500/30',  icon: Calendar },
+  'wasted':       { label: 'Wasted',      color: 'text-red-400',     bg: 'bg-red-500/30',     icon: AlertCircle },
+  'unset':        { label: 'Unset',       color: 'text-gray-600',    bg: 'bg-gray-800',       icon: Clock },
+}
+
+const CATEGORY_ORDER: HourCategory[] = ['sleep', 'deep-work', 'shallow-work', 'learning', 'exercise', 'recovery', 'social', 'admin', 'wasted', 'unset']
+
+const PILLARS: Omit<Pillar, 'score' | 'note'>[] = [
+  { id: 'body',       label: 'Body',         icon: Dumbbell,   color: 'text-orange-400' },
+  { id: 'skills',     label: 'Skills',       icon: Brain,      color: 'text-cyan-400' },
+  { id: 'mental',     label: 'Mental',       icon: Shield,     color: 'text-purple-400' },
+  { id: 'winning',    label: 'Winning',      icon: Award,      color: 'text-yellow-400' },
+  { id: 'confidence', label: 'Confidence',   icon: Flame,      color: 'text-red-400' },
+  { id: 'financial',  label: 'Financial',    icon: DollarSign, color: 'text-emerald-400' },
+  { id: 'work-ethic', label: 'Work Ethic',   icon: Zap,        color: 'text-blue-400' },
+]
+
+const GOAL_CATEGORIES: Omit<GoalCategory, 'goals'>[] = [
+  { id: 'startups',  label: '12 Startups',      color: 'text-cyan-400' },
+  { id: 'companies', label: '12 Companies',      color: 'text-purple-400' },
+  { id: 'income',    label: '12 Income Areas',   color: 'text-emerald-400' },
+  { id: 'upgrades',  label: '12 Upgrades',       color: 'text-yellow-400' },
+]
+
+const STATUS_COLORS: Record<string, string> = {
+  'planning': 'bg-gray-700 text-gray-300',
+  'active':   'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40',
+  'done':     'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40',
+  'paused':   'bg-yellow-500/20 text-yellow-300 border border-yellow-500/40',
+}
+
+const DEBT_RULES = [
+  { rule: 'Rule of 20-4-10', title: 'Car Purchase', formula: '20% down · 4yr loan · 10% income max', desc: 'Never buy a car with less than 20% down, longer than 4-year financing, and more than 10% of gross monthly income in payments.', color: 'border-red-500/40 bg-red-500/5' },
+  { rule: 'Rule of 2-6-10', title: 'Phone Purchase', formula: '2% of income max · 6-month amortization · 10% on extras', desc: 'Phone payment should never exceed 2% of monthly income. Amortize over max 6 months. Keep extras under 10%.', color: 'border-orange-500/40 bg-orange-500/5' },
+  { rule: 'Rule of 3-6-9', title: 'Emergency Fund', formula: '3 months (single) · 6 months (family) · 9 months (entrepreneur)', desc: 'Build 3 months expenses as single, 6 months if you have a family, 9 months if you are an entrepreneur before any investing.', color: 'border-yellow-500/40 bg-yellow-500/5' },
+  { rule: 'Rule of 5-15-25', title: 'Personal Loan', formula: '5% down · 15% max DTI · 25% max housing', desc: 'Personal loans require 5% down, debt-to-income ratio must stay below 15%, and housing costs below 25% of gross income.', color: 'border-purple-500/40 bg-purple-500/5' },
+  { rule: 'Rule of 72', title: 'Money Doubling', formula: '72 ÷ interest rate = years to double', desc: 'To estimate how many years it takes money to double, divide 72 by the annual interest rate. Applies to both growth and debt.', color: 'border-cyan-500/40 bg-cyan-500/5' },
+]
+
+const PASSIVE_INCOME_STREAMS = [
+  'Dividend stocks & ETFs',
+  'High-Yield Savings Accounts (HYSAs)',
+  'House Hacking (rent rooms in primary home)',
+  'Short-Term Rentals (STR/Airbnb)',
+  'Long-Term Rental Properties',
+  'YouTube channel monetization',
+  'Affiliate marketing (blog/social)',
+  'Digital products (eBooks, templates)',
+  'Online courses & cohorts',
+  'Royalty income (books, music, patents)',
+  'Peer-to-Peer lending',
+  'REITs (Real Estate Investment Trusts)',
+  'Index fund investing (compounding)',
+  'Cryptocurrency staking / yield',
+  'Print-on-demand merchandise',
+  'Software / SaaS products',
+  'Licensing technology or IP',
+  'Angel investing (equity stakes)',
+  'Vending machine or ATM businesses',
+  'Storage unit rentals',
+  'Car rental (Turo/Rideshare ownership)',
+  'Laundromat or car wash ownership',
+  'Niche website / ad revenue',
+  'Domain name flipping & resale',
+]
+
+const MENTORS = [
+  { name: 'David Goggins', title: 'Can\'t Hurt Me', accent: 'text-red-400', rules: ['The Accountability Mirror — write your failures, read them daily', '40% Rule — when your mind says quit, you\'re at 40% capacity', 'Callous your mind with daily discomfort', 'If it doesn\'t suck, it won\'t make you stronger', 'The Cookie Jar — collect wins to draw from in dark times'] },
+  { name: 'Alex Hormozi', title: '$100M Offers', accent: 'text-yellow-400', rules: ['Volume cures all uncertainty — do more of what works', 'Speed of implementation beats perfection', 'The market doesn\'t care about your effort, only your output', 'Make offers so good people feel stupid saying no', 'Work on the business, not just in it'] },
+  { name: 'Elon Musk', title: 'First Principles', accent: 'text-cyan-400', rules: ['First Principles thinking — question every assumption', 'Time-block ruthlessly: every hour must produce value', 'Feedback loops must be extremely tight', 'If you\'re not failing, you\'re not innovating enough', 'Hire people smarter than you in their domain'] },
+  { name: 'Andrew Huberman', title: 'Neural Optimization', accent: 'text-emerald-400', rules: ['Morning sunlight exposure within 30 minutes of waking', 'NSDR (Non-Sleep Deep Rest) = free performance enhancement', 'Exercise 6 days/week for neuroplasticity', 'Delay caffeine 90-120 min after waking for stable energy', 'Cold exposure builds mental resilience and dopamine'] },
+  { name: 'James Clear', title: 'Atomic Habits', accent: 'text-purple-400', rules: ['1% better every day = 37x better in a year', 'Systems beat goals every time', 'Never miss twice — one miss is an accident, two is a habit', 'Identity-based habits: be the person who does X', 'Environment design shapes behavior more than willpower'] },
+  { name: 'Naval Ravikant', title: 'Almanack', accent: 'text-indigo-400', rules: ['Build specific knowledge you can\'t be trained for', 'Seek leverage: code, media, capital, and labor', 'Productize yourself — create assets that scale without you', 'Reading is the ultimate unfair advantage', 'Accountability builds reputation, reputation creates wealth'] },
+]
+
+const ANCIENT_WISDOM = [
+  { 
+    name: 'Marcus Aurelius', 
+    book: 'Meditations', 
+    accent: 'text-amber-400',
+    keys: [
+      'You have power over your mind, not outside events — realize this, and you will find strength.',
+      'The impediment to action advances action. What stands in the way becomes the way.',
+      'Confine yourself to the present — the past and future are not in your control.',
+      'Do not indulge in discussions about other people. Focus only on your own actions.',
+      'Perfection of character is this: to live each day as if it were your last, without frenzy, laziness, or any pretending.',
+      'When you wake up in the morning, think of what a privilege it is to be alive, to think, to enjoy, to love.',
+    ]
+  },
+  {
+    name: 'Niccolò Machiavelli',
+    book: 'The Prince',
+    accent: 'text-rose-400',
+    keys: [
+      'It is better to be feared than loved, if you cannot have both.',
+      'Never waste the opportunity offered by a good crisis.',
+      'The first method for estimating the intelligence of a ruler is to look at the men he has around him.',
+      'A prince must be a fox to recognize traps and a lion to frighten wolves.',
+      'Men are driven by two principal impulses: love or fear.',
+      'It is better to act boldly and lose than to be cautious and win nothing.',
+    ]
+  }
+]
+
+const REVIEW_TEMPLATES: Record<string, { title: string; prompts: string[] }> = {
+  daily:     { title: 'Daily Debrief', prompts: ['What were my 3 non-negotiable wins today?', 'Where did I waste time or energy?', 'What am I grateful for right now?', 'What is my single most important task tomorrow?', 'Score the day 1-10 and justify the score.'] },
+  weekly:    { title: 'Weekly War Room', prompts: ['Did I execute on my main weekly goal?', 'What patterns hurt my performance this week?', 'What were the 3 biggest lessons?', 'Am I on track with my 90-day targets?', 'What must be different next week?'] },
+  monthly:   { title: 'Monthly Reckoning', prompts: ['Did I move the needle on my 12x goals?', 'What financial progress was made this month?', 'What skills did I sharpen?', 'What relationships did I invest in or neglect?', 'Where am I lying to myself?'] },
+  quarterly: { title: '90-Day Reset', prompts: ['Did I hit 80%+ of my quarterly milestones?', 'What is the single biggest bottleneck to my goals?', 'How has my financial position changed?', 'What new leverage do I have that I didn\'t have 90 days ago?', 'What must I start, stop, and continue?'] },
+  yearly:    { title: 'Annual Sovereignty Review', prompts: ['Did I start and sustain my 12 income areas?', 'What is my net worth change year-over-year?', 'Which pillar improved the most? Which is still broken?', 'What is my single largest unresolved fear holding me back?', 'Am I living the life I designed or the life that happened to me?'] },
+}
+
+// ── Default Data Generators ─────────────────────────────────────────────────────
+
+function getDefaultHours(): HourBlock[] {
+  return Array.from({ length: 24 }, (_, i) => ({ hour: i, category: 'unset' as HourCategory }))
+}
+
+function getDefaultPillars(): Pillar[] {
+  return PILLARS.map(p => ({ ...p, score: 5, note: '' }))
+}
+
+function getDefaultGoalCategories(): GoalCategory[] {
+  return GOAL_CATEGORIES.map(cat => ({
+    ...cat,
+    goals: Array.from({ length: 12 }, (_, i) => ({
+      id: `${cat.id}-${i}`,
+      name: '',
+      status: 'planning' as const,
+      metric: '',
+      note: '',
+    }))
+  }))
+}
+
+function todayStr() {
+  return new Date().toISOString().split('T')[0]
+}
+
+// ── Sub-Components ──────────────────────────────────────────────────────────────
+
+function SectionHeader({ icon: Icon, title, subtitle, accent = 'text-cyan-400' }: { icon: any; title: string; subtitle?: string; accent?: string }) {
+  return (
+    <div className="flex items-start gap-3 mb-6">
+      <div className={`mt-0.5 p-2 rounded-lg bg-white/5 border border-white/10`}>
+        <Icon className={`w-5 h-5 ${accent}`} />
+      </div>
+      <div>
+        <h3 className={`text-lg font-bold tracking-tight ${accent}`}>{title}</h3>
+        {subtitle && <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>}
+      </div>
+    </div>
+  )
+}
+
+function GlassPanel({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`bg-white/[0.03] border border-white/10 rounded-2xl p-6 backdrop-blur-sm ${className}`}>
+      {children}
+    </div>
+  )
+}
+
+function ScoreSlider({ value, onChange, color = 'cyan' }: { value: number; onChange: (v: number) => void; color?: string }) {
+  const colorMap: Record<string, string> = {
+    orange: 'accent-orange-400', cyan: 'accent-cyan-400', purple: 'accent-purple-400',
+    yellow: 'accent-yellow-400', red: 'accent-red-400', emerald: 'accent-emerald-400', blue: 'accent-blue-400',
+  }
+  const scoreColor = value >= 8 ? 'text-emerald-400' : value >= 5 ? 'text-yellow-400' : 'text-red-400'
+  return (
+    <div className="flex items-center gap-3">
+      <input
+        type="range" min={1} max={10} value={value}
+        onChange={e => onChange(Number(e.target.value))}
+        className={`flex-1 h-2 rounded-full bg-white/10 ${colorMap[color] || 'accent-cyan-400'}`}
+      />
+      <span className={`text-xl font-black w-8 text-center ${scoreColor}`}>{value}</span>
+    </div>
+  )
+}
+
+// ── Main Component ──────────────────────────────────────────────────────────────
+
+export default function DisciplineOS() {
+  const [activeSection, setActiveSection] = useState<'day' | 'goals' | 'reviews' | 'mentors' | 'finance'>('day')
+  const [selectedDate, setSelectedDate] = useState(todayStr())
+  const [hours, setHours] = useState<HourBlock[]>(getDefaultHours())
+  const [pillars, setPillars] = useState<Pillar[]>(getDefaultPillars())
+  const [wins, setWins] = useState(['', '', ''])
+  const [losses, setLosses] = useState(['', '', ''])
+  const [gratitude, setGratitude] = useState('')
+  const [tomorrow, setTomorrow] = useState('')
+  const [selectedHourCat, setSelectedHourCat] = useState<HourCategory>('deep-work')
+  const [goalCategories, setGoalCategories] = useState<GoalCategory[]>(getDefaultGoalCategories())
+  const [reviewType, setReviewType] = useState<keyof typeof REVIEW_TEMPLATES>('daily')
+  const [reviewAnswers, setReviewAnswers] = useState<string[]>([])
+  const [passiveChecked, setPassiveChecked] = useState<boolean[]>(Array(PASSIVE_INCOME_STREAMS.length).fill(false))
+  const [expandedMentor, setExpandedMentor] = useState<string | null>(null)
+  const [expandedWisdom, setExpandedWisdom] = useState<string | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveStatus, setSaveStatus] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  // ── Load from API ──
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await fetch('/api/admin/discipline')
+        if (!res.ok) throw new Error('Failed to load')
+        const data = await res.json()
+
+        if (data.goals?.categories) {
+          setGoalCategories(data.goals.categories)
+        }
+        if (data.goals?.passive) {
+          setPassiveChecked(data.goals.passive)
+        }
+
+        const todayData = data.days?.find((d: any) => d.date === selectedDate)
+        if (todayData) {
+          if (todayData.hours) setHours(todayData.hours)
+          if (todayData.pillars) {
+            setPillars(getDefaultPillars().map(p => ({
+              ...p,
+              score: todayData.pillars[p.id]?.score ?? 5,
+              note: todayData.pillars[p.id]?.note ?? '',
+            })))
+          }
+          if (todayData.wins) setWins(todayData.wins)
+          if (todayData.losses) setLosses(todayData.losses)
+          if (todayData.gratitude) setGratitude(todayData.gratitude)
+          if (todayData.tomorrow) setTomorrow(todayData.tomorrow)
+        }
+      } catch (e) {
+        // Use localStorage fallback
+        try {
+          const cached = localStorage.getItem(`discipline_day_${selectedDate}`)
+          if (cached) {
+            const d = JSON.parse(cached)
+            if (d.hours) setHours(d.hours)
+            if (d.pillars) setPillars(d.pillars)
+            if (d.wins) setWins(d.wins)
+            if (d.losses) setLosses(d.losses)
+            if (d.gratitude) setGratitude(d.gratitude)
+            if (d.tomorrow) setTomorrow(d.tomorrow)
+          }
+          const cachedGoals = localStorage.getItem('discipline_goals')
+          if (cachedGoals) setGoalCategories(JSON.parse(cachedGoals))
+          const cachedPassive = localStorage.getItem('discipline_passive')
+          if (cachedPassive) setPassiveChecked(JSON.parse(cachedPassive))
+        } catch {}
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    load()
+  }, [selectedDate])
+
+  // ── Review answers reset on type change ──
+  useEffect(() => {
+    const template = REVIEW_TEMPLATES[reviewType]
+    setReviewAnswers(Array(template.prompts.length).fill(''))
+  }, [reviewType])
+
+  // ── Hour block click ──
+  const handleHourClick = (hour: number) => {
+    setHours(prev => prev.map(h => h.hour === hour ? { ...h, category: selectedHourCat } : h))
+  }
+
+  // ── Save day data ──
+  const handleSaveDay = async () => {
+    setIsSaving(true)
+    const dayData = {
+      hours,
+      pillars: Object.fromEntries(pillars.map(p => [p.id, { score: p.score, note: p.note }])),
+      wins, losses, gratitude, tomorrow,
+    }
+    localStorage.setItem(`discipline_day_${selectedDate}`, JSON.stringify(dayData))
+    try {
+      const res = await fetch('/api/admin/discipline', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'day', date: selectedDate, data: dayData })
+      })
+      const result = await res.json()
+      setSaveStatus(result.message || 'Saved')
+    } catch {
+      setSaveStatus('Saved to local cache (API offline)')
+    } finally {
+      setIsSaving(false)
+      setTimeout(() => setSaveStatus(null), 3000)
+    }
+  }
+
+  // ── Save goals ──
+  const handleSaveGoals = async () => {
+    setIsSaving(true)
+    const goalsData = { categories: goalCategories, passive: passiveChecked }
+    localStorage.setItem('discipline_goals', JSON.stringify(goalCategories))
+    localStorage.setItem('discipline_passive', JSON.stringify(passiveChecked))
+    try {
+      const res = await fetch('/api/admin/discipline', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'goals', goalsData })
+      })
+      const result = await res.json()
+      setSaveStatus(result.message || 'Goals saved')
+    } catch {
+      setSaveStatus('Goals saved to local cache')
+    } finally {
+      setIsSaving(false)
+      setTimeout(() => setSaveStatus(null), 3000)
+    }
+  }
+
+  // ── Save review ──
+  const handleSaveReview = async () => {
+    setIsSaving(true)
+    const id = `${reviewType}_${selectedDate}_${Date.now()}`
+    try {
+      const res = await fetch('/api/admin/discipline', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'review', id, reviewType, date: selectedDate, answers: reviewAnswers })
+      })
+      const result = await res.json()
+      setSaveStatus(result.message || 'Review saved')
+    } catch {
+      setSaveStatus('Review saved locally')
+    } finally {
+      setIsSaving(false)
+      setTimeout(() => setSaveStatus(null), 3000)
+    }
+  }
+
+  // ── Update pillar ──
+  const updatePillar = (id: string, field: 'score' | 'note', value: any) => {
+    setPillars(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p))
+  }
+
+  // ── Update goal ──
+  const updateGoal = (catId: string, goalId: string, field: keyof Goal, value: string) => {
+    setGoalCategories(prev => prev.map(cat =>
+      cat.id === catId
+        ? { ...cat, goals: cat.goals.map(g => g.id === goalId ? { ...g, [field]: value } : g) }
+        : cat
+    ))
+  }
+
+  // ── Deep work hours calculated ──
+  const deepWorkHours = hours.filter(h => h.category === 'deep-work').length
+  const sleepHours = hours.filter(h => h.category === 'sleep').length
+  const wastedHours = hours.filter(h => h.category === 'wasted').length
+  const avgPillarScore = (pillars.reduce((a, b) => a + b.score, 0) / pillars.length).toFixed(1)
+  const goalsCompleted = goalCategories.flatMap(c => c.goals).filter(g => g.status === 'done').length
+  const passiveCompleted = passiveChecked.filter(Boolean).length
+
+  const NAV_TABS = [
+    { id: 'day',      label: 'Today',        icon: Sun },
+    { id: 'goals',    label: '12× Goals',    icon: Target },
+    { id: 'reviews',  label: 'Reviews',      icon: Calendar },
+    { id: 'mentors',  label: 'Wisdom',       icon: BookOpen },
+    { id: 'finance',  label: 'Finance Laws', icon: DollarSign },
+  ]
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-32">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-full border-2 border-cyan-500/30 border-t-cyan-500 animate-spin" />
+          <p className="text-gray-500 text-sm tracking-widest uppercase">Loading System 12×</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-950 text-white">
+      {/* ── Header Bar ── */}
+      <div className="border-b border-white/10 bg-black/40 backdrop-blur-sm sticky top-0 z-40">
+        <div className="px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center">
+                <Flame className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <h2 className="text-base font-black tracking-tight">DISCIPLINE OS</h2>
+                <p className="text-[10px] text-gray-500 uppercase tracking-widest">System 12×</p>
+              </div>
+            </div>
+
+            {/* ── Quick Stats ── */}
+            <div className="hidden md:flex items-center gap-4 ml-6 pl-6 border-l border-white/10">
+              <div className="flex items-center gap-1.5">
+                <Laptop className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="text-xs font-bold text-cyan-400">{deepWorkHours}h</span>
+                <span className="text-[10px] text-gray-600">deep work</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Activity className="w-3.5 h-3.5 text-purple-400" />
+                <span className="text-xs font-bold text-purple-400">{avgPillarScore}</span>
+                <span className="text-[10px] text-gray-600">avg score</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Target className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-xs font-bold text-emerald-400">{goalsCompleted}/48</span>
+                <span className="text-[10px] text-gray-600">goals done</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={e => setSelectedDate(e.target.value)}
+              className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs text-gray-300 focus:border-cyan-500/50 outline-none"
+            />
+            {saveStatus && (
+              <span className="text-xs text-emerald-400 font-medium animate-pulse px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20">
+                ✓ {saveStatus}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* ── Section Nav ── */}
+        <div className="flex gap-1 px-6 pb-0 overflow-x-auto">
+          {NAV_TABS.map(tab => {
+            const Icon = tab.icon
+            const isActive = activeSection === tab.id
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveSection(tab.id as any)}
+                className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold tracking-wide border-b-2 transition-all whitespace-nowrap ${
+                  isActive
+                    ? 'border-cyan-500 text-cyan-400'
+                    : 'border-transparent text-gray-500 hover:text-gray-300'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                {tab.label}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      <div className="p-6 space-y-6 max-w-7xl mx-auto">
+
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {/* SECTION: TODAY */}
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {activeSection === 'day' && (
+          <div className="space-y-6">
+            {/* 24-Hour Grid */}
+            <GlassPanel>
+              <SectionHeader icon={Clock} title="24-Hour Accountability Grid" subtitle="Click an hour block to assign its category" accent="text-cyan-400" />
+
+              {/* Category Selector */}
+              <div className="flex flex-wrap gap-2 mb-5">
+                {CATEGORY_ORDER.map(cat => {
+                  const info = HOUR_CATEGORIES[cat]
+                  const Icon = info.icon
+                  const isSelected = selectedHourCat === cat
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => setSelectedHourCat(cat)}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                        isSelected ? `${info.bg} ${info.color} border-current scale-105` : 'bg-white/5 text-gray-500 border-white/10 hover:border-white/20'
+                      }`}
+                    >
+                      <Icon className="w-3 h-3" />
+                      {info.label}
+                    </button>
+                  )
+                })}
+              </div>
+
+              {/* Hour Blocks */}
+              <div className="grid grid-cols-6 md:grid-cols-12 gap-1.5">
+                {hours.map(block => {
+                  const info = HOUR_CATEGORIES[block.category]
+                  const Icon = info.icon
+                  const isAM = block.hour < 12
+                  const displayHour = block.hour === 0 ? '12' : block.hour > 12 ? String(block.hour - 12) : String(block.hour)
+                  return (
+                    <button
+                      key={block.hour}
+                      onClick={() => handleHourClick(block.hour)}
+                      title={`${displayHour}${isAM ? 'am' : 'pm'} — ${info.label}`}
+                      className={`group relative aspect-square rounded-xl flex flex-col items-center justify-center gap-0.5 border transition-all hover:scale-105 ${info.bg} ${block.category !== 'unset' ? 'border-current/30' : 'border-white/5 hover:border-white/20'}`}
+                    >
+                      <Icon className={`w-3 h-3 ${info.color}`} />
+                      <span className="text-[9px] font-bold text-gray-400">{displayHour}{isAM ? 'a' : 'p'}</span>
+                    </button>
+                  )
+                })}
+              </div>
+
+              {/* Summary Bar */}
+              <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-3 gap-4">
+                <div className="text-center">
+                  <p className="text-2xl font-black text-cyan-400">{deepWorkHours}h</p>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest">Deep Work</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-black text-indigo-400">{sleepHours}h</p>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest">Sleep</p>
+                </div>
+                <div className="text-center">
+                  <p className={`text-2xl font-black ${wastedHours > 2 ? 'text-red-400' : 'text-gray-400'}`}>{wastedHours}h</p>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest">Wasted</p>
+                </div>
+              </div>
+            </GlassPanel>
+
+            {/* 7-Pillar Assessment */}
+            <GlassPanel>
+              <SectionHeader icon={Activity} title="7-Pillar Daily Assessment" subtitle="Rate each pillar 1–10 with radical honesty" accent="text-purple-400" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {pillars.map(pillar => {
+                  const Icon = pillar.icon
+                  const colorKey = pillar.color.replace('text-', '').replace('-400', '')
+                  return (
+                    <div key={pillar.id} className="bg-white/[0.02] rounded-xl p-4 border border-white/5">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Icon className={`w-4 h-4 ${pillar.color}`} />
+                        <span className="text-sm font-bold">{pillar.label}</span>
+                      </div>
+                      <ScoreSlider value={pillar.score} onChange={v => updatePillar(pillar.id, 'score', v)} color={colorKey} />
+                      <input
+                        type="text"
+                        placeholder="One-line note..."
+                        value={pillar.note}
+                        onChange={e => updatePillar(pillar.id, 'note', e.target.value)}
+                        className="mt-2 w-full text-xs bg-transparent border-b border-white/10 pb-1 outline-none text-gray-400 placeholder-gray-700 focus:border-white/20"
+                      />
+                    </div>
+                  )
+                })}
+              </div>
+            </GlassPanel>
+
+            {/* Daily Debrief */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <GlassPanel>
+                <SectionHeader icon={Star} title="3 Wins Today" accent="text-emerald-400" />
+                {wins.map((win, i) => (
+                  <div key={i} className="flex items-start gap-2 mb-3">
+                    <span className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                    <input
+                      type="text"
+                      placeholder={`Win #${i + 1}...`}
+                      value={win}
+                      onChange={e => setWins(prev => prev.map((w, j) => j === i ? e.target.value : w))}
+                      className="w-full text-sm bg-transparent border-b border-white/10 pb-1.5 outline-none text-gray-200 placeholder-gray-700 focus:border-emerald-500/30"
+                    />
+                  </div>
+                ))}
+              </GlassPanel>
+
+              <GlassPanel>
+                <SectionHeader icon={AlertCircle} title="Losses & Lessons" accent="text-red-400" />
+                {losses.map((loss, i) => (
+                  <div key={i} className="flex items-start gap-2 mb-3">
+                    <span className="w-5 h-5 rounded-full bg-red-500/20 border border-red-500/40 text-red-400 text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                    <input
+                      type="text"
+                      placeholder={`Lesson #${i + 1}...`}
+                      value={loss}
+                      onChange={e => setLosses(prev => prev.map((l, j) => j === i ? e.target.value : l))}
+                      className="w-full text-sm bg-transparent border-b border-white/10 pb-1.5 outline-none text-gray-200 placeholder-gray-700 focus:border-red-500/30"
+                    />
+                  </div>
+                ))}
+              </GlassPanel>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <GlassPanel>
+                <SectionHeader icon={Heart} title="Gratitude" accent="text-pink-400" />
+                <textarea
+                  placeholder="What are you grateful for right now?"
+                  value={gratitude}
+                  onChange={e => setGratitude(e.target.value)}
+                  rows={3}
+                  className="w-full text-sm bg-transparent resize-none outline-none text-gray-200 placeholder-gray-700"
+                />
+              </GlassPanel>
+              <GlassPanel>
+                <SectionHeader icon={Zap} title="Tomorrow's #1 Priority" accent="text-yellow-400" />
+                <textarea
+                  placeholder="The single non-negotiable thing you MUST do tomorrow..."
+                  value={tomorrow}
+                  onChange={e => setTomorrow(e.target.value)}
+                  rows={3}
+                  className="w-full text-sm bg-transparent resize-none outline-none text-gray-200 placeholder-gray-700"
+                />
+              </GlassPanel>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                onClick={handleSaveDay}
+                disabled={isSaving}
+                className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-cyan-600 to-purple-600 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-cyan-500/20 hover:scale-[1.02] transition-all disabled:opacity-50"
+              >
+                {isSaving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                {isSaving ? 'SYNCING...' : 'COMMIT DAY LOG'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {/* SECTION: 12× GOALS */}
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {activeSection === 'goals' && (
+          <div className="space-y-6">
+            {/* Overall Progress */}
+            <GlassPanel>
+              <div className="flex items-center justify-between mb-4">
+                <SectionHeader icon={Target} title="12× Parallel Goals Tracker" subtitle="Track all 48 targets across your 4 goal categories" accent="text-cyan-400" />
+                <div className="text-right">
+                  <p className="text-3xl font-black text-cyan-400">{goalsCompleted}/48</p>
+                  <p className="text-[10px] text-gray-500 uppercase">goals done</p>
+                </div>
+              </div>
+              <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full transition-all duration-500"
+                  style={{ width: `${(goalsCompleted / 48) * 100}%` }}
+                />
+              </div>
+              <div className="mt-2 text-right text-xs text-gray-500">{((goalsCompleted / 48) * 100).toFixed(1)}% complete</div>
+            </GlassPanel>
+
+            {/* Goal Category Grids */}
+            {goalCategories.map(category => {
+              const catDone = category.goals.filter(g => g.status === 'done').length
+              return (
+                <GlassPanel key={category.id}>
+                  <div className="flex items-center justify-between mb-5">
+                    <h3 className={`text-lg font-black tracking-tight ${category.color}`}>{category.label}</h3>
+                    <span className="text-xs text-gray-500">{catDone}/12 done</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                    {category.goals.map((goal, idx) => (
+                      <div key={goal.id} className="bg-white/[0.02] border border-white/5 rounded-xl p-3 hover:border-white/10 transition-all">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className={`text-xs font-black ${category.color} w-5`}>#{idx + 1}</span>
+                          <input
+                            type="text"
+                            placeholder={`${category.label.replace('12 ', '')} name...`}
+                            value={goal.name}
+                            onChange={e => updateGoal(category.id, goal.id, 'name', e.target.value)}
+                            className="flex-1 text-xs bg-transparent outline-none text-gray-200 placeholder-gray-700 font-medium"
+                          />
+                        </div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <select
+                            value={goal.status}
+                            onChange={e => updateGoal(category.id, goal.id, 'status', e.target.value)}
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full cursor-pointer outline-none ${STATUS_COLORS[goal.status]} bg-transparent`}
+                          >
+                            <option value="planning">Planning</option>
+                            <option value="active">Active</option>
+                            <option value="paused">Paused</option>
+                            <option value="done">Done</option>
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Metric (KSh / %)..."
+                            value={goal.metric}
+                            onChange={e => updateGoal(category.id, goal.id, 'metric', e.target.value)}
+                            className="flex-1 text-[10px] bg-transparent outline-none text-gray-500 placeholder-gray-700"
+                          />
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="Quick note..."
+                          value={goal.note}
+                          onChange={e => updateGoal(category.id, goal.id, 'note', e.target.value)}
+                          className="w-full text-[10px] bg-transparent border-b border-white/5 pb-0.5 outline-none text-gray-600 placeholder-gray-800 focus:border-white/10"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </GlassPanel>
+              )
+            })}
+
+            {/* Passive Income Matrix */}
+            <GlassPanel>
+              <SectionHeader icon={TrendingUp} title="Passive Income Matrix" subtitle={`${passiveCompleted}/${PASSIVE_INCOME_STREAMS.length} income streams activated`} accent="text-emerald-400" />
+              <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden mb-5">
+                <div
+                  className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full transition-all"
+                  style={{ width: `${(passiveCompleted / PASSIVE_INCOME_STREAMS.length) * 100}%` }}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
+                {PASSIVE_INCOME_STREAMS.map((stream, i) => (
+                  <label
+                    key={i}
+                    className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                      passiveChecked[i]
+                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                        : 'bg-white/[0.02] border-white/5 text-gray-500 hover:border-white/10'
+                    }`}
+                  >
+                    {passiveChecked[i]
+                      ? <CheckSquare className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                      : <Square className="w-4 h-4 flex-shrink-0" />
+                    }
+                    <span className="text-xs font-medium">{stream}</span>
+                    <input
+                      type="checkbox"
+                      className="hidden"
+                      checked={passiveChecked[i]}
+                      onChange={() => setPassiveChecked(prev => prev.map((c, j) => j === i ? !c : c))}
+                    />
+                  </label>
+                ))}
+              </div>
+            </GlassPanel>
+
+            <div className="flex justify-end">
+              <button
+                onClick={handleSaveGoals}
+                disabled={isSaving}
+                className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-emerald-600 to-cyan-600 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-[1.02] transition-all disabled:opacity-50"
+              >
+                {isSaving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                {isSaving ? 'SYNCING...' : 'COMMIT GOALS'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {/* SECTION: REVIEWS */}
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {activeSection === 'reviews' && (
+          <div className="space-y-6">
+            <GlassPanel>
+              <SectionHeader icon={Calendar} title="Structured Assessment Reviews" subtitle="Radical honesty is non-negotiable" accent="text-amber-400" />
+              <div className="flex flex-wrap gap-2 mb-6">
+                {Object.keys(REVIEW_TEMPLATES).map(type => (
+                  <button
+                    key={type}
+                    onClick={() => setReviewType(type as any)}
+                    className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide border transition-all ${
+                      reviewType === type
+                        ? 'bg-amber-500/20 text-amber-400 border-amber-500/40'
+                        : 'bg-white/5 text-gray-500 border-white/10 hover:border-white/20'
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+
+              <h3 className="text-base font-bold text-amber-400 mb-5">{REVIEW_TEMPLATES[reviewType].title}</h3>
+              <div className="space-y-5">
+                {REVIEW_TEMPLATES[reviewType].prompts.map((prompt, i) => (
+                  <div key={i} className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                    <p className="text-xs text-gray-400 font-medium mb-3">
+                      <span className="text-amber-500 font-black mr-2">Q{i + 1}.</span>{prompt}
+                    </p>
+                    <textarea
+                      placeholder="Answer with radical honesty..."
+                      value={reviewAnswers[i] || ''}
+                      onChange={e => setReviewAnswers(prev => prev.map((a, j) => j === i ? e.target.value : a))}
+                      rows={3}
+                      className="w-full text-sm bg-transparent resize-none outline-none text-gray-200 placeholder-gray-700"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={handleSaveReview}
+                  disabled={isSaving}
+                  className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-amber-600 to-orange-600 rounded-xl font-bold text-sm hover:scale-[1.02] transition-all disabled:opacity-50"
+                >
+                  {isSaving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  {isSaving ? 'SAVING...' : `SAVE ${reviewType.toUpperCase()} REVIEW`}
+                </button>
+              </div>
+            </GlassPanel>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {/* SECTION: WISDOM */}
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {activeSection === 'mentors' && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {MENTORS.map(mentor => (
+                <GlassPanel key={mentor.name} className="cursor-pointer" >
+                  <button
+                    className="w-full text-left"
+                    onClick={() => setExpandedMentor(expandedMentor === mentor.name ? null : mentor.name)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className={`font-black text-base ${mentor.accent}`}>{mentor.name}</h4>
+                        <p className="text-xs text-gray-500 italic">{mentor.title}</p>
+                      </div>
+                      {expandedMentor === mentor.name
+                        ? <ChevronUp className="w-4 h-4 text-gray-500" />
+                        : <ChevronDown className="w-4 h-4 text-gray-500" />
+                      }
+                    </div>
+                  </button>
+                  {expandedMentor === mentor.name && (
+                    <ul className="mt-4 space-y-2">
+                      {mentor.rules.map((rule, i) => (
+                        <li key={i} className="flex items-start gap-2 text-xs text-gray-300">
+                          <span className={`font-black ${mentor.accent} mt-0.5`}>→</span>
+                          {rule}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </GlassPanel>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {ANCIENT_WISDOM.map(wisdom => (
+                <GlassPanel key={wisdom.name}>
+                  <button
+                    className="w-full text-left"
+                    onClick={() => setExpandedWisdom(expandedWisdom === wisdom.name ? null : wisdom.name)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className={`font-black text-base ${wisdom.accent}`}>{wisdom.name}</h4>
+                        <p className="text-xs text-gray-500 italic">"{wisdom.book}"</p>
+                      </div>
+                      {expandedWisdom === wisdom.name
+                        ? <ChevronUp className="w-4 h-4 text-gray-500" />
+                        : <ChevronDown className="w-4 h-4 text-gray-500" />
+                      }
+                    </div>
+                  </button>
+                  {expandedWisdom === wisdom.name && (
+                    <ul className="mt-4 space-y-2">
+                      {wisdom.keys.map((key, i) => (
+                        <li key={i} className="flex items-start gap-2 text-xs text-gray-300 italic">
+                          <span className={`font-black not-italic ${wisdom.accent} mt-0.5`}>"</span>
+                          {key}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </GlassPanel>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {/* SECTION: FINANCE LAWS */}
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {activeSection === 'finance' && (
+          <div className="space-y-4">
+            <GlassPanel>
+              <SectionHeader icon={DollarSign} title="Debt Trap Formulas" subtitle="Never violate these rules. Ever." accent="text-red-400" />
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {DEBT_RULES.map(rule => (
+                  <div key={rule.rule} className={`rounded-xl p-4 border ${rule.color}`}>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">{rule.rule}</p>
+                    <h4 className="text-sm font-black text-white mb-1">{rule.title}</h4>
+                    <p className="text-xs text-cyan-400 font-mono font-bold mb-2">{rule.formula}</p>
+                    <p className="text-xs text-gray-400 leading-relaxed">{rule.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </GlassPanel>
+
+            <GlassPanel>
+              <SectionHeader icon={BarChart2} title="Financial Rules Cheat Sheet" accent="text-emerald-400" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  { title: '50/30/20 Budget Rule', desc: '50% needs, 30% wants, 20% savings & debt payoff. Non-negotiable baseline for financial sanity.', color: 'text-emerald-400' },
+                  { title: 'Pay Yourself First', desc: 'Automatically transfer 20%+ of every income to savings before touching it. Automate this. No exceptions.', color: 'text-cyan-400' },
+                  { title: 'Never Use Credit for Depreciating Assets', desc: 'Credit is only justified for assets that appreciate (real estate, business) or generate cash flow. Cars, phones, and clothes are not investments.', color: 'text-yellow-400' },
+                  { title: 'Net Worth Tracking (Monthly)', desc: 'Net Worth = Assets − Liabilities. Track this monthly. It is the only financial metric that truly matters long-term.', color: 'text-purple-400' },
+                  { title: 'The Latte Factor', desc: 'KSh 500/day in small purchases = KSh 180,000/year = >1M KSh invested over 5 years at 10% returns. Small habits compound ruthlessly.', color: 'text-amber-400' },
+                  { title: 'Never Accept a Single Income Stream', desc: 'The wealthy have 7+ income streams. Your goal is 12. Start with one, build the second while the first runs, repeat.', color: 'text-rose-400' },
+                ].map(item => (
+                  <div key={item.title} className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                    <h4 className={`text-sm font-black mb-2 ${item.color}`}>{item.title}</h4>
+                    <p className="text-xs text-gray-400 leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </GlassPanel>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

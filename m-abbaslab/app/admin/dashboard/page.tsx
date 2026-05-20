@@ -51,9 +51,11 @@ import {
 import { personalConfig } from '@/config/personal'
 import FinanceTracker from '@/components/admin/FinanceTracker'
 import ContentScheduler from '@/components/admin/ContentScheduler'
+import WhatsAppBroadcaster from '@/components/admin/WhatsAppBroadcaster'
 import ZapierPanel from '@/components/admin/ZapierPanel'
 import JarvisInbox from '@/components/admin/JarvisInbox'
 import JarvisBrain from '@/components/admin/JarvisBrain'
+import DisciplineOS from '@/components/admin/DisciplineOS'
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -62,6 +64,12 @@ export default function AdminDashboardPage() {
   const [titles, setTitles] = useState<any[]>([])
   const [alphas, setAlphas] = useState<any[]>([])
   const [jarvisTrainingRules, setJarvisTrainingRules] = useState<any[]>([])
+  const [whatsappBotSchedule, setWhatsappBotSchedule] = useState<any>({
+    type: 'always',
+    workingHoursStart: '08:00',
+    workingHoursEnd: '17:00',
+    timezone: 'Africa/Nairobi'
+  })
   const [editingItem, setEditingItem] = useState<{ type: string, id: string, field?: string } | null>(null)
   const [selectedEditProject, setSelectedEditProject] = useState<any | null>(null)
   const [selectedEditArticle, setSelectedEditArticle] = useState<any | null>(null)
@@ -75,6 +83,26 @@ export default function AdminDashboardPage() {
   const [adminPassword, setAdminPassword] = useState((personalConfig as any).adminCredentials?.password || 'admin123')
   const [siteFeatures, setSiteFeatures] = useState(personalConfig.site.features)
 
+  const [brandName, setBrandName] = useState(personalConfig.brandName || 'M-AbbasLab')
+  const [siteTitle, setSiteTitle] = useState(personalConfig.title || '')
+  const [tagline, setTagline] = useState(personalConfig.tagline || '')
+  const [googleAnalyticsId, setGoogleAnalyticsId] = useState(personalConfig.googleAnalyticsId || '')
+  
+  // Social Media State
+  const [socialGithub, setSocialGithub] = useState(personalConfig.social?.github || '')
+  const [socialLinkedin, setSocialLinkedin] = useState(personalConfig.social?.linkedin || '')
+  const [socialTwitter, setSocialTwitter] = useState(personalConfig.social?.twitter || '')
+  const [socialInstagram, setSocialInstagram] = useState(personalConfig.social?.instagram || '')
+  const [socialTiktok, setSocialTiktok] = useState(personalConfig.social?.tiktok || '')
+  const [socialFacebook, setSocialFacebook] = useState(personalConfig.social?.facebook || '')
+  const [socialYoutube, setSocialYoutube] = useState(personalConfig.social?.youtube || '')
+  const [socialWhatsapp, setSocialWhatsapp] = useState(personalConfig.social?.whatsapp || '')
+  const [socialTelegram, setSocialTelegram] = useState(personalConfig.social?.telegram || '')
+
+  // Roles & Research Interests State
+  const [rolesStr, setRolesStr] = useState(personalConfig.roles?.join(', ') || '')
+  const [researchInterestsStr, setResearchInterestsStr] = useState(personalConfig.researchInterests?.join(', ') || '')
+
   // Load from API (File-Based CMS) with LocalStorage fallback
   useEffect(() => {
     const loadConfig = async () => {
@@ -87,11 +115,32 @@ export default function AdminDashboardPage() {
           setTitles(config.fashion?.titles || [])
           setAlphas(config.worldQuant?.alphas || [])
           setJarvisTrainingRules(config.jarvisTraining || (personalConfig as any).jarvisTraining || [])
+          setWhatsappBotSchedule(config.whatsappBotSchedule || (personalConfig as any).whatsappBotSchedule || {
+            type: 'always',
+            workingHoursStart: '08:00',
+            workingHoursEnd: '17:00',
+            timezone: 'Africa/Nairobi'
+          })
           setAdminName(config.name || personalConfig.name)
           setAdminEmail(config.email || personalConfig.email)
           setAdminUsername(config.adminCredentials?.username || (personalConfig as any).adminCredentials?.username || 'ceo')
           setAdminPassword(config.adminCredentials?.password || (personalConfig as any).adminCredentials?.password || 'admin123')
           setSiteFeatures(config.site?.features || personalConfig.site.features)
+          setBrandName(config.brandName || personalConfig.brandName || 'M-AbbasLab')
+          setSiteTitle(config.title || personalConfig.title || '')
+          setTagline(config.tagline || personalConfig.tagline || '')
+          setGoogleAnalyticsId(config.googleAnalyticsId || personalConfig.googleAnalyticsId || '')
+          setSocialGithub(config.social?.github || personalConfig.social?.github || '')
+          setSocialLinkedin(config.social?.linkedin || personalConfig.social?.linkedin || '')
+          setSocialTwitter(config.social?.twitter || personalConfig.social?.twitter || '')
+          setSocialInstagram(config.social?.instagram || personalConfig.social?.instagram || '')
+          setSocialTiktok(config.social?.tiktok || personalConfig.social?.tiktok || '')
+          setSocialFacebook(config.social?.facebook || personalConfig.social?.facebook || '')
+          setSocialYoutube(config.social?.youtube || personalConfig.social?.youtube || '')
+          setSocialWhatsapp(config.social?.whatsapp || personalConfig.social?.whatsapp || '')
+          setSocialTelegram(config.social?.telegram || personalConfig.social?.telegram || '')
+          setRolesStr(config.roles?.join(', ') || personalConfig.roles?.join(', ') || '')
+          setResearchInterestsStr(config.researchInterests?.join(', ') || personalConfig.researchInterests?.join(', ') || '')
           setIsLoaded(true)
           return
         }
@@ -105,12 +154,19 @@ export default function AdminDashboardPage() {
       const savedTitles = localStorage.getItem('admin_titles')
       const savedAlphas = localStorage.getItem('admin_alphas')
       const savedJarvisTraining = localStorage.getItem('admin_jarvis_training')
+      const savedWhatsappBotSchedule = localStorage.getItem('admin_whatsapp_bot_schedule')
 
       setProjects(savedProjects ? JSON.parse(savedProjects) : personalConfig.projects)
       setArticles(savedArticles ? JSON.parse(savedArticles) : personalConfig.articles)
       setTitles(savedTitles ? JSON.parse(savedTitles) : (personalConfig as any).fashion?.titles || [])
       setAlphas(savedAlphas ? JSON.parse(savedAlphas) : (personalConfig as any).worldQuant?.alphas || [])
       setJarvisTrainingRules(savedJarvisTraining ? JSON.parse(savedJarvisTraining) : (personalConfig as any).jarvisTraining || [])
+      setWhatsappBotSchedule(savedWhatsappBotSchedule ? JSON.parse(savedWhatsappBotSchedule) : (personalConfig as any).whatsappBotSchedule || {
+        type: 'always',
+        workingHoursStart: '08:00',
+        workingHoursEnd: '17:00',
+        timezone: 'Africa/Nairobi'
+      })
       setIsLoaded(true)
     }
 
@@ -124,10 +180,27 @@ export default function AdminDashboardPage() {
         ...personalConfig,
         name: adminName,
         email: adminEmail,
+        brandName,
+        title: siteTitle,
+        tagline,
+        googleAnalyticsId,
         adminCredentials: {
           username: adminUsername,
           password: adminPassword
         },
+        social: {
+          github: socialGithub,
+          linkedin: socialLinkedin,
+          twitter: socialTwitter,
+          instagram: socialInstagram,
+          tiktok: socialTiktok,
+          facebook: socialFacebook,
+          youtube: socialYoutube,
+          whatsapp: socialWhatsapp,
+          telegram: socialTelegram
+        },
+        roles: rolesStr.split(',').map(r => r.trim()).filter(Boolean),
+        researchInterests: researchInterestsStr.split(',').map(r => r.trim()).filter(Boolean),
         projects,
         articles,
         fashion: {
@@ -142,7 +215,8 @@ export default function AdminDashboardPage() {
           ...personalConfig.site,
           features: siteFeatures
         },
-        jarvisTraining: jarvisTrainingRules
+        jarvisTraining: jarvisTrainingRules,
+        whatsappBotSchedule: whatsappBotSchedule
       }
 
       const response = await fetch('/api/admin/config', {
@@ -171,8 +245,9 @@ export default function AdminDashboardPage() {
       localStorage.setItem('admin_titles', JSON.stringify(titles))
       localStorage.setItem('admin_alphas', JSON.stringify(alphas))
       localStorage.setItem('admin_jarvis_training', JSON.stringify(jarvisTrainingRules))
+      localStorage.setItem('admin_whatsapp_bot_schedule', JSON.stringify(whatsappBotSchedule))
     }
-  }, [projects, articles, titles, alphas, jarvisTrainingRules, isLoaded])
+  }, [projects, articles, titles, alphas, jarvisTrainingRules, whatsappBotSchedule, isLoaded])
 
   // Quant Lab State
   const [alphaExpression, setAlphaExpression] = useState('rank(close_price) / sum(volume, 20)')
@@ -625,7 +700,7 @@ export default function AdminDashboardPage() {
       {/* Tabs */}
       <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
         <div className="flex gap-6 overflow-x-auto pb-2 scrollbar-hide">
-          {['overview', 'jarvis-inbox', 'jarvis-brain', 'zapier-automations', 'finance-tracker', 'content-scheduler', 'projects', 'articles', 'modeling', 'world-quant', 'social-media', 'comms-hub', 'system-integrity', 'skills', 'settings'].map((tab) => (
+          {['overview', 'jarvis-inbox', 'jarvis-brain', 'zapier-automations', 'finance-tracker', 'content-scheduler', 'projects', 'articles', 'modeling', 'world-quant', 'social-media', 'comms-hub', 'system-integrity', 'skills', 'settings', 'discipline-os'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -634,7 +709,7 @@ export default function AdminDashboardPage() {
                 : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
                 }`}
             >
-              {tab.replace('-', ' ')}
+              {tab === 'discipline-os' ? 'Discipline OS' : tab.replace('-', ' ')}
             </button>
           ))}
         </div>
@@ -643,7 +718,14 @@ export default function AdminDashboardPage() {
       {/* Tab Content */}
       <div className="space-y-6">
         {activeTab === 'jarvis-inbox' && <JarvisInbox />}
-        {activeTab === 'jarvis-brain' && <JarvisBrain rules={jarvisTrainingRules} onChange={setJarvisTrainingRules} />}
+        {activeTab === 'jarvis-brain' && (
+          <JarvisBrain
+            rules={jarvisTrainingRules}
+            onChange={setJarvisTrainingRules}
+            schedule={whatsappBotSchedule}
+            onScheduleChange={setWhatsappBotSchedule}
+          />
+        )}
         {activeTab === 'zapier-automations' && <ZapierPanel />}
         {activeTab === 'overview' && (
           <>
@@ -732,6 +814,7 @@ export default function AdminDashboardPage() {
         {activeTab === 'content-scheduler' && (
           <div className="space-y-4">
             <ContentScheduler />
+            <WhatsAppBroadcaster />
           </div>
         )}
 
@@ -1763,7 +1846,6 @@ export default function AdminDashboardPage() {
         )}
 
         {/* Site Settings Tab */}
-        {/* Site Settings Tab */}
         {activeTab === 'settings' && (
           <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -1772,10 +1854,11 @@ export default function AdminDashboardPage() {
             </div>
 
             <div className="p-6 space-y-8">
+              {/* BRANDING & IDENTITY */}
               <div>
                 <h3 className="text-sm font-bold mb-4 flex items-center gap-2">
                   <User className="w-4 h-4 text-blue-500" />
-                  IDENTITY PARAMETERS
+                  BRANDING & IDENTITY
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -1788,6 +1871,33 @@ export default function AdminDashboardPage() {
                     />
                   </div>
                   <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Brand Name</label>
+                    <input
+                      type="text"
+                      value={brandName}
+                      onChange={(e) => setBrandName(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none font-medium"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Professional Title</label>
+                    <input
+                      type="text"
+                      value={siteTitle}
+                      onChange={(e) => setSiteTitle(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none font-medium"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Tagline / Pitch</label>
+                    <textarea
+                      value={tagline}
+                      onChange={(e) => setTagline(e.target.value)}
+                      rows={2}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none font-medium resize-none"
+                    />
+                  </div>
+                  <div>
                     <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Secure Contact Email</label>
                     <input
                       type="email"
@@ -1796,9 +1906,19 @@ export default function AdminDashboardPage() {
                       className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none font-medium"
                     />
                   </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Google Analytics Measure ID</label>
+                    <input
+                      type="text"
+                      value={googleAnalyticsId}
+                      onChange={(e) => setGoogleAnalyticsId(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none font-medium"
+                    />
+                  </div>
                 </div>
               </div>
 
+              {/* CREDENTIALS */}
               <div>
                 <h3 className="text-sm font-bold mb-4 flex items-center gap-2">
                   <Lock className="w-4 h-4 text-rose-500" />
@@ -1817,7 +1937,7 @@ export default function AdminDashboardPage() {
                   <div>
                     <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Password</label>
                     <input
-                      type="text"
+                      type="password"
                       value={adminPassword}
                       onChange={(e) => setAdminPassword(e.target.value)}
                       className="w-full px-4 py-2 border border-rose-200 dark:border-rose-900/30 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-rose-500 outline-none font-medium"
@@ -1826,9 +1946,129 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
+              {/* SOCIAL LINKS */}
               <div>
                 <h3 className="text-sm font-bold mb-4 flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-emerald-500" />
+                  <Share2 className="w-4 h-4 text-emerald-500" />
+                  SOCIAL MEDIA ECOSYSTEM
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">GitHub URL</label>
+                    <input
+                      type="text"
+                      value={socialGithub}
+                      onChange={(e) => setSocialGithub(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-emerald-500 outline-none font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">LinkedIn URL</label>
+                    <input
+                      type="text"
+                      value={socialLinkedin}
+                      onChange={(e) => setSocialLinkedin(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-emerald-500 outline-none font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">X / Twitter URL</label>
+                    <input
+                      type="text"
+                      value={socialTwitter}
+                      onChange={(e) => setSocialTwitter(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-emerald-500 outline-none font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Instagram URL</label>
+                    <input
+                      type="text"
+                      value={socialInstagram}
+                      onChange={(e) => setSocialInstagram(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-emerald-500 outline-none font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">TikTok URL</label>
+                    <input
+                      type="text"
+                      value={socialTiktok}
+                      onChange={(e) => setSocialTiktok(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-emerald-500 outline-none font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Facebook URL</label>
+                    <input
+                      type="text"
+                      value={socialFacebook}
+                      onChange={(e) => setSocialFacebook(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-emerald-500 outline-none font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">YouTube Channel URL</label>
+                    <input
+                      type="text"
+                      value={socialYoutube}
+                      onChange={(e) => setSocialYoutube(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-emerald-500 outline-none font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">WhatsApp Direct Link</label>
+                    <input
+                      type="text"
+                      value={socialWhatsapp}
+                      onChange={(e) => setSocialWhatsapp(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-emerald-500 outline-none font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Telegram Username URL</label>
+                    <input
+                      type="text"
+                      value={socialTelegram}
+                      onChange={(e) => setSocialTelegram(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-emerald-500 outline-none font-medium"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* TAXONOMY */}
+              <div>
+                <h3 className="text-sm font-bold mb-4 flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-purple-500" />
+                  PROFESSIONAL TAXONOMY
+                </h3>
+                <div className="grid grid-cols-1 gap-6">
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Roles (Comma Separated)</label>
+                    <input
+                      type="text"
+                      value={rolesStr}
+                      onChange={(e) => setRolesStr(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-purple-500 outline-none font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2">Research Interests (Comma Separated)</label>
+                    <input
+                      type="text"
+                      value={researchInterestsStr}
+                      onChange={(e) => setResearchInterestsStr(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-purple-500 outline-none font-medium"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* INTERFACE SWITCHES */}
+              <div>
+                <h3 className="text-sm font-bold mb-4 flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-yellow-500" />
                   INTERFACE MODULES
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1878,6 +2118,10 @@ export default function AdminDashboardPage() {
               </div>
             </div>
           </div>
+        )}
+
+        {activeTab === 'discipline-os' && (
+          <DisciplineOS />
         )}
       </div>
 

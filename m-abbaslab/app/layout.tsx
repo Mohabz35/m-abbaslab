@@ -6,6 +6,7 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Scene3D from '@/components/background/Scene3D'
+import FloatingJarvisLauncher from '@/components/ui/FloatingJarvisLauncher'
 import PageTransition from '@/components/PageTransition'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import Analytics from '@/components/Analytics'
@@ -128,6 +129,7 @@ export default function RootLayout({
         </Suspense>
         <ErrorBoundary>
           <Scene3D />
+          <FloatingJarvisLauncher />
 
           <div className="relative min-h-screen flex flex-col z-10">
             <Navbar />
