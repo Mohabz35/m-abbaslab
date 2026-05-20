@@ -51,6 +51,7 @@ import {
 import { personalConfig } from '@/config/personal'
 import FinanceTracker from '@/components/admin/FinanceTracker'
 import ContentScheduler from '@/components/admin/ContentScheduler'
+import WhatsAppBroadcaster from '@/components/admin/WhatsAppBroadcaster'
 import ZapierPanel from '@/components/admin/ZapierPanel'
 import JarvisInbox from '@/components/admin/JarvisInbox'
 import JarvisBrain from '@/components/admin/JarvisBrain'
@@ -813,6 +814,7 @@ export default function AdminDashboardPage() {
         {activeTab === 'content-scheduler' && (
           <div className="space-y-4">
             <ContentScheduler />
+            <WhatsAppBroadcaster />
           </div>
         )}
 
