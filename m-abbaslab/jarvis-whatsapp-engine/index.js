@@ -69,124 +69,75 @@ async function copyDir(sourcePath, targetPath) {
   for (const entry of entries) {
     const sourceEntryPath = path.join(sourcePath, entry.name)
     const targetEntryPath = path.join(targetPath, entry.name)
-
     if (entry.isDirectory()) {
       await copyDir(sourceEntryPath, targetEntryPath)
     } else {
-      await ensureDir(path.dirname(targetEntryPath))
       await fs.promises.copyFile(sourceEntryPath, targetEntryPath)
     }
   }
 }
 
-async function backupAuthState() {
-  if (!exists(AUTH_DIR)) return false
-
-  try {
+async function backupAuth() {
+  if (await exists(AUTH_DIR)) {
+    console.log('[M-JARVIS] 💾 Backing up auth state...')
     await clearDir(AUTH_BACKUP_DIR)
     await copyDir(AUTH_DIR, AUTH_BACKUP_DIR)
-    console.log('[M-JARVIS] Auth state backup refreshed.')
-    return true
-  } catch (error) {
-    console.error('[M-JARVIS] Failed to back up auth state:', error.message)
-    return false
+    console.log('[M-JARVIS] ✅ Auth state backed up')
   }
 }
 
-async function restoreAuthStateFromBackup() {
-  if (!exists(AUTH_BACKUP_DIR)) {
-    console.warn('[M-JARVIS] No auth backup available to restore.')
-    return false
-  }
-
-  try {
+async function restoreAuth() {
+  if (await exists(AUTH_BACKUP_DIR)) {
+    console.log('[M-JARVIS] 🔄 Restoring auth state from backup...')
     await clearDir(AUTH_DIR)
     await copyDir(AUTH_BACKUP_DIR, AUTH_DIR)
-    console.log('[M-JARVIS] Auth state restored from backup.')
+    console.log('[M-JARVIS] ✅ Auth state restored')
     return true
-  } catch (error) {
-    console.error('[M-JARVIS] Failed to restore auth state backup:', error.message)
-    return false
+  }
+  return false
+}
+
+async function updateStatus(updates) {
+  if (updates.connectionState) connectionState = updates.connectionState
+  if (updates.isConnected !== undefined) isConnected = updates.isConnected
+  if (updates.lastConnectedAt) lastConnectedAt = updates.lastConnectedAt
+  if (updates.lastDisconnectedAt) lastDisconnectedAt = updates.lastDisconnectedAt
+  if (updates.lastError !== undefined) lastError = updates.lastError
+  if (updates.qr !== undefined) latestQr = updates.qr
+  if (updates.pairingCode !== undefined) latestPairingCode = updates.pairingCode
+
+  if (hasSupabase) {
+    try {
+      await supabase.from('whatsapp_connection_status').upsert({
+        id: STATUS_ROW_ID,
+        status: connectionState,
+        is_connected: isConnected,
+        last_connected_at: lastConnectedAt,
+        last_disconnected_at: lastDisconnectedAt,
+        last_error: lastError ? String(lastError) : null,
+        reconnect_attempts: reconnectAttempts,
+        updated_at: new Date().toISOString()
+      })
+    } catch (e) {
+      console.error('[M-JARVIS] Failed to update status in Supabase:', e.message)
+    }
   }
 }
 
-function buildStatusPayload(overrides = {}) {
-  return {
-    id: STATUS_ROW_ID,
-    status: isConnected ? 'online' : connectionState,
-    service: 'M-JARVIS WhatsApp Engine',
-    is_connected: isConnected,
-    connection_state: connectionState,
-    reconnect_attempts: reconnectAttempts,
-    last_connected_at: lastConnectedAt,
-    last_disconnected_at: lastDisconnectedAt,
-    last_error: lastError,
-    engine_url: process.env.JARVIS_ENGINE_URL || null,
-    metadata: {
-      latestQrAvailable: Boolean(latestQr),
-      latestPairingCodeAvailable: Boolean(latestPairingCode),
-      qrCode: latestQr || null,
-      pairingCode: latestPairingCode || null
-    },
-    updated_at: new Date().toISOString(),
-    ...overrides,
-  }
-}
-
-async function pushConnectionStatus(overrides = {}) {
-  if (!supabase) return
-
-  try {
-    await supabase.from('whatsapp_connection_status').upsert(buildStatusPayload(overrides))
-  } catch (error) {
-    console.error('[M-JARVIS] Failed to push connection status:', error.message)
-  }
-}
-
-function isChatbotAllowedNow(schedule) {
-  if (!schedule || schedule.type === 'always') return true
-  if (schedule.type === 'disabled') return false
-
-  const tz = schedule.timezone || 'Africa/Nairobi'
-  const now = new Date()
-  const timeStr = now.toLocaleTimeString('en-GB', {
-    timeZone: tz,
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  })
-
-  const [curH, curM] = timeStr.split(':').map(Number)
-  const currentMins = curH * 60 + curM
-
-  const [startH, startM] = (schedule.workingHoursStart || '08:00').split(':').map(Number)
-  const [endH, endM] = (schedule.workingHoursEnd || '17:00').split(':').map(Number)
-  const startMins = startH * 60 + startM
-  const endMins = endH * 60 + endM
-  const isWorkingHours = currentMins >= startMins && currentMins < endMins
-
-  if (schedule.type === 'working') return isWorkingHours
-  if (schedule.type === 'non-working') return !isWorkingHours
-
-  return true
-}
-
-async function getChatHistory(sender) {
-  if (!supabase) return []
-
-  try {
-    const { data, error } = await supabase
-      .from('whatsapp_messages')
-      .select('message_text, jarvis_reply, timestamp')
-      .eq('sender_number', sender)
-      .order('timestamp', { ascending: false })
-      .limit(8)
-
-    if (error || !data) return []
-    return data.reverse()
-  } catch (e) {
-    console.warn('[M-JARVIS] Could not fetch chat history:', e.message)
-    return []
+async function logMessage(sender, senderName, text, reply) {
+  if (hasSupabase) {
+    try {
+      await supabase.from('whatsapp_messages').insert({
+        sender_number: sender,
+        sender_name: senderName || 'Unknown',
+        message_text: text,
+        jarvis_reply: reply,
+        is_read: false,
+        timestamp: new Date().toISOString()
+      })
+    } catch (e) {
+      console.error('[M-JARVIS] Failed to log message to Supabase:', e.message)
+    }
   }
 }
 
@@ -194,495 +145,227 @@ async function getJarvisResponse(senderName, messageText, sender) {
   const lowerMsg = messageText.toLowerCase()
   let trainedRules = []
   let configData = null
-  let chatbotSchedule = null
 
-  if (supabase) {
+  if (hasSupabase) {
     try {
-      const { data, error } = await supabase
-        .from('site_config')
-        .select('config_data')
-        .eq('id', 1)
-        .single()
-
-      if (!error && data && data.config_data) {
+      const { data } = await supabase.from('site_config').select('config_data').eq('id', 1).single()
+      if (data?.config_data) {
         configData = data.config_data
         trainedRules = data.config_data.jarvisTraining || []
-        chatbotSchedule = data.config_data.whatsappBotSchedule || null
       }
-    } catch (err) {
-      console.warn('[M-JARVIS] Supabase config fetch failed, using local fallback:', err.message)
+    } catch (e) {
+      console.warn('[M-JARVIS] Failed to fetch config from Supabase:', e.message)
     }
   }
 
   if (!configData) {
-    const localConfig = loadLocalConfig()
-    if (localConfig) {
-      configData = localConfig
-      trainedRules = localConfig.jarvisTraining || []
-      chatbotSchedule = localConfig.whatsappBotSchedule || null
-      console.log('[M-JARVIS] Using local config fallback.')
-    }
-  }
-
-  if (!isChatbotAllowedNow(chatbotSchedule)) {
-    console.log('[M-JARVIS] Bot is outside its active schedule window. Skipping reply.')
-    return null
+    configData = loadLocalConfig()
+    if (configData) trainedRules = configData.jarvisTraining || []
   }
 
   for (const rule of trainedRules) {
     if (rule.keyword && lowerMsg.includes(rule.keyword.toLowerCase())) {
-      console.log(`[M-JARVIS] Matched trained rule: "${rule.keyword}"`)
       return rule.response
     }
   }
 
   if (process.env.OPENROUTER_API_KEY) {
-    console.log('[M-JARVIS] OpenRouter AI active. Building context-aware response...')
-
     try {
-      const history = await getChatHistory(sender)
-      const conversationMessages = []
-
-      for (const row of history.slice(-6)) {
-        if (row.message_text && !row.message_text.startsWith('[Manual Reply]')) {
-          conversationMessages.push({ role: 'user', content: row.message_text })
-          if (row.jarvis_reply) {
-            conversationMessages.push({ role: 'assistant', content: row.jarvis_reply })
-          }
-        } else if (row.message_text && row.message_text.startsWith('[Manual Reply]') && row.jarvis_reply) {
-          conversationMessages.push({
-            role: 'assistant',
-            content: `[Mohammed's personal reply]: ${row.jarvis_reply}`,
-          })
-        }
-      }
-
-      conversationMessages.push({ role: 'user', content: messageText })
-
-      const dynamicSystemPrompt = `You are M-JARVIS, a highly capable and intelligent personal assistant for Mohammed Abbas.
-Mohammed Abbas is an Economist, Statistician, Data Scientist, Full-Stack Software Engineer, and commercial fashion model based in Kenya.
-Your replies should mirror Mohammed's professional yet approachable communication style. Be concise (2-4 sentences max), helpful, and slightly futuristic.
-
-Mohammed's profile:
-- Email: ${configData?.email || 'mohammedabbasofficial100@gmail.com'}
-- Brand: ${configData?.brandName || 'M-AbbasLab'}
-- Roles: ${JSON.stringify(configData?.roles || ['Economist', 'Engineer', 'Data Scientist'])}
-- Projects: ${JSON.stringify((configData?.projects || []).slice(0, 4).map((p) => ({ title: p.title, description: p.description, status: p.status })))}
-- Modeling Titles: ${JSON.stringify((configData?.fashion?.titles || []).slice(0, 3).map((t) => ({ title: t.title, year: t.year })))}
-- Contact: Email ${configData?.email || 'mohammedabbasofficial100@gmail.com'}, WhatsApp: +254702894309, Web: m-abbaslab.vercel.app
-
-IMPORTANT: You are conversing with ${senderName}. Study the conversation history above (especially any [Mohammed's personal reply] entries) to match his tone and style closely. Respond ONLY to the latest message.`
-
+      const systemPrompt = "You are M-JARVIS, Mohammed Abbas's intelligent personal assistant. Mohammed is an Economist, Statistician, Data Scientist, and Software Engineer. Be professional, concise, and helpful. Mirror his style."
+      
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://m-abbaslab.vercel.app',
-          'X-Title': 'M-AbbasLab Jarvis WhatsApp',
+          'Authorization': "Bearer " + process.env.OPENROUTER_API_KEY,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: process.env.OPENROUTER_MODEL || 'nvidia/nemotron-3-super-120b-a12b:free',
+          model: process.env.OPENROUTER_MODEL || 'openai/gpt-3.5-turbo',
           messages: [
-            { role: 'system', content: dynamicSystemPrompt },
-            ...conversationMessages,
-          ],
-          temperature: 0.7,
-          max_tokens: 512,
-        }),
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: "Message from " + senderName + ": " + messageText }
+          ]
+        })
       })
 
       if (response.ok) {
-        const responseData = await response.json()
-        const reply = responseData.choices?.[0]?.message?.content?.trim() || ''
-        if (reply) {
-          console.log('[M-JARVIS] OpenRouter response received.')
-          return reply
-        }
-      } else {
-        const errBody = await response.text()
-        console.error('[M-JARVIS] OpenRouter error:', response.status, errBody)
+        const data = await response.json()
+        return data.choices?.[0]?.message?.content?.trim()
       }
-    } catch (err) {
-      console.error('[M-JARVIS] OpenRouter call failed:', err.message)
+    } catch (e) {
+      console.error('[M-JARVIS] AI Response failed:', e.message)
     }
   }
 
-  if (configData) {
-    if (lowerMsg.includes('project') || lowerMsg.includes('portfolio') || lowerMsg.includes('work')) {
-      const topProjects = (configData.projects || [])
-        .slice(0, 3)
-        .map((p) => `• *${p.title}*: ${p.description}`)
-        .join('\n')
-      return `Mohammed has built several outstanding systems. Here are a few recent ones:\n\n${topProjects || '• M-AbbasLab Platform'}\n\nExplore them all at: *m-abbaslab.vercel.app*`
-    }
-
-    if (lowerMsg.includes('model') || lowerMsg.includes('fashion') || lowerMsg.includes('title')) {
-      const titlesList = (configData.fashion?.titles || [])
-        .slice(0, 3)
-        .map((t) => `• *${t.title}* (${t.year})`)
-        .join('\n')
-      return `Mohammed is a crowned commercial and pageantry model in Kenya. His achievements include:\n\n${titlesList || '• Mr. Glam Haven\n• Mr. YYMH'}`
-    }
-
-    if (lowerMsg.includes('contact') || lowerMsg.includes('email') || lowerMsg.includes('phone')) {
-      return `You can connect with Mohammed directly at:\nEmail: ${configData.email || 'mohammedabbasofficial100@gmail.com'}\nPhone/WhatsApp: +254 702 894 309\nWeb: *m-abbaslab.vercel.app*`
-    }
+  if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
+    return "Hello " + senderName + "! I'm M-JARVIS, Mohammed's assistant. How can I help?"
   }
 
-  if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey') || lowerMsg.includes('salam') || lowerMsg.includes('habari')) {
-    return `Hello ${senderName}. This is M-JARVIS, Mohammed's AI assistant. How can I help you today?`
-  }
-  if (lowerMsg.includes('who are you') || lowerMsg.includes('are you a bot') || lowerMsg.includes('are you ai')) {
-    return `I'm M-JARVIS, Mohammed Abbas's intelligent personal assistant. I handle his WhatsApp while he's working. How can I assist you?`
-  }
-  if (lowerMsg.includes('mohammed') || lowerMsg.includes('boss') || lowerMsg.includes('director')) {
-    return `Mohammed Abbas is a visionary economist, full-stack engineer, and founder of the Quantum Impact Syndicate. He's currently occupied but will personally respond to you soon.`
-  }
-  if (lowerMsg.includes('thank') || lowerMsg.includes('thanks') || lowerMsg.includes('appreciate') || lowerMsg.includes('asante')) {
-    return `You're most welcome. Is there anything else I can assist you with?`
-  }
-
-  return `Thank you for reaching out to Mohammed. I've logged your message and he will respond personally. In the meantime, visit *m-abbaslab.vercel.app* to explore his work.`
-}
-
-async function logMessageToSupabase(sender, senderName, message, reply) {
-  if (!supabase) {
-    console.log('[Supabase] Not configured. Skipping message log.')
-    return
-  }
-
-  try {
-    await supabase.from('whatsapp_messages').insert([{
-      sender_number: sender,
-      sender_name: senderName || 'Unknown',
-      message_text: message,
-      jarvis_reply: reply,
-      message_type: 'text',
-      direction: 'incoming',
-      metadata: {},
-      timestamp: new Date().toISOString(),
-      is_read: false,
-    }])
-    console.log(`[Supabase] Logged message from ${senderName}`)
-  } catch (err) {
-    console.error('[Supabase] Failed to log message:', err.message)
-  }
-}
-
-async function logManualReplyToSupabase(recipientJid, recipientName, replyText) {
-  if (!supabase) return
-
-  try {
-    await supabase.from('whatsapp_messages').insert([{
-      sender_number: recipientJid,
-      sender_name: recipientName || 'Contact',
-      message_text: '[Manual Reply]',
-      jarvis_reply: replyText,
-      message_type: 'text',
-      direction: 'outgoing',
-      metadata: {},
-      timestamp: new Date().toISOString(),
-      is_read: true,
-    }])
-    console.log(`[Supabase] Logged Mohammed's manual reply to ${recipientJid}`)
-  } catch (err) {
-    console.error('[Supabase] Failed to log manual reply:', err.message)
-  }
-}
-
-async function logJarvisInteraction(sender, senderName, messageText, reply) {
-  if (!supabase) return
-
-  try {
-    await supabase.from('jarvis_interactions').insert([{
-      sender_number: sender,
-      sender_name: senderName || 'Unknown',
-      user_message: messageText,
-      ai_reply: reply,
-      provider: process.env.OPENROUTER_API_KEY ? 'openrouter' : 'fallback',
-      timestamp: new Date().toISOString(),
-    }])
-  } catch (err) {
-    console.error('[Supabase] Failed to log interaction:', err.message)
-  }
-}
-
-function resetRealtimeState() {
-  isConnected = false
-  latestQr = null
-  latestPairingCode = null
-}
-
-function scheduleReconnect(reason, options = { restoreBackup: false }) {
-  if (reconnectTimer) return
-
-  console.log(`[M-JARVIS] Reconnect scheduled in ${RECONNECT_DELAY / 1000}s. Reason: ${reason}`)
-  reconnectTimer = setTimeout(async () => {
-    reconnectTimer = null
-    if (options.restoreBackup) {
-      await restoreAuthStateFromBackup()
-    }
-    startJarvis().catch((e) => console.error('[M-JARVIS] Reconnect start error:', e.message))
-  }, RECONNECT_DELAY)
+  return "Thanks for your message! Mohammed will get back to you soon. Visit m-abbaslab.vercel.app for more."
 }
 
 async function startJarvis() {
   if (isStarting) return
   isStarting = true
-  connectionState = 'connecting'
+  
+  console.log('[M-JARVIS] Starting WhatsApp Engine...')
+  await ensureDir(AUTH_DIR)
+  
+  const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR)
+  const { version } = await fetchLatestBaileysVersion()
 
-  try {
-    console.log('[M-JARVIS] Starting WhatsApp Engine...')
-    await ensureDir(AUTH_DIR)
+  sock = makeWASocket({
+    version,
+    auth: state,
+    printQRInTerminal: false,
+    logger: pino({ level: 'silent' }),
+    browser: ['M-JARVIS', 'Chrome', '1.0.0']
+  })
 
-    const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR)
-    const configData = loadLocalConfig()
-    const { version } = await fetchLatestBaileysVersion()
+  groupMonitor = new GroupMonitor(sock, supabase)
 
-    sock = makeWASocket({
-      version,
-      auth: state,
-      printQRInTerminal: false,
-      logger: pino({ level: 'silent' }),
-      browser: ['M-JARVIS', 'Safari', '1.0'],
-    })
+  sock.ev.on('creds.update', async () => {
+    await saveCreds()
+    await backupAuth()
+  })
 
-    // Pairing Code logic
-    const phoneNumber = process.env.PHONE_NUMBER
-    if (phoneNumber && !sock.authState.creds.registered) {
-      setTimeout(async () => {
-        try {
-          const code = await sock.requestPairingCode(phoneNumber)
-          latestPairingCode = code
-          console.log(`\n[M-JARVIS] 🔑 Pairing Code: ${code}\n`)
-          await pushConnectionStatus({ status: 'awaiting_pairing' })
-        } catch (err) {
-          console.error('[M-JARVIS] Failed to request pairing code:', err.message)
-        }
-      }, 3000)
+  sock.ev.on('connection.update', async (update) => {
+    const { connection, lastDisconnect, qr } = update
+
+    if (qr) {
+      latestQr = qr
+      console.log('[M-JARVIS] New QR Code generated.')
+      qrcode.generate(qr, { small: true })
+      await updateStatus({ qr, connectionState: 'qr_ready' })
     }
 
-    sock.ev.on('creds.update', saveCreds)
-
-    sock.ev.on('connection.update', async (update) => {
-      const { connection, lastDisconnect, qr } = update
-
-      if (qr) {
-        latestQr = qr
-        console.log('[M-JARVIS] New QR Code generated.')
-        await pushConnectionStatus({ status: 'awaiting_login' })
-      }
-
-      if (connection === 'connecting') {
-        connectionState = 'connecting'
-        await pushConnectionStatus()
-      }
-
-      if (connection === 'open') {
-        isConnected = true
-        connectionState = 'connected'
-        reconnectAttempts = 0
-        lastConnectedAt = new Date().toISOString()
-        lastError = null
-        latestQr = null
-        latestPairingCode = null
-
-        console.log('\n[M-JARVIS] Connected to WhatsApp. Bot is online and listening.\n')
+    if (connection === 'close') {
+      const statusCode = lastDisconnect?.error?.output?.statusCode
+      const shouldReconnect = statusCode !== DisconnectReason.loggedOut
+      
+      isConnected = false
+      lastDisconnectedAt = new Date().toISOString()
+      lastError = lastDisconnect?.error?.message || 'Disconnected'
+      
+      console.log("[M-JARVIS] Disconnected. Code: " + statusCode + ". Reconnecting: " + shouldReconnect)
+      
+      if (shouldReconnect) {
+        connectionState = 'reconnecting'
+        reconnectAttempts++
         
-        // Initialize group and status monitoring
-        groupMonitor = new GroupMonitor(sock, supabase, configData)
-        groupMonitor.initializeGroupMonitoring().catch(err => console.error('[M-JARVIS] Group monitor init error:', err))
-        groupMonitor.initializeStatusMonitoring().catch(err => console.error('[M-JARVIS] Status monitor init error:', err))
+        if (reconnectAttempts === 2) {
+          await restoreAuth()
+        }
 
-        await backupAuthState()
-        await pushConnectionStatus({ status: 'online' })
+        const delay = Math.min(RECONNECT_DELAY * reconnectAttempts, 30000)
+        reconnectTimer = setTimeout(() => {
+          isStarting = false
+          startJarvis()
+        }, delay)
+      } else {
+        connectionState = 'logged_out'
+        console.log('[M-JARVIS] 🚪 Hard logout. Clearing session for fresh login...')
+        if (fs.existsSync(AUTH_DIR)) fs.rmSync(AUTH_DIR, { recursive: true, force: true })
+        if (fs.existsSync(AUTH_BACKUP_DIR)) fs.rmSync(AUTH_BACKUP_DIR, { recursive: true, force: true })
+        
+        setTimeout(() => {
+          isStarting = false
+          startJarvis()
+        }, 3000)
+      }
+      await updateStatus({ isConnected, connectionState, lastDisconnectedAt, lastError })
+    }
+
+    if (connection === 'open') {
+      isConnected = true
+      isStarting = false
+      reconnectAttempts = 0
+      connectionState = 'connected'
+      lastConnectedAt = new Date().toISOString()
+      latestQr = null
+      latestPairingCode = null
+      
+      console.log('[M-JARVIS] ✅ Connected to WhatsApp!')
+      await backupAuth()
+      await updateStatus({ isConnected, connectionState, lastConnectedAt, qr: null, pairingCode: null })
+    }
+  })
+
+  sock.ev.on('messages.upsert', async ({ messages, type }) => {
+    if (type !== 'notify') return
+
+    for (const msg of messages) {
+      if (msg.key.fromMe || !msg.message) continue
+      
+      const sender = msg.key.remoteJid
+      const isGroup = sender.endsWith('@g.us')
+      const messageText = msg.message.conversation || msg.message.extendedTextMessage?.text || ''
+      const senderName = msg.pushName || 'User'
+
+      if (isGroup) {
+        await groupMonitor.handleMessage(msg)
+        continue
       }
 
-      if (connection === 'close') {
-        const code = lastDisconnect?.error?.output?.statusCode
-        const shouldReconnect = code !== DisconnectReason.loggedOut
-
-        resetRealtimeState()
-        connectionState = shouldReconnect ? 'disconnected' : 'logged_out'
-        lastDisconnectedAt = new Date().toISOString()
-        lastError = `disconnect_code_${code || 'unknown'}`
-
-        console.log(`[M-JARVIS] Disconnected. Code: ${code}. Reconnecting: ${shouldReconnect}`)
-        await pushConnectionStatus()
-
-        if (shouldReconnect) {
-          scheduleReconnect(lastError)
-        } else {
-          const restored = await restoreAuthStateFromBackup()
-          if (restored) {
-            scheduleReconnect('logged_out_restore', { restoreBackup: false })
-          }
-        }
-      }
-    })
-
-    sock.ev.on('messages.upsert', async ({ messages, type }) => {
-      if (type !== 'notify') return
-
-      for (const msg of messages) {
-        const sender = msg.key.remoteJid
-        const isGroup = sender?.endsWith('@g.us')
-        const isStatus = sender === 'status@broadcast'
-
-        if (isStatus) {
-          if (groupMonitor) {
-            groupMonitor.handleStatusUpdate(msg)
-          }
-          continue
-        }
-
-        if (msg.key.fromMe) {
-          const msgId = msg.key.id
-          if (sentBotReplies.has(msgId)) {
-            sentBotReplies.delete(msgId)
-            continue
-          }
-
-          const replyText =
-            msg.message?.conversation ||
-            msg.message?.extendedTextMessage?.text ||
-            ''
-
-          if (replyText && sender && !isGroup) {
-            const recipientName = msg.pushName || sender.split('@')[0]
-            console.log(`\n[M-JARVIS] Manual reply by Mohammed to ${sender}: "${replyText}"`)
-            await logManualReplyToSupabase(sender, recipientName, replyText)
-          }
-          continue
-        }
-
-        const messageText =
-          msg.message?.conversation ||
-          msg.message?.extendedTextMessage?.text ||
-          msg.message?.imageMessage?.caption ||
-          ''
-
-        if (!messageText) continue
-
-        const senderName = msg.pushName || sender.split('@')[0]
-
-        if (isGroup) {
-          if (groupMonitor) {
-            await groupMonitor.handleGroupMessage(msg, sender, messageText, senderName)
-          }
-          continue
-        }
-
-        console.log(`\n[M-JARVIS] Message from ${senderName} (${sender}): "${messageText}"`)
-
+      if (messageText) {
+        console.log("[M-JARVIS] 📩 Message from " + senderName + ": " + messageText)
         const reply = await getJarvisResponse(senderName, messageText, sender)
-        if (reply === null) {
-          console.log('[M-JARVIS] Schedule block. No reply sent.')
-          continue
+        
+        if (reply) {
+          await sock.sendMessage(sender, { text: reply }, { quoted: msg })
+          await logMessage(sender, senderName, messageText, reply)
+          console.log("[M-JARVIS] ✅ Replied to " + senderName)
         }
-
-        try {
-          const sentMsg = await sock.sendMessage(sender, { text: reply }, { quoted: msg })
-          if (sentMsg?.key?.id) {
-            sentBotReplies.add(sentMsg.key.id)
-            setTimeout(() => sentBotReplies.delete(sentMsg.key.id), 30000)
-          }
-          console.log(`[M-JARVIS] Replied to ${senderName}: "${reply.substring(0, 80)}..."`)
-        } catch (sendErr) {
-          console.error('[M-JARVIS] Failed to send reply:', sendErr.message)
-        }
-
-        await logMessageToSupabase(sender, senderName, messageText, reply)
-        await logJarvisInteraction(sender, senderName, messageText, reply)
       }
-    })
-  } catch (error) {
-    resetRealtimeState()
-    connectionState = 'error'
-    lastDisconnectedAt = new Date().toISOString()
-    lastError = error.message
-    console.error('[M-JARVIS] Engine startup failed:', error.message)
-    await pushConnectionStatus()
-    scheduleReconnect(error.message, { restoreBackup: reconnectAttempts >= MAX_RECONNECT_ATTEMPTS })
-  } finally {
-    isStarting = false
-  }
-}
-
-async function triggerManualReconnect() {
-  if (reconnectTimer) {
-    clearTimeout(reconnectTimer)
-    reconnectTimer = null
-  }
-
-  reconnectAttempts = 0
-  isConnected = false
-  connectionState = 'reconnecting'
-  lastError = 'manual_reconnect_requested'
-  await pushConnectionStatus()
-
-  try {
-    if (sock?.ws?.close) {
-      sock.ws.close()
     }
-  } catch (error) {
-    console.warn('[M-JARVIS] Manual socket close warning:', error.message)
-  }
+  })
 
-  sock = null
-  setTimeout(() => {
-    startJarvis().catch((error) => console.error('[M-JARVIS] Manual reconnect failed:', error.message))
-  }, 1000)
+  if (process.env.PHONE_NUMBER && !sock.authState.creds.registered) {
+    const phoneNumber = process.env.PHONE_NUMBER.replace(/[^0-9]/g, '')
+    console.log("[M-JARVIS] Requesting pairing code for: " + phoneNumber + "...")
+    
+    setTimeout(async () => {
+      try {
+        if (sock && !sock.authState.creds.registered) {
+          const code = await sock.requestPairingCode(phoneNumber)
+          latestPairingCode = code?.match(/.{1,4}/g)?.join('-') || code
+          console.log("\n🔑 [M-JARVIS] YOUR PAIRING CODE IS: " + latestPairingCode + "\n")
+          await updateStatus({ pairingCode: latestPairingCode, connectionState: 'pairing_ready' })
+        }
+      } catch (e) {
+        console.error('[M-JARVIS] Failed to request pairing code:', e.message)
+      }
+    }, 10000)
+  }
 }
 
-function startHealthLoop() {
+function startHealthCheck() {
   if (healthInterval) clearInterval(healthInterval)
-
   healthInterval = setInterval(async () => {
-    if (isConnected) {
-      await backupAuthState()
-    }
-
-    await pushConnectionStatus()
-
-    if (!isConnected && !reconnectTimer && !isStarting) {
-      scheduleReconnect('health_check')
+    if (isConnected && sock) {
+      try {
+        await sock.fetchBlocklist()
+      } catch (e) {
+        console.warn('[M-JARVIS] Health check failed, connection might be stale')
+      }
     }
   }, HEALTH_CHECK_INTERVAL)
 }
 
-const server = http.createServer(async (req, res) => {
-  if (req.method === 'POST' && req.url === '/reconnect') {
-    await triggerManualReconnect()
-    res.writeHead(200, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({
-      success: true,
-      status: 'reconnecting',
-      timestamp: new Date().toISOString(),
-    }))
-    return
-  }
-
+const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({
-    status: isConnected ? 'online' : connectionState === 'reconnecting' ? 'reconnecting' : 'degraded',
-    service: 'M-JARVIS WhatsApp Engine',
-    timestamp: new Date().toISOString(),
+    status: connectionState,
     isConnected,
-    connectionState,
-    reconnectAttempts,
     lastConnectedAt,
     lastDisconnectedAt,
-    lastError,
+    reconnectAttempts,
+    pairingCode: latestPairingCode
   }))
 })
 
 server.listen(PORT, () => {
-  console.log(`[M-JARVIS] Health check server listening on port ${PORT}`)
-})
-
-startHealthLoop()
-startJarvis().catch((error) => {
-  console.error('[M-JARVIS] Fatal startup error:', error.message)
+  console.log("[M-JARVIS] 🌐 Health server on port " + PORT)
+  startJarvis()
+  startHealthCheck()
 })
