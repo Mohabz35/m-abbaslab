@@ -2,12 +2,10 @@ require('dotenv').config()
 
 const { default: makeWASocket, DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys')
 const { createClient } = require('@supabase/supabase-js')
-const qrcode = require('qrcode-terminal')
 const pino = require('pino')
 const fs = require('fs')
 const path = require('path')
 const http = require('http')
-const GroupMonitor = require('./group-monitor')
 
 const SUPABASE_URL = process.env.SUPABASE_URL
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY
@@ -19,12 +17,11 @@ const LOCAL_CONFIG_PATH = path.join(__dirname, '..', 'data', 'personal.json')
 const AUTH_DIR = path.join(__dirname, 'auth_state')
 const AUTH_BACKUP_DIR = path.join(__dirname, 'auth_backup')
 const STATUS_ROW_ID = 'primary'
-const MAX_RECONNECT_ATTEMPTS = Number(process.env.MAX_RECONNECT_ATTEMPTS || 5)
-const HEALTH_CHECK_INTERVAL = Number(process.env.HEALTH_CHECK_INTERVAL || 30000)
-const RECONNECT_DELAY = 5000 // 5 seconds
+const PHONE_NUMBER = process.env.PHONE_NUMBER || '254702894309'
+const PAIRING_CODE_TIMEOUT = 120000 // 2 minutes to enter code
+const RECONNECT_DELAY = 3000 // 3 seconds
 
 let sock = null
-let groupMonitor = null
 let reconnectTimer = null
 let healthInterval = null
 let reconnectAttempts = 0
@@ -34,8 +31,8 @@ let connectionState = 'initializing'
 let lastConnectedAt = null
 let lastDisconnectedAt = null
 let lastError = null
-let latestQr = null
 let latestPairingCode = null
+let pairingCodeRequestTime = null
 
 const sentBotReplies = new Set()
 
@@ -103,7 +100,6 @@ async function updateStatus(updates) {
   if (updates.lastConnectedAt) lastConnectedAt = updates.lastConnectedAt
   if (updates.lastDisconnectedAt) lastDisconnectedAt = updates.lastDisconnectedAt
   if (updates.lastError !== undefined) lastError = updates.lastError
-  if (updates.qr !== undefined) latestQr = updates.qr
   if (updates.pairingCode !== undefined) latestPairingCode = updates.pairingCode
 
   if (hasSupabase) {
@@ -116,6 +112,7 @@ async function updateStatus(updates) {
         last_disconnected_at: lastDisconnectedAt,
         last_error: lastError ? String(lastError) : null,
         reconnect_attempts: reconnectAttempts,
+        pairing_code: latestPairingCode,
         updated_at: new Date().toISOString()
       })
     } catch (e) {
@@ -204,138 +201,165 @@ async function getJarvisResponse(senderName, messageText, sender) {
   return "Thanks for your message! Mohammed will get back to you soon. Visit m-abbaslab.vercel.app for more."
 }
 
-async function startJarvis() {
-  if (isStarting) return
-  isStarting = true
-  
-  console.log('[M-JARVIS] Starting WhatsApp Engine...')
-  await ensureDir(AUTH_DIR)
-  
-  const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR)
-  const { version } = await fetchLatestBaileysVersion()
+async function requestPairingCode() {
+  if (!sock) {
+    console.log('[M-JARVIS] ⚠️ Socket not ready for pairing code request')
+    return
+  }
 
-  sock = makeWASocket({
-    version,
-    auth: state,
-    printQRInTerminal: false,
-    logger: pino({ level: 'silent' }),
-    browser: ['M-JARVIS', 'Chrome', '1.0.0']
-  })
-
-  groupMonitor = new GroupMonitor(sock, supabase)
-
-  sock.ev.on('creds.update', async () => {
-    await saveCreds()
-    await backupAuth()
-  })
-
-  sock.ev.on('connection.update', async (update) => {
-    const { connection, lastDisconnect, qr } = update
-
-    if (qr) {
-      latestQr = qr
-      console.log('[M-JARVIS] New QR Code generated.')
-      qrcode.generate(qr, { small: true })
-      await updateStatus({ qr, connectionState: 'qr_ready' })
-    }
-
-    if (connection === 'close') {
-      const statusCode = lastDisconnect?.error?.output?.statusCode
-      const shouldReconnect = statusCode !== DisconnectReason.loggedOut
-      
-      isConnected = false
-      lastDisconnectedAt = new Date().toISOString()
-      lastError = lastDisconnect?.error?.message || 'Disconnected'
-      
-      console.log("[M-JARVIS] Disconnected. Code: " + statusCode + ". Reconnecting: " + shouldReconnect)
-      
-      if (shouldReconnect) {
-        connectionState = 'reconnecting'
-        reconnectAttempts++
-        
-        if (reconnectAttempts === 2) {
-          await restoreAuth()
-        }
-
-        const delay = Math.min(RECONNECT_DELAY * reconnectAttempts, 30000)
-        reconnectTimer = setTimeout(() => {
-          isStarting = false
-          startJarvis()
-        }, delay)
-      } else {
-        connectionState = 'logged_out'
-        console.log('[M-JARVIS] 🚪 Hard logout. Clearing session for fresh login...')
-        if (fs.existsSync(AUTH_DIR)) fs.rmSync(AUTH_DIR, { recursive: true, force: true })
-        if (fs.existsSync(AUTH_BACKUP_DIR)) fs.rmSync(AUTH_BACKUP_DIR, { recursive: true, force: true })
-        
-        setTimeout(() => {
-          isStarting = false
-          startJarvis()
-        }, 3000)
-      }
-      await updateStatus({ isConnected, connectionState, lastDisconnectedAt, lastError })
-    }
-
-    if (connection === 'open') {
-      isConnected = true
-      isStarting = false
-      reconnectAttempts = 0
-      connectionState = 'connected'
-      lastConnectedAt = new Date().toISOString()
-      latestQr = null
-      latestPairingCode = null
-      
-      console.log('[M-JARVIS] ✅ Connected to WhatsApp!')
-      await backupAuth()
-      await updateStatus({ isConnected, connectionState, lastConnectedAt, qr: null, pairingCode: null })
-    }
-  })
-
-  sock.ev.on('messages.upsert', async ({ messages, type }) => {
-    if (type !== 'notify') return
-
-    for (const msg of messages) {
-      if (msg.key.fromMe || !msg.message) continue
-      
-      const sender = msg.key.remoteJid
-      const isGroup = sender.endsWith('@g.us')
-      const messageText = msg.message.conversation || msg.message.extendedTextMessage?.text || ''
-      const senderName = msg.pushName || 'User'
-
-      if (isGroup) {
-        await groupMonitor.handleMessage(msg)
-        continue
-      }
-
-      if (messageText) {
-        console.log("[M-JARVIS] 📩 Message from " + senderName + ": " + messageText)
-        const reply = await getJarvisResponse(senderName, messageText, sender)
-        
-        if (reply) {
-          await sock.sendMessage(sender, { text: reply }, { quoted: msg })
-          await logMessage(sender, senderName, messageText, reply)
-          console.log("[M-JARVIS] ✅ Replied to " + senderName)
-        }
-      }
-    }
-  })
-
-  if (process.env.PHONE_NUMBER && !sock.authState.creds.registered) {
-    const phoneNumber = process.env.PHONE_NUMBER.replace(/[^0-9]/g, '')
-    console.log("[M-JARVIS] Requesting pairing code for: " + phoneNumber + "...")
+  try {
+    console.log('[M-JARVIS] 📱 Requesting pairing code for: ' + PHONE_NUMBER)
+    pairingCodeRequestTime = Date.now()
     
-    setTimeout(async () => {
-      try {
-        if (sock && !sock.authState.creds.registered) {
-          const code = await sock.requestPairingCode(phoneNumber)
-          latestPairingCode = code?.match(/.{1,4}/g)?.join('-') || code
-          console.log("\n🔑 [M-JARVIS] YOUR PAIRING CODE IS: " + latestPairingCode + "\n")
-          await updateStatus({ pairingCode: latestPairingCode, connectionState: 'pairing_ready' })
+    const code = await sock.requestPairingCode(PHONE_NUMBER)
+    latestPairingCode = code?.match(/.{1,4}/g)?.join('-') || code
+    
+    console.log('\n' + '='.repeat(60))
+    console.log('🔑 [M-JARVIS] YOUR PAIRING CODE IS: ' + latestPairingCode)
+    console.log('⏱️  Code valid for 2 minutes. Enter it on your phone now!')
+    console.log('='.repeat(60) + '\n')
+    
+    await updateStatus({ pairingCode: latestPairingCode, connectionState: 'waiting_for_pairing' })
+  } catch (e) {
+    console.error('[M-JARVIS] ❌ Failed to request pairing code:', e.message)
+    lastError = e.message
+    await updateStatus({ lastError })
+  }
+}
+
+async function startJarvis() {
+  if (isStarting) {
+    console.log('[M-JARVIS] ⚠️ Already starting, skipping...')
+    return
+  }
+  
+  isStarting = true
+  console.log('\n[M-JARVIS] 🚀 Starting WhatsApp Engine (Pairing Code Mode)...')
+  
+  try {
+    await ensureDir(AUTH_DIR)
+    
+    const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR)
+    const { version } = await fetchLatestBaileysVersion()
+
+    sock = makeWASocket({
+      version,
+      auth: state,
+      printQRInTerminal: false,
+      logger: pino({ level: 'silent' }),
+      browser: ['M-JARVIS', 'Chrome', '1.0.0']
+    })
+
+    sock.ev.on('creds.update', async () => {
+      await saveCreds()
+      await backupAuth()
+    })
+
+    sock.ev.on('connection.update', async (update) => {
+      const { connection, lastDisconnect } = update
+
+      if (connection === 'close') {
+        const statusCode = lastDisconnect?.error?.output?.statusCode
+        const shouldReconnect = statusCode !== DisconnectReason.loggedOut
+        
+        isConnected = false
+        lastDisconnectedAt = new Date().toISOString()
+        lastError = lastDisconnect?.error?.message || 'Disconnected'
+        
+        console.log('[M-JARVIS] ❌ Disconnected. Code: ' + statusCode + '. Reconnecting: ' + shouldReconnect)
+        
+        if (shouldReconnect) {
+          connectionState = 'reconnecting'
+          reconnectAttempts++
+          
+          if (reconnectAttempts === 2) {
+            console.log('[M-JARVIS] 🔄 Attempting to restore from backup...')
+            await restoreAuth()
+          }
+
+          const delay = Math.min(RECONNECT_DELAY * reconnectAttempts, 30000)
+          console.log('[M-JARVIS] ⏳ Reconnecting in ' + (delay / 1000) + ' seconds...')
+          
+          reconnectTimer = setTimeout(() => {
+            isStarting = false
+            startJarvis()
+          }, delay)
+        } else {
+          connectionState = 'logged_out'
+          console.log('[M-JARVIS] 🚪 Hard logout detected. Clearing session for fresh start...')
+          if (fs.existsSync(AUTH_DIR)) fs.rmSync(AUTH_DIR, { recursive: true, force: true })
+          if (fs.existsSync(AUTH_BACKUP_DIR)) fs.rmSync(AUTH_BACKUP_DIR, { recursive: true, force: true })
+          
+          setTimeout(() => {
+            isStarting = false
+            startJarvis()
+          }, 3000)
         }
-      } catch (e) {
-        console.error('[M-JARVIS] Failed to request pairing code:', e.message)
+        await updateStatus({ isConnected, connectionState, lastDisconnectedAt, lastError })
       }
-    }, 10000)
+
+      if (connection === 'open') {
+        isConnected = true
+        isStarting = false
+        reconnectAttempts = 0
+        connectionState = 'connected'
+        lastConnectedAt = new Date().toISOString()
+        latestPairingCode = null
+        
+        console.log('\n' + '='.repeat(60))
+        console.log('✅ [M-JARVIS] CONNECTED TO WHATSAPP!')
+        console.log('🟢 Bot is online and listening for messages')
+        console.log('='.repeat(60) + '\n')
+        
+        await backupAuth()
+        await updateStatus({ isConnected, connectionState, lastConnectedAt, pairingCode: null })
+      }
+
+      if (connection === 'open' && !sock.authState.creds.registered) {
+        setTimeout(() => {
+          requestPairingCode()
+        }, 1000)
+      }
+    })
+
+    sock.ev.on('messages.upsert', async ({ messages, type }) => {
+      if (type !== 'notify') return
+
+      for (const msg of messages) {
+        if (msg.key.fromMe || !msg.message) continue
+        
+        const sender = msg.key.remoteJid
+        const messageText = msg.message.conversation || msg.message.extendedTextMessage?.text || ''
+        const senderName = msg.pushName || 'User'
+
+        if (messageText) {
+          console.log('[M-JARVIS] 📩 Message from ' + senderName + ': ' + messageText)
+          const reply = await getJarvisResponse(senderName, messageText, sender)
+          
+          if (reply) {
+            await sock.sendMessage(sender, { text: reply }, { quoted: msg })
+            await logMessage(sender, senderName, messageText, reply)
+            console.log('[M-JARVIS] ✅ Replied to ' + senderName)
+          }
+        }
+      }
+    })
+
+    setTimeout(() => {
+      if (sock && !sock.authState.creds.registered) {
+        requestPairingCode()
+      }
+    }, 5000)
+
+  } catch (e) {
+    console.error('[M-JARVIS] ❌ Fatal error:', e.message)
+    lastError = e.message
+    await updateStatus({ lastError, connectionState: 'error' })
+    isStarting = false
+    
+    setTimeout(() => {
+      startJarvis()
+    }, 5000)
   }
 }
 
@@ -346,10 +370,10 @@ function startHealthCheck() {
       try {
         await sock.fetchBlocklist()
       } catch (e) {
-        console.warn('[M-JARVIS] Health check failed, connection might be stale')
+        console.warn('[M-JARVIS] Health check failed')
       }
     }
-  }, HEALTH_CHECK_INTERVAL)
+  }, 30000)
 }
 
 const server = http.createServer((req, res) => {
@@ -360,12 +384,18 @@ const server = http.createServer((req, res) => {
     lastConnectedAt,
     lastDisconnectedAt,
     reconnectAttempts,
-    pairingCode: latestPairingCode
+    pairingCode: latestPairingCode,
+    pairingCodeAge: pairingCodeRequestTime ? Date.now() - pairingCodeRequestTime : null
   }))
 })
 
 server.listen(PORT, () => {
-  console.log("[M-JARVIS] 🌐 Health server on port " + PORT)
+  console.log('[M-JARVIS] 🌐 Health check server on port ' + PORT)
   startJarvis()
   startHealthCheck()
+})
+
+process.on('SIGINT', () => {
+  console.log('[M-JARVIS] Shutting down...')
+  process.exit(0)
 })
