@@ -1,1 +1,446 @@
-'use client'\n\nimport { useState, useEffect } from 'react'\nimport {\n  FileText,\n  Briefcase,\n  User,\n  Settings,\n  Plus,\n  Edit,\n  Image,\n  BarChart,\n  Upload,\n  Save,\n  Target,\n  FlaskConical,\n  Activity,\n  Zap,\n  Share2,\n  Linkedin,\n  Instagram,\n  Twitter,\n  Youtube,\n  MessageSquare,\n  Sparkles,\n  ArrowRight,\n  Minus,\n  ShieldCheck,\n  ShieldAlert,\n  Server,\n  RefreshCcw,\n  Terminal,\n  Lock,\n  Cpu,\n  Send,\n  Phone,\n  FileUp,\n  MessageCircle,\n  History,\n  AlertTriangle,\n  Headset,\n  Hash,\n  Heart,\n  Eye,\n  Brain,\n  CheckCircle,\n  Award,\n  Trash2,\n  Music2\n} from 'lucide-react'\nimport { personalConfig } from '@/config/personal'\nimport FinanceTracker from '@/components/admin/FinanceTracker'\nimport ContentScheduler from '@/components/admin/ContentScheduler'\nimport CommsHub from '@/components/admin/CommsHub'\nimport WhatsAppBroadcaster from '@/components/admin/WhatsAppBroadcaster'\nimport ZapierPanel from '@/components/admin/ZapierPanel'\nimport DisciplineOS from '@/components/admin/DisciplineOS'\nimport WhatsAppConnectionPanel from '@/components/admin/WhatsAppConnectionPanel'\n\nexport default function AdminDashboardPage() {\n  const [activeTab, setActiveTab] = useState('overview')\n  const [projects, setProjects] = useState<any[]>([])\n  const [articles, setArticles] = useState<any[]>([])\n  const [titles, setTitles] = useState<any[]>([])\n  const [alphas, setAlphas] = useState<any[]>([])\n  const [jarvisTrainingRules, setJarvisTrainingRules] = useState<any[]>([])\n  const [whatsappBotSchedule, setWhatsappBotSchedule] = useState<any>({\n    type: 'always',\n    workingHoursStart: '08:00',\n    workingHoursEnd: '17:00',\n    timezone: 'Africa/Nairobi'\n  })\n  const [editingItem, setEditingItem] = useState<{ type: string, id: string, field?: string } | null>(null)\n  const [selectedEditProject, setSelectedEditProject] = useState<any | null>(null)\n  const [selectedEditArticle, setSelectedEditArticle] = useState<any | null>(null)\n  const [isLoaded, setIsLoaded] = useState(false)\n  const [isSaving, setIsSaving] = useState(false)\n\n  // Site Settings State\n  const [adminName, setAdminName] = useState(personalConfig.name)\n  const [adminEmail, setAdminEmail] = useState(personalConfig.email)\n  const [adminUsername, setAdminUsername] = useState((personalConfig as any).adminCredentials?.username || 'ceo')\n  const [adminPassword, setAdminPassword] = useState((personalConfig as any).adminCredentials?.password || 'admin123')\n  const [siteFeatures, setSiteFeatures] = useState(personalConfig.site.features)\n\n  const [brandName, setBrandName] = useState(personalConfig.brandName || 'M-AbbasLab')\n  const [siteTitle, setSiteTitle] = useState(personalConfig.title || '')\n  const [tagline, setTagline] = useState(personalConfig.tagline || '')\n  const [googleAnalyticsId, setGoogleAnalyticsId] = useState(personalConfig.googleAnalyticsId || '')\n  \n  // Social Media State\n  const [socialGithub, setSocialGithub] = useState(personalConfig.social?.github || '')\n  const [socialLinkedin, setSocialLinkedin] = useState(personalConfig.social?.linkedin || '')\n  const [socialTwitter, setSocialTwitter] = useState(personalConfig.social?.twitter || '')\n  const [socialInstagram, setSocialInstagram] = useState(personalConfig.social?.instagram || '')\n  const [socialTiktok, setSocialTiktok] = useState(personalConfig.social?.tiktok || '')\n  const [socialFacebook, setSocialFacebook] = useState(personalConfig.social?.facebook || '')\n  const [socialYoutube, setSocialYoutube] = useState(personalConfig.social?.youtube || '')\n  const [socialWhatsapp, setSocialWhatsapp] = useState(personalConfig.social?.whatsapp || '')\n  const [socialTelegram, setSocialTelegram] = useState(personalConfig.social?.telegram || '')\n\n  // Roles & Research Interests State\n  const [rolesStr, setRolesStr] = useState(personalConfig.roles?.join(', ') || '')\n  const [researchInterestsStr, setResearchInterestsStr] = useState(personalConfig.researchInterests?.join(', ') || '')\n\n  // Load from API (File-Based CMS) with LocalStorage fallback\n  useEffect(() => {\n    const loadConfig = async () => {\n      try {\n        const response = await fetch('/api/admin/config')\n        if (response.ok) {\n          const config = await response.json()\n          \n          // Only update if the config has data\n          if (config.projects && config.projects.length > 0) setProjects(config.projects)\n          else setProjects(personalConfig.projects || [])\n          \n          if (config.articles && config.articles.length > 0) setArticles(config.articles)\n          else setArticles(personalConfig.articles || [])\n          \n          setTitles(config.fashion?.titles || (personalConfig as any).fashion?.titles || [])\n          setAlphas(config.worldQuant?.alphas || (personalConfig as any).worldQuant?.alphas || [])\n          setJarvisTrainingRules(config.jarvisTraining || (personalConfig as any).jarvisTraining || [])\n          \n          setWhatsappBotSchedule(config.whatsappBotSchedule || (personalConfig as any).whatsappBotSchedule || {\n            type: 'always',\n            workingHoursStart: '08:00',\n            workingHoursEnd: '17:00',\n            timezone: 'Africa/Nairobi'\n          })\n          \n          setAdminName(config.name || personalConfig.name)\n          setAdminEmail(config.email || personalConfig.email)\n          setAdminUsername(config.adminCredentials?.username || (personalConfig as any).adminCredentials?.username || 'ceo')\n          setAdminPassword(config.adminCredentials?.password || (personalConfig as any).adminCredentials?.password || 'admin123')\n          setSiteFeatures(config.site?.features || personalConfig.site.features)\n          setBrandName(config.brandName || personalConfig.brandName || 'M-AbbasLab')\n          setSiteTitle(config.title || personalConfig.title || '')\n          setTagline(config.tagline || personalConfig.tagline || '')\n          setGoogleAnalyticsId(config.googleAnalyticsId || personalConfig.googleAnalyticsId || '')\n          \n          setSocialGithub(config.social?.github || personalConfig.social?.github || '')\n          setSocialLinkedin(config.social?.linkedin || personalConfig.social?.linkedin || '')\n          setSocialTwitter(config.social?.twitter || personalConfig.social?.twitter || '')\n          setSocialInstagram(config.social?.instagram || personalConfig.social?.instagram || '')\n          setSocialTiktok(config.social?.tiktok || personalConfig.social?.tiktok || '')\n          setSocialFacebook(config.social?.facebook || personalConfig.social?.facebook || '')\n          setSocialYoutube(config.social?.youtube || personalConfig.social?.youtube || '')\n          setSocialWhatsapp(config.social?.whatsapp || personalConfig.social?.whatsapp || '')\n          setSocialTelegram(config.social?.telegram || personalConfig.social?.telegram || '')\n          \n          setRolesStr(config.roles?.join(', ') || personalConfig.roles?.join(', ') || '')\n          setResearchInterestsStr(config.researchInterests?.join(', ') || personalConfig.researchInterests?.join(', ') || '')\n          \n          setIsLoaded(true)\n          return\n        }\n      } catch (error) {\n        console.warn('API load failed, falling back to LocalStorage/personalConfig')\n      }\n\n      // Fallback\n      setProjects(personalConfig.projects || [])\n      setArticles(personalConfig.articles || [])\n      setTitles((personalConfig as any).fashion?.titles || [])\n      setAlphas((personalConfig as any).worldQuant?.alphas || [])\n      setJarvisTrainingRules((personalConfig as any).jarvisTraining || [])\n      setIsLoaded(true)\n    }\n\n    loadConfig()\n  }, [])\n\n  const handleSaveToProject = async () => {\n    setIsSaving(true)\n    try {\n      const fullConfig = {\n        ...personalConfig,\n        name: adminName,\n        email: adminEmail,\n        brandName,\n        title: siteTitle,\n        tagline,\n        googleAnalyticsId,\n        adminCredentials: {\n          username: adminUsername,\n          password: adminPassword\n        },\n        social: {\n          github: socialGithub,\n          linkedin: socialLinkedin,\n          twitter: socialTwitter,\n          instagram: socialInstagram,\n          tiktok: socialTiktok,\n          facebook: socialFacebook,\n          youtube: socialYoutube,\n          whatsapp: socialWhatsapp,\n          telegram: socialTelegram\n        },\n        roles: rolesStr.split(',').map(r => r.trim()).filter(Boolean),\n        researchInterests: researchInterestsStr.split(',').map(r => r.trim()).filter(Boolean),\n        projects,\n        articles,\n        fashion: {\n          ...(personalConfig as any).fashion,\n          titles\n        },\n        worldQuant: {\n          ...(personalConfig as any).worldQuant,\n          alphas\n        },\n        site: {\n          ...personalConfig.site,\n          features: siteFeatures\n        },\n        jarvisTraining: jarvisTrainingRules,\n        whatsappBotSchedule: whatsappBotSchedule\n      }\n\n      const response = await fetch('/api/admin/config', {\n        method: 'POST',\n        headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify(fullConfig)\n      })\n\n      if (response.ok) {\n        alert('SUCCESS: Mission data committed to project files. Changes are now permanent.')\n      } else {\n        throw new Error('Failed to save')\n      }\n    } catch (error) {\n      alert('ERROR: Failed to sync with project files. Local changes still cached in browser.')\n    } finally {\n      setIsSaving(false)\n    }\n  }\n\n  const tabs = [\n    { id: 'overview', label: 'Overview', icon: Activity },\n    { id: 'projects', label: 'Projects', icon: Briefcase },\n    { id: 'articles', label: 'Articles', icon: FileText },\n    { id: 'alphas', label: 'Alphas', icon: Zap },\n    { id: 'comms', label: 'Comms Hub', icon: MessageSquare },\n    { id: 'scheduler', label: 'Content Scheduler', icon: History },\n    { id: 'zapier', label: 'Zapier & Automation', icon: Cpu },\n    { id: 'discipline', label: 'Discipline OS', icon: ShieldCheck },\n    { id: 'finance', label: 'Finance Tracker', icon: BarChart },\n    { id: 'settings', label: 'Settings', icon: Settings },\n  ]\n\n  const renderContent = () => {\n    switch (activeTab) {\n      case 'overview':\n        return (\n          <div className=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6\">\n            <div className=\"bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg\">\n              <div className=\"flex items-center gap-4 mb-4\">\n                <div className=\"p-3 bg-blue-500/10 rounded-lg\">\n                  <Activity className=\"w-6 h-6 text-blue-500\" />\n                </div>\n                <div>\n                  <h3 className=\"text-lg font-semibold text-white\">System Status</h3>\n                  <p className=\"text-sm text-slate-400\">All systems operational</p>\n                </div>\n              </div>\n              <div className=\"space-y-3\">\n                <div className=\"flex justify-between text-sm\">\n                  <span className=\"text-slate-400\">Vercel Deployment</span>\n                  <span className=\"text-green-500 font-medium\">Healthy</span>\n                </div>\n                <div className=\"flex justify-between text-sm\">\n                  <span className=\"text-slate-400\">Database Sync</span>\n                  <span className=\"text-green-500 font-medium\">Active</span>\n                </div>\n              </div>\n            </div>\n            <div className=\"bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg\">\n              <h3 className=\"text-lg font-semibold text-white mb-4\">Content Summary</h3>\n              <div className=\"grid grid-cols-2 gap-4\">\n                <div className=\"p-3 bg-slate-700/50 rounded-lg\">\n                  <div className=\"text-2xl font-bold text-white\">{projects.length}</div>\n                  <div className=\"text-xs text-slate-400 uppercase\">Projects</div>\n                </div>\n                <div className=\"p-3 bg-slate-700/50 rounded-lg\">\n                  <div className=\"text-2xl font-bold text-white\">{articles.length}</div>\n                  <div className=\"text-xs text-slate-400 uppercase\">Articles</div>\n                </div>\n              </div>\n            </div>\n          </div>\n        )\n      case 'projects':\n        return (\n          <div className=\"bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg\">\n            <div className=\"flex justify-between items-center mb-6\">\n              <h3 className=\"text-xl font-bold text-white\">Project Systems</h3>\n              <button className=\"flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors\">\n                <Plus className=\"w-4 h-4\" /> Add Project\n              </button>\n            </div>\n            <div className=\"space-y-4\">\n              {projects.map(p => (\n                <div key={p.id} className=\"p-4 bg-slate-700/30 rounded-lg border border-slate-600 flex justify-between items-center\">\n                  <div>\n                    <h4 className=\"font-bold text-white\">{p.title}</h4>\n                    <p className=\"text-sm text-slate-400\">{p.category} • {p.status}</p>\n                  </div>\n                  <div className=\"flex gap-2\">\n                    <button className=\"p-2 text-slate-400 hover:text-white transition-colors\"><Edit className=\"w-4 h-4\" /></button>\n                    <button className=\"p-2 text-slate-400 hover:text-red-400 transition-colors\"><Trash2 className=\"w-4 h-4\" /></button>\n                  </div>\n                </div>\n              ))}\n            </div>\n          </div>\n        )\n      case 'articles':\n        return (\n          <div className=\"bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg\">\n            <div className=\"flex justify-between items-center mb-6\">\n              <h3 className=\"text-xl font-bold text-white\">Research Articles</h3>\n              <button className=\"flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors\">\n                <Plus className=\"w-4 h-4\" /> Write Article\n              </button>\n            </div>\n            <div className=\"space-y-4\">\n              {articles.map(a => (\n                <div key={a.id} className=\"p-4 bg-slate-700/30 rounded-lg border border-slate-600 flex justify-between items-center\">\n                  <div>\n                    <h4 className=\"font-bold text-white\">{a.title}</h4>\n                    <p className=\"text-sm text-slate-400\">{a.category} • {a.publishDate}</p>\n                  </div>\n                  <div className=\"flex gap-2\">\n                    <button className=\"p-2 text-slate-400 hover:text-white transition-colors\"><Edit className=\"w-4 h-4\" /></button>\n                    <button className=\"p-2 text-slate-400 hover:text-red-400 transition-colors\"><Trash2 className=\"w-4 h-4\" /></button>\n                  </div>\n                </div>\n              ))}\n            </div>\n          </div>\n        )\n      case 'comms':\n        return (\n          <div className=\"space-y-6\">\n            <CommsHub />\n            <div className=\"mt-8 pt-8 border-t border-slate-700\">\n              <h3 className=\"text-xl font-bold text-white mb-4 flex items-center gap-2\">\n                <Send className=\"w-6 h-6 text-green-500\" />\n                WhatsApp Broadcaster\n              </h3>\n              <WhatsAppBroadcaster />\n            </div>\n          </div>\n        )\n      case 'scheduler':\n        return <ContentScheduler />\n      case 'zapier':\n        return <ZapierPanel />\n      case 'discipline':\n        return <DisciplineOS />\n      case 'finance':\n        return <FinanceTracker />\n      case 'settings':\n        return (\n          <div className=\"space-y-8\">\n            <div className=\"bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl\">\n              <h3 className=\"text-xl font-bold text-white mb-6 flex items-center gap-2\">\n                <Phone className=\"w-6 h-6 text-blue-500\" />\n                WhatsApp Connection Management\n              </h3>\n              <WhatsAppConnectionPanel />\n            </div>\n            <div className=\"bg-slate-800 p-6 rounded-xl border border-slate-700\">\n              <h3 className=\"text-xl font-bold text-white mb-6 flex items-center gap-2\">\n                <Settings className=\"w-6 h-6 text-slate-400\" />\n                Site Configuration\n              </h3>\n              <div className=\"grid grid-cols-1 md:grid-cols-2 gap-6\">\n                <div>\n                  <label className=\"block text-sm font-medium text-slate-400 mb-2\">Admin Name</label>\n                  <input \n                    type=\"text\" value={adminName} onChange={e => setAdminName(e.target.value)}\n                    className=\"w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none\"\n                  />\n                </div>\n                <div>\n                  <label className=\"block text-sm font-medium text-slate-400 mb-2\">Admin Email</label>\n                  <input \n                    type=\"email\" value={adminEmail} onChange={e => setAdminEmail(e.target.value)}\n                    className=\"w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none\"\n                  />\n                </div>\n              </div>\n            </div>\n          </div>\n        )\n      default:\n        return <div className=\"text-white\">Tab under construction</div>\n    }\n  }\n\n  return (\n    <div className=\"min-h-screen bg-slate-900 text-slate-100 p-8\">\n      <div className=\"max-w-7xl mx-auto\">\n        <div className=\"flex justify-between items-center mb-12\">\n          <div>\n            <h1 className=\"text-4xl font-bold text-white mb-2\">Sentinel Command Center</h1>\n            <p className=\"text-slate-400\">Managing M-AbbasLab Intelligence Infrastructure</p>\n          </div>\n          <button \n            onClick={handleSaveToProject}\n            disabled={isSaving}\n            className=\"flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50\"\n          >\n            {isSaving ? <RefreshCcw className=\"w-5 h-5 animate-spin\" /> : <Save className=\"w-5 h-5\" />}\n            {isSaving ? 'COMMITTING...' : 'COMMIT CHANGES'}\n          </button>\n        </div>\n\n        <div className=\"flex flex-wrap gap-2 mb-8 bg-slate-800/50 p-2 rounded-2xl border border-slate-700/50\">\n          {tabs.map(tab => {\n            const Icon = tab.icon\n            return (\n              <button\n                key={tab.id}\n                onClick={() => setActiveTab(tab.id)}\n                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${activeTab === tab.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-slate-400 hover:bg-slate-700 hover:text-white'}`}\n              >\n                <Icon className=\"w-4 h-4\" />\n                {tab.label}\n              </button>\n            )\n          })}\n        </div>\n\n        <div className=\"animate-in fade-in slide-in-from-bottom-4 duration-500\">\n          {renderContent()}\n        </div>\n      </div>\n    </div>\n  )\n}'
+'use client'
+
+import { useState, useEffect } from 'react'
+import {
+  FileText,
+  Briefcase,
+  User,
+  Settings,
+  Plus,
+  Edit,
+  Image,
+  BarChart,
+  Upload,
+  Save,
+  Target,
+  FlaskConical,
+  Activity,
+  Zap,
+  Share2,
+  Linkedin,
+  Instagram,
+  Twitter,
+  Youtube,
+  MessageSquare,
+  Sparkles,
+  ArrowRight,
+  Minus,
+  ShieldCheck,
+  ShieldAlert,
+  Server,
+  RefreshCcw,
+  Terminal,
+  Lock,
+  Cpu,
+  Send,
+  Phone,
+  FileUp,
+  MessageCircle,
+  History,
+  AlertTriangle,
+  Headset,
+  Hash,
+  Heart,
+  Eye,
+  Brain,
+  CheckCircle,
+  Award,
+  Trash2,
+  Music2
+} from 'lucide-react'
+import { personalConfig } from '@/config/personal'
+import FinanceTracker from '@/components/admin/FinanceTracker'
+import ContentScheduler from '@/components/admin/ContentScheduler'
+import CommsHub from '@/components/admin/CommsHub'
+import WhatsAppBroadcaster from '@/components/admin/WhatsAppBroadcaster'
+import ZapierPanel from '@/components/admin/ZapierPanel'
+import DisciplineOS from '@/components/admin/DisciplineOS'
+import WhatsAppConnectionPanel from '@/components/admin/WhatsAppConnectionPanel'
+
+export default function AdminDashboardPage() {
+  const [activeTab, setActiveTab] = useState('overview')
+  const [projects, setProjects] = useState<any[]>([])
+  const [articles, setArticles] = useState<any[]>([])
+  const [titles, setTitles] = useState<any[]>([])
+  const [alphas, setAlphas] = useState<any[]>([])
+  const [jarvisTrainingRules, setJarvisTrainingRules] = useState<any[]>([])
+  const [whatsappBotSchedule, setWhatsappBotSchedule] = useState<any>({
+    type: 'always',
+    workingHoursStart: '08:00',
+    workingHoursEnd: '17:00',
+    timezone: 'Africa/Nairobi'
+  })
+  const [editingItem, setEditingItem] = useState<{ type: string, id: string, field?: string } | null>(null)
+  const [selectedEditProject, setSelectedEditProject] = useState<any | null>(null)
+  const [selectedEditArticle, setSelectedEditArticle] = useState<any | null>(null)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+
+  // Site Settings State
+  const [adminName, setAdminName] = useState(personalConfig.name)
+  const [adminEmail, setAdminEmail] = useState(personalConfig.email)
+  const [adminUsername, setAdminUsername] = useState((personalConfig as any).adminCredentials?.username || 'ceo')
+  const [adminPassword, setAdminPassword] = useState((personalConfig as any).adminCredentials?.password || 'admin123')
+  const [siteFeatures, setSiteFeatures] = useState(personalConfig.site.features)
+
+  const [brandName, setBrandName] = useState(personalConfig.brandName || 'M-AbbasLab')
+  const [siteTitle, setSiteTitle] = useState(personalConfig.title || '')
+  const [tagline, setTagline] = useState(personalConfig.tagline || '')
+  const [googleAnalyticsId, setGoogleAnalyticsId] = useState(personalConfig.googleAnalyticsId || '')
+  
+  // Social Media State
+  const [socialGithub, setSocialGithub] = useState(personalConfig.social?.github || '')
+  const [socialLinkedin, setSocialLinkedin] = useState(personalConfig.social?.linkedin || '')
+  const [socialTwitter, setSocialTwitter] = useState(personalConfig.social?.twitter || '')
+  const [socialInstagram, setSocialInstagram] = useState(personalConfig.social?.instagram || '')
+  const [socialTiktok, setSocialTiktok] = useState(personalConfig.social?.tiktok || '')
+  const [socialFacebook, setSocialFacebook] = useState(personalConfig.social?.facebook || '')
+  const [socialYoutube, setSocialYoutube] = useState(personalConfig.social?.youtube || '')
+  const [socialWhatsapp, setSocialWhatsapp] = useState(personalConfig.social?.whatsapp || '')
+  const [socialTelegram, setSocialTelegram] = useState(personalConfig.social?.telegram || '')
+
+  // Roles & Research Interests State
+  const [rolesStr, setRolesStr] = useState(personalConfig.roles?.join(', ') || '')
+  const [researchInterestsStr, setResearchInterestsStr] = useState(personalConfig.researchInterests?.join(', ') || '')
+
+  // Load from API (File-Based CMS) with LocalStorage fallback
+  useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const response = await fetch('/api/admin/config')
+        if (response.ok) {
+          const config = await response.json()
+          
+          // Only update if the config has data
+          if (config.projects && config.projects.length > 0) setProjects(config.projects)
+          else setProjects(personalConfig.projects || [])
+          
+          if (config.articles && config.articles.length > 0) setArticles(config.articles)
+          else setArticles(personalConfig.articles || [])
+          
+          setTitles(config.fashion?.titles || (personalConfig as any).fashion?.titles || [])
+          setAlphas(config.worldQuant?.alphas || (personalConfig as any).worldQuant?.alphas || [])
+          setJarvisTrainingRules(config.jarvisTraining || (personalConfig as any).jarvisTraining || [])
+          
+          setWhatsappBotSchedule(config.whatsappBotSchedule || (personalConfig as any).whatsappBotSchedule || {
+            type: 'always',
+            workingHoursStart: '08:00',
+            workingHoursEnd: '17:00',
+            timezone: 'Africa/Nairobi'
+          })
+          
+          setAdminName(config.name || personalConfig.name)
+          setAdminEmail(config.email || personalConfig.email)
+          setAdminUsername(config.adminCredentials?.username || (personalConfig as any).adminCredentials?.username || 'ceo')
+          setAdminPassword(config.adminCredentials?.password || (personalConfig as any).adminCredentials?.password || 'admin123')
+          setSiteFeatures(config.site?.features || personalConfig.site.features)
+          setBrandName(config.brandName || personalConfig.brandName || 'M-AbbasLab')
+          setSiteTitle(config.title || personalConfig.title || '')
+          setTagline(config.tagline || personalConfig.tagline || '')
+          setGoogleAnalyticsId(config.googleAnalyticsId || personalConfig.googleAnalyticsId || '')
+          
+          setSocialGithub(config.social?.github || personalConfig.social?.github || '')
+          setSocialLinkedin(config.social?.linkedin || personalConfig.social?.linkedin || '')
+          setSocialTwitter(config.social?.twitter || personalConfig.social?.twitter || '')
+          setSocialInstagram(config.social?.instagram || personalConfig.social?.instagram || '')
+          setSocialTiktok(config.social?.tiktok || personalConfig.social?.tiktok || '')
+          setSocialFacebook(config.social?.facebook || personalConfig.social?.facebook || '')
+          setSocialYoutube(config.social?.youtube || personalConfig.social?.youtube || '')
+          setSocialWhatsapp(config.social?.whatsapp || personalConfig.social?.whatsapp || '')
+          setSocialTelegram(config.social?.telegram || personalConfig.social?.telegram || '')
+          
+          setRolesStr(config.roles?.join(', ') || personalConfig.roles?.join(', ') || '')
+          setResearchInterestsStr(config.researchInterests?.join(', ') || personalConfig.researchInterests?.join(', ') || '')
+          
+          setIsLoaded(true)
+          return
+        }
+      } catch (error) {
+        console.warn('API load failed, falling back to LocalStorage/personalConfig')
+      }
+
+      // Fallback
+      setProjects(personalConfig.projects || [])
+      setArticles(personalConfig.articles || [])
+      setTitles((personalConfig as any).fashion?.titles || [])
+      setAlphas((personalConfig as any).worldQuant?.alphas || [])
+      setJarvisTrainingRules((personalConfig as any).jarvisTraining || [])
+      setIsLoaded(true)
+    }
+
+    loadConfig()
+  }, [])
+
+  const handleSaveToProject = async () => {
+    setIsSaving(true)
+    try {
+      const fullConfig = {
+        ...personalConfig,
+        name: adminName,
+        email: adminEmail,
+        brandName,
+        title: siteTitle,
+        tagline,
+        googleAnalyticsId,
+        adminCredentials: {
+          username: adminUsername,
+          password: adminPassword
+        },
+        social: {
+          github: socialGithub,
+          linkedin: socialLinkedin,
+          twitter: socialTwitter,
+          instagram: socialInstagram,
+          tiktok: socialTiktok,
+          facebook: socialFacebook,
+          youtube: socialYoutube,
+          whatsapp: socialWhatsapp,
+          telegram: socialTelegram
+        },
+        roles: rolesStr.split(',').map(r => r.trim()).filter(Boolean),
+        researchInterests: researchInterestsStr.split(',').map(r => r.trim()).filter(Boolean),
+        projects,
+        articles,
+        fashion: {
+          ...(personalConfig as any).fashion,
+          titles
+        },
+        worldQuant: {
+          ...(personalConfig as any).worldQuant,
+          alphas
+        },
+        site: {
+          ...personalConfig.site,
+          features: siteFeatures
+        },
+        jarvisTraining: jarvisTrainingRules,
+        whatsappBotSchedule: whatsappBotSchedule
+      }
+
+      const response = await fetch('/api/admin/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fullConfig)
+      })
+
+      if (response.ok) {
+        alert('SUCCESS: Mission data committed to project files. Changes are now permanent.')
+      } else {
+        throw new Error('Failed to save')
+      }
+    } catch (error) {
+      alert('ERROR: Failed to sync with project files. Local changes still cached in browser.')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: Activity },
+    { id: 'projects', label: 'Projects', icon: Briefcase },
+    { id: 'articles', label: 'Articles', icon: FileText },
+    { id: 'alphas', label: 'Alphas', icon: Zap },
+    { id: 'comms', label: 'Comms Hub', icon: MessageSquare },
+    { id: 'scheduler', label: 'Content Scheduler', icon: History },
+    { id: 'zapier', label: 'Zapier & Automation', icon: Cpu },
+    { id: 'discipline', label: 'Discipline OS', icon: ShieldCheck },
+    { id: 'finance', label: 'Finance Tracker', icon: BarChart },
+    { id: 'settings', label: 'Settings', icon: Settings },
+  ]
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'overview':
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-blue-500/10 rounded-lg">
+                  <Activity className="w-6 h-6 text-blue-500" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">System Status</h3>
+                  <p className="text-sm text-slate-400">All systems operational</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-400">Vercel Deployment</span>
+                  <span className="text-green-500 font-medium">Healthy</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-400">Database Sync</span>
+                  <span className="text-green-500 font-medium">Active</span>
+                </div>
+              </div>
+            </div>
+            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
+              <h3 className="text-lg font-semibold text-white mb-4">Content Summary</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-3 bg-slate-700/50 rounded-lg">
+                  <div className="text-2xl font-bold text-white">{projects.length}</div>
+                  <div className="text-xs text-slate-400 uppercase">Projects</div>
+                </div>
+                <div className="p-3 bg-slate-700/50 rounded-lg">
+                  <div className="text-2xl font-bold text-white">{articles.length}</div>
+                  <div className="text-xs text-slate-400 uppercase">Articles</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      case 'projects':
+        return (
+          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold text-white">Project Systems</h3>
+              <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                <Plus className="w-4 h-4" /> Add Project
+              </button>
+            </div>
+            <div className="space-y-4">
+              {projects.map(p => (
+                <div key={p.id} className="p-4 bg-slate-700/30 rounded-lg border border-slate-600 flex justify-between items-center">
+                  <div>
+                    <h4 className="font-bold text-white">{p.title}</h4>
+                    <p className="text-sm text-slate-400">{p.category} • {p.status}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button className="p-2 text-slate-400 hover:text-white transition-colors"><Edit className="w-4 h-4" /></button>
+                    <button className="p-2 text-slate-400 hover:text-red-400 transition-colors"><Trash2 className="w-4 h-4" /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      case 'articles':
+        return (
+          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold text-white">Research Articles</h3>
+              <button className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+                <Plus className="w-4 h-4" /> Write Article
+              </button>
+            </div>
+            <div className="space-y-4">
+              {articles.map(a => (
+                <div key={a.id} className="p-4 bg-slate-700/30 rounded-lg border border-slate-600 flex justify-between items-center">
+                  <div>
+                    <h4 className="font-bold text-white">{a.title}</h4>
+                    <p className="text-sm text-slate-400">{a.category} • {a.publishDate}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button className="p-2 text-slate-400 hover:text-white transition-colors"><Edit className="w-4 h-4" /></button>
+                    <button className="p-2 text-slate-400 hover:text-red-400 transition-colors"><Trash2 className="w-4 h-4" /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      case 'comms':
+        return (
+          <div className="space-y-6">
+            <CommsHub />
+            <div className="mt-8 pt-8 border-t border-slate-700">
+              <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <Send className="w-6 h-6 text-green-500" />
+                WhatsApp Broadcaster
+              </h3>
+              <WhatsAppBroadcaster />
+            </div>
+          </div>
+        )
+      case 'scheduler':
+        return <ContentScheduler />
+      case 'zapier':
+        return <ZapierPanel />
+      case 'discipline':
+        return <DisciplineOS />
+      case 'finance':
+        return <FinanceTracker />
+      case 'settings':
+        return (
+          <div className="space-y-8">
+            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl">
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <Phone className="w-6 h-6 text-blue-500" />
+                WhatsApp Connection Management
+              </h3>
+              <WhatsAppConnectionPanel />
+            </div>
+            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <Settings className="w-6 h-6 text-slate-400" />
+                Site Configuration
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">Admin Name</label>
+                  <input 
+                    type="text" value={adminName} onChange={e => setAdminName(e.target.value)}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-2">Admin Email</label>
+                  <input 
+                    type="email" value={adminEmail} onChange={e => setAdminEmail(e.target.value)}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      default:
+        return <div className="text-white">Tab under construction</div>
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-900 text-slate-100 p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-12">
+          <div>
+            <h1 className="text-4xl font-bold text-white mb-2">Sentinel Command Center</h1>
+            <p className="text-slate-400">Managing M-AbbasLab Intelligence Infrastructure</p>
+          </div>
+          <button 
+            onClick={handleSaveToProject}
+            disabled={isSaving}
+            className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50"
+          >
+            {isSaving ? <RefreshCcw className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+            {isSaving ? 'COMMITTING...' : 'COMMIT CHANGES'}
+          </button>
+        </div>
+
+        <div className="flex flex-wrap gap-2 mb-8 bg-slate-800/50 p-2 rounded-2xl border border-slate-700/50">
+          {tabs.map(tab => {
+            const Icon = tab.icon
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
+                  activeTab === tab.id 
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
+                    : 'text-slate-400 hover:bg-slate-700 hover:text-white'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {tab.label}
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {renderContent()}
+        </div>
+      </div>
+    </div>
+  )
+}
