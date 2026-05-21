@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const { default: makeWASocket, DisconnectReason, useMultiFileAuthState } = require('@whiskeysockets/baileys')
+const { default: makeWASocket, DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys')
 const { createClient } = require('@supabase/supabase-js')
 const qrcode = require('qrcode-terminal')
 const pino = require('pino')
@@ -21,6 +21,7 @@ const AUTH_BACKUP_DIR = path.join(__dirname, 'auth_backup')
 const STATUS_ROW_ID = 'primary'
 const MAX_RECONNECT_ATTEMPTS = Number(process.env.MAX_RECONNECT_ATTEMPTS || 5)
 const HEALTH_CHECK_INTERVAL = Number(process.env.HEALTH_CHECK_INTERVAL || 30000)
+const RECONNECT_DELAY = 5000 // 5 seconds
 
 let sock = null
 let groupMonitor = null
@@ -437,13 +438,30 @@ async function startJarvis() {
 
     const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR)
     const configData = loadLocalConfig()
+    const { version } = await fetchLatestBaileysVersion()
 
     sock = makeWASocket({
+      version,
       auth: state,
-      printQRInTerminal: true,
+      printQRInTerminal: false,
       logger: pino({ level: 'silent' }),
       browser: ['M-JARVIS', 'Safari', '1.0'],
     })
+
+    // Pairing Code logic
+    const phoneNumber = process.env.PHONE_NUMBER
+    if (phoneNumber && !sock.authState.creds.registered) {
+      setTimeout(async () => {
+        try {
+          const code = await sock.requestPairingCode(phoneNumber)
+          latestPairingCode = code
+          console.log(`\n[M-JARVIS] 🔑 Pairing Code: ${code}\n`)
+          await pushConnectionStatus({ status: 'awaiting_pairing' })
+        } catch (err) {
+          console.error('[M-JARVIS] Failed to request pairing code:', err.message)
+        }
+      }, 3000)
+    }
 
     sock.ev.on('creds.update', saveCreds)
 
