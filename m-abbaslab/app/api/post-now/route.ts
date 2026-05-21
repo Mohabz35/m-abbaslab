@@ -84,16 +84,16 @@ export async function POST(request: NextRequest) {
     // Trigger Zapier for other platforms (Instagram, Facebook, TikTok, etc.)
     if (platforms.some((p) => ['instagram', 'facebook', 'tiktok', 'telegram'].includes(p))) {
       tasks.push(
-        triggerZap({
+        triggerZap('social_media_post', {
           content: content.trim(),
           platforms: platforms.filter((p) => ['instagram', 'facebook', 'tiktok', 'telegram'].includes(p)),
           mediaUrl: mediaPath ? `file://${mediaPath}` : undefined,
         }).then((success) => {
           platforms.forEach((p) => {
             if (['instagram', 'facebook', 'tiktok', 'telegram'].includes(p)) {
-              results[p] = { success, id: success ? 'zapier-triggered' : undefined, error: success ? undefined : 'Zapier trigger failed' }
+              results[p] = { success, id: success ? 'zapier-triggered' : undefined, error: success ? undefined : 'Zapier trigger failed' };
             }
-          })
+          });
         })
       )
     }
