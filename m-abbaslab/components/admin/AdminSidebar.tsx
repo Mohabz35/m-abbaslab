@@ -10,6 +10,7 @@ import {
   FileText,
   User,
   Settings,
+  Zap,
   LogOut,
   Menu,
   X
@@ -18,6 +19,7 @@ import { personalConfig } from '@/config/personal'
 
 const navItems = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
+  { name: 'Comms Hub', href: '/admin/comms-hub', icon: <Zap className="w-5 h-5" /> },
   { name: 'Projects', href: '/admin/projects', icon: <Briefcase className="w-5 h-5" /> },
   { name: 'Articles', href: '/admin/articles', icon: <FileText className="w-5 h-5" /> },
   { name: 'Fashion', href: '/admin/fashion', icon: <User className="w-5 h-5" /> },

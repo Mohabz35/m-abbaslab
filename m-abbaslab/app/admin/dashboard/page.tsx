@@ -51,10 +51,9 @@ import {
 import { personalConfig } from '@/config/personal'
 import FinanceTracker from '@/components/admin/FinanceTracker'
 import ContentScheduler from '@/components/admin/ContentScheduler'
+import CommsHub from '@/components/admin/CommsHub'
 import WhatsAppBroadcaster from '@/components/admin/WhatsAppBroadcaster'
 import ZapierPanel from '@/components/admin/ZapierPanel'
-import JarvisInbox from '@/components/admin/JarvisInbox'
-import JarvisBrain from '@/components/admin/JarvisBrain'
 import DisciplineOS from '@/components/admin/DisciplineOS'
 
 export default function AdminDashboardPage() {
@@ -700,7 +699,7 @@ export default function AdminDashboardPage() {
       {/* Tabs */}
       <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
         <div className="flex gap-6 overflow-x-auto pb-2 scrollbar-hide">
-          {['overview', 'jarvis-inbox', 'jarvis-brain', 'zapier-automations', 'finance-tracker', 'content-scheduler', 'projects', 'articles', 'modeling', 'world-quant', 'social-media', 'comms-hub', 'system-integrity', 'skills', 'settings', 'discipline-os'].map((tab) => (
+          {['overview', 'zapier-automations', 'finance-tracker', 'content-scheduler', 'projects', 'articles', 'modeling', 'world-quant', 'social-media', 'comms-hub', 'system-integrity', 'skills', 'settings', 'discipline-os'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -717,15 +716,6 @@ export default function AdminDashboardPage() {
 
       {/* Tab Content */}
       <div className="space-y-6">
-        {activeTab === 'jarvis-inbox' && <JarvisInbox />}
-        {activeTab === 'jarvis-brain' && (
-          <JarvisBrain
-            rules={jarvisTrainingRules}
-            onChange={setJarvisTrainingRules}
-            schedule={whatsappBotSchedule}
-            onScheduleChange={setWhatsappBotSchedule}
-          />
-        )}
         {activeTab === 'zapier-automations' && <ZapierPanel />}
         {activeTab === 'overview' && (
           <>
@@ -817,6 +807,8 @@ export default function AdminDashboardPage() {
             <WhatsAppBroadcaster />
           </div>
         )}
+
+        {(activeTab === 'comms-hub' || activeTab === 'jarvis-inbox' || activeTab === 'jarvis-brain') && <CommsHub />}
 
         {activeTab === 'projects' && (
           <div className="space-y-4">
@@ -1627,8 +1619,8 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* Communications Hub Tab */}
-        {activeTab === 'comms-hub' && (
+        {/* Legacy Communications Hub Tab */}
+        {activeTab === 'comms-hub-legacy' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* WhatsApp AI Trainer */}

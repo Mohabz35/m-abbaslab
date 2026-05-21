@@ -1,4 +1,3 @@
-﻿// app/admin/layout.tsx
 import AdminAuth from '@/components/admin/AdminAuth'
 
 export default function AdminLayout({
