@@ -56,6 +56,7 @@ import WhatsAppBroadcaster from '@/components/admin/WhatsAppBroadcaster'
 import ZapierPanel from '@/components/admin/ZapierPanel'
 import DisciplineOS from '@/components/admin/DisciplineOS'
 import WhatsAppConnectionPanel from '@/components/admin/WhatsAppConnectionPanel'
+import WorldQuantLab from '@/components/admin/WorldQuantLab'
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -339,6 +340,8 @@ export default function AdminDashboardPage() {
             </div>
           </div>
         )
+      case 'alphas':
+        return <WorldQuantLab />
       case 'comms':
         return (
           <div className="space-y-6">
