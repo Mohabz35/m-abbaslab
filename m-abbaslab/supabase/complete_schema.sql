@@ -188,50 +188,126 @@ ALTER TABLE whatsapp_broadcasts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE whatsapp_broadcast_logs ENABLE ROW LEVEL SECURITY;
 
 -- Allow public read
-CREATE POLICY IF NOT EXISTS "Allow public read projects" ON projects FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Allow public read articles" ON articles FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Allow public read fashion_items" ON fashion_items FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Allow public read finance_entries" ON finance_entries FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Allow public read finance_goals" ON finance_goals FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Allow public read site_config" ON site_config FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Allow public read audit_logs" ON audit_logs FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Allow public read market_data_cache" ON market_data_cache FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Allow public read whatsapp_subscribers" ON whatsapp_subscribers FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Allow public read whatsapp_broadcasts" ON whatsapp_broadcasts FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Allow public read whatsapp_broadcast_logs" ON whatsapp_broadcast_logs FOR SELECT USING (true);
+DO $$ BEGIN
+  CREATE POLICY "Allow public read projects" ON projects FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow public read articles" ON articles FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow public read fashion_items" ON fashion_items FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow public read finance_entries" ON finance_entries FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow public read finance_goals" ON finance_goals FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow public read site_config" ON site_config FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow public read audit_logs" ON audit_logs FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow public read market_data_cache" ON market_data_cache FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow public read whatsapp_subscribers" ON whatsapp_subscribers FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow public read whatsapp_broadcasts" ON whatsapp_broadcasts FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow public read whatsapp_broadcast_logs" ON whatsapp_broadcast_logs FOR SELECT USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- Allow insert from API (anon key)
-CREATE POLICY IF NOT EXISTS "Allow insert projects" ON projects FOR INSERT WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow insert articles" ON articles FOR INSERT WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow insert fashion_items" ON fashion_items FOR INSERT WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow insert finance_entries" ON finance_entries FOR INSERT WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow insert finance_goals" ON finance_goals FOR INSERT WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow insert site_config" ON site_config FOR INSERT WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow insert audit_logs" ON audit_logs FOR INSERT WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow insert market_data_cache" ON market_data_cache FOR INSERT WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow insert whatsapp_subscribers" ON whatsapp_subscribers FOR INSERT WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow insert whatsapp_broadcasts" ON whatsapp_broadcasts FOR INSERT WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow insert whatsapp_broadcast_logs" ON whatsapp_broadcast_logs FOR INSERT WITH CHECK (true);
+DO $$ BEGIN
+  CREATE POLICY "Allow insert projects" ON projects FOR INSERT WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow insert articles" ON articles FOR INSERT WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow insert fashion_items" ON fashion_items FOR INSERT WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow insert finance_entries" ON finance_entries FOR INSERT WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow insert finance_goals" ON finance_goals FOR INSERT WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow insert site_config" ON site_config FOR INSERT WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow insert audit_logs" ON audit_logs FOR INSERT WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow insert market_data_cache" ON market_data_cache FOR INSERT WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow insert whatsapp_subscribers" ON whatsapp_subscribers FOR INSERT WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow insert whatsapp_broadcasts" ON whatsapp_broadcasts FOR INSERT WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow insert whatsapp_broadcast_logs" ON whatsapp_broadcast_logs FOR INSERT WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- Allow update from API (anon key)
-CREATE POLICY IF NOT EXISTS "Allow update projects" ON projects FOR UPDATE USING (true) WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow update articles" ON articles FOR UPDATE USING (true) WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow update fashion_items" ON fashion_items FOR UPDATE USING (true) WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow update finance_entries" ON finance_entries FOR UPDATE USING (true) WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow update finance_goals" ON finance_goals FOR UPDATE USING (true) WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow update site_config" ON site_config FOR UPDATE USING (true) WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow update whatsapp_subscribers" ON whatsapp_subscribers FOR UPDATE USING (true) WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow update whatsapp_broadcasts" ON whatsapp_broadcasts FOR UPDATE USING (true) WITH CHECK (true);
-CREATE POLICY IF NOT EXISTS "Allow update whatsapp_broadcast_logs" ON whatsapp_broadcast_logs FOR UPDATE USING (true) WITH CHECK (true);
+DO $$ BEGIN
+  CREATE POLICY "Allow update projects" ON projects FOR UPDATE USING (true) WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow update articles" ON articles FOR UPDATE USING (true) WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow update fashion_items" ON fashion_items FOR UPDATE USING (true) WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow update finance_entries" ON finance_entries FOR UPDATE USING (true) WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow update finance_goals" ON finance_goals FOR UPDATE USING (true) WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow update site_config" ON site_config FOR UPDATE USING (true) WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow update whatsapp_subscribers" ON whatsapp_subscribers FOR UPDATE USING (true) WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow update whatsapp_broadcasts" ON whatsapp_broadcasts FOR UPDATE USING (true) WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow update whatsapp_broadcast_logs" ON whatsapp_broadcast_logs FOR UPDATE USING (true) WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- Allow delete from API (anon key)
-CREATE POLICY IF NOT EXISTS "Allow delete projects" ON projects FOR DELETE USING (true);
-CREATE POLICY IF NOT EXISTS "Allow delete articles" ON articles FOR DELETE USING (true);
-CREATE POLICY IF NOT EXISTS "Allow delete fashion_items" ON fashion_items FOR DELETE USING (true);
-CREATE POLICY IF NOT EXISTS "Allow delete finance_entries" ON finance_entries FOR DELETE USING (true);
-CREATE POLICY IF NOT EXISTS "Allow delete finance_goals" ON finance_goals FOR DELETE USING (true);
-CREATE POLICY IF NOT EXISTS "Allow delete whatsapp_subscribers" ON whatsapp_subscribers FOR DELETE USING (true);
-CREATE POLICY IF NOT EXISTS "Allow delete whatsapp_broadcasts" ON whatsapp_broadcasts FOR DELETE USING (true);
+DO $$ BEGIN
+  CREATE POLICY "Allow delete projects" ON projects FOR DELETE USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow delete articles" ON articles FOR DELETE USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow delete fashion_items" ON fashion_items FOR DELETE USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow delete finance_entries" ON finance_entries FOR DELETE USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow delete finance_goals" ON finance_goals FOR DELETE USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow delete whatsapp_subscribers" ON whatsapp_subscribers FOR DELETE USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  CREATE POLICY "Allow delete whatsapp_broadcasts" ON whatsapp_broadcasts FOR DELETE USING (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- Realtime for broadcasts
 ALTER TABLE whatsapp_broadcasts REPLICA IDENTITY FULL;
