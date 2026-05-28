@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   Target, Flame, Brain, DollarSign, Heart, Shield, Zap,
   TrendingUp, BookOpen, Calendar, ChevronDown, ChevronUp,
   CheckSquare, Square, Save, RefreshCcw, Award, Star,
   Clock, Sun, Moon, Coffee, Dumbbell, Laptop, Users,
-  AlertCircle, Plus, Trash2, BarChart2, Activity
+  AlertCircle, Plus, Trash2, BarChart2, Activity,
+  FileDown, Send, CheckCircle2, MessageSquare
 } from 'lucide-react'
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -58,6 +59,13 @@ interface Review {
   type: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly'
   date: string
   answers: string[]
+}
+
+interface WisdomItem {
+  id: number
+  type: 'alert' | 'insight' | 'action' | 'news'
+  message: string
+  timestamp: string
 }
 
 // ── Constants ──────────────────────────────────────────────────────────────────
@@ -225,9 +233,9 @@ function SectionHeader({ icon: Icon, title, subtitle, accent = 'text-cyan-400' }
   )
 }
 
-function GlassPanel({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+function GlassPanel({ children, className = '', id }: { children: React.ReactNode; className?: string, id?: string }) {
   return (
-    <div className={`bg-white/[0.03] border border-white/10 rounded-2xl p-6 backdrop-blur-sm ${className}`}>
+    <div id={id} className={`bg-white/[0.03] border border-white/10 rounded-2xl p-6 backdrop-blur-sm ${className}`}>
       {children}
     </div>
   )
@@ -264,7 +272,7 @@ export default function DisciplineOS() {
   const [tomorrow, setTomorrow] = useState('')
   const [selectedHourCat, setSelectedHourCat] = useState<HourCategory>('deep-work')
   const [goalCategories, setGoalCategories] = useState<GoalCategory[]>(getDefaultGoalCategories())
-  const [reviewType, setReviewType] = useState<keyof typeof REVIEW_TEMPLATES>('daily')
+  const [reviewType, setReviewType] = useState<keyof typeof REVIEW_TEMPLATES>('weekly')
   const [reviewAnswers, setReviewAnswers] = useState<string[]>([])
   const [passiveChecked, setPassiveChecked] = useState<boolean[]>(Array(PASSIVE_INCOME_STREAMS.length).fill(false))
   const [expandedMentor, setExpandedMentor] = useState<string | null>(null)
@@ -272,6 +280,12 @@ export default function DisciplineOS() {
   const [isSaving, setIsSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  
+  // New State for Advanced Features
+  const [isExportingPDF, setIsExportingPDF] = useState(false)
+  const [isZapping, setIsZapping] = useState(false)
+  const [wisdomFeed, setWisdomFeed] = useState<WisdomItem[]>([])
+  const [loadingWisdom, setLoadingWisdom] = useState(false)
 
   // ── Load from API ──
   useEffect(() => {
@@ -328,6 +342,25 @@ export default function DisciplineOS() {
     load()
   }, [selectedDate])
 
+  // Load Wisdom Feed
+  useEffect(() => {
+    if (activeSection === 'mentors') {
+      const fetchWisdom = async () => {
+        setLoadingWisdom(true)
+        try {
+          const res = await fetch('/api/admin/wisdom')
+          const data = await res.json()
+          if (data.success) setWisdomFeed(data.feed)
+        } catch (e) {
+          console.error('Failed to load wisdom feed')
+        } finally {
+          setLoadingWisdom(false)
+        }
+      }
+      fetchWisdom()
+    }
+  }, [activeSection])
+
   // ── Review answers reset on type change ──
   useEffect(() => {
     const template = REVIEW_TEMPLATES[reviewType]
@@ -339,7 +372,7 @@ export default function DisciplineOS() {
     setHours(prev => prev.map(h => h.hour === hour ? { ...h, category: selectedHourCat } : h))
   }
 
-  // ── Save day data ──
+  // ── Save Functions ──
   const handleSaveDay = async () => {
     setIsSaving(true)
     const dayData = {
@@ -357,14 +390,13 @@ export default function DisciplineOS() {
       const result = await res.json()
       setSaveStatus(result.message || 'Saved')
     } catch {
-      setSaveStatus('Saved to local cache (API offline)')
+      setSaveStatus('Saved locally')
     } finally {
       setIsSaving(false)
       setTimeout(() => setSaveStatus(null), 3000)
     }
   }
 
-  // ── Save goals ──
   const handleSaveGoals = async () => {
     setIsSaving(true)
     const goalsData = { categories: goalCategories, passive: passiveChecked }
@@ -379,14 +411,13 @@ export default function DisciplineOS() {
       const result = await res.json()
       setSaveStatus(result.message || 'Goals saved')
     } catch {
-      setSaveStatus('Goals saved to local cache')
+      setSaveStatus('Saved locally')
     } finally {
       setIsSaving(false)
       setTimeout(() => setSaveStatus(null), 3000)
     }
   }
 
-  // ── Save review ──
   const handleSaveReview = async () => {
     setIsSaving(true)
     const id = `${reviewType}_${selectedDate}_${Date.now()}`
@@ -399,19 +430,84 @@ export default function DisciplineOS() {
       const result = await res.json()
       setSaveStatus(result.message || 'Review saved')
     } catch {
-      setSaveStatus('Review saved locally')
+      setSaveStatus('Saved locally')
     } finally {
       setIsSaving(false)
       setTimeout(() => setSaveStatus(null), 3000)
     }
   }
 
-  // ── Update pillar ──
+  // ── Advanced Automation ──
+  
+  const generatePDFReport = async () => {
+    setIsExportingPDF(true)
+    try {
+      const html2pdf = (await import('html2pdf.js')).default
+      const element = document.getElementById('review-export-container')
+      if (!element) return
+      
+      const opt = {
+        margin: 10,
+        filename: `DisciplineOS_${reviewType}_${selectedDate}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#030712' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }
+      
+      await html2pdf().set(opt).from(element).save()
+      setSaveStatus('PDF Exported Successfully')
+    } catch (err) {
+      console.error(err)
+      setSaveStatus('PDF Export Failed')
+    } finally {
+      setIsExportingPDF(false)
+      setTimeout(() => setSaveStatus(null), 3000)
+    }
+  }
+
+  const sendToZapier = async () => {
+    setIsZapping(true)
+    try {
+      // Structure the payload for the webhook
+      const payload = {
+        report_type: reviewType,
+        date: selectedDate,
+        deep_work_hours: deepWorkHours,
+        average_pillar_score: avgPillarScore,
+        answers: REVIEW_TEMPLATES[reviewType].prompts.map((p, i) => ({
+          question: p,
+          answer: reviewAnswers[i] || 'N/A'
+        }))
+      }
+
+      const res = await fetch('/api/admin/zapier', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          eventName: 'discipline_report',
+          payload
+        })
+      })
+
+      const result = await res.json()
+      if (res.ok && result.success) {
+        setSaveStatus('Report sent to Zapier (Email/WhatsApp Triggered)')
+      } else {
+        setSaveStatus('Zapier integration failed. Check ZapierPanel config.')
+      }
+    } catch (err) {
+      setSaveStatus('Zapier Request Failed')
+    } finally {
+      setIsZapping(false)
+      setTimeout(() => setSaveStatus(null), 4000)
+    }
+  }
+
+  // ── Helpers ──
   const updatePillar = (id: string, field: 'score' | 'note', value: any) => {
     setPillars(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p))
   }
 
-  // ── Update goal ──
   const updateGoal = (catId: string, goalId: string, field: keyof Goal, value: string) => {
     setGoalCategories(prev => prev.map(cat =>
       cat.id === catId
@@ -420,7 +516,6 @@ export default function DisciplineOS() {
     ))
   }
 
-  // ── Deep work hours calculated ──
   const deepWorkHours = hours.filter(h => h.category === 'deep-work').length
   const sleepHours = hours.filter(h => h.category === 'sleep').length
   const wastedHours = hours.filter(h => h.category === 'wasted').length
@@ -492,7 +587,7 @@ export default function DisciplineOS() {
             />
             {saveStatus && (
               <span className="text-xs text-emerald-400 font-medium animate-pulse px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20">
-                ✓ {saveStatus}
+                {saveStatus}
               </span>
             )}
           </div>
@@ -816,13 +911,28 @@ export default function DisciplineOS() {
         )}
 
         {/* ══════════════════════════════════════════════════════════════════════ */}
-        {/* SECTION: REVIEWS */}
+        {/* SECTION: REVIEWS & REPORTS */}
         {/* ══════════════════════════════════════════════════════════════════════ */}
         {activeSection === 'reviews' && (
           <div className="space-y-6">
-            <GlassPanel>
+            {/* Action Bar for Automations */}
+            <div className="flex flex-wrap gap-3 mb-4">
+              <button onClick={generatePDFReport} disabled={isExportingPDF}
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded-xl text-sm font-bold transition-all disabled:opacity-50">
+                {isExportingPDF ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <FileDown className="w-4 h-4" />}
+                Export PDF
+              </button>
+              
+              <button onClick={sendToZapier} disabled={isZapping}
+                className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-xl text-sm font-bold transition-all disabled:opacity-50">
+                {isZapping ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                Dispatch via Zapier (Email / WhatsApp)
+              </button>
+            </div>
+
+            <GlassPanel id="review-export-container">
               <SectionHeader icon={Calendar} title="Structured Assessment Reviews" subtitle="Radical honesty is non-negotiable" accent="text-amber-400" />
-              <div className="flex flex-wrap gap-2 mb-6">
+              <div className="flex flex-wrap gap-2 mb-6" data-html2canvas-ignore="true">
                 {Object.keys(REVIEW_TEMPLATES).map(type => (
                   <button
                     key={type}
@@ -838,32 +948,36 @@ export default function DisciplineOS() {
                 ))}
               </div>
 
-              <h3 className="text-base font-bold text-amber-400 mb-5">{REVIEW_TEMPLATES[reviewType].title}</h3>
-              <div className="space-y-5">
+              <div className="mb-8 border-b border-white/10 pb-4">
+                <h3 className="text-xl font-black text-amber-400 uppercase tracking-widest">{REVIEW_TEMPLATES[reviewType].title}</h3>
+                <p className="text-gray-500 text-sm mt-1 font-mono">Date: {selectedDate}</p>
+              </div>
+
+              <div className="space-y-6">
                 {REVIEW_TEMPLATES[reviewType].prompts.map((prompt, i) => (
-                  <div key={i} className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                    <p className="text-xs text-gray-400 font-medium mb-3">
+                  <div key={i} className="bg-white/[0.02] border border-white/5 rounded-xl p-5">
+                    <p className="text-sm text-amber-100 font-bold mb-3">
                       <span className="text-amber-500 font-black mr-2">Q{i + 1}.</span>{prompt}
                     </p>
                     <textarea
                       placeholder="Answer with radical honesty..."
                       value={reviewAnswers[i] || ''}
                       onChange={e => setReviewAnswers(prev => prev.map((a, j) => j === i ? e.target.value : a))}
-                      rows={3}
-                      className="w-full text-sm bg-transparent resize-none outline-none text-gray-200 placeholder-gray-700"
+                      rows={4}
+                      className="w-full text-base bg-transparent resize-none outline-none text-white placeholder-gray-700"
                     />
                   </div>
                 ))}
               </div>
 
-              <div className="mt-6 flex justify-end">
+              <div className="mt-8 flex justify-end" data-html2canvas-ignore="true">
                 <button
                   onClick={handleSaveReview}
                   disabled={isSaving}
-                  className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-amber-600 to-orange-600 rounded-xl font-bold text-sm hover:scale-[1.02] transition-all disabled:opacity-50"
+                  className="flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-600 to-orange-600 rounded-xl font-black tracking-widest text-sm hover:scale-[1.02] transition-all disabled:opacity-50 shadow-lg shadow-amber-500/20"
                 >
-                  {isSaving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                  {isSaving ? 'SAVING...' : `SAVE ${reviewType.toUpperCase()} REVIEW`}
+                  {isSaving ? <RefreshCcw className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+                  {isSaving ? 'SAVING...' : `COMMIT ${reviewType.toUpperCase()} REVIEW`}
                 </button>
               </div>
             </GlassPanel>
@@ -871,10 +985,36 @@ export default function DisciplineOS() {
         )}
 
         {/* ══════════════════════════════════════════════════════════════════════ */}
-        {/* SECTION: WISDOM */}
+        {/* SECTION: WISDOM & MENTORS */}
         {/* ══════════════════════════════════════════════════════════════════════ */}
         {activeSection === 'mentors' && (
           <div className="space-y-6">
+            
+            {/* AI Wisdom Feed */}
+            <GlassPanel>
+              <SectionHeader icon={Brain} title="JARVIS Intelligence Feed" subtitle="Automated daily insights, alerts, and wisdom" accent="text-blue-400" />
+              {loadingWisdom ? (
+                <div className="py-10 flex justify-center text-blue-500"><RefreshCcw className="w-6 h-6 animate-spin" /></div>
+              ) : wisdomFeed.length > 0 ? (
+                <div className="space-y-3">
+                  {wisdomFeed.map(item => (
+                    <div key={item.id} className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-4 flex gap-3">
+                      {item.type === 'alert' && <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />}
+                      {item.type === 'insight' && <Brain className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />}
+                      {item.type === 'action' && <Zap className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />}
+                      {item.type === 'news' && <MessageSquare className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />}
+                      <div>
+                        <p className="text-sm text-gray-200">{item.message}</p>
+                        <p className="text-xs text-gray-500 mt-1">{new Date(item.timestamp).toLocaleString()}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">No new intelligence available today.</div>
+              )}
+            </GlassPanel>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {MENTORS.map(mentor => (
                 <GlassPanel key={mentor.name} className="cursor-pointer" >

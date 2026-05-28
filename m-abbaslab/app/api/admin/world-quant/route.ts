@@ -222,6 +222,29 @@ export async function POST(request: NextRequest) {
                   message_text: `🧠 WORLD QUANT LAB ALERT\n\nAlpha PASSED with REAL BACKTEST!\n\nCode: ${alpha.code}\nSharpe: ${metrics.sharpe_ratio}\nReturn: ${(metrics.annual_return * 100).toFixed(1)}%\nDrawdown: ${(metrics.max_drawdown * 100).toFixed(1)}%\nWin Rate: ${(metrics.win_rate * 100).toFixed(1)}%\n\nReview: https://m-abbaslab.vercel.app/admin/dashboard`,
                   status: 'pending'
                 })
+            } else if (stored && !metrics.is_passed) {
+              const getFailReason = (m: AlphaMetrics) => {
+                if (m.sharpe_ratio < 1.0) return "Sharpe ratio too low"
+                if (m.max_drawdown < -0.15) return "Drawdown too high"
+                if (m.win_rate < 0.5) return "Win rate too low"
+                return "Failed fitness criteria"
+              }
+              await supabase.from('failed_alphas').insert({
+                alpha_code: alpha.code,
+                data_field: alpha.field,
+                operator: alpha.operator,
+                lookback: alpha.lookback,
+                transform: alpha.transform,
+                sharpe_ratio: metrics.sharpe_ratio,
+                annual_return: metrics.annual_return,
+                max_drawdown: metrics.max_drawdown,
+                win_rate: metrics.win_rate,
+                turnover: metrics.turnover,
+                fitness_score: metrics.fitness_score,
+                batch_id: batchId,
+                failed_reason: getFailReason(metrics),
+                meta: { alpha, metrics },
+              })
             }
           } catch (e) {
             console.warn('[WQ] Failed to store alpha:', e)
@@ -331,6 +354,15 @@ export async function GET(request: NextRequest) {
         .order('started_at', { ascending: false })
         .limit(5)
       data.batches = batches || []
+    }
+
+    if (type === 'all' || type === 'failed_alphas') {
+      const { data: failed_alphas } = await supabase
+        .from('failed_alphas')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50)
+      data.failed_alphas = failed_alphas || []
     }
 
     if (type === 'all' || type === 'health') {

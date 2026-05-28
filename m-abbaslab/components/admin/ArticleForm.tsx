@@ -83,7 +83,14 @@ export default function ArticleForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await onSubmit(formData)
+    
+    // Convert tags string to array
+    const tagsArray = formData.tags
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean)
+
+    await onSubmit({ ...formData, tags: tagsArray as any })
   }
 
   return (

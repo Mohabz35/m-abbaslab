@@ -5,11 +5,13 @@ import { Settings, Wifi, Brain } from 'lucide-react'
 import JarvisSettings from '@/components/admin/JarvisSettings'
 import WhatsAppConnection from '@/components/admin/WhatsAppConnection'
 import JarvisLearning from '@/components/admin/JarvisLearning'
+import SecuritySettings from '@/components/admin/SecuritySettings'
+import SystemSettings from '@/components/admin/SystemSettings'
 
-type ActiveSettingsTab = 'general' | 'connection' | 'learning'
+type ActiveSettingsTab = 'system' | 'general' | 'connection' | 'learning' | 'security'
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState<ActiveSettingsTab>('general')
+  const [activeTab, setActiveTab] = useState<ActiveSettingsTab>('system')
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-black p-6">
@@ -19,18 +21,20 @@ export default function SettingsPage() {
           <div>
             <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
               <Settings className="w-5 h-5 text-blue-500" />
-              Jarvis Control Hub
+              System Configuration Center
             </h1>
             <p className="text-xs text-gray-500 mt-1">
-              Configure system behaviors, track WhatsApp connection socket state, and guide model learning feedback.
+              Configure global system behaviors, sub-modules, and WhatsApp connection states.
             </p>
           </div>
 
           <div className="flex bg-gray-50 dark:bg-gray-950 p-1 rounded-xl border border-gray-150 dark:border-gray-800 self-start md:self-auto overflow-x-auto">
             {([
-              { id: 'general', label: 'Jarvis Settings', Icon: Settings },
+              { id: 'system', label: 'Global Preferences', Icon: Settings },
+              { id: 'general', label: 'Jarvis Logic', Icon: Brain },
               { id: 'connection', label: 'Connection Manager', Icon: Wifi },
-              { id: 'learning', label: 'Learning Feedback', Icon: Brain }
+              { id: 'learning', label: 'Learning Feedback', Icon: Brain },
+              { id: 'security', label: 'Security & Identity', Icon: Settings }
             ] as const).map(({ id, label, Icon }) => (
               <button
                 key={id}
@@ -50,9 +54,11 @@ export default function SettingsPage() {
 
         {/* Tab panels */}
         <div className="transition-all duration-200">
+          {activeTab === 'system' && <SystemSettings />}
           {activeTab === 'general' && <JarvisSettings />}
           {activeTab === 'connection' && <WhatsAppConnection />}
           {activeTab === 'learning' && <JarvisLearning />}
+          {activeTab === 'security' && <SecuritySettings />}
         </div>
       </div>
     </div>

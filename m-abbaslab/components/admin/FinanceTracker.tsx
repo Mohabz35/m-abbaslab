@@ -30,7 +30,7 @@ interface SavingsGoal {
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6']
 
 export default function FinanceTracker() {
-  const [activeTab, setActiveTab] = useState<'log' | 'history' | 'breakdown' | 'goals'>('log')
+  const [activeTab, setActiveTab] = useState<'log' | 'history' | 'breakdown' | 'goals' | 'advisor'>('log')
   const [entries, setEntries] = useState<FinanceEntry[]>([])
   const [goals, setGoals] = useState<SavingsGoal[]>([])
   const [isLoaded, setIsLoaded] = useState(false)
@@ -49,6 +49,13 @@ export default function FinanceTracker() {
 
   const [isSyncing, setIsSyncing] = useState(false)
   const [syncStatus, setSyncStatus] = useState<'idle' | 'success' | 'error'>('idle')
+
+  // Advisor & CSV/PDF Upload State
+  const [statementFile, setStatementFile] = useState<File | null>(null)
+  const [advisorAdvice, setAdvisorAdvice] = useState<string | null>(null)
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [uploadStatus, setUploadStatus] = useState<string>('')
+  const [pdfTextContext, setPdfTextContext] = useState<string>('')
 
   // Load Data
   useEffect(() => {
@@ -227,6 +234,90 @@ export default function FinanceTracker() {
     ))
   }
 
+  const handleUploadStatement = async () => {
+    if (!statementFile) return
+    setUploadStatus(`Processing ${statementFile.name}...`)
+    
+    try {
+      if (statementFile.name.endsWith('.csv')) {
+        const text = await statementFile.text()
+        const lines = text.split('\n')
+        const newEntries: FinanceEntry[] = []
+        for (let i = 1; i < lines.length; i++) {
+          if (!lines[i].trim()) continue
+          const cols = lines[i].split(',')
+          if (cols.length >= 3) {
+            const date = cols[0].trim()
+            const desc = cols[1].trim()
+            let amount = parseFloat(cols[2])
+            const type = (cols[3] || '').toLowerCase().includes('income') || amount > 0 ? 'income' : 'expense'
+            amount = Math.abs(amount)
+            
+            if (!isNaN(amount)) {
+              newEntries.push({
+                id: Date.now() + i,
+                type,
+                amount,
+                category: 'Imported',
+                date: date || new Date().toISOString().split('T')[0],
+                desc
+              })
+            }
+          }
+        }
+        
+        if (newEntries.length > 0) {
+          setEntries(prev => [...newEntries, ...prev])
+          setUploadStatus(`Successfully imported ${newEntries.length} transactions.`)
+        } else {
+          setUploadStatus('No valid transactions found in CSV.')
+        }
+      } else if (statementFile.name.endsWith('.pdf')) {
+        const formData = new FormData()
+        formData.append('file', statementFile)
+        const res = await fetch('/api/admin/finance-advisor/pdf', {
+          method: 'POST',
+          body: formData
+        })
+        const data = await res.json()
+        if (data.success) {
+          setPdfTextContext(data.text)
+          setUploadStatus('PDF parsed successfully! Ready for AI Analysis.')
+        } else {
+          setUploadStatus(data.error || 'Failed to parse PDF.')
+        }
+      } else {
+        setUploadStatus('Unsupported file format.')
+      }
+    } catch (err) {
+      setUploadStatus('Failed to process file format.')
+    }
+    setStatementFile(null)
+    setTimeout(() => setUploadStatus(''), 4000)
+  }
+
+  const handleAIAdvisor = async () => {
+    setIsAnalyzing(true)
+    setAdvisorAdvice(null)
+    try {
+      const res = await fetch('/api/admin/finance-advisor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ transactions: entries, pdfText: pdfTextContext })
+      })
+      const data = await res.json()
+      if (data.success) {
+        setAdvisorAdvice(data.advice)
+      } else {
+        setAdvisorAdvice("Error: Unable to generate advice.")
+      }
+    } catch (e) {
+      setAdvisorAdvice("Error communicating with AI Advisor.")
+    } finally {
+      setIsAnalyzing(false)
+    }
+  }
+
   if (!isLoaded) return <div className="p-8 text-center text-gray-500 animate-pulse">Loading secure finance module...</div>
 
   return (
@@ -305,7 +396,8 @@ export default function FinanceTracker() {
           { id: 'log', label: 'Log Entry', icon: Plus },
           { id: 'history', label: 'History', icon: List },
           { id: 'breakdown', label: 'Breakdown', icon: BarChart3 },
-          { id: 'goals', label: 'Goals', icon: Target }
+          { id: 'goals', label: 'Goals', icon: Target },
+          { id: 'advisor', label: 'AI Advisor & Import', icon: Cloud }
         ].map(tab => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
@@ -601,6 +693,67 @@ export default function FinanceTracker() {
                         </div>
                       )
                     })
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* AI ADVISOR & IMPORT TAB */}
+            {activeTab === 'advisor' && (
+              <div className="space-y-8">
+                {/* CSV/PDF Import */}
+                <div className="p-6 bg-gray-50 dark:bg-gray-800/30 rounded-2xl border border-gray-100 dark:border-gray-800">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                    <Cloud className="w-5 h-5 text-blue-500" />
+                    Bulk Bank Statement Import
+                  </h3>
+                  <p className="text-sm text-gray-500 mb-4">Upload a .CSV or .PDF statement file. PDF will be parsed and sent directly to AI.</p>
+                  
+                  <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <input 
+                      type="file" 
+                      accept=".csv,.pdf"
+                      onChange={e => setStatementFile(e.target.files?.[0] || null)}
+                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/30 dark:file:text-blue-400"
+                    />
+                    <button
+                      onClick={handleUploadStatement}
+                      disabled={!statementFile}
+                      className="w-full sm:w-auto px-6 py-2.5 bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 font-medium rounded-xl transition-colors disabled:opacity-50"
+                    >
+                      Process Statement
+                    </button>
+                  </div>
+                  {uploadStatus && <p className="mt-3 text-sm text-blue-500 font-medium">{uploadStatus}</p>}
+                </div>
+
+                {/* AI Advisory */}
+                <div className="p-6 border border-emerald-500/30 bg-emerald-500/5 rounded-2xl">
+                  <div className="flex justify-between items-center mb-4">
+                    <div>
+                      <h3 className="text-lg font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                        <Target className="w-5 h-5" />
+                        AI Financial Analyst
+                      </h3>
+                      <p className="text-sm text-gray-500">Scan your entire ledger and receive automated wealth-building advice.</p>
+                    </div>
+                    <button
+                      onClick={handleAIAdvisor}
+                      disabled={isAnalyzing || (entries.length === 0 && !pdfTextContext)}
+                      className="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-xl shadow-lg hover:scale-105 transition-all disabled:opacity-50"
+                    >
+                      {isAnalyzing ? 'Analyzing Ledger...' : 'Run Analysis'}
+                    </button>
+                  </div>
+
+                  {advisorAdvice && (
+                    <div className="mt-6 p-5 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
+                      <div className="prose dark:prose-invert max-w-none text-sm">
+                        {advisorAdvice.split('\\n').map((line, i) => (
+                          <p key={i} className="mb-2">{line.replace(/\\*\\*/g, '')}</p>
+                        ))}
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>

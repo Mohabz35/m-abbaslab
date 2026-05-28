@@ -57,6 +57,10 @@ import ZapierPanel from '@/components/admin/ZapierPanel'
 import DisciplineOS from '@/components/admin/DisciplineOS'
 import WhatsAppConnectionPanel from '@/components/admin/WhatsAppConnectionPanel'
 import WorldQuantLab from '@/components/admin/WorldQuantLab'
+import ProjectsManager from '@/components/admin/ProjectsManager'
+import ArticlesManager from '@/components/admin/ArticlesManager'
+import OverviewDashboard from '@/components/admin/OverviewDashboard'
+import JarvisHub from '@/components/admin/JarvisHub'
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -241,6 +245,7 @@ export default function AdminDashboardPage() {
     { id: 'projects', label: 'Projects', icon: Briefcase },
     { id: 'articles', label: 'Articles', icon: FileText },
     { id: 'alphas', label: 'Alphas', icon: Zap },
+    { id: 'jarvishub', label: 'JARVIS HUB', icon: Sparkles },
     { id: 'comms', label: 'Comms Hub', icon: MessageSquare },
     { id: 'scheduler', label: 'Content Scheduler', icon: History },
     { id: 'zapier', label: 'Zapier & Automation', icon: Cpu },
@@ -252,96 +257,15 @@ export default function AdminDashboardPage() {
   const renderContent = () => {
     switch (activeTab) {
       case 'overview':
-        return (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-blue-500/10 rounded-lg">
-                  <Activity className="w-6 h-6 text-blue-500" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-white">System Status</h3>
-                  <p className="text-sm text-slate-400">All systems operational</p>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Vercel Deployment</span>
-                  <span className="text-green-500 font-medium">Healthy</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Database Sync</span>
-                  <span className="text-green-500 font-medium">Active</span>
-                </div>
-              </div>
-            </div>
-            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
-              <h3 className="text-lg font-semibold text-white mb-4">Content Summary</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 bg-slate-700/50 rounded-lg">
-                  <div className="text-2xl font-bold text-white">{projects.length}</div>
-                  <div className="text-xs text-slate-400 uppercase">Projects</div>
-                </div>
-                <div className="p-3 bg-slate-700/50 rounded-lg">
-                  <div className="text-2xl font-bold text-white">{articles.length}</div>
-                  <div className="text-xs text-slate-400 uppercase">Articles</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )
+        return <OverviewDashboard />
       case 'projects':
-        return (
-          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-white">Project Systems</h3>
-              <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
-                <Plus className="w-4 h-4" /> Add Project
-              </button>
-            </div>
-            <div className="space-y-4">
-              {projects.map(p => (
-                <div key={p.id} className="p-4 bg-slate-700/30 rounded-lg border border-slate-600 flex justify-between items-center">
-                  <div>
-                    <h4 className="font-bold text-white">{p.title}</h4>
-                    <p className="text-sm text-slate-400">{p.category} • {p.status}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button className="p-2 text-slate-400 hover:text-white transition-colors"><Edit className="w-4 h-4" /></button>
-                    <button className="p-2 text-slate-400 hover:text-red-400 transition-colors"><Trash2 className="w-4 h-4" /></button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )
+        return <ProjectsManager />
       case 'articles':
-        return (
-          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-white">Research Articles</h3>
-              <button className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
-                <Plus className="w-4 h-4" /> Write Article
-              </button>
-            </div>
-            <div className="space-y-4">
-              {articles.map(a => (
-                <div key={a.id} className="p-4 bg-slate-700/30 rounded-lg border border-slate-600 flex justify-between items-center">
-                  <div>
-                    <h4 className="font-bold text-white">{a.title}</h4>
-                    <p className="text-sm text-slate-400">{a.category} • {a.publishDate}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button className="p-2 text-slate-400 hover:text-white transition-colors"><Edit className="w-4 h-4" /></button>
-                    <button className="p-2 text-slate-400 hover:text-red-400 transition-colors"><Trash2 className="w-4 h-4" /></button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )
+        return <ArticlesManager />
       case 'alphas':
         return <WorldQuantLab />
+      case 'jarvishub':
+        return <JarvisHub />
       case 'comms':
         return (
           <div className="space-y-6">
@@ -403,45 +327,69 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-12">
-          <div>
-            <h1 className="text-4xl font-bold text-white mb-2">Sentinel Command Center</h1>
-            <p className="text-slate-400">Managing M-AbbasLab Intelligence Infrastructure</p>
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row font-sans selection:bg-blue-500/30">
+      
+      {/* Sidebar */}
+      <div className="w-full md:w-64 bg-slate-900/60 backdrop-blur-xl border-r border-slate-800 flex flex-col shrink-0 shadow-2xl z-20">
+        <div className="p-6 border-b border-slate-800/50">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+              <span className="font-bold text-white text-lg">MA</span>
+            </div>
+            <div>
+              <h1 className="font-bold text-white tracking-wide">Sentinel</h1>
+              <p className="text-[10px] text-slate-400 uppercase tracking-widest">Command Center</p>
+            </div>
           </div>
-          <button 
-            onClick={handleSaveToProject}
-            disabled={isSaving}
-            className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50"
-          >
-            {isSaving ? <RefreshCcw className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-            {isSaving ? 'COMMITTING...' : 'COMMIT CHANGES'}
-          </button>
         </div>
-
-        <div className="flex flex-wrap gap-2 mb-8 bg-slate-800/50 p-2 rounded-2xl border border-slate-700/50">
+        
+        <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1 scrollbar-hide">
+          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-3 px-2">Core Systems</div>
           {tabs.map(tab => {
             const Icon = tab.icon
+            const isActive = activeTab === tab.id
+            const isJarvis = tab.id === 'jarvishub'
+            
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
-                  activeTab === tab.id 
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
-                    : 'text-slate-400 hover:bg-slate-700 hover:text-white'
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  isActive
+                    ? isJarvis 
+                      ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20 shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]'
+                      : 'bg-blue-500/10 text-blue-400 border border-blue-500/20 shadow-[inset_0_0_12px_rgba(59,130,246,0.1)]'
+                    : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border border-transparent'
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className={`w-4 h-4 ${isActive ? (isJarvis ? 'text-purple-400' : 'text-blue-400') : 'text-slate-500'}`} />
                 {tab.label}
               </button>
             )
           })}
         </div>
+        
+        <div className="p-4 border-t border-slate-800/50 bg-slate-900/40">
+          <button 
+            onClick={handleSaveToProject}
+            disabled={isSaving}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50 text-sm"
+          >
+            {isSaving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            {isSaving ? 'COMMITTING...' : 'COMMIT CHANGES'}
+          </button>
+        </div>
+      </div>
 
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          {renderContent()}
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-y-auto h-screen relative bg-[#0B0F19]">
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none"></div>
+        
+        <div className="p-8 max-w-7xl mx-auto relative z-10">
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {renderContent()}
+          </div>
         </div>
       </div>
     </div>

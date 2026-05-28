@@ -28,6 +28,18 @@ interface Alpha {
   drawdown_curve: number[]
 }
 
+interface FailedAlpha {
+  id: string
+  alpha_code: string
+  failed_reason: string
+  sharpe_ratio: number
+  annual_return: number
+  max_drawdown: number
+  win_rate: number
+  created_at: string
+}
+
+
 interface Batch {
   id: string
   batch_name: string
@@ -209,6 +221,7 @@ const PnLChart: React.FC<{ data: number[]; color?: string }> = ({ data, color = 
 
 export default function WorldQuantLab() {
   const [alphas, setAlphas] = useState<Alpha[]>([])
+  const [failedAlphas, setFailedAlphas] = useState<FailedAlpha[]>([])
   const [batches, setBatches] = useState<Batch[]>([])
   const [healthLogs, setHealthLogs] = useState<HealthLog[]>([])
   const [selectedAlpha, setSelectedAlpha] = useState<Alpha | null>(null)
@@ -216,14 +229,38 @@ export default function WorldQuantLab() {
   const [activeBatch, setActiveBatch] = useState<Batch | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [stats, setStats] = useState({ totalAlphas: 0, passedAlphas: 0, avgSharpe: 0, bestSharpe: 0, successRate: 0 })
+  const [activeTab, setActiveTab] = useState<'discovered' | 'brain' | 'console'>('discovered')
+  const [consoleLogs, setConsoleLogs] = useState<{ id: number, text: string, type: 'info'|'success'|'error'|'warning' }[]>([])
+
+  // Simulate incoming console logs
+  useEffect(() => {
+    if (activeTab !== 'console' && !isRunning) return
+    const interval = setInterval(() => {
+      const msgs = [
+        { t: "Connecting to WorldQuant API...", type: "info" as const },
+        { t: "Fetching latest market data (US Equities)...", type: "info" as const },
+        { t: "Generating alpha expression tree...", type: "info" as const },
+        { t: "Applying rank() and ts_rank() neutralization...", type: "warning" as const },
+        { t: "Executing simulated backtest for alpha candidate...", type: "info" as const },
+        { t: "Backtest complete. Sharpe Ratio computed.", type: "success" as const },
+        { t: "Warning: High turnover detected. Applying decay filter.", type: "warning" as const },
+        { t: "Alpha stored in pending queue.", type: "success" as const },
+      ]
+      const msg = msgs[Math.floor(Math.random() * msgs.length)]
+      setConsoleLogs(prev => [...prev.slice(-40), { id: Date.now(), text: `[${new Date().toISOString().split('T')[1].split('.')[0]}] ${msg.t}`, type: msg.type }])
+    }, isRunning ? 1500 : 5000)
+    return () => clearInterval(interval)
+  }, [isRunning, activeTab])
 
   const fetchData = useCallback(async () => {
     try {
       const { data: alphaData } = await supabase.from("alphas").select("*").order("created_at", { ascending: false }).limit(50)
+      const { data: failedData } = await supabase.from("failed_alphas").select("*").order("created_at", { ascending: false }).limit(50)
       const { data: batchData } = await supabase.from("alpha_batches").select("*").order("started_at", { ascending: false }).limit(5)
       const { data: healthData } = await supabase.from("wq_health_log").select("*").order("created_at", { ascending: false }).limit(10)
 
       if (alphaData) setAlphas(alphaData)
+      if (failedData) setFailedAlphas(failedData)
       if (batchData) {
         setBatches(batchData)
         const running = batchData.find((b) => b.status === "running")
@@ -462,39 +499,100 @@ export default function WorldQuantLab() {
 
             <div className="rounded-2xl border border-slate-800 bg-slate-900 overflow-hidden">
               <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800">
-                <div className="flex items-center gap-2"><Sparkles className="w-5 h-5 text-emerald-400" /><span className="font-mono text-sm text-emerald-300">ALPHA DISCOVERY FEED</span></div>
+                <div className="flex items-center gap-4">
+                  <button onClick={() => setActiveTab('discovered')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'discovered' ? 'text-emerald-300 border-b-2 border-emerald-400 pb-1' : 'text-slate-500 hover:text-slate-300'}`}>
+                    <Sparkles className="w-4 h-4" /> DISCOVERED
+                  </button>
+                  <button onClick={() => setActiveTab('brain')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'brain' ? 'text-purple-400 border-b-2 border-purple-400 pb-1' : 'text-slate-500 hover:text-slate-300'}`}>
+                    <Brain className="w-4 h-4" /> ALPHA BRAIN (FAILED)
+                  </button>
+                  <button onClick={() => setActiveTab('console')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'console' ? 'text-blue-400 border-b-2 border-blue-400 pb-1' : 'text-slate-500 hover:text-slate-300'}`}>
+                    <Terminal className="w-4 h-4" /> LIVE CONSOLE
+                  </button>
+                </div>
                 <span className="text-xs text-slate-500">Live</span>
               </div>
               <div className="max-h-[500px] overflow-y-auto">
-                <AnimatePresence>
-                  {alphas.map((alpha) => (
-                    <motion.div key={alpha.id} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className={`p-4 border-b border-slate-800/50 cursor-pointer transition-colors hover:bg-slate-800/50 ${alpha.is_passed ? "border-l-2 border-l-emerald-500" : "border-l-2 border-l-slate-700"}`} onClick={() => setSelectedAlpha(alpha)}>
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <div className="font-mono text-sm text-emerald-300">{alpha.alpha_code}</div>
-                          <div className="text-xs text-slate-500 mt-1">{new Date(alpha.created_at).toLocaleString()}</div>
+                <AnimatePresence mode="wait">
+                  {activeTab === 'console' ? (
+                    <motion.div key="console" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4">
+                      <div className="flex justify-between items-center mb-3">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-2.5 h-2.5 rounded-full ${isRunning ? 'bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.7)]' : 'bg-slate-600'}`}></div>
+                          <span className="text-xs font-mono text-slate-400 uppercase tracking-widest">{isRunning ? 'ENGINE ACTIVE' : 'STANDBY'}</span>
                         </div>
-                        <div className={`px-2 py-1 rounded text-xs font-mono ${alpha.status === "passed" ? "bg-emerald-500/20 text-emerald-400" : alpha.status === "failed" ? "bg-red-500/20 text-red-400" : "bg-slate-700/50 text-slate-400"}`}>{alpha.status?.toUpperCase()}</div>
+                        <button onClick={() => setConsoleLogs([])} className="text-xs text-slate-600 hover:text-slate-400 font-mono">CLEAR</button>
                       </div>
-                      <div className="grid grid-cols-4 gap-2 text-xs">
-                        <div><span className="text-slate-500">Sharpe</span><div className={`font-mono font-bold ${(alpha.sharpe_ratio || 0) >= 1.5 ? "text-emerald-400" : "text-slate-300"}`}>{alpha.sharpe_ratio?.toFixed(2) || "N/A"}</div></div>
-                        <div><span className="text-slate-500">Return</span><div className="font-mono text-slate-300">{alpha.annual_return ? `${(alpha.annual_return * 100).toFixed(1)}%` : "N/A"}</div></div>
-                        <div><span className="text-slate-500">Drawdown</span><div className={`font-mono ${(alpha.max_drawdown || 0) > -0.15 ? "text-emerald-400" : "text-red-400"}`}>{alpha.max_drawdown ? `${(alpha.max_drawdown * 100).toFixed(1)}%` : "N/A"}</div></div>
-                        <div><span className="text-slate-500">Win Rate</span><div className="font-mono text-slate-300">{alpha.win_rate ? `${(alpha.win_rate * 100).toFixed(1)}%` : "N/A"}</div></div>
+                      <div className="bg-black rounded-xl p-4 h-[420px] overflow-y-auto font-mono text-xs border border-slate-800 shadow-inner">
+                        <div className="space-y-1">
+                          {consoleLogs.length === 0 && <div className="text-slate-600 italic">Awaiting engine output...</div>}
+                          {consoleLogs.map(log => (
+                            <div key={log.id} className={`leading-relaxed ${log.type === 'error' ? 'text-red-400' : log.type === 'warning' ? 'text-amber-400' : log.type === 'success' ? 'text-emerald-400' : 'text-slate-400'}`}>
+                              <span className="text-slate-600 mr-2">$</span>{log.text}
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      {alpha.pnl_curve && alpha.pnl_curve.length > 0 && (
-                        <div className="mt-3"><PnLChart data={alpha.pnl_curve} color={alpha.is_passed ? "#00ff88" : "#64748b"} /></div>
+                    </motion.div>
+                  ) : activeTab === 'discovered' ? (
+                    <motion.div key="discovered" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                      {alphas.map((alpha) => (
+                        <motion.div key={alpha.id} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className={`p-4 border-b border-slate-800/50 cursor-pointer transition-colors hover:bg-slate-800/50 ${alpha.is_passed ? "border-l-2 border-l-emerald-500" : "border-l-2 border-l-slate-700"}`} onClick={() => setSelectedAlpha(alpha)}>
+                          <div className="flex items-start justify-between mb-2">
+                            <div>
+                              <div className="font-mono text-sm text-emerald-300">{alpha.alpha_code}</div>
+                              <div className="text-xs text-slate-500 mt-1">{new Date(alpha.created_at).toLocaleString()}</div>
+                            </div>
+                            <div className={`px-2 py-1 rounded text-xs font-mono ${alpha.status === "passed" ? "bg-emerald-500/20 text-emerald-400" : alpha.status === "failed" ? "bg-red-500/20 text-red-400" : "bg-slate-700/50 text-slate-400"}`}>{alpha.status?.toUpperCase()}</div>
+                          </div>
+                          <div className="grid grid-cols-4 gap-2 text-xs">
+                            <div><span className="text-slate-500">Sharpe</span><div className={`font-mono font-bold ${(alpha.sharpe_ratio || 0) >= 1.5 ? "text-emerald-400" : "text-slate-300"}`}>{alpha.sharpe_ratio?.toFixed(2) || "N/A"}</div></div>
+                            <div><span className="text-slate-500">Return</span><div className="font-mono text-slate-300">{alpha.annual_return ? `${(alpha.annual_return * 100).toFixed(1)}%` : "N/A"}</div></div>
+                            <div><span className="text-slate-500">Drawdown</span><div className={`font-mono ${(alpha.max_drawdown || 0) > -0.15 ? "text-emerald-400" : "text-red-400"}`}>{alpha.max_drawdown ? `${(alpha.max_drawdown * 100).toFixed(1)}%` : "N/A"}</div></div>
+                            <div><span className="text-slate-500">Win Rate</span><div className="font-mono text-slate-300">{alpha.win_rate ? `${(alpha.win_rate * 100).toFixed(1)}%` : "N/A"}</div></div>
+                          </div>
+                          {alpha.pnl_curve && alpha.pnl_curve.length > 0 && (
+                            <div className="mt-3"><PnLChart data={alpha.pnl_curve} color={alpha.is_passed ? "#00ff88" : "#64748b"} /></div>
+                          )}
+                        </motion.div>
+                      ))}
+                      {alphas.length === 0 && (
+                        <div className="text-center py-12 text-slate-600">
+                          <Brain className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                          <p className="text-sm">No alphas discovered yet</p>
+                          <p className="text-xs mt-1">Start the engine to begin discovery</p>
+                        </div>
                       )}
                     </motion.div>
-                  ))}
+                  ) : (
+                    <motion.div key="brain" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                      {failedAlphas.map((fAlpha) => (
+                        <motion.div key={fAlpha.id} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="p-4 border-b border-slate-800/50 hover:bg-slate-800/50 border-l-2 border-l-purple-500">
+                          <div className="flex items-start justify-between mb-2">
+                            <div>
+                              <div className="font-mono text-sm text-purple-300">{fAlpha.alpha_code}</div>
+                              <div className="text-xs text-slate-500 mt-1">{new Date(fAlpha.created_at).toLocaleString()}</div>
+                            </div>
+                            <div className="px-2 py-1 rounded text-xs font-mono bg-purple-500/20 text-purple-400">{fAlpha.failed_reason}</div>
+                          </div>
+                          <div className="grid grid-cols-4 gap-2 text-xs">
+                            <div><span className="text-slate-500">Sharpe</span><div className="font-mono text-slate-300">{fAlpha.sharpe_ratio?.toFixed(2) || "N/A"}</div></div>
+                            <div><span className="text-slate-500">Return</span><div className="font-mono text-slate-300">{fAlpha.annual_return ? `${(fAlpha.annual_return * 100).toFixed(1)}%` : "N/A"}</div></div>
+                            <div><span className="text-slate-500">Drawdown</span><div className="font-mono text-slate-300">{fAlpha.max_drawdown ? `${(fAlpha.max_drawdown * 100).toFixed(1)}%` : "N/A"}</div></div>
+                            <div><span className="text-slate-500">Win Rate</span><div className="font-mono text-slate-300">{fAlpha.win_rate ? `${(fAlpha.win_rate * 100).toFixed(1)}%` : "N/A"}</div></div>
+                          </div>
+                        </motion.div>
+                      ))}
+                      {failedAlphas.length === 0 && (
+                        <div className="text-center py-12 text-slate-600">
+                          <Brain className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                          <p className="text-sm">No failed alphas yet</p>
+                          <p className="text-xs mt-1">Failed alphas will be memorized here</p>
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
                 </AnimatePresence>
-                {alphas.length === 0 && (
-                  <div className="text-center py-12 text-slate-600">
-                    <Brain className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                    <p className="text-sm">No alphas discovered yet</p>
-                    <p className="text-xs mt-1">Start the engine to begin discovery</p>
-                  </div>
-                )}
               </div>
             </div>
           </div>
