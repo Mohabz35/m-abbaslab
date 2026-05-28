@@ -61,6 +61,8 @@ import ProjectsManager from '@/components/admin/ProjectsManager'
 import ArticlesManager from '@/components/admin/ArticlesManager'
 import OverviewDashboard from '@/components/admin/OverviewDashboard'
 import JarvisHub from '@/components/admin/JarvisHub'
+import FashionManager from '@/components/admin/FashionManager'
+import SettingsHub from '@/components/admin/SettingsHub'
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -251,6 +253,7 @@ export default function AdminDashboardPage() {
     { id: 'zapier', label: 'Zapier & Automation', icon: Cpu },
     { id: 'discipline', label: 'Discipline OS', icon: ShieldCheck },
     { id: 'finance', label: 'Finance Tracker', icon: BarChart },
+    { id: 'fashion', label: 'Fashion', icon: Sparkles },
     { id: 'settings', label: 'Settings', icon: Settings },
   ]
 
@@ -287,40 +290,10 @@ export default function AdminDashboardPage() {
         return <DisciplineOS />
       case 'finance':
         return <FinanceTracker />
+      case 'fashion':
+        return <FashionManager />
       case 'settings':
-        return (
-          <div className="space-y-8">
-            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl">
-              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <Phone className="w-6 h-6 text-blue-500" />
-                WhatsApp Connection Management
-              </h3>
-              <WhatsAppConnectionPanel />
-            </div>
-            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
-              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <Settings className="w-6 h-6 text-slate-400" />
-                Site Configuration
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Admin Name</label>
-                  <input 
-                    type="text" value={adminName} onChange={e => setAdminName(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Admin Email</label>
-                  <input 
-                    type="email" value={adminEmail} onChange={e => setAdminEmail(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        )
+        return <SettingsHub />
       default:
         return <div className="text-white">Tab under construction</div>
     }

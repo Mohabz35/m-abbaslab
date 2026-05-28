@@ -17,8 +17,8 @@ export default function OverviewDashboard() {
     projects: 0,
     shippedProjects: 0,
     articles: 0,
-    commsSent: 125, // Mock data for comms/finance if not hooked up yet
-    financeTotal: 45000,
+    commsSent: 0,
+    financeTotal: 0,
   })
   
   const [wisdomFeed, setWisdomFeed] = useState<any[]>([])
@@ -55,6 +55,7 @@ export default function OverviewDashboard() {
             { data: recentProjects },
             { data: recentArticles },
             { data: recentAlphas },
+            { count: commsCount },
           ] = await Promise.all([
             supabase.from('alphas').select('*', { count: 'exact', head: true }),
             supabase.from('alphas').select('*', { count: 'exact', head: true }).eq('is_passed', true),
@@ -65,6 +66,7 @@ export default function OverviewDashboard() {
             supabase.from('projects').select('id, title, created_at').order('created_at', { ascending: false }).limit(3),
             supabase.from('articles').select('id, title, created_at').order('created_at', { ascending: false }).limit(3),
             supabase.from('alphas').select('id, alpha_code, is_passed, created_at').order('created_at', { ascending: false }).limit(3),
+            supabase.from('whatsapp_messages').select('*', { count: 'exact', head: true }),
           ])
 
           // Calculate Finance Total
@@ -99,7 +101,8 @@ export default function OverviewDashboard() {
             projects: projectCount || 0,
             shippedProjects: shippedCount || 0,
             articles: articleCount || 0,
-            financeTotal: totalFinance
+            financeTotal: totalFinance,
+            commsSent: commsCount || 0,
           }))
         }
       } catch (e) {

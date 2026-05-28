@@ -70,6 +70,26 @@ CREATE TABLE IF NOT EXISTS alpha_mutations (
     created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Failed alphas: tracks alphas that didn't meet criteria
+CREATE TABLE IF NOT EXISTS failed_alphas (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    alpha_code TEXT NOT NULL,
+    alpha_name TEXT,
+    data_field TEXT,
+    operator TEXT,
+    lookback INTEGER,
+    transform TEXT,
+    sharpe_ratio DECIMAL(10,4),
+    annual_return DECIMAL(10,4),
+    max_drawdown DECIMAL(10,4),
+    win_rate DECIMAL(10,4),
+    turnover DECIMAL(10,4),
+    fitness_score DECIMAL(10,4),
+    failed_reason TEXT,
+    generation_batch UUID,
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+
 -- System health log
 CREATE TABLE IF NOT EXISTS wq_health_log (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -142,3 +162,14 @@ CREATE POLICY "Allow update batches" ON alpha_batches FOR UPDATE USING (true) WI
 
 DROP POLICY IF EXISTS "Allow update notifications" ON wq_notifications;
 CREATE POLICY "Allow update notifications" ON wq_notifications FOR UPDATE USING (true) WITH CHECK (true);
+
+-- Failed alphas: indexes and RLS
+CREATE INDEX IF NOT EXISTS idx_failed_alphas_created ON failed_alphas(created_at DESC);
+
+ALTER TABLE failed_alphas ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public read failed_alphas" ON failed_alphas;
+CREATE POLICY "Allow public read failed_alphas" ON failed_alphas FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow insert failed_alphas" ON failed_alphas;
+CREATE POLICY "Allow insert failed_alphas" ON failed_alphas FOR INSERT WITH CHECK (true);
