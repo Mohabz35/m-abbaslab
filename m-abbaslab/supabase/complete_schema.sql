@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS projects (
     title TEXT NOT NULL,
     description TEXT,
     category TEXT,
-    status TEXT DEFAULT 'active' CHECK (status IN ('active','shipped','archived')),
+    status TEXT DEFAULT 'active',
     tech_stack TEXT[] DEFAULT '{}',
     image_url TEXT,
     project_url TEXT,
@@ -22,6 +22,23 @@ CREATE TABLE IF NOT EXISTS projects (
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
+
+-- Add columns if table already exists without them
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'active';
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS tech_stack TEXT[] DEFAULT '{}';
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS image_url TEXT;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS project_url TEXT;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS github_url TEXT;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS featured BOOLEAN DEFAULT false;
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT now();
+
+-- Remove the CHECK constraint if it exists from previous runs, re-add safely
+DO $$ BEGIN
+  ALTER TABLE projects DROP CONSTRAINT IF EXISTS projects_status_check;
+EXCEPTION WHEN undefined_object THEN NULL; END $$;
+DO $$ BEGIN
+  ALTER TABLE projects ADD CONSTRAINT projects_status_check CHECK (status IN ('active','shipped','archived'));
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- Articles
 CREATE TABLE IF NOT EXISTS articles (
@@ -34,11 +51,30 @@ CREATE TABLE IF NOT EXISTS articles (
     image_url TEXT,
     author TEXT,
     read_time INTEGER DEFAULT 5,
-    status TEXT DEFAULT 'draft' CHECK (status IN ('draft','published','archived')),
+    status TEXT DEFAULT 'draft',
     published_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
+
+-- Add columns if table already exists without them
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS excerpt TEXT;
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS content TEXT;
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS category TEXT;
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS tags TEXT[] DEFAULT '{}';
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS image_url TEXT;
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS author TEXT;
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS read_time INTEGER DEFAULT 5;
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'draft';
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS published_at TIMESTAMPTZ;
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT now();
+
+DO $$ BEGIN
+  ALTER TABLE articles DROP CONSTRAINT IF EXISTS articles_status_check;
+EXCEPTION WHEN undefined_object THEN NULL; END $$;
+DO $$ BEGIN
+  ALTER TABLE articles ADD CONSTRAINT articles_status_check CHECK (status IN ('draft','published','archived'));
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- Fashion items
 CREATE TABLE IF NOT EXISTS fashion_items (
@@ -55,6 +91,22 @@ CREATE TABLE IF NOT EXISTS fashion_items (
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'design';
+ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS collection TEXT;
+ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS category TEXT;
+ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS size TEXT;
+ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS stock INTEGER DEFAULT 0;
+ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS image_url TEXT;
+ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS price DECIMAL(10,2);
+ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT now();
+
+DO $$ BEGIN
+  ALTER TABLE fashion_items DROP CONSTRAINT IF EXISTS fashion_items_status_check;
+EXCEPTION WHEN undefined_object THEN NULL; END $$;
+DO $$ BEGIN
+  ALTER TABLE fashion_items ADD CONSTRAINT fashion_items_status_check CHECK (status IN ('design','production','shipped','archived'));
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
 -- Finance entries
 CREATE TABLE IF NOT EXISTS finance_entries (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -66,6 +118,9 @@ CREATE TABLE IF NOT EXISTS finance_entries (
     recurring BOOLEAN DEFAULT false,
     created_at TIMESTAMPTZ DEFAULT now()
 );
+
+ALTER TABLE finance_entries ADD COLUMN IF NOT EXISTS category TEXT;
+ALTER TABLE finance_entries ADD COLUMN IF NOT EXISTS recurring BOOLEAN DEFAULT false;
 
 -- Finance goals
 CREATE TABLE IF NOT EXISTS finance_goals (
