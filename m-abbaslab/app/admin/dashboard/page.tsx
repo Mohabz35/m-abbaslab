@@ -63,6 +63,7 @@ import OverviewDashboard from '@/components/admin/OverviewDashboard'
 import JarvisHub from '@/components/admin/JarvisHub'
 import FashionManager from '@/components/admin/FashionManager'
 import SettingsHub from '@/components/admin/SettingsHub'
+import AdvancedAnalytics from '@/components/admin/AdvancedAnalytics'
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -253,6 +254,7 @@ export default function AdminDashboardPage() {
     { id: 'zapier', label: 'Zapier & Automation', icon: Cpu },
     { id: 'discipline', label: 'Discipline OS', icon: ShieldCheck },
     { id: 'finance', label: 'Finance Tracker', icon: BarChart },
+    { id: 'analytics', label: 'Analytics', icon: BarChart },
     { id: 'fashion', label: 'Fashion', icon: Sparkles },
     { id: 'settings', label: 'Settings', icon: Settings },
   ]
@@ -290,6 +292,8 @@ export default function AdminDashboardPage() {
         return <DisciplineOS />
       case 'finance':
         return <FinanceTracker />
+      case 'analytics':
+        return <AdvancedAnalytics />
       case 'fashion':
         return <FashionManager />
       case 'settings':

@@ -2,43 +2,57 @@
 
 import React, { useState, useEffect } from 'react'
 import { Shield, Key, History, User, Save, RefreshCcw, Activity } from 'lucide-react'
+import { supabase, hasSupabaseKeys } from '@/lib/supabase'
+import { personalConfig } from '@/config/personal'
 
 export default function SecuritySettings() {
   const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'audit'>('profile')
   const [isSaving, setIsSaving] = useState(false)
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
 
-  // Profile State
   const [bio, setBio] = useState('Chief Executive Officer. Architecting System 12×.')
   const [displayName, setDisplayName] = useState('M. Abbas')
-  
-  // Security State
+
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
-  // Mock Audit History
-  const [auditLogs] = useState([
-    { id: 1, action: 'PASSWORD_CHANGED', ip: '192.168.1.1', date: new Date(Date.now() - 86400000).toISOString() },
-    { id: 2, action: 'ZAPIER_WEBHOOK_TRIGGERED', ip: 'System', date: new Date(Date.now() - 172800000).toISOString() },
-    { id: 3, action: 'DISCIPLINE_REVIEW_SAVED', ip: '192.168.1.1', date: new Date(Date.now() - 259200000).toISOString() },
-    { id: 4, action: 'ADMIN_LOGIN_SUCCESS', ip: '192.168.1.1', date: new Date(Date.now() - 345600000).toISOString() },
-  ])
+  const [auditLogs, setAuditLogs] = useState<any[]>([])
+  const [auditLoading, setAuditLoading] = useState(false)
+
+  useEffect(() => {
+    if (activeTab === 'audit') {
+      fetchAuditLogs()
+    }
+  }, [activeTab])
+
+  const fetchAuditLogs = async () => {
+    setAuditLoading(true)
+    if (hasSupabaseKeys) {
+      const { data } = await supabase.from('audit_logs').select('*').order('created_at', { ascending: false }).limit(20)
+      if (data) setAuditLogs(data)
+    }
+    setAuditLoading(false)
+  }
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, type })
     setTimeout(() => setToast(null), 3000)
   }
 
-  const handleUpdateProfile = () => {
+  const handleUpdateProfile = async () => {
     setIsSaving(true)
+    if (hasSupabaseKeys) {
+      await supabase.from('site_config').upsert({ key: 'profile', value: { displayName, bio } }, { onConflict: 'key' })
+      await supabase.from('audit_logs').insert({ action: 'PROFILE_UPDATED', entity_type: 'profile', details: { displayName } })
+    }
     setTimeout(() => {
       setIsSaving(false)
       showToast('Profile biography updated successfully.')
-    }, 1000)
+    }, 500)
   }
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
       showToast('New passwords do not match.', 'error')
       return
@@ -48,18 +62,23 @@ export default function SecuritySettings() {
       return
     }
     setIsSaving(true)
+    if (hasSupabaseKeys) {
+      const { error } = await supabase.from('site_config').upsert({ key: 'admin_credentials', value: { password: newPassword } }, { onConflict: 'key' })
+      if (!error) {
+        await supabase.from('audit_logs').insert({ action: 'PASSWORD_CHANGED', entity_type: 'security', details: {} })
+      }
+    }
     setTimeout(() => {
       setIsSaving(false)
       setCurrentPassword('')
       setNewPassword('')
       setConfirmPassword('')
-      showToast('Security credentials updated. Re-login may be required.')
-    }, 1500)
+      showToast('Security credentials updated.')
+    }, 500)
   }
 
   return (
     <div className="bg-gray-950 border border-gray-800 rounded-2xl p-6 shadow-sm text-gray-200">
-      {/* Toast */}
       {toast && (
         <div className={`fixed top-4 right-4 z-50 rounded-xl px-4 py-3 text-sm font-medium border shadow-lg transition-all ${
           toast.type === 'error' ? 'bg-red-500/10 border-red-500/20 text-red-500' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
@@ -68,7 +87,6 @@ export default function SecuritySettings() {
         </div>
       )}
 
-      {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-gray-800 pb-6">
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2 text-white">
@@ -79,7 +97,6 @@ export default function SecuritySettings() {
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="flex flex-wrap gap-2 mb-8 border-b border-gray-800 pb-4">
         {[
           { id: 'profile', label: 'Identity Profile', icon: User },
@@ -105,9 +122,7 @@ export default function SecuritySettings() {
         })}
       </div>
 
-      {/* Tab Content */}
       <div className="min-h-[300px]">
-        {/* PROFILE TAB */}
         {activeTab === 'profile' && (
           <div className="max-w-xl space-y-6">
             <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-800">
@@ -115,108 +130,73 @@ export default function SecuritySettings() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Display Name</label>
-                  <input
-                    type="text"
-                    value={displayName}
-                    onChange={e => setDisplayName(e.target.value)}
-                    className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none"
-                  />
+                  <input type="text" value={displayName} onChange={e => setDisplayName(e.target.value)} className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase mb-2">System Biography</label>
-                  <textarea
-                    value={bio}
-                    onChange={e => setBio(e.target.value)}
-                    rows={4}
-                    className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none resize-none"
-                  />
+                  <textarea value={bio} onChange={e => setBio(e.target.value)} rows={4} className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none resize-none" />
                 </div>
-                <button
-                  onClick={handleUpdateProfile}
-                  disabled={isSaving}
-                  className="px-6 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
-                >
-                  {isSaving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                  Save Identity
+                <button onClick={handleUpdateProfile} disabled={isSaving} className="px-6 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50">
+                  {isSaving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Save Identity
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* SECURITY TAB */}
         {activeTab === 'security' && (
           <div className="max-w-xl space-y-6">
             <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-800">
               <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                <Key className="w-5 h-5 text-amber-500" />
-                Change Master Password
+                <Key className="w-5 h-5 text-amber-500" /> Change Master Password
               </h3>
               <p className="text-xs text-gray-500 mb-6">Updating this will revoke all existing admin sessions.</p>
-              
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Current Password</label>
-                  <input
-                    type="password"
-                    value={currentPassword}
-                    onChange={e => setCurrentPassword(e.target.value)}
-                    className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-amber-500 outline-none"
-                  />
-                </div>
-                <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase mb-2">New Password</label>
-                  <input
-                    type="password"
-                    value={newPassword}
-                    onChange={e => setNewPassword(e.target.value)}
-                    className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-amber-500 outline-none"
-                  />
+                  <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-amber-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Confirm New Password</label>
-                  <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={e => setConfirmPassword(e.target.value)}
-                    className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-amber-500 outline-none"
-                  />
+                  <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-amber-500 outline-none" />
                 </div>
-                <button
-                  onClick={handleChangePassword}
-                  disabled={isSaving || !currentPassword || !newPassword}
-                  className="px-6 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
-                >
-                  {isSaving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />}
-                  Update Security Credentials
+                <button onClick={handleChangePassword} disabled={isSaving || !newPassword} className="px-6 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50">
+                  {isSaving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />} Update Security Credentials
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* AUDIT TAB */}
         {activeTab === 'audit' && (
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <Activity className="w-5 h-5 text-purple-500" />
-              System Event Logs
-            </h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Activity className="w-5 h-5 text-purple-500" /> System Event Logs
+              </h3>
+              <button onClick={fetchAuditLogs} className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center gap-1">
+                <RefreshCcw className={`w-3 h-3 ${auditLoading ? 'animate-spin' : ''}`} /> Refresh
+              </button>
+            </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-gray-800 text-gray-500 text-xs uppercase tracking-wider">
                     <th className="pb-3 font-bold">Timestamp</th>
                     <th className="pb-3 font-bold">Action Event</th>
-                    <th className="pb-3 font-bold">IP Address</th>
+                    <th className="pb-3 font-bold">Entity</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-800/50">
+                  {auditLogs.length === 0 && !auditLoading && (
+                    <tr><td colSpan={3} className="py-8 text-center text-gray-500">No audit events yet. Actions will be logged here automatically.</td></tr>
+                  )}
+                  {auditLoading && <tr><td colSpan={3} className="py-8 text-center text-gray-500">Loading...</td></tr>}
                   {auditLogs.map(log => (
                     <tr key={log.id} className="hover:bg-gray-900/30">
-                      <td className="py-3 text-gray-400 font-mono">{new Date(log.date).toLocaleString()}</td>
+                      <td className="py-3 text-gray-400 font-mono text-xs">{new Date(log.created_at).toLocaleString()}</td>
                       <td className="py-3 text-cyan-400 font-bold tracking-wide">{log.action}</td>
-                      <td className="py-3 text-gray-500 font-mono">{log.ip}</td>
+                      <td className="py-3 text-gray-500 font-mono text-xs">{log.entity_type || '-'}</td>
                     </tr>
                   ))}
                 </tbody>

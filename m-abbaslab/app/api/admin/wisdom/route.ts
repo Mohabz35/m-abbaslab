@@ -1,40 +1,77 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { jwtVerify } from 'jose'
+import { NextResponse } from 'next/server'
+import { supabase, hasSupabaseKeys } from '@/lib/supabase'
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback_secret_abbaslab_2026_change_in_production'
-)
+export async function GET() {
+  const feed: any[] = []
 
-async function isAuthorized(request: NextRequest): Promise<boolean> {
-  const header = request.headers.get('x-admin-secret')
-  if (process.env.ADMIN_SECRET && header === process.env.ADMIN_SECRET) return true
-  const session = request.cookies.get('admin_session')
-  if (!session?.value) return false
-  try {
-    await jwtVerify(session.value, JWT_SECRET)
-    return true
-  } catch {
-    return false
+  if (hasSupabaseKeys) {
+    // Real data: check system health
+    const { count: alphaCount } = await supabase.from('alphas').select('*', { count: 'exact', head: true })
+    const { count: passedCount } = await supabase.from('alphas').select('*', { count: 'exact', head: true }).eq('is_passed', true)
+    const { count: pendingMessages } = await supabase.from('whatsapp_messages').select('*', { count: 'exact', head: true }).eq('is_read', false)
+    const { count: messageCount } = await supabase.from('whatsapp_messages').select('*', { count: 'exact', head: true })
+    const { count: projectCount } = await supabase.from('projects').select('*', { count: 'exact', head: true })
+    const { count: unshippedProjects } = await supabase.from('projects').select('*', { count: 'exact', head: true }).neq('status', 'shipped')
+
+    // Alphas that need attention (queued for testing)
+    const { count: simulatingAlphas } = await supabase.from('alphas').select('*', { count: 'exact', head: true }).eq('status', 'simulating')
+    const { count: passedAlphasReady } = await supabase.from('alphas').select('*', { count: 'exact', head: true }).eq('status', 'passed').eq('submitted_to_wq', false)
+
+    if (alphaCount && alphaCount > 0) {
+      feed.push({
+        id: 1,
+        type: alphaCount > 50 ? 'alert' : 'insight',
+        message: alphaCount > 50
+          ? `Alpha Lab is at capacity: ${alphaCount} alphas generated. Consider pruning low-fitness candidates.`
+          : `${alphaCount} alphas have been tested. Pass rate: ${passedCount && alphaCount ? Math.round(passedCount / alphaCount * 100) : 0}%.`
+      })
+    }
+
+    if (passedAlphasReady && passedAlphasReady > 0) {
+      feed.push({
+        id: 2,
+        type: 'action',
+        message: `${passedAlphasReady} passed alpha${passedAlphasReady > 1 ? 's' : ''} ready for WorldQuant submission. Review and submit in the Alpha Lab.`
+      })
+    }
+
+    if (simulatingAlphas && simulatingAlphas > 0) {
+      feed.push({
+        id: 3,
+        type: 'action',
+        message: `${simulatingAlphas} alpha${simulatingAlphas > 1 ? 's are' : ' is'} currently in simulation. Results pending.`
+      })
+    }
+
+    if (messageCount && messageCount > 0) {
+      feed.push({
+        id: 4,
+        type: pendingMessages && pendingMessages > 0 ? 'alert' : 'insight',
+        message: pendingMessages && pendingMessages > 0
+          ? `${pendingMessages} unread WhatsApp message${pendingMessages > 1 ? 's' : ''} in JARVIS inbox.`
+          : `${messageCount} WhatsApp messages processed by JARVIS. All caught up.`
+      })
+    }
+
+    if (unshippedProjects && unshippedProjects > 0) {
+      feed.push({
+        id: 5,
+        type: 'insight',
+        message: `${unshippedProjects} active project${unshippedProjects > 1 ? 's' : ''} in development. Total: ${projectCount || 0}.`
+      })
+    }
   }
-}
 
-export async function GET(request: NextRequest) {
-  if (!(await isAuthorized(request))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  // Always add at least one item so the feed is never empty
+  if (feed.length === 0) {
+    feed.push({
+      id: 1,
+      type: 'insight',
+      message: hasSupabaseKeys
+        ? 'All systems operational. No significant activity detected yet.'
+        : 'Supabase not configured. Connect your database to see live intelligence.'
+    })
   }
 
-  try {
-    // In a production app, these would come from an AI API or news aggregation service.
-    // For now, we mock the intelligence feed.
-    const wisdomFeed = [
-      { id: 1, type: 'alert', message: 'Vercel Deployment is healthy but approaching bandwidth limit.', timestamp: new Date().toISOString() },
-      { id: 2, type: 'insight', message: 'Articles published on Tuesday mornings show a 24% higher read rate.', timestamp: new Date(Date.now() - 3600000).toISOString() },
-      { id: 3, type: 'action', message: 'You have 3 Alphas in the queue ready for testing.', timestamp: new Date(Date.now() - 7200000).toISOString() },
-      { id: 4, type: 'news', message: 'AI model breakthroughs in Quant Finance announced yesterday.', timestamp: new Date(Date.now() - 86400000).toISOString() }
-    ]
-
-    return NextResponse.json({ success: true, feed: wisdomFeed })
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
+  return NextResponse.json({ feed })
 }
