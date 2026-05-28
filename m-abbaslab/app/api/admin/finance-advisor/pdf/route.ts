@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-// @ts-ignore
-const pdfParse = require('pdf-parse')
+
+export const dynamic = 'force-dynamic'
 
 export async function POST(req: Request) {
   try {
@@ -11,6 +11,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: 'No file uploaded' }, { status: 400 })
     }
 
+    // @ts-ignore
+    const pdfParse = require('pdf-parse')
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
 

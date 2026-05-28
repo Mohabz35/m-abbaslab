@@ -47,3 +47,5 @@ data/scheduled-posts.json
 jarvis-whatsapp-engine/auth_state/
 jarvis-whatsapp-engine/node_modules/
 jarvis-whatsapp-engine/.env
+
+.vercel

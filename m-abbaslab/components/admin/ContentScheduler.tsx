@@ -679,11 +679,11 @@ export default function ContentScheduler() {
                             <p className="text-sm text-slate-300 whitespace-pre-wrap mb-3 leading-relaxed line-clamp-3">{post.content}</p>
                             <div className="flex items-center justify-between">
                               <div className="flex gap-2">
-                                {post.platforms.map(pid => {
-                                  const pl = PLATFORMS.find(p => p.id === pid)
-                                  if (!pl) return null
-                                  return <pl.Icon key={pid} style={{ color: pl.color }} className="w-4 h-4 opacity-80" title={pl.label} />
-                                })}
+                                 {post.platforms.map(pid => {
+                                   const pl = PLATFORMS.find(p => p.id === pid)
+                                   if (!pl) return null
+                                   return <div key={pid} title={pl.label}><pl.Icon style={{ color: pl.color }} className="w-4 h-4 opacity-80" /></div>
+                                 })}
                               </div>
                               <span className="text-xs text-slate-500">
                                 {post.status === 'scheduled' && post.scheduledAt ? `📅 ${new Date(post.scheduledAt).toLocaleString()}`

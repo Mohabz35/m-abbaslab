@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Plus, Edit, Trash2, Search, FileText, Sparkles, X, Wand2 } from 'lucide-react'
+import { Plus, Edit, Trash2, Search, FileText, Sparkles, X, Wand2, Briefcase } from 'lucide-react'
 import ArticleForm from './ArticleForm'
 import { motion, AnimatePresence } from 'framer-motion'
 
