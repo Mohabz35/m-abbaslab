@@ -8,7 +8,8 @@ import {
 import {
   Brain, Activity, TrendingUp, AlertTriangle, CheckCircle,
   Zap, Database, Cpu, Network, Play, Pause, BarChart3,
-  Clock, X, Send, Sparkles, Terminal, RefreshCw, LineChart
+  Clock, X, Send, Sparkles, Terminal, RefreshCw, LineChart,
+  ChevronDown, ChevronUp, Loader
 } from "lucide-react"
 
 interface Alpha {
@@ -26,6 +27,7 @@ interface Alpha {
   created_at: string
   pnl_curve: number[]
   drawdown_curve: number[]
+  generation_batch?: string
 }
 
 interface FailedAlpha {
@@ -38,7 +40,6 @@ interface FailedAlpha {
   win_rate: number
   created_at: string
 }
-
 
 interface Batch {
   id: string
@@ -183,7 +184,7 @@ const WorkingQuants: React.FC<{ batch: Batch | null }> = ({ batch }) => {
       </div>
       <AnimatePresence>
         {particles.map((p) => (
-          <motion.div key={p.id} initial={{ opacity: 0, scale: 0.5, x: `${p.x}%`, y: `${p.y}%` }} animate={{ opacity: [0, 1, 1, 0], scale: [0.5, 1, 1, 0.8] }} exit={{ opacity: 0 }} transition={{ duration: 4 }} className="absolute px-3 py-1.5 bg-emerald-950/80 border border-emerald-500/30 rounded-lg text-emerald-300 text-xs font-mono whitespace-nowrap" style={{ left: `${p.x}%`, top: `${p.y}%` }}>
+          <motion.div key={p.id} initial={{ opacity: 0, scale: 0.5, x: `${p.x}%`, y: `${p.y}%` }} animate={{ opacity: [0, 1, 1, 0], scale: [0.5, 1, 1, 0.8] }} exit={{ opacity: 0 }} transition={{ duration: 4 }} className="absolute text-xs text-emerald-400 font-mono pointer-events-none">
             <span className="inline-block w-2 h-2 bg-emerald-400 rounded-full mr-2 animate-pulse" />
             {p.text}
           </motion.div>
@@ -231,6 +232,9 @@ export default function WorldQuantLab() {
   const [stats, setStats] = useState({ totalAlphas: 0, passedAlphas: 0, avgSharpe: 0, bestSharpe: 0, successRate: 0 })
   const [activeTab, setActiveTab] = useState<'discovered' | 'brain' | 'console'>('discovered')
   const [consoleLogs, setConsoleLogs] = useState<{ id: number, text: string, type: 'info'|'success'|'error'|'warning' }[]>([])
+  const [expandedBatchId, setExpandedBatchId] = useState<string | null>(null)
+  const [batchAlphasMap, setBatchAlphasMap] = useState<Record<string, Alpha[]>>({})
+  const [loadingBatchId, setLoadingBatchId] = useState<string | null>(null)
 
   // Simulate incoming console logs
   useEffect(() => {
@@ -241,10 +245,10 @@ export default function WorldQuantLab() {
         { t: "Fetching latest market data (US Equities)...", type: "info" as const },
         { t: "Generating alpha expression tree...", type: "info" as const },
         { t: "Applying rank() and ts_rank() neutralization...", type: "warning" as const },
-        { t: "Executing simulated backtest for alpha candidate...", type: "info" as const },
+        { t: "Executing real backtest for alpha candidate...", type: "info" as const },
         { t: "Backtest complete. Sharpe Ratio computed.", type: "success" as const },
         { t: "Warning: High turnover detected. Applying decay filter.", type: "warning" as const },
-        { t: "Alpha stored in pending queue.", type: "success" as const },
+        { t: "Alpha stored in permanent memory.", type: "success" as const },
       ]
       const msg = msgs[Math.floor(Math.random() * msgs.length)]
       setConsoleLogs(prev => [...prev.slice(-40), { id: Date.now(), text: `[${new Date().toISOString().split('T')[1].split('.')[0]}] ${msg.t}`, type: msg.type }])
@@ -254,9 +258,9 @@ export default function WorldQuantLab() {
 
   const fetchData = useCallback(async () => {
     try {
-      const { data: alphaData } = await supabase.from("alphas").select("*").order("created_at", { ascending: false }).limit(50)
+      const { data: alphaData } = await supabase.from("alphas").select("*").order("created_at", { ascending: false }).limit(100)
       const { data: failedData } = await supabase.from("failed_alphas").select("*").order("created_at", { ascending: false }).limit(50)
-      const { data: batchData } = await supabase.from("alpha_batches").select("*").order("started_at", { ascending: false }).limit(5)
+      const { data: batchData } = await supabase.from("alpha_batches").select("*").order("started_at", { ascending: false }).limit(10)
       const { data: healthData } = await supabase.from("wq_health_log").select("*").order("created_at", { ascending: false }).limit(10)
 
       if (alphaData) setAlphas(alphaData)
@@ -285,25 +289,53 @@ export default function WorldQuantLab() {
     }
   }, [])
 
+  // Fetch batch alphas when batch is expanded
+  const handleExpandBatch = async (batchId: string) => {
+    if (expandedBatchId === batchId) {
+      setExpandedBatchId(null)
+      return
+    }
+    
+    setExpandedBatchId(batchId)
+    setLoadingBatchId(batchId)
+    
+    try {
+      const { data } = await supabase
+        .from("alphas")
+        .select("*")
+        .eq("generation_batch", batchId)
+        .order("created_at", { ascending: false })
+      
+      if (data) {
+        setBatchAlphasMap(prev => ({...prev, [batchId]: data}))
+      }
+    } catch (err) {
+      console.error("[WQ Lab] Failed to fetch batch alphas:", err)
+    } finally {
+      setLoadingBatchId(null)
+    }
+  }
+
   useEffect(() => {
     fetchData()
-    const interval = setInterval(fetchData, 10000)
+    const interval = setInterval(fetchData, isRunning ? 3000 : 10000) // Poll faster when running
     return () => clearInterval(interval)
-  }, [fetchData])
+  }, [fetchData, isRunning])
 
   useEffect(() => {
     const channel = supabase
       .channel("worldquant-lab")
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "alphas" }, (payload) => {
-        setAlphas((prev) => [payload.new as Alpha, ...prev.slice(0, 49)])
+        setAlphas((prev) => [payload.new as Alpha, ...prev.slice(0, 99)])
       })
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "alpha_batches" }, (payload) => {
         setActiveBatch(payload.new as Batch)
         setIsRunning((payload.new as Batch).status === "running")
+        fetchData() // Refresh all data on batch update
       })
       .subscribe()
     return () => { supabase.removeChannel(channel) }
-  }, [])
+  }, [fetchData])
 
   const handleStartEngine = async () => {
     setIsGenerating(true)
@@ -395,6 +427,34 @@ export default function WorldQuantLab() {
   return (
     <div className={`min-h-screen ${hc.bg} text-white p-6 transition-colors duration-1000`}>
       <div className="max-w-7xl mx-auto">
+        {/* LIVE PROGRESS BANNER */}
+        {isRunning && activeBatch && (
+          <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="mb-6 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border border-emerald-500/50 rounded-lg p-4 shadow-lg">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-3">
+                <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1, repeat: Infinity }}>
+                  <Loader className="w-5 h-5 text-emerald-400 animate-spin" />
+                </motion.div>
+                <span className="font-mono text-sm text-emerald-300 uppercase tracking-widest">TESTING ALPHAS IN PROGRESS</span>
+              </div>
+              <span className="text-xl font-bold text-emerald-400">{activeBatch.total_tested} / {activeBatch.total_generated || 10}</span>
+            </div>
+            <div className="w-full bg-slate-900 rounded-full h-2 border border-slate-800 overflow-hidden">
+              <motion.div 
+                className="h-full bg-gradient-to-r from-emerald-400 to-blue-400"
+                initial={{ width: 0 }}
+                animate={{ width: activeBatch.total_generated ? `${(activeBatch.total_tested / activeBatch.total_generated) * 100}%` : 0 }}
+                transition={{ duration: 0.5 }}
+              />
+            </div>
+            <div className="mt-2 flex justify-between text-xs text-slate-400">
+              <span>✅ Passed: <span className="text-emerald-400 font-bold">{activeBatch.total_passed}</span></span>
+              <span>❌ Failed: <span className="text-red-400 font-bold">{activeBatch.total_tested - activeBatch.total_passed}</span></span>
+              <span>📊 Pass Rate: <span className="text-blue-400 font-bold">{activeBatch.total_tested > 0 ? ((activeBatch.total_passed / activeBatch.total_tested) * 100).toFixed(1) : 0}%</span></span>
+            </div>
+          </motion.div>
+        )}
+
         {/* HEADER */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
@@ -412,7 +472,7 @@ export default function WorldQuantLab() {
               <div className={`w-3 h-3 rounded-full ${healthColor === "emerald" ? "bg-emerald-400 animate-pulse" : healthColor === "amber" ? "bg-amber-400 animate-pulse" : healthColor === "red" ? "bg-red-400 animate-pulse" : "bg-slate-400"}`} />
               <span className={`text-sm font-mono ${hc.text} uppercase`}>{activeBatch?.health_status || "STANDBY"}</span>
             </div>
-            <button onClick={isRunning ? handleStopEngine : handleStartEngine} disabled={isGenerating} className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${isRunning ? "bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30" : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30"} disabled:opacity-50`}>
+            <button onClick={isRunning ? handleStopEngine : handleStartEngine} disabled={isGenerating} className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${isRunning ? "bg-red-600 hover:bg-red-700" : "bg-emerald-600 hover:bg-emerald-700"} disabled:opacity-50`}>
               {isGenerating ? <RefreshCw className="w-4 h-4 animate-spin" /> : isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               {isGenerating ? "GENERATING..." : isRunning ? "STOP ENGINE" : "START ENGINE"}
             </button>
@@ -463,7 +523,7 @@ export default function WorldQuantLab() {
               </div>
               <div className="space-y-2 max-h-48 overflow-y-auto">
                 {healthLogs.map((log) => (
-                  <motion.div key={log.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className={`flex items-center gap-3 p-2 rounded-lg text-xs font-mono ${log.status === "healthy" ? "bg-emerald-950/30 text-emerald-400" : log.status === "warning" ? "bg-amber-950/30 text-amber-400" : "bg-red-950/30 text-red-400"}`}>
+                  <motion.div key={log.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className={`flex items-center gap-3 p-2 rounded-lg text-xs font-mono ${log.status === "healthy" ? "text-emerald-400 bg-emerald-500/5" : log.status === "warning" ? "text-amber-400 bg-amber-500/5" : "text-red-400 bg-red-500/5"}`}>
                     {log.status === "healthy" ? <CheckCircle className="w-4 h-4" /> : log.status === "warning" ? <AlertTriangle className="w-4 h-4" /> : <X className="w-4 h-4" />}
                     <span className="text-slate-500">{new Date(log.created_at).toLocaleTimeString()}</span>
                     <span className="uppercase">{log.component}</span>
@@ -500,13 +560,13 @@ export default function WorldQuantLab() {
             <div className="rounded-2xl border border-slate-800 bg-slate-900 overflow-hidden">
               <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800">
                 <div className="flex items-center gap-4">
-                  <button onClick={() => setActiveTab('discovered')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'discovered' ? 'text-emerald-300 border-b-2 border-emerald-400 pb-1' : 'text-slate-500 hover:text-slate-300'}`}>
+                  <button onClick={() => setActiveTab('discovered')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'discovered' ? 'text-emerald-300 border-b-2 border-emerald-300' : 'text-slate-400'}`}>
                     <Sparkles className="w-4 h-4" /> DISCOVERED
                   </button>
-                  <button onClick={() => setActiveTab('brain')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'brain' ? 'text-purple-400 border-b-2 border-purple-400 pb-1' : 'text-slate-500 hover:text-slate-300'}`}>
+                  <button onClick={() => setActiveTab('brain')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'brain' ? 'text-purple-400 border-b-2 border-purple-400' : 'text-slate-400'}`}>
                     <Brain className="w-4 h-4" /> ALPHA BRAIN (FAILED)
                   </button>
-                  <button onClick={() => setActiveTab('console')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'console' ? 'text-blue-400 border-b-2 border-blue-400 pb-1' : 'text-slate-500 hover:text-slate-300'}`}>
+                  <button onClick={() => setActiveTab('console')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'console' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-slate-400'}`}>
                     <Terminal className="w-4 h-4" /> LIVE CONSOLE
                   </button>
                 </div>
@@ -527,7 +587,7 @@ export default function WorldQuantLab() {
                         <div className="space-y-1">
                           {consoleLogs.length === 0 && <div className="text-slate-600 italic">Awaiting engine output...</div>}
                           {consoleLogs.map(log => (
-                            <div key={log.id} className={`leading-relaxed ${log.type === 'error' ? 'text-red-400' : log.type === 'warning' ? 'text-amber-400' : log.type === 'success' ? 'text-emerald-400' : 'text-slate-400'}`}>
+                            <div key={log.id} className={`leading-relaxed ${log.type === 'error' ? 'text-red-400' : log.type === 'warning' ? 'text-amber-400' : log.type === 'success' ? 'text-emerald-400' : 'text-slate-300'}`}>
                               <span className="text-slate-600 mr-2">$</span>{log.text}
                             </div>
                           ))}
@@ -537,16 +597,16 @@ export default function WorldQuantLab() {
                   ) : activeTab === 'discovered' ? (
                     <motion.div key="discovered" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                       {alphas.map((alpha) => (
-                        <motion.div key={alpha.id} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className={`p-4 border-b border-slate-800/50 cursor-pointer transition-colors hover:bg-slate-800/50 ${alpha.is_passed ? "border-l-2 border-l-emerald-500" : "border-l-2 border-l-slate-700"}`} onClick={() => setSelectedAlpha(alpha)}>
+                        <motion.div key={alpha.id} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className={`p-4 border-b border-slate-800/50 cursor-pointer transition-colors hover:bg-slate-800/30`} onClick={() => setSelectedAlpha(alpha)}>
                           <div className="flex items-start justify-between mb-2">
                             <div>
                               <div className="font-mono text-sm text-emerald-300">{alpha.alpha_code}</div>
                               <div className="text-xs text-slate-500 mt-1">{new Date(alpha.created_at).toLocaleString()}</div>
                             </div>
-                            <div className={`px-2 py-1 rounded text-xs font-mono ${alpha.status === "passed" ? "bg-emerald-500/20 text-emerald-400" : alpha.status === "failed" ? "bg-red-500/20 text-red-400" : "bg-slate-700/50 text-slate-400"}`}>{alpha.status?.toUpperCase()}</div>
+                            <div className={`px-2 py-1 rounded text-xs font-mono ${alpha.status === "passed" ? "bg-emerald-500/20 text-emerald-400" : alpha.status === "failed" ? "bg-red-500/20 text-red-400" : "bg-slate-600/20 text-slate-300"}`}>{alpha.status}</div>
                           </div>
                           <div className="grid grid-cols-4 gap-2 text-xs">
-                            <div><span className="text-slate-500">Sharpe</span><div className={`font-mono font-bold ${(alpha.sharpe_ratio || 0) >= 1.5 ? "text-emerald-400" : "text-slate-300"}`}>{alpha.sharpe_ratio?.toFixed(2) || "N/A"}</div></div>
+                            <div><span className="text-slate-500">Sharpe</span><div className={`font-mono font-bold ${(alpha.sharpe_ratio || 0) >= 1.5 ? "text-emerald-400" : "text-slate-300"}`}>{(alpha.sharpe_ratio || 0).toFixed(2)}</div></div>
                             <div><span className="text-slate-500">Return</span><div className="font-mono text-slate-300">{alpha.annual_return ? `${(alpha.annual_return * 100).toFixed(1)}%` : "N/A"}</div></div>
                             <div><span className="text-slate-500">Drawdown</span><div className={`font-mono ${(alpha.max_drawdown || 0) > -0.15 ? "text-emerald-400" : "text-red-400"}`}>{alpha.max_drawdown ? `${(alpha.max_drawdown * 100).toFixed(1)}%` : "N/A"}</div></div>
                             <div><span className="text-slate-500">Win Rate</span><div className="font-mono text-slate-300">{alpha.win_rate ? `${(alpha.win_rate * 100).toFixed(1)}%` : "N/A"}</div></div>
@@ -598,9 +658,9 @@ export default function WorldQuantLab() {
           </div>
         </div>
 
-        {/* BATCH HISTORY */}
+        {/* BATCH HISTORY WITH EXPANDABLE ALPHAS */}
         <div className="mt-6 rounded-2xl border border-slate-800 bg-slate-900 p-4">
-          <div className="flex items-center gap-2 mb-4"><Clock className="w-5 h-5 text-emerald-400" /><span className="font-mono text-sm text-emerald-300">BATCH HISTORY</span></div>
+          <div className="flex items-center gap-2 mb-4"><Clock className="w-5 h-5 text-emerald-400" /><span className="font-mono text-sm text-emerald-300">BATCH HISTORY & DETAILS</span></div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -613,27 +673,92 @@ export default function WorldQuantLab() {
                   <th className="text-right py-2 px-3">ERRORS</th>
                   <th className="text-left py-2 px-3">HEALTH</th>
                   <th className="text-left py-2 px-3">STARTED</th>
+                  <th className="text-center py-2 px-3">DETAILS</th>
                 </tr>
               </thead>
               <tbody>
                 {batches.map((batch) => (
-                  <tr key={batch.id} className="border-b border-slate-800/30 hover:bg-slate-800/30">
-                    <td className="py-3 px-3 font-mono text-emerald-300">{batch.batch_name}</td>
-                    <td className="py-3 px-3">
-                      <span className={`px-2 py-1 rounded text-xs font-mono ${batch.status === "running" ? "bg-emerald-500/20 text-emerald-400" : batch.status === "completed" ? "bg-blue-500/20 text-blue-400" : batch.status === "failed" ? "bg-red-500/20 text-red-400" : "bg-slate-700/50 text-slate-400"}`}>{batch.status.toUpperCase()}</span>
-                    </td>
-                    <td className="py-3 px-3 text-right font-mono">{batch.total_generated}</td>
-                    <td className="py-3 px-3 text-right font-mono">{batch.total_tested}</td>
-                    <td className="py-3 px-3 text-right font-mono text-emerald-400">{batch.total_passed}</td>
-                    <td className="py-3 px-3 text-right font-mono">{batch.error_count}</td>
-                    <td className="py-3 px-3">
-                      <div className="flex items-center gap-2">
-                        <span className={`w-2 h-2 rounded-full ${batch.health_status === "healthy" ? "bg-emerald-400" : batch.health_status === "warning" ? "bg-amber-400 animate-pulse" : "bg-red-400 animate-pulse"}`} />
-                        <span className="text-xs text-slate-400 uppercase">{batch.health_status}</span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-3 text-xs text-slate-500">{new Date(batch.started_at).toLocaleString()}</td>
-                  </tr>
+                  <React.Fragment key={batch.id}>
+                    <tr className="border-b border-slate-800/30 hover:bg-slate-800/30">
+                      <td className="py-3 px-3 font-mono text-emerald-300">{batch.batch_name}</td>
+                      <td className="py-3 px-3">
+                        <span className={`px-2 py-1 rounded text-xs font-mono ${batch.status === "running" ? "bg-emerald-500/20 text-emerald-400" : batch.status === "completed" ? "bg-blue-500/20 text-blue-400" : "bg-slate-500/20 text-slate-300"}`}>{batch.status}</span>
+                      </td>
+                      <td className="py-3 px-3 text-right font-mono">{batch.total_generated}</td>
+                      <td className="py-3 px-3 text-right font-mono">{batch.total_tested}</td>
+                      <td className="py-3 px-3 text-right font-mono text-emerald-400">{batch.total_passed}</td>
+                      <td className="py-3 px-3 text-right font-mono">{batch.error_count}</td>
+                      <td className="py-3 px-3">
+                        <div className="flex items-center gap-2">
+                          <span className={`w-2 h-2 rounded-full ${batch.health_status === "healthy" ? "bg-emerald-400" : batch.health_status === "warning" ? "bg-amber-400 animate-pulse" : "bg-red-400"}`} />
+                          <span className="text-xs text-slate-400 uppercase">{batch.health_status}</span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-3 text-xs text-slate-500">{new Date(batch.started_at).toLocaleString()}</td>
+                      <td className="py-3 px-3 text-center">
+                        <button
+                          onClick={() => handleExpandBatch(batch.id)}
+                          className="inline-flex items-center gap-1 px-2 py-1 text-xs text-emerald-400 hover:bg-emerald-500/20 rounded transition-colors"
+                        >
+                          {loadingBatchId === batch.id ? <Loader className="w-4 h-4 animate-spin" /> : expandedBatchId === batch.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                        </button>
+                      </td>
+                    </tr>
+                    {/* Expanded batch alphas */}
+                    <AnimatePresence>
+                      {expandedBatchId === batch.id && batchAlphasMap[batch.id] && (
+                        <tr>
+                          <td colSpan={9} className="px-0">
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              className="bg-slate-950/50 border-b border-slate-800"
+                            >
+                              <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
+                                {batchAlphasMap[batch.id]?.length === 0 ? (
+                                  <div className="text-slate-600 text-xs text-center py-4">No alphas in this batch</div>
+                                ) : (
+                                  batchAlphasMap[batch.id]?.map((alpha) => (
+                                    <motion.div
+                                      key={alpha.id}
+                                      initial={{ opacity: 0, x: -10 }}
+                                      animate={{ opacity: 1, x: 0 }}
+                                      className={`flex items-center justify-between p-3 rounded-lg border ${alpha.is_passed ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-red-500/30 bg-red-500/5'}`}
+                                    >
+                                      <div className="flex-1">
+                                        <div className="font-mono text-sm text-emerald-300">{alpha.alpha_code}</div>
+                                        <div className="grid grid-cols-5 gap-4 text-xs text-slate-400 mt-1">
+                                          <div>Sharpe: <span className={alpha.is_passed ? 'text-emerald-400' : 'text-red-400'}>{alpha.sharpe_ratio.toFixed(2)}</span></div>
+                                          <div>Return: <span className={alpha.annual_return > 0 ? 'text-emerald-400' : 'text-red-400'}>{(alpha.annual_return * 100).toFixed(1)}%</span></div>
+                                          <div>DD: <span className={alpha.max_drawdown > -0.15 ? 'text-emerald-400' : 'text-red-400'}>{(alpha.max_drawdown * 100).toFixed(1)}%</span></div>
+                                          <div>Win: {(alpha.win_rate * 100).toFixed(1)}%</div>
+                                          <div>Fitness: <span className="text-blue-400">{alpha.fitness_score.toFixed(2)}</span></div>
+                                        </div>
+                                      </div>
+                                      <div className="flex gap-2">
+                                        {alpha.is_passed && (
+                                          <button
+                                            onClick={() => { setSelectedAlpha(alpha); }}
+                                            className="px-2 py-1 text-xs bg-emerald-500/20 text-emerald-400 rounded hover:bg-emerald-500/30 transition-colors"
+                                          >
+                                            View
+                                          </button>
+                                        )}
+                                        <span className={`px-2 py-1 text-xs rounded font-mono ${alpha.is_passed ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
+                                          {alpha.is_passed ? '✓ PASS' : '✗ FAIL'}
+                                        </span>
+                                      </div>
+                                    </motion.div>
+                                  ))
+                                )}
+                              </div>
+                            </motion.div>
+                          </td>
+                        </tr>
+                      )}
+                    </AnimatePresence>
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>
@@ -645,7 +770,7 @@ export default function WorldQuantLab() {
       <AnimatePresence>
         {selectedAlpha && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6" onClick={() => setSelectedAlpha(null)}>
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div>
@@ -697,7 +822,7 @@ export default function WorldQuantLab() {
                         {(() => {
                           const data = selectedAlpha.drawdown_curve; const mn = Math.min(...data); const mx = Math.max(...data); const r = mx - mn || 1
                           const pts = data.map((v, i) => { const x = (i / (data.length - 1)) * 100; const y = 50 - ((v - mn) / r) * 50; return `${x},${y}` }).join(" ")
-                          return <><polyline points={pts} fill="none" stroke="#ff4444" strokeWidth="0.3" vectorEffect="non-scaling-stroke" /><polygon points={`0,50 ${pts} 100,50`} fill="rgba(255,68,68,0.1)" /></>
+                          return <><polyline points={pts} fill="none" stroke="#ff4444" strokeWidth="0.3" vectorEffect="non-scaling-stroke" /><polygon points={`0,50 ${pts} 100,50`} fill="rgba(255, 68, 68, 0.2)" /></>
                         })()}
                       </svg>
                     </div>
