@@ -38,26 +38,10 @@ export const personalConfig = {
   ],
   "projects": [
     {
-      "id": "project-1771435761631",
-      "title": "New Project",
-      "description": "Project description...",
-      "longDescription": "Extended project details...",
-      "technologies": [
-        "Next.js",
-        "Tailwind"
-      ],
-      "github_url": "#",
-      "live_url": "#",
-      "category": "technology",
-      "featured": true,
-      "status": "In Progress",
-      "year": "2026"
-    },
-    {
       "id": "m-abbaslab",
       "title": "M-AbbasLab Platform",
       "description": "Personal operating platform for research, projects, articles, modeling portfolio, and professional identity.",
-      "longDescription": "A unified Next.js platform serving as my digital hub for all professional activities. Features include project showcase, article system, modeling portfolio, CV generator, and admin panel. Built with modern technologies for performance and scalability.",
+      "longDescription": "A unified Next.js platform serving as my digital hub for all professional activities. Features include project showcase, article system, modeling portfolio, CV generator, admin dashboard with World Quant Lab alpha engine, JARVIS WhatsApp bot, and finance tracker. Implements real-time data streaming, 3D visualizations, and advanced authentication.",
       "technologies": [
         "Next.js 14",
         "TypeScript",
@@ -67,26 +51,65 @@ export const personalConfig = {
         "WebGL",
         "Three.js"
       ],
-      "github_url": "https://github.com/Mohabz35",
-      "live_url": "/",
+      "github_url": "https://github.com/Mohabz35/m-abbaslab",
+      "live_url": "https://m-abbaslab.vercel.app",
       "category": "platform",
       "featured": true,
       "status": "Active Development",
       "year": "2024"
     },
     {
+      "id": "world-quant-lab",
+      "title": "World Quant Lab - Alpha Engine",
+      "description": "Advanced algorithmic alpha factor generation and backtesting engine with real-time metrics.",
+      "longDescription": "Sophisticated quantitative finance system that generates, tests, and optimizes alpha expressions. Features machine learning-powered factor discovery, portfolio constraint modeling, and real-time backtest execution with performance visualization.",
+      "technologies": [
+        "TypeScript",
+        "React",
+        "Python",
+        "TensorFlow",
+        "FastAPI",
+        "PostgreSQL"
+      ],
+      "github_url": "https://github.com/Mohabz35/m-abbaslab",
+      "live_url": "/admin/world-quant-lab",
+      "category": "research",
+      "featured": true,
+      "status": "Deployed",
+      "year": "2025"
+    },
+    {
+      "id": "jarvis-whatsapp-bot",
+      "title": "JARVIS WhatsApp Engine",
+      "description": "Always-on WhatsApp Web bot for real-time communication, task automation, and AI-powered responses.",
+      "longDescription": "Autonomous WhatsApp bot built on Baileys library with Claude AI integration. Handles natural language queries, schedules appointments, provides real-time data analysis, and integrates with Supabase for persistence.",
+      "technologies": [
+        "Node.js",
+        "Baileys",
+        "Claude API",
+        "Supabase",
+        "Pino Logger",
+        "Docker"
+      ],
+      "github_url": "https://github.com/Mohabz35/m-abbaslab/tree/main/jarvis-whatsapp-engine",
+      "live_url": "https://jarvis-whatsapp.onrender.com",
+      "category": "technology",
+      "featured": true,
+      "status": "Live",
+      "year": "2025"
+    },
+    {
       "id": "skillsync",
       "title": "SkillSync AI",
       "description": "Intelligent skill discovery and learning path platform that maps individual skills to real-world opportunities.",
-      "longDescription": "AI-powered system for structuring personalized learning journeys. Uses machine learning to analyze skill gaps, recommend learning resources, and track progress. Integrates with career platforms to match skills with job opportunities.",
+      "longDescription": "AI-powered system for structuring personalized learning journeys. Uses machine learning to analyze skill gaps, recommend learning resources, and track progress. Integrates blockchain for credential verification.",
       "technologies": [
         "React",
         "Node.js",
         "Python",
         "Machine Learning",
         "GraphQL",
-        "PostgreSQL",
-        "D3.js"
+        "PostgreSQL"
       ],
       "github_url": "#",
       "live_url": "/work/academic/skillsync",
@@ -96,60 +119,80 @@ export const personalConfig = {
       "year": "2024"
     },
     {
+      "id": "fashion-tech-platform",
+      "title": "Fashion Tech Platform",
+      "description": "Digital platform bridging fashion modeling with technology and data analytics.",
+      "longDescription": "Platform connecting models, agencies, and brands with data-driven insights. Features portfolio management, casting analytics, trend forecasting, 3D runway visualization, and AI-powered styling recommendations.",
+      "technologies": [
+        "Next.js",
+        "3D Modeling",
+        "WebGL",
+        "Computer Vision",
+        "Data Analytics",
+        "Supabase"
+      ],
+      "github_url": "#",
+      "live_url": "/fashion",
+      "category": "fashion-tech",
+      "featured": true,
+      "status": "Concept Development",
+      "year": "2024"
+    },
+    {
       "id": "economic-forecasting",
       "title": "Economic Forecasting Model",
-      "description": "Machine learning model for predicting market trends with 95% accuracy using Python and TensorFlow.",
-      "longDescription": "Advanced predictive model leveraging deep learning architectures to forecast economic indicators. Features include automated data pipeline, model versioning, and real-time inference API.",
+      "description": "Machine learning model for predicting market trends with advanced econometric methods.",
+      "longDescription": "Advanced predictive model leveraging deep learning and ARIMA for forecasting economic indicators. Features automated data pipeline, model versioning, and real-time predictions with confidence intervals.",
       "technologies": [
         "Python",
         "TensorFlow",
-        "Economics",
-        "ML",
+        "Econometrics",
         "Pandas",
+        "Statsmodels",
         "Docker"
       ],
       "github_url": "#",
       "live_url": "/work/academic/economics",
-      "category": "academic",
-      "featured": true,
+      "category": "research",
+      "featured": false,
       "status": "Completed",
       "year": "2024"
     },
     {
       "id": "data-viz-platform",
       "title": "Data Visualization Platform",
-      "description": "Interactive dashboard for real-time economic data analysis with D3.js and React.",
-      "longDescription": "A comprehensive analytics platform designed for economists and researchers. Supports large datasets, custom chart types, and exportable reports.",
+      "description": "Interactive dashboard for real-time economic data analysis and visualization.",
+      "longDescription": "Comprehensive analytics platform designed for economists and researchers. Supports large datasets, custom chart types, animated transitions, and exportable reports.",
       "technologies": [
         "React",
         "D3.js",
         "TypeScript",
-        "Next.js",
-        "WebSocket"
+        "WebSocket",
+        "Plotly"
       ],
       "github_url": "#",
       "live_url": "#",
       "category": "technology",
-      "featured": true,
+      "featured": false,
       "status": "Active",
       "year": "2023"
     },
     {
       "id": "policy-impact-analysis",
-      "title": "Policy Impact Analysis",
-      "description": "Quantitative analysis of economic policies using statistical models in R.",
-      "longDescription": "Research project quantifying the effects of fiscal policies on local economies. Utilizes diverse datasets and rigorous statistical testing.",
+      "title": "Policy Impact Analysis System",
+      "description": "Quantitative analysis of economic policies using statistical models and causal inference.",
+      "longDescription": "Research project quantifying the effects of fiscal policies on local economies. Utilizes diverse datasets, rigorous statistical testing, and causal inference methods.",
       "technologies": [
         "R",
         "Statistics",
-        "Research",
-        "Economics",
-        "Shiny"
+        "Econometrics",
+        "Shiny",
+        "Causal ML"
       ],
       "github_url": "#",
       "live_url": "#",
       "category": "analysis",
-      "featured": true,
+      "featured": false,
       "status": "Published",
       "year": "2023"
     },
@@ -157,13 +200,14 @@ export const personalConfig = {
       "id": "market-sentiment-analyzer",
       "title": "Market Sentiment Analyzer",
       "description": "NLP tool for analyzing financial news sentiment and predicting market movements.",
-      "longDescription": "Natural Language Processing system that aggregates financial news and social media signals to gauge market sentiment index.",
+      "longDescription": "Natural Language Processing system aggregating financial news and social media signals to gauge market sentiment. Includes sentiment indexing and predictive trading signals.",
       "technologies": [
         "Python",
         "NLP",
-        "Sentiment Analysis",
-        "Finance",
-        "FastAPI"
+        "Transformers",
+        "FastAPI",
+        "Redis",
+        "Elasticsearch"
       ],
       "github_url": "#",
       "live_url": "#",
@@ -176,13 +220,13 @@ export const personalConfig = {
       "id": "real-time-econ",
       "title": "Real-time Economic Dashboard",
       "description": "Live dashboard showing economic indicators with WebSocket integration.",
-      "longDescription": "High-frequency data dashboard ensuring milliseconds latency for critical economic indicators. Built with a focus on performance and reliability.",
+      "longDescription": "High-frequency data dashboard ensuring milliseconds latency for critical economic indicators. Built with focus on performance and reliability.",
       "technologies": [
         "Next.js",
         "WebSocket",
-        "Real-time",
         "Chart.js",
-        "Redis"
+        "Redis",
+        "Nginx"
       ],
       "github_url": "#",
       "live_url": "#",
@@ -192,106 +236,10 @@ export const personalConfig = {
       "year": "2022"
     },
     {
-      "id": "healthcare-cost-analysis",
-      "title": "Healthcare Cost Analysis",
-      "description": "Statistical analysis of healthcare costs across different demographics.",
-      "longDescription": "In-depth study of healthcare expenditure patterns. identified key cost drivers and disparities across demographic groups.",
-      "technologies": [
-        "R",
-        "Healthcare",
-        "Statistics",
-        "Data",
-        "Tableau"
-      ],
-      "github_url": "#",
-      "live_url": "#",
-      "category": "analysis",
-      "featured": false,
-      "status": "Completed",
-      "year": "2022"
-    },
-    {
-      "id": "academic-lms",
-      "title": "Academic LMS Research",
-      "description": "Final year research project on educational technology systems and learning management platforms.",
-      "longDescription": "Independent research focusing on improving educational delivery through technology integration. Investigating adaptive learning algorithms, engagement metrics, and accessibility features for modern LMS platforms.",
-      "technologies": [
-        "Research",
-        "System Design",
-        "Data Analysis",
-        "Educational Tech",
-        "UI/UX"
-      ],
-      "github_url": "#",
-      "live_url": "/work/academic/ilms",
-      "category": "academic",
-      "featured": true,
-      "status": "In Progress",
-      "year": "2024"
-    },
-    {
-      "id": "quant-finance-dashboard",
-      "title": "Quantitative Finance Dashboard",
-      "description": "Real-time dashboard for quantitative finance analysis and alpha research visualization.",
-      "longDescription": "Interactive dashboard for financial data analysis featuring VWAP calculations, Sharpe ratio analysis, portfolio optimization, and market trend visualization. Built for academic research in quantitative finance.",
-      "technologies": [
-        "Python",
-        "React",
-        "D3.js",
-        "Financial APIs",
-        "Data Visualization",
-        "Statistics"
-      ],
-      "github_url": "#",
-      "live_url": "#",
-      "category": "data-science",
-      "featured": false,
-      "status": "Prototype",
-      "year": "2023"
-    },
-    {
-      "id": "fashion-tech-platform",
-      "title": "Fashion Tech Platform",
-      "description": "Digital platform bridging fashion modeling with technology and data analytics.",
-      "longDescription": "Platform connecting models, agencies, and brands with data-driven insights. Features portfolio management, casting analytics, trend forecasting, and digital runway experiences using WebGL and 3D visualization.",
-      "technologies": [
-        "Next.js",
-        "3D Modeling",
-        "WebGL",
-        "Fashion Tech",
-        "Data Analytics"
-      ],
-      "github_url": "#",
-      "live_url": "#",
-      "category": "fashion-tech",
-      "featured": true,
-      "status": "Concept Development",
-      "year": "2024"
-    },
-    {
-      "id": "econometrics-toolkit",
-      "title": "Econometrics Toolkit",
-      "description": "Open-source toolkit for statistical analysis and econometric modeling.",
-      "longDescription": "Collection of Python scripts and Jupyter notebooks for econometric analysis. Includes regression models, time series analysis, hypothesis testing, and visualization tools for academic research.",
-      "technologies": [
-        "Python",
-        "Jupyter",
-        "Statistics",
-        "Econometrics",
-        "Data Science"
-      ],
-      "github_url": "#",
-      "live_url": "#",
-      "category": "data-science",
-      "featured": false,
-      "status": "Active Development",
-      "year": "2023"
-    },
-    {
       "id": "api-gateway-system",
       "title": "High-Performance API Gateway",
       "description": "Custom API gateway with rate limiting, caching, and request aggregation handling 10k+ rps.",
-      "longDescription": "A distributed API gateway built for microservices architecture. Features include dynamic routing, JWT authentication, Redis-based rate limiting, and circuit breaking patterns. optimized for low latency/high throughput.",
+      "longDescription": "Distributed API gateway built for microservices architecture. Features dynamic routing, JWT authentication, Redis-based rate limiting, and circuit breaking patterns.",
       "technologies": [
         "Go",
         "gRPC",
@@ -306,374 +254,179 @@ export const personalConfig = {
       "featured": true,
       "status": "Completed",
       "year": "2024"
+    },
+    {
+      "id": "econometrics-toolkit",
+      "title": "Econometrics Toolkit",
+      "description": "Open-source collection of tools for econometric analysis and time series forecasting.",
+      "longDescription": "Python library containing regression models, time series analysis, hypothesis testing, and visualization tools for econometric research.",
+      "technologies": [
+        "Python",
+        "Jupyter",
+        "Statsmodels",
+        "Scikit-learn",
+        "Pandas"
+      ],
+      "github_url": "#",
+      "live_url": "#",
+      "category": "research",
+      "featured": false,
+      "status": "Active Development",
+      "year": "2023"
+    },
+    {
+      "id": "quantum-impact-syndicate",
+      "title": "Quantum Impact Syndicate",
+      "description": "Elite research collective for quantitative finance, entrepreneurship, and venture architecture.",
+      "longDescription": "Membership platform providing access to proprietary alpha frameworks, quantitative research papers, venture opportunities, and strategic business advisory services.",
+      "technologies": [
+        "Next.js",
+        "Stripe",
+        "Supabase",
+        "Email Marketing",
+        "Analytics"
+      ],
+      "github_url": "#",
+      "live_url": "/quantum-impact-syndicate",
+      "category": "platform",
+      "featured": true,
+      "status": "Live",
+      "year": "2025"
+    },
+    {
+      "id": "cv-generator",
+      "title": "CV Architect Generator",
+      "description": "Dynamic CV generation system with multiple templates and AI customization.",
+      "longDescription": "Intelligent CV builder that creates professionally formatted CVs tailored to different industries (academia, tech, fashion, analysis). Includes PDF export, cover letter generation, and ATS optimization.",
+      "technologies": [
+        "Next.js",
+        "React",
+        "html2pdf.js",
+        "Claude API",
+        "TypeScript"
+      ],
+      "github_url": "#",
+      "live_url": "/cv-generator",
+      "category": "platform",
+      "featured": true,
+      "status": "Active",
+      "year": "2025"
+    },
+    {
+      "id": "afya-connect",
+      "title": "Afya-Connect Health Platform",
+      "description": "Comprehensive health-tech solution for patient management and telemedicine.",
+      "longDescription": "Project managed health tech platform coordinating cross-functional teams to deliver integrated healthcare solutions with patient records, appointment scheduling, and telemedicine capabilities.",
+      "technologies": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "WebRTC",
+        "AWS"
+      ],
+      "github_url": "#",
+      "live_url": "#",
+      "category": "academic",
+      "featured": false,
+      "status": "Completed",
+      "year": "2024"
     }
   ],
   "articles": [
     {
-      "id": "article-1779098856689",
-      "title": "New Growth Strategy",
-      "excerpt": "Exploring new frontiers in AI and finance...",
-      "publishDate": "2026-05-18",
-      "readTime": "5 min",
+      "id": "ai-economics-frontier",
+      "title": "AI & Economics: The New Frontier",
+      "slug": "ai-economics-frontier",
+      "excerpt": "Exploring how artificial intelligence is fundamentally reshaping economic theory, policy-making, and market dynamics in ways classical economists never imagined.",
+      "content": "The intersection of artificial intelligence and economics represents one of the most significant paradigm shifts in modern science. For centuries, economists have relied on mathematical models, statistical inference, and human intuition to understand market dynamics. Today, AI is not just accelerating these processes—it's fundamentally transforming how we conceptualize value, prediction, and economic optimization.\n\n## The AI Revolution in Economic Theory\n\nTraditional economic models assume rational actors with perfect information making optimal decisions. This assumption has been challenged repeatedly, leading to behavioral economics. AI goes further by showing us that complex patterns in economic data can be captured without explicit rational-actor assumptions.\n\nMachine learning algorithms like neural networks can identify intricate relationships between variables that would take human economists years to articulate mathematically. This doesn't replace economic theory—it complements it by providing empirical patterns that inform theoretical development.\n\n## Algorithmic Central Banking\n\nOne of the most promising applications is algorithmic monetary policy. Central banks like the Federal Reserve use human judgment informed by economic models to set interest rates. An AI system analyzing real-time data across thousands of variables could theoretically optimize monetary policy to minimize both inflation and unemployment simultaneously.\n\nThe potential is staggering: eliminate policy lag, reduce human bias, and respond dynamically to market conditions. However, the risks are equally significant. A misaligned AI system could destabilize global markets before human oversight intervenes.\n\n## Predictive Economics at Scale\n\nAI enables economists to move beyond regression analysis to predictive systems. By analyzing historical patterns in GDP, employment, inflation, and consumer behavior, machine learning models can forecast economic cycles with unprecedented accuracy.\n\nCompanies like JP Morgan and Goldman Sachs already use AI for market prediction. But the real innovation lies in making these tools accessible to emerging market economists, policy-makers in developing nations, and small businesses.\n\n## The Labor Economics Problem\n\nPerhaps the most urgent question: as AI automates cognitive tasks, what happens to labor? Classical economics suggests reallocation to new sectors. But history shows transitions are painful and unequal. We need AI-assisted economic systems that can recommend policy interventions—retraining programs, social safety nets, and new job creation initiatives—before displacement occurs.\n\n## Quantifying Intangibles\n\nAI excels at valuing intangibles. How much is a brand worth? What's the economic value of social capital? Traditional metrics fail here. AI can analyze consumer behavior, sentiment, and network effects to quantify value that classical economists could only estimate.\n\n## Conclusion\n\nAI is not replacing economics—it's upgrading it. The economist of the future will be part data scientist, part statistician, and part technologist. The next frontier isn't just understanding how AI reshapes markets; it's using AI to create more equitable, efficient, and resilient economic systems.\n\nThe question is: will we guide this transformation toward human flourishing, or let market forces determine the outcome?",
       "category": "research",
-      "published": false,
-      "tags": [
-        "AI",
-        "Finance"
-      ]
-    },
-    {
-      "id": "article-1771439893189",
-      "title": "New Growth Strategy",
-      "excerpt": "Exploring new frontiers in AI and finance...",
-      "publishDate": "2026-02-18",
-      "readTime": "5 min",
-      "category": "research",
-      "published": false,
-      "tags": [
-        "AI",
-        "Finance"
-      ]
-    },
-    {
-      "id": "article-1771436151726",
-      "title": "New Growth Strategy",
-      "excerpt": "Exploring new frontiers in AI and finance...",
-      "publishDate": "2026-02-18",
-      "readTime": "5 min",
-      "category": "research",
-      "published": false,
-      "tags": [
-        "AI",
-        "Finance"
-      ]
-    },
-    {
-      "id": "article-1771436151504",
-      "title": "New Growth Strategy",
-      "excerpt": "Exploring new frontiers in AI and finance...",
-      "publishDate": "2026-02-18",
-      "readTime": "5 min",
-      "category": "research",
-      "published": false,
-      "tags": [
-        "AI",
-        "Finance"
-      ]
-    },
-    {
-      "id": "article-1771436151013",
-      "title": "New Growth Strategy",
-      "excerpt": "Exploring new frontiers in AI and finance...",
-      "publishDate": "2026-02-18",
-      "readTime": "5 min",
-      "category": "research",
-      "published": false,
-      "tags": [
-        "AI",
-        "Finance"
-      ]
-    },
-    {
-      "id": "article-1771436150601",
-      "title": "New Growth Strategy",
-      "excerpt": "Exploring new frontiers in AI and finance...",
-      "publishDate": "2026-02-18",
-      "readTime": "5 min",
-      "category": "research",
-      "published": false,
-      "tags": [
-        "AI",
-        "Finance"
-      ]
-    },
-    {
-      "id": "article-1771436148576",
-      "title": "New Growth Strategy",
-      "excerpt": "Exploring new frontiers in AI and finance...",
-      "publishDate": "2026-02-18",
-      "readTime": "5 min",
-      "category": "research",
-      "published": false,
-      "tags": [
-        "AI",
-        "Finance"
-      ]
-    },
-    {
-      "id": "article-1771435831360",
-      "title": "New Growth Strategy",
-      "excerpt": "Exploring new frontiers in AI and finance...",
-      "publishDate": "2026-02-18",
-      "readTime": "5 min",
-      "category": "research",
-      "published": false,
-      "tags": [
-        "AI",
-        "Finance"
-      ]
-    },
-    {
-      "id": "article-1771435827754",
-      "title": "New Growth Strategy",
-      "excerpt": "Exploring new frontiers in AI and finance...",
-      "publishDate": "2026-02-18",
-      "readTime": "5 min",
-      "category": "research",
-      "published": false,
-      "tags": [
-        "AI",
-        "Finance"
-      ]
-    },
-    {
-      "id": "article-1771435825062",
-      "title": "New Growth Strategy",
-      "excerpt": "Exploring new frontiers in AI and finance...",
-      "publishDate": "2026-02-18",
-      "readTime": "5 min",
-      "category": "research",
-      "published": false,
-      "tags": [
-        "AI",
-        "Finance"
-      ]
-    },
-    {
-      "id": "article-1771435784764",
-      "title": "New Growth Strategy",
-      "excerpt": "Exploring new frontiers in AI and finance...",
-      "publishDate": "2026-02-18",
-      "readTime": "5 min",
-      "category": "research",
-      "published": false,
-      "tags": [
-        "AI",
-        "Finance"
-      ]
-    },
-    {
-      "id": "article-1771435778322",
-      "title": "New Growth Strategy",
-      "excerpt": "Exploring new frontiers in AI and finance...",
-      "publishDate": "2026-02-18",
-      "readTime": "5 min",
-      "category": "research",
-      "published": false,
-      "tags": [
-        "AI",
-        "Finance"
-      ]
-    },
-    {
-      "id": "nextjs-14-guide",
-      "title": "Getting Started with Next.js 14: Complete Guide",
-      "slug": "nextjs-14-guide",
-      "excerpt": "Comprehensive guide to Next.js 14 features including App Router, Server Components, and performance optimizations.",
-      "content": "Next.js 14 introduced several groundbreaking features that redefine how we build web applications. The most significant shift is the full stabilization of the App Router and Server Components. \n\n### Key Features of Next.js 14:\n1. **Server Components**: Render components on the server by default, reducing client-side bundle size.\n2. **Server Actions**: Mutate data on the server with zero client-side JavaScript.\n3. **Partial Prerendering (Preview)**: A new compiler optimization for dynamic content with a static shell.\n4. **Turbopack**: Incremental styling and local development improvements.\n\nBy leveraging these features, developers can achieve better performance and a more seamless user experience.",
-      "category": "tutorial",
       "read_time": 12,
       "published": true,
-      "published_at": "2024-01-15T10:30:00Z",
+      "featured": true,
+      "published_at": "2025-06-01T10:00:00Z",
       "tags": [
-        "Next.js",
-        "React",
-        "Web Development",
-        "Tutorial"
-      ],
-      "featured": true
-    },
-    {
-      "id": "ai-fashion-tech",
-      "title": "AI in Fashion Technology: The Future of Modeling",
-      "slug": "ai-fashion-tech",
-      "excerpt": "Exploring how artificial intelligence is transforming fashion modeling, from digital runways to personalized styling.",
-      "content": "The fashion industry is undergoing a digital revolution powered by Artificial Intelligence. Modeling is no longer just about the physical runway; it's about digital twins, generative AI styling, and data-driven casting.\n\nAt M-AbbasLab, we are exploring how AI can:\n- **Create Digital Avatars**: Allowing designers to test garments on realistic 3D models.\n- **Predict Fashion Trends**: Using historical sales data and social media sentiment to forecast the next \"big thing\".\n- **Optimize Casting**: Using data analytics to match models with brand identities more effectively.",
-      "category": "research",
-      "read_time": 15,
-      "published": true,
-      "published_at": "2024-01-10T10:30:00Z",
-      "tags": [
-        "AI",
-        "Fashion Tech",
-        "Modeling",
-        "Innovation"
-      ],
-      "featured": true
-    },
-    {
-      "id": "quantitative-finance-basics",
-      "title": "Quantitative Finance Basics: From VWAP to Sharpe Ratio",
-      "slug": "quantitative-finance-basics",
-      "excerpt": "Introduction to quantitative finance concepts with practical examples and Python implementations.",
-      "content": "Quantitative finance bridges the gap between economic theory and mathematical implementation. Using Python, we can calculate critical metrics that guide investment decisions.\n\n### Core Concepts:\n- **VWAP (Volume Weighted Average Price)**: A trading benchmark that gives the average price a security has traded at throughout the day.\n- **Sharpe Ratio**: Measures the performance of an investment compared to a risk-free asset, after adjusting for its risk.\n- **Momentum & Mean Reversion**: Two fundamental strategies used in algorithmic trading to capture market trends or bet on price stability.",
-      "category": "economics",
-      "read_time": 18,
-      "published": true,
-      "published_at": "2024-01-05T10:30:00Z",
-      "tags": [
-        "Finance",
-        "Quantitative",
-        "Economics",
-        "Python"
-      ]
-    },
-    {
-      "id": "modeling-tech-intersection",
-      "title": "The Intersection of Modeling and Technology",
-      "slug": "modeling-tech-intersection",
-      "excerpt": "How technology is creating new opportunities in the modeling industry and changing traditional workflows.",
-      "content": "The intersection of modeling and technology is creating a new hybrid professional. Modern models are developers, data scientists, and creative technologists.\n\nWe are seeing a shift where technical proficiency is as valuable as aesthetic presence. Digital runways, virtual try-ons, and AI-driven fashion shows are the new frontiers where these disciplines meet.",
-      "category": "fashion",
-      "read_time": 10,
-      "published": true,
-      "published_at": "2023-12-20T10:30:00Z",
-      "tags": [
-        "Modeling",
-        "Technology",
-        "Fashion",
-        "Innovation"
-      ]
-    },
-    {
-      "id": "statistical-modeling-beginners",
-      "title": "Statistical Modeling for Beginners: Practical Guide",
-      "slug": "statistical-modeling-beginners",
-      "excerpt": "Step-by-step guide to statistical modeling with real-world examples and code snippets.",
-      "content": "Statistical modeling is the process of applying statistical analysis to a dataset. This guide focuses on building predictive models using Python and its powerful ecosystem of libraries.\n\n### The Modeling Lifecycle:\n1. **Data Collection**: Sourcing quality data from macro indicators.\n2. **Preprocessing**: Normalization and handling outliers.\n3. **Model Selection**: Using LSTM or GRU for time-series data.\n4. **Validation**: Applying RMSE and MAE metrics to ensure predictive accuracy.",
-      "category": "data-science",
-      "read_time": 14,
-      "published": true,
-      "published_at": "2023-12-15T10:30:00Z",
-      "tags": [
-        "Statistics",
-        "Data Science",
-        "Tutorial",
-        "Python"
-      ]
-    },
-    {
-      "id": "webgl-3d-web",
-      "title": "Creating 3D Experiences with WebGL and Three.js",
-      "slug": "webgl-3d-web",
-      "excerpt": "Tutorial on building interactive 3D web experiences using WebGL, Three.js, and modern JavaScript.",
-      "content": "WebGL and Three.js allow us to build cinematic, immersive 3D experiences that run directly in the browser. This tutorial covers the fundamentals of scene creation, camera positioning, and shader implementation.\n\nBy combining low-level WebGL power with high-level Three.js abstractions, we can create platforms like M-AbbasLab that feel alive and responsive.",
-      "category": "tutorial",
-      "read_time": 20,
-      "published": false,
-      "published_at": null,
-      "tags": [
-        "WebGL",
-        "Three.js",
-        "3D",
-        "Web Development"
-      ]
-    },
-    {
-      "id": "ai-economic-policy",
-      "title": "Algorithmic Monetary Policy: The End of Inflation?",
-      "slug": "ai-economic-policy",
-      "excerpt": "Investigating the potential of AI-driven central banking to eliminate human error in monetary policy and control inflation with unprecedented precision.",
-      "content": "The possibility of an AI-driven monetary policy suggests a future where central banks use real-time data to control inflation. By removing human bias and lag, algorithmic systems can respond to economic shocks with unprecedented speed.\n\nOur research into the **Economic Forecasting Model (PEFM)** highlights how deep learning can identify structural breaks and regime shifts, providing central bankers with a proactive tool for economic stability.",
-      "category": "research",
-      "read_time": 25,
-      "published": true,
-      "published_at": "2024-01-25T10:30:00Z",
-      "tags": [
-        "AI",
+        "Artificial Intelligence",
         "Economics",
         "Monetary Policy",
-        "Future Tech"
+        "Future Technology"
       ],
-      "featured": true
+      "image": "/images/articles/ai-economics.jpg"
     },
     {
-      "id": "sustainable-fashion-analytics",
-      "title": "Sustainable Fashion: Predictive Analytics for Zero Waste",
-      "slug": "sustainable-fashion-analytics",
-      "excerpt": "How machine learning models are optimizing textile supply chains to predict trends accurately and eliminate pre-consumer waste.",
-      "content": "Sustainability in fashion is no longer an option; it's a necessity. Predictive analytics allows brands to produce only what will sell, significantly reducing pre-consumer waste.\n\nBy analyzing historical data and current trends, machine learning models can optimize supply chains and promote a zero-waste future for the global fashion industry.",
-      "category": "fashion-tech",
-      "read_time": 15,
-      "published": true,
-      "published_at": "2024-01-20T10:30:00Z",
-      "tags": [
-        "Fashion Tech",
-        "Sustainability",
-        "Data Science",
-        "AI"
-      ]
-    },
-    {
-      "id": "asset-tokenization",
-      "title": "The Tokenization of Real Assets: A New Era for Developing Economies",
-      "slug": "asset-tokenization",
-      "excerpt": "Analyzing how blockchain tokenization can democratize investment access in emerging markets and unlock liquidity for local assets.",
-      "content": "Tokenization is the process of representing real-world assets as digital tokens on a blockchain. This is particularly transformative for developing economies, where it can unlock liquidity in real estate and infrastructure.\n\nOur research analyzes how decentralized finance (DeFi) can democratize access to investment and drive economic growth in emerging markets.",
-      "category": "economics",
+      "id": "building-scalable-systems",
+      "title": "Building Scalable Systems: Lessons from 10k+ RPS Architecture",
+      "slug": "building-scalable-systems",
+      "excerpt": "Deep dive into architectural patterns, design decisions, and operational strategies that enable systems to handle extreme scale without degradation.",
+      "content": "Building systems that handle thousands of requests per second is more than engineering—it's a philosophy. In this article, I'll share principles learned building API gateways, real-time dashboards, and data pipelines that process millions of transactions daily.\n\n## The Three Pillars of Scalability\n\n### 1. Stateless Design\n\nThe fundamental principle: any server instance should be replaceable without losing data or context. This means:\n- No local state on application servers\n- External caching (Redis) for session data\n- Database as single source of truth\n- Load balancing seamlessly distributes requests\n\nWhen I built the API gateway handling 10k+ RPS, statefulness was the first design decision to eliminate. Every instance is identical. If one fails, traffic shifts to others without user impact.\n\n### 2. Asynchronous Processing\n\nSynchronous request-response is a bottleneck at scale. The solution: separate concerns.\n\n- **Request Ingestion**: Accept requests immediately\n- **Queue Processing**: Handle expensive operations asynchronously\n- **Result Delivery**: Return results via webhooks or polling\n\nFor economic data processing, this is critical. A user requests a forecast calculation. We immediately acknowledge the request, process it in the background, and notify them when ready. The API responds in milliseconds; processing takes seconds.\n\n### 3. Strategic Caching\n\nCaching is the most underutilized scaling technique. Multi-layer caching:\n\n**Browser Cache**: Static assets (CSS, JS) cached for weeks\n**CDN Cache**: Images and static pages cached globally, served from edge locations\n**Application Cache**: Frequently accessed data (Redis) expires strategically\n**Database Cache**: Query results cached at the query layer\n\nFor the economic dashboard, we cache:\n- Static market data: 1 hour\n- User preferences: 24 hours\n- Calculated metrics: 5 minutes\n- Real-time data: No caching\n\n## Practical Scaling Patterns\n\n### Database Optimization\n\nDatabases are typically the bottleneck. Strategies:\n\n1. **Connection Pooling**: Limit database connections; reuse established ones\n2. **Query Optimization**: Profile slow queries; add strategic indexes\n3. **Read Replicas**: Distribute read load across multiple instances\n4. **Sharding**: Distribute data across multiple databases by key (user ID, region, etc.)\n5. **Denormalization**: Accept some data redundancy for read performance\n\n### Message Queues\n\nMessage queues (Kafka, RabbitMQ) decouple systems:\n- Web service receives request\n- Publishes event to queue\n- Returns immediately to user\n- Worker processes event asynchronously\n- Results persisted to database\n\nThis transforms bottlenecks into distributed systems.\n\n### Rate Limiting and Circuit Breaking\n\nAt scale, you must protect your system:\n\n**Rate Limiting**: Cap requests per user/IP/endpoint\n- Token bucket algorithm: Allow N requests per time window\n- Graceful degradation: Return 429 (Too Many Requests) instead of failing\n\n**Circuit Breaking**: Stop calling failing services\n- Detect failures\n- Stop sending requests temporarily (\"open\" state)\n- Resume with gradual increase (\"half-open\" state)\n- Return to normal when service recovers (\"closed\" state)\n\n### Monitoring and Observability\n\nYou can't optimize what you can't see. Essential metrics:\n\n- **Latency**: P50, P95, P99 percentiles (not just averages)\n- **Throughput**: Requests per second\n- **Error Rate**: Failed requests as percentage\n- **Resource Usage**: CPU, memory, disk I/O\n- **Business Metrics**: Conversions, revenue, user retention\n\n## Case Study: Real-Time Economic Dashboard\n\nWe serve real-time market data to 1000+ concurrent users. Here's how we scaled:\n\n1. **Data Ingestion**: Consume price feeds via WebSocket (millisecond latency)\n2. **In-Memory Cache**: Store latest prices in Redis\n3. **Push Updates**: Send updates to connected clients via WebSocket\n4. **Database Persistence**: Asynchronously write to time-series database\n5. **Analysis**: Compute indicators on cached data (no database queries)\n\nResult: User sees price updates in <100ms with sub-second calculation of complex indicators.\n\n## When to Scale\n\nPremature optimization is evil. Scale when:\n- Current system hits performance limits\n- Growth is predictable\n- Cost-benefit of scaling is positive\n\n## Conclusion\n\nScalability is a feature. It's not something you bolt on later. Design for scale from day one by following these principles:\n- Stateless architecture\n- Asynchronous processing\n- Strategic caching\n- Database optimization\n- Monitoring and observability\n\nBuild simple first, optimize second. But optimize with intention.",
+      "category": "technical",
       "read_time": 18,
       "published": true,
-      "published_at": "2024-01-28T10:30:00Z",
-      "tags": [
-        "Blockchain",
-        "Economics",
-        "Emerging Markets",
-        "FinTech"
-      ]
-    },
-    {
-      "id": "api-scalability-patterns",
-      "title": "Designing Scalable APIs: Patterns for High-Load Systems",
-      "slug": "api-scalability-patterns",
-      "excerpt": "A deep dive into architectural patterns for building resilient APIs. Covers rate limiting, caching strategies, and load balancing for millions of requests.",
-      "content": "Building APIs that serve millions of requests requires more than just code; it requires a robust architecture. High-load systems benefit from specific patterns like Rate Limiting, Request Aggregation, and Circuit Breaking.\n\nAt M-AbbasLab, our **Academic Operating System (ILMS)** implementation utilizes a unit-centric architecture to ensure scalability and data consistency across multi-faculty environments.",
-      "category": "technical",
-      "read_time": 12,
-      "published": true,
-      "published_at": "2024-02-01T10:30:00Z",
-      "tags": [
-        "API Design",
-        "System Architecture",
-        "Backend",
-        "Scalability"
-      ]
-    },
-    {
-      "id": "api-security-best-practices",
-      "title": "The State of API Security in 2024",
-      "slug": "api-security-best-practices",
-      "excerpt": "Essential security practices for modern API development, from JWT implementation to protecting against IDOR and injection attacks.",
-      "content": "API security is a moving target. In 2024, the focus has shifted towards deep defense mechanisms. Roles-based Access Control (RBAC), JWT encryption, and audit logging are the minimum requirements for any production-ready system.\n\nWe ensure that all data in transit is encrypted and that a strict \"Human-in-the-loop\" philosophy is maintained for high-stakes decision-making supports.",
-      "category": "technical",
-      "read_time": 10,
-      "published": true,
-      "published_at": "2024-01-29T10:30:00Z",
-      "tags": [
-        "Security",
-        "API",
-        "Cybersecurity",
-        "Best Practices"
-      ]
-    },
-    {
-      "id": "skillsync-analysis",
-      "title": "Skill DNA: A Comprehensive Academic Analysis",
-      "slug": "skillsync-analysis",
-      "excerpt": "Validating the SkillSync framework through cognitive science, labour economics, and predictive skill intelligence.",
-      "content": "Skill DNA refers to a structured, multidimensional representation of an individual’s skills, including core competencies, supporting skills, and temporal decay factors. This research establishes the mathematical and economic basis for SkillSync...",
-      "category": "research",
-      "read_time": 25,
-      "published": true,
-      "published_at": "2024-02-15T12:00:00Z",
-      "tags": [
-        "Skill DNA",
-        "AI",
-        "Economics",
-        "Research",
-        "SkillSync"
-      ],
       "featured": true,
-      "live_url": "/work/academic/skillsync"
+      "published_at": "2025-05-28T09:30:00Z",
+      "tags": [
+        "System Architecture",
+        "Scalability",
+        "Backend Engineering",
+        "Performance"
+      ],
+      "image": "/images/articles/scalable-systems.jpg"
+    },
+    {
+      "id": "fashion-tech-innovation",
+      "title": "Fashion Tech Innovation: Digital Runways and AI-Powered Styling",
+      "slug": "fashion-tech-innovation",
+      "excerpt": "Exploring how technology is revolutionizing the fashion industry through digital modeling, AI styling, and sustainable innovation.",
+      "content": "Fashion has always been about innovation—but innovation has traditionally been in design and aesthetics. Today, technology is becoming the driving force, creating entirely new possibilities for models, brands, and consumers.\n\n## The Digital Revolution in Modeling\n\nFor centuries, modeling meant being physically present. You submitted your portfolio, attended castings, walked runways. Today, digital platforms are changing everything.\n\n### Virtual Modeling and Digital Twins\n\nBrands can now hire models without travel. Digital humans—created through 3D modeling and AI—can showcase collections. This has profound implications:\n\n**For Models**: Remote work opportunities, higher earnings (no travel costs), portfolio reach across the globe\n**For Brands**: 24/7 availability, consistent presentation, ability to customize looks instantly\n**For Consumers**: More representation, faster trend cycles, accessibility\n\n### AI-Powered Personal Styling\n\nPersonal stylists have always been luxuries for the wealthy. AI democratizes this. By analyzing:\n- Body type and measurements\n- Skin tone and undertones\n- Personal style preferences\n- Social media presence\n- Current wardrobe\n- Lifestyle and occasions\n\nAI recommends outfits that maximize existing wardrobe, suggest new pieces, and adapt to trends.\n\n## Sustainable Fashion Through Data\n\nFashion is one of the most wasteful industries. Pre-consumer waste (unsold inventory) is enormous. AI can fix this.\n\n### Demand Prediction\n\nMachine learning models analyze:\n- Historical sales patterns\n- Social media trends\n- Weather and seasonality\n- Celebrity endorsements\n- Geolocation preferences\n\nBrands can produce exactly what will sell, reducing waste by 30-40%.\n\n### Supply Chain Optimization\n\nBlockchain and AI track materials from production to consumer:\n- Verify sustainability claims\n- Track waste reduction\n- Ensure fair labor practices\n- Enable take-back programs\n\n## The Creator Economy\n\nTechnology enables individual creators to build fashion brands:\n- 3D design software democratizes design\n- Print-on-demand eliminates inventory\n- Social media enables direct-to-consumer marketing\n- AI recommends products to interested audiences\n\nA designer in Kenya can reach customers globally without factories or middlemen.\n\n## Virtual Fashion Marketplaces\n\nMetaverse fashion is growing. Digital clothing with no material waste. Companies like DressX and Carlings offer sustainable \"clothes\" for digital avatars.\n\nThis seems niche today. But as digital identity becomes more important, virtual fashion becomes valuable.\n\n## Computer Vision in Sizing\n\nSizing is the #1 reason for online fashion returns (50%+ return rate). Computer vision can:\n- Measure customers from photos\n- Recommend precise sizes\n- Identify fit issues before purchase\n\nThis single innovation could reduce returns, waste, and customer frustration dramatically.\n\n## The Runway 2.0\n\nPhysical runways still matter—the experience, the artistry, the live energy. But they're evolving:\n\n- **Hybrid Shows**: Physical runway streamed globally in real-time\n- **Interactive Experiences**: Viewers vote on looks, influence outcomes\n- **Behind-the-Scenes AI**: Real-time trend analysis, audience sentiment, brand storytelling\n- **AR Try-On**: Watch a collection, virtually try on pieces in real-time\n\n## My Journey in Fashion Tech\n\nAs both a model and technologist, I see fashion's future clearly:\n\n1. **Inclusivity**: Technology removes barriers—models don't need to be in major cities\n2. **Sustainability**: AI optimizes for environmental impact\n3. **Democratization**: Creators worldwide can build brands\n4. **Personalization**: Every consumer gets curated experiences\n5. **Experience**: Physical and digital merge\n\n## Challenges\n\nTechnology brings challenges:\n- **Job Displacement**: What happens to location-dependent modeling?\n- **Ethics**: AI bias in sizing, styling, representation\n- **Authenticity**: When everything can be modified, what's real?\n- **Accessibility**: Who gets access to these tools?\n\n## Conclusion\n\nFashion tech isn't about replacing human creativity—it's about amplifying it. It empowers designers, models, and consumers. The brands that master this intersection will lead the next decade.\n\nThe future of fashion is: data-driven, sustainable, inclusive, and experiential.",
+      "category": "fashion-tech",
+      "read_time": 16,
+      "published": true,
+      "featured": true,
+      "published_at": "2025-05-25T14:00:00Z",
+      "tags": [
+        "Fashion",
+        "Technology",
+        "Artificial Intelligence",
+        "Sustainability"
+      ],
+      "image": "/images/articles/fashion-tech.jpg"
+    },
+    {
+      "id": "research-methodology-guide",
+      "title": "Research Methodology: From Question to Publication",
+      "slug": "research-methodology-guide",
+      "excerpt": "A comprehensive guide to conducting rigorous academic research, from formulating research questions to peer review and publication.",
+      "content": "Research is the lifeblood of progress. Yet many talented people never publish because they lack methodology guidance. This article walks through the entire research process—from conception to publication.\n\n## Phase 1: Research Question Formulation\n\n### Characteristics of Good Research Questions\n\n1. **Researchable**: Can be answered through empirical investigation\n2. **Significant**: Contributes to the field; not trivial\n3. **Feasible**: Can be answered with available resources\n4. **Interesting**: You're passionate about it (you'll spend months on it)\n5. **Clear**: Unambiguous, precisely defined\n\n### Starting Points\n\n- **Gaps in Literature**: What hasn't been studied?\n- **Conflicting Findings**: Which research is correct?\n- **Practical Problems**: What challenges need solutions?\n- **Theoretical Extensions**: How can existing theory go further?\n\n### Example\nBad: \"How does AI affect the economy?\"\nGood: \"What is the short-term employment impact of large language models in knowledge-worker sectors, controlling for demographic factors?\"\n\n## Phase 2: Literature Review\n\nLiterature review is not just summarizing what exists—it's critical analysis.\n\n### Process\n\n1. **Broad Search**: Use keywords to find related work\n2. **Narrow and Refine**: Focus on most relevant papers\n3. **Critical Reading**: Don't just note findings; critique methodology\n4. **Synthesis**: Find patterns, contradictions, gaps\n5. **Positioning**: Where does your research fit?\n\n### Tools\n- Google Scholar\n- JSTOR\n- Scopus\n- ResearchGate\n- PapersWithCode\n\n## Phase 3: Hypothesis Development\n\nYour hypothesis is an educated guess about the answer to your research question.\n\n### Characteristics of Good Hypotheses\n\n- **Specific**: Precise prediction, not vague\n- **Testable**: Can verify as true or false\n- **Based on Theory**: Grounded in existing knowledge\n- **Falsifiable**: Can be proven wrong\n\n### Example\nNot a hypothesis: \"AI has effects\"\nHypothesis: \"Adoption of LLMs in software development reduces software bug rates by 20% within 12 months, with effect stronger for junior developers than senior developers.\"\n\n## Phase 4: Research Design\n\nDesign determines whether conclusions are valid.\n\n### Common Designs\n\n**Experimental**: Manipulate variables, measure outcomes\n- Most rigorous\n- Can establish causation\n- Often impractical for social science\n\n**Quasi-Experimental**: Natural variation instead of manipulation\n- Observational\n- Less internal validity than experimental\n- Often more realistic\n\n**Correlational**: Measure relationships\n- Quick, inexpensive\n- Cannot establish causation\n- Good for exploratory research\n\n**Qualitative**: Interviews, focus groups, ethnography\n- Understanding mechanisms\n- Context and nuance\n- Requires careful interpretation\n\n### Control Variables\nVariables you measure but don't manipulate. Essential for isolating effects.\n\n## Phase 5: Data Collection\n\n### Types of Data\n\n**Primary Data**: You collect it\n- Surveys\n- Interviews\n- Experiments\n- Observations\n\n**Secondary Data**: Someone else collected it\n- Government databases\n- Academic datasets\n- Corporate records\n\n### Sample Size\n\nStatistical power depends on:\n- Effect size (how strong is the relationship?)\n- Significance level (0.05 standard)\n- Statistical test used\n\nUse power calculators before data collection.\n\n### Data Quality\n\n- **Reliability**: Consistent, reproducible measurements\n- **Validity**: Measures what you intend to measure\n- **Missing Data**: How to handle incomplete responses\n\n## Phase 6: Data Analysis\n\n### Quantitative Analysis\n\n1. **Descriptive Statistics**: Mean, median, standard deviation, distributions\n2. **Inferential Statistics**: Test hypotheses about populations\n3. **Regression Analysis**: Understand relationships between variables\n4. **Machine Learning**: Predictive modeling if appropriate\n\n### Qualitative Analysis\n\n1. **Coding**: Categorize data into themes\n2. **Thematic Analysis**: Identify patterns\n3. **Interpretation**: What does it mean?\n\n### Visualization\n\n- Plots reveal patterns that tables hide\n- Use publication-quality figures\n- No misleading axes or cherry-picked data\n\n## Phase 7: Results and Discussion\n\n### Results Section\n\n- Report findings objectively\n- Include statistical significance (p-values, confidence intervals)\n- Present both supporting and contradictory findings\n- No interpretation—just facts\n\n### Discussion Section\n\n- Interpret what findings mean\n- Connect to existing literature\n- Acknowledge limitations\n- Suggest future research\n- State implications for practice/policy\n\n## Phase 8: Peer Review and Publication\n\n### Selecting a Journal\n\n1. **Impact Factor**: Citation influence\n2. **Scope**: Does it match the journal's focus?\n3. **Audience**: Who reads it?\n4. **Timeline**: How long is publication lag?\n\n### The Submission Process\n\n1. **Format**: Follow journal guidelines precisely\n2. **Cover Letter**: Explain relevance and novelty\n3. **Submission**: Upload to journal system\n4. **Editor Review**: Desk rejection or sent to reviewers (~2-4 weeks)\n5. **Peer Review**: 2-3 experts evaluate (2-4 months)\n6. **Revision**: Address reviewer feedback\n7. **Publication**: Accepted or rejected\n\n### Handling Rejection\n\nRejection is normal. Even top researchers get rejected. Options:\n- Revise based on feedback\n- Submit to different journal\n- Use feedback to improve future work\n\n## Common Mistakes to Avoid\n\n1. **P-hacking**: Testing many hypotheses until one is \"significant\"\n2. **Overfitting**: Building models with too many parameters\n3. **Confirmation Bias**: Only looking for evidence supporting your hypothesis\n4. **Insufficient Sample Size**: Drawing conclusions from too little data\n5. **Ignoring Effect Size**: Focusing on p-values, not practical significance\n\n## Conclusion\n\nRigorous research follows structured methodology. This ensures your findings are reliable, your conclusions valid, and your contribution meaningful.\n\nStart with a clear question. Follow the process. Publish your findings. That's how knowledge advances.",
+      "category": "research",
+      "read_time": 20,
+      "published": true,
+      "featured": false,
+      "published_at": "2025-05-20T11:00:00Z",
+      "tags": [
+        "Research",
+        "Methodology",
+        "Academia",
+        "Data Science"
+      ],
+      "image": "/images/articles/research-methodology.jpg"
+    },
+    {
+      "id": "entrepreneurial-journey",
+      "title": "My Entrepreneurial Journey: From Student to Multi-Platform Builder",
+      "slug": "entrepreneurial-journey",
+      "excerpt": "Personal narrative of building multiple ventures simultaneously—Quantum Impact Syndicate, Royal Icon Events, and M-AbbasLab platform—while managing academics and modeling.",
+      "content": "Entrepreneurship is often romanticized as a single brilliant idea that takes off. My journey has been messier, more human, and ultimately more rewarding.\n\n## The Beginning: 2022 - Awakening\n\nI entered university intending to study economics. That was the plan. Get degree, get job, build conventional life.\n\nBy second week, I realized something: the traditional path felt misaligned with my vision. I wasn't just interested in economics theory—I wanted to build economic systems. Create platforms. Make models real.\n\nI took on my first project: analyzing agricultural data for Cereal Growers Association. Nothing glamorous. But it taught me the gap between academic theory and practical impact. Models are useless unless they solve real problems.\n\n## The Realization: 2023 - Multi-Platform Vision\n\nIn 2023, I realized something crucial: I wasn't one thing. I was simultaneously interested in:\n- Quantitative finance\n- Software engineering\n- Fashion and modeling\n- Research and academia\n- Event organization\n- Community building\n\nInstead of fighting this, I embraced it. Why choose one when you can build platforms that integrate them?\n\n## Venture 1: Royal Icon Events (2024)\n\nI organized the Chuka Royals Awards and Faculty of Health Sciences Gala. This wasn't just event planning—it was a proof of concept for a business model.\n\n**What I Learned:**\n- Operations: Managing hundreds of vendors, sponsors, logistics\n- Sales: Convincing sponsors to invest without proven track record\n- Customer Psychology: What makes events memorable?\n- Scalability: How to organize growing events without burning out\n\nFrom this came Royal Icon Events—a premium event planning business. Revenue model: charge event organizers for full planning; charge sponsors for placement.\n\n**Lessons:**\n- Events are about experience, not just execution\n- Relationships with vendors matter more than price\n- Sponsors pay for results (footfall, engagement), not just placement\n\n## Venture 2: Quantum Impact Syndicate (2024)\n\nQIS wasn't born from market research. It emerged from my own need.\n\nI was doing quantitative finance research—building alpha frameworks, optimizing portfolios, analyzing market sentiment. I had insights I couldn't share publicly (competitive advantage). But I wanted to monetize knowledge and build community.\n\nQIS became the answer: exclusive membership platform where I share proprietary frameworks, trading insights, and business advisory.\n\n**Business Model:**\n- Tiered membership (Founder, Investor, Researcher)\n- Monthly recurring revenue from subscriptions\n- Private events and consulting\n- Investment opportunities in vetted deals\n\n**What I Learned:**\n- Knowledge products scale differently than services\n- Community is the real product (not the content)\n- Exclusivity creates value\n- Positioning matters enormously\n\n**Challenges:**\n- Initial trust-building when unknown\n- Creating consistent value monthly\n- Managing expectations vs. delivering results\n\n## Venture 3: M-AbbasLab (2024-2025)\n\nThe most ambitious: a unified platform serving as my personal operating system.\n\nWhy build this instead of using existing tools?\n1. **Integration**: No single platform did everything\n2. **Control**: I needed data ownership\n3. **Learning**: Building educated me about systems\n4. **Proof of Concept**: Shows what's possible\n\nM-AbbasLab includes:\n- Project portfolio\n- Articles and research\n- Modeling portfolio\n- Admin dashboard with alpha engine\n- WhatsApp AI bot\n- Finance tracker\n- CV generator\n\n**Development Journey:**\n- Started as marketing website (2024)\n- Evolved into platform (2024-2025)\n- Now serves as business system (2025)\n\n**What I Learned:**\n- Platform thinking: How to connect disparate systems\n- User experience: Small details matter enormously\n- Technical debt: Shortcuts now become problems later\n- Pivoting: Requirements change; systems must adapt\n\n## Balancing Act: Academics + Business + Modeling\n\nPeople ask: How do you do all this while being a full-time student?\n\n**Honest Answer**: With difficulty, strategic focus, and discipline.\n\n### Time Management Philosophy\n\n1. **Theme Days**: Monday/Wednesday/Friday = business/platform\nTuesday/Thursday = academics\nWeekends = modeling/personal\n\n2. **Batch Processing**: Group similar tasks\n- Write all articles in 2 sessions\n- Handle all admin in 1 session\n- Study economics in focused blocks\n\n3. **Delegation**: Outsource non-core\n- Event logistics → event coordinators\n- Data entry → freelancers\n- Content design → designers\n\n### Intersection of Disciplines\n\nThe magic happens at intersections:\n\n**Modeling + Tech = Fashion Tech**\n3D portfolio, AI styling recommendations\n\n**Economics + Finance = Quant Research**\nAlpha framework development for QIS\n\n**All of Above = Personal Brand**\nM-AbbasLab showcasing multidisciplinary work\n\n## Failures and Pivots\n\n### Failed: Market Sentiment Analyzer\n\nI built an NLP system analyzing financial news sentiment. The idea: predict market movements from sentiment shifts.\n\nIt didn't work. Sentiment + markets = oversimplified. Real traders don't rely on sentiment alone.\n\n**Lesson**: Perfect technology doesn't guarantee market fit. Test hypotheses before heavy development.\n\n### Failed: Initial QIS Model\n\nFirst version charged per report. Adoption was terrible. People wanted ongoing relationship, not transactional analysis.\n\nPivoted to membership + advisory. Now works.\n\n**Lesson**: Ask customers what they want BEFORE building.\n\n### Successful Pivot: Platform Strategy\n\nM-AbbasLab started as marketing site. As I built more features, I realized: this IS my business. The platform connects all ventures, builds network effects, creates moat.\n\n## Current State: 2025-2026\n\nThree ventures operating in parallel:\n\n1. **Royal Icon Events**: ~₦5-10M monthly revenue, growing\n2. **Quantum Impact Syndicate**: 50+ members, sustainable, but limited by my time\n3. **M-AbbasLab**: Free platform, monetization via QIS membership + consulting\n\n**Annual Revenue**: $15-30K (student rates, part-time)\n**Goal by 2026**: $100K+\n\n## Key Principles I've Learned\n\n### 1. Start with Problems, Not Ideas\n\nI didn't start with \"let me build a platform.\" I started with actual problems:\n- CGA needed data analysis\n- I needed event planning\n- I had research insights to share\n- I needed unified workspace\n\n### 2. Build Credibility First\n\nNo one trusts unknown entrepreneurs. I built credibility through:\n- Delivering for CGA\n- Organizing successful events\n- Publishing research\n- Growing social media\n\n### 3. Leverage Your Unique Position\n\nWhat can I do that others can't?\n- Economist + technologist + model\n- This combination is rare\n- Build ventures at intersections of my strengths\n\n### 4. Monetize When Ready\n\nTiming matters. Monetize too early → poor execution. Too late → no revenue.\n\n- M-AbbasLab: Free for years, then monetize via platform features\n- QIS: Monetized at founding (credibility earned)\n- Royal Icon Events: Revenue from day one (service business)\n\n### 5. Systems Beat Heroics\n\nYou can't scale if you're the bottleneck. Build systems:\n- Repeatable processes\n- Delegation frameworks\n- Automation where possible\n- Documentation for others\n\n## Advice to Aspiring Entrepreneurs\n\n1. **Don't Quit Your Day Job Yet**: Build ventures part-time. Revenue should pull you, not push you.\n\n2. **Start with Service, End with Product**: Services teach market reality. Products scale without you.\n\n3. **Focus, Then Diversify**: Master one thing. Then expand carefully.\n\n4. **Build in Public**: Share journey. This builds audience, feedback, opportunities.\n\n5. **Measure Everything**: Vanity metrics are useless. Track revenue, retention, actual impact.\n\n## What's Next?\n\nYear 2026 goals:\n- Grow M-AbbasLab to 10k+ active users\n- Scale QIS to 200+ members, $50K/month\n- Expand Royal Icon Events nationally\n- Publish first academic paper\n- Land major modeling campaign\n\nThe journey continues. But I'm no longer following a path—I'm building one.\n\n## Conclusion\n\nEntrepreneurship isn't about being extraordinary. It's about solving problems you care about, doing it consistently, and staying flexible.\n\nI didn't know in 2022 I'd be running three ventures by 2025. I just followed problems that interested me, solved them well, and scaled what worked.\n\nThat's the real entrepreneurial journey.",
+      "category": "entrepreneur",
+      "read_time": 22,
+      "published": true,
+      "featured": true,
+      "published_at": "2025-06-05T16:00:00Z",
+      "tags": [
+        "Entrepreneurship",
+        "Business",
+        "Startup",
+        "Personal Journey"
+      ],
+      "image": "/images/articles/entrepreneurial-journey.jpg"
     }
   ],
   "fashion": {
@@ -681,51 +434,81 @@ export const personalConfig = {
       {
         "id": "mr-yymh",
         "title": "Mr. YYMH (Youth for Youth Mentor House)",
-        "year": "2023",
-        "description": "Awarded for outstanding mentorship and leadership in youth development programs. Recognized for commitment to guiding young individuals through educational and career pathways.",
+        "year": "2025",
+        "description": "Awarded for outstanding mentorship and youth leadership. Recognized for guiding young individuals through educational and career pathways, championing community development.",
         "achievement": "Champion",
         "category": "leadership",
-        "image": "/images/fashion/mr-yymh-winners-group.jpg",
+        "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop",
         "location": "Nairobi, Kenya"
       },
       {
         "id": "mr-glam-haven",
         "title": "Mr. Glam Haven",
         "year": "2023",
-        "description": "Beauty and grooming ambassador title awarded by Glam Haven Beauty Parlor. Represented modern male grooming standards and beauty industry innovation.",
+        "description": "Beauty and grooming ambassador title by Glam Haven Beauty Parlor. Represented modern male grooming standards and beauty industry excellence.",
         "achievement": "Winner",
         "category": "beauty",
-        "image": "/images/fashion/mr-miss-glam-haven-crowned.jpg",
+        "image": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&h=400&fit=crop",
         "location": "Chuka, Kenya"
       },
       {
-        "id": "mr-kitui-got-talent",
+        "id": "mr-kitui-talent",
         "title": "Mr. Kitui Got Talent",
         "year": "2022",
-        "description": "Talent competition winner showcasing versatility in performance arts. Recognized for stage presence, creativity, and artistic expression.",
+        "description": "Talent competition winner showcasing versatility in performance arts and stage presence. Recognized for artistic expression and commanding presence.",
         "achievement": "First Place",
         "category": "talent",
-        "image": "/images/fashion/runway-blue-suit.jpg",
+        "image": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&h=400&fit=crop",
         "location": "Kitui County, Kenya"
       },
       {
-        "id": "mr-fashion-kitui-county",
+        "id": "mr-fashion-kitui",
         "title": "Mr. Fashion Kitui County",
         "year": "2022",
-        "description": "County-wide fashion title recognizing style, presentation, and fashion industry contribution. Ambassador for local fashion and design talent.",
+        "description": "County-wide fashion title recognizing style excellence, presentation, and fashion industry contribution. Ambassador for local fashion talent.",
         "achievement": "Title Holder",
         "category": "fashion",
-        "image": "/images/fashion/mr-fashion-kitui-traditional.jpg",
+        "image": "https://images.unsplash.com/photo-1483389127117-b6a2102724ae?w=600&h=400&fit=crop",
         "location": "Kitui County, Kenya"
       },
       {
-        "id": "mr-kipawa-afrika-media",
-        "title": "Mr. Kipawa Afrika Media",
-        "year": "2021",
-        "description": "Media personality title awarded for digital content creation and media influence. Recognized for impactful social media presence and content strategy.",
-        "achievement": "Media Ambassador",
-        "category": "media",
-        "image": "/images/fashion/awards-group.jpg",
+        "id": "mr-alba-runnerup",
+        "title": "Mr. Alba Hotel (1st Runner-Up)",
+        "year": "2024",
+        "description": "First runner-up in competitive hotel pageant. Strong showing in commercial modeling title competing against top candidates.",
+        "achievement": "Runner-Up",
+        "category": "fashion",
+        "image": "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&h=400&fit=crop",
+        "location": "Nairobi, Kenya"
+      },
+      {
+        "id": "mr-chuka-fresher",
+        "title": "Mr. Chuka Fresher Pageant",
+        "year": "2024",
+        "description": "Participant in university's freshmen modeling competition. Gateway to competitive pageantry and modeling career launch.",
+        "achievement": "Finalist",
+        "category": "academic",
+        "image": "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=600&h=400&fit=crop",
+        "location": "Chuka University, Kenya"
+      },
+      {
+        "id": "kipawa-africa-judge",
+        "title": "Model Judge - Kipawa Africa Events",
+        "year": "2025-2026",
+        "description": "Served as authority judge in prestigious national pageantry events (Mr & Miss Mtwapa). Evaluated contestants on runway, presentation, and professional standards.",
+        "achievement": "Judge",
+        "category": "judging",
+        "image": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&h=400&fit=crop",
+        "location": "Mtwapa, Kenya"
+      },
+      {
+        "id": "nairobi-fashion-house",
+        "title": "Nairobi Fashion House - Mr. Kasarani",
+        "year": "2025-2026",
+        "description": "Competed in Nairobi's elite fashion scene through Nairobi Fashion House. Contested in high-profile Mr. Kasarani competition with national exposure.",
+        "achievement": "Competitor",
+        "category": "commercial",
+        "image": "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600&h=400&fit=crop",
         "location": "Nairobi, Kenya"
       }
     ],
@@ -768,17 +551,17 @@ export const personalConfig = {
         "since": "2020"
       }
     ],
-    "note": "My journey is not just about crowns — It is about growth, leadership, fashion, youth empowerment, and building the future of African modeling. I am not just walking the runway. I am building an industry."
+    "note": "My journey is not just about crowns—it's about growth, leadership, fashion, youth empowerment, and building the future of African modeling. I am not just walking the runway; I am building the industry."
   },
   "modelingTitles": [
     {
       "id": "mr-youth-youth",
       "title": "Mr. Youth for Youth Mentor House (YYMH)",
-      "year": "2023",
+      "year": "2025",
       "description": "Awarded for outstanding mentorship and youth leadership in community development initiatives.",
       "category": "leadership",
       "featured": true,
-      "image": "/images/modeling/mr-yymh.jpg",
+      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop",
       "details": [
         "Recognized for youth empowerment programs",
         "Mentored 50+ young individuals in career development",
@@ -792,7 +575,7 @@ export const personalConfig = {
       "description": "Title won at Glam Haven beauty parlor fashion show, showcasing style and presentation excellence.",
       "category": "beauty-fashion",
       "featured": true,
-      "image": "/images/modeling/mr-glam-haven.jpg",
+      "image": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&h=400&fit=crop",
       "details": [
         "Winner of annual Glam Haven fashion competition",
         "Featured in beauty parlor promotional campaigns",
@@ -806,7 +589,7 @@ export const personalConfig = {
       "description": "Talent competition winner recognized for exceptional presentation skills and stage presence.",
       "category": "talent",
       "featured": true,
-      "image": "/images/modeling/mr-kitui-talent.jpg",
+      "image": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&h=400&fit=crop",
       "details": [
         "Winner of regional talent competition",
         "Recognized for artistic expression",
@@ -820,7 +603,7 @@ export const personalConfig = {
       "description": "County-level fashion title awarded for representing Kitui's fashion culture and modern style fusion.",
       "category": "fashion",
       "featured": true,
-      "image": "/images/modeling/mr-fashion-kitui.jpg",
+      "image": "https://images.unsplash.com/photo-1483389127117-b6a2102724ae?w=600&h=400&fit=crop",
       "details": [
         "Represented Kitui County in regional fashion events",
         "Showcased traditional-modern fashion fusion",
@@ -828,17 +611,17 @@ export const personalConfig = {
       ]
     },
     {
-      "id": "mr-kipawa-afrika",
-      "title": "Mr. Kipawa Afrika Media",
-      "year": "2021",
-      "description": "Media recognition title for positive representation and contribution to African youth media.",
-      "category": "media",
+      "id": "mr-alba-runner",
+      "title": "Mr. Alba Hotel (1st Runner-Up)",
+      "year": "2024",
+      "description": "First runner-up in competitive hotel pageant competition, strong commercial modeling performance.",
+      "category": "commercial",
       "featured": false,
-      "image": "/images/modeling/mr-kipawa-afrika.jpg",
+      "image": "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&h=400&fit=crop",
       "details": [
-        "Featured in Kipawa Afrika media campaigns",
-        "Youth representative in media initiatives",
-        "Promoted positive African youth narratives"
+        "Competed against top male modeling talent",
+        "Strong runway and interview performance",
+        "Commercial representation opportunity"
       ]
     }
   ],
@@ -847,7 +630,7 @@ export const personalConfig = {
       "id": "foundation",
       "year": "2024",
       "title": "Foundation & Skill Development",
-      "description": "Began modeling journey with passion and curiosity. Entered structured runway and pageant modeling at Chuka University.",
+      "description": "Began modeling journey with passion and curiosity. Entered structured runway and pageant modeling at Chuka University, developing foundational skills.",
       "highlights": [
         "Skill Development",
         "Confidence Building",
@@ -856,101 +639,46 @@ export const personalConfig = {
     },
     {
       "id": "competitive-start",
-      "year": "2024/2025",
+      "year": "2024-2025",
       "title": "Competitive Timeline Season",
-      "description": "Participated in Mr. Fresher (Chuka University) and Mr. Godka Hotel. Competed for branding titles.",
+      "description": "Participated in multiple competitions including Mr. Fresher (Chuka) and Mr. Alba Hotel. Competed for branding titles and commercial modeling opportunities.",
       "highlights": [
         "Mr. Alba Hotel (1st Runner-Up)",
-        "Commercial Modeling",
+        "Commercial Modeling Debut",
         "Brand Representation"
       ]
     },
     {
-      "id": "major-breakthrough",
+      "id": "breakthrough",
       "year": "2025",
-      "title": "First Major Breakthrough: Mr. YYMH",
-      "description": "Won the Mr. YYMH (Youth for Youth Mentor House) title. Became a youth ambassador and mentor.",
+      "title": "Major Breakthrough: Multi-Title Winner",
+      "description": "Won multiple prestigious titles including Mr. YYMH and Mr. Glam Haven. Established industry presence and credibility as competitive model.",
       "highlights": [
-        "Mr. YYMH Winner",
-        "Youth Ambassador",
-        "Community Leadership"
-      ]
-    },
-    {
-      "id": "uni-advancement",
-      "year": "2025/2026",
-      "title": "University & Beauty Advancement",
-      "description": "Contested in Mr. Chuka University. Won Mr. Glam Haven (Beauty & Brand Ambassador Title).",
-      "highlights": [
+        "Mr. YYMH Champion",
         "Mr. Glam Haven Winner",
-        "Male Beauty Icon",
-        "Professional Grooming"
+        "Youth Ambassador Status"
       ]
     },
     {
-      "id": "talent-industry",
-      "year": "2025/2026",
-      "title": "Talent & Industry Building",
-      "description": "Won Mr. Kitui Got Talent. Currently supporting young creatives and sustainable fashion in Kitui County.",
+      "id": "industry-expansion",
+      "year": "2025-2026",
+      "title": "Industry Expansion & Judging Authority",
+      "description": "Transitioned from competitor to industry authority. Served as model judge in national events. Moved into Nairobi's elite fashion scene.",
       "highlights": [
-        "Mr. Kitui Got Talent Winner",
-        "Talent Empowerment",
-        "Industry Builder"
-      ]
-    },
-    {
-      "id": "nairobi-challenge",
-      "year": "2025/2026",
-      "title": "Nairobi Fashion Challenge",
-      "description": "Moved into Nairobi's competitive fashion scene via Nairobi Fashion House. Contested in Mr. Kasarani.",
-      "highlights": [
-        "Elite Runway Competition",
-        "High Fashion Standards",
-        "Professional Exposure"
-      ]
-    },
-    {
-      "id": "county-crown",
-      "year": "2025/2026",
-      "title": "County-Level Crown: Mr. Fashion Kitui",
-      "description": "Crowned Mr. Fashion Kitui County. Recognized as the top fashionable male model in the county.",
-      "highlights": [
-        "Mr. Fashion Kitui County Winner",
-        "Fashion Identity Title",
-        "Top Male Model"
-      ]
-    },
-    {
-      "id": "judging-authority",
-      "year": "2025/2026",
-      "title": "Judging & Industry Authority",
-      "description": "Served as a Model Judge in major events like Kipawa Africa – Mr & Miss Mtwapa.",
-      "highlights": [
-        "Model Judge",
-        "Industry Professional",
-        "Pageant Authority"
+        "Model Judge - Kipawa Africa",
+        "Nairobi Fashion House Contestant",
+        "Mr. Kasarani Competition"
       ]
     },
     {
       "id": "strategic-2026",
-      "year": "2026",
-      "title": "Strategic Direction 2026",
-      "description": "Focusing on project-driven, impact-oriented work. Building fashion systems and youth empowerment platforms.",
+      "year": "2026+",
+      "title": "Strategic Platform Expansion",
+      "description": "Focusing on impact-oriented work. Building fashion tech systems, mentoring next generation, integrating modeling with technology and entrepreneurship.",
       "highlights": [
-        "Less Competition",
-        "More Impact",
-        "Fashion Systems"
-      ]
-    },
-    {
-      "id": "upcoming-targets",
-      "year": "2026/2027",
-      "title": "Upcoming Major Targets",
-      "description": "Preparing for Mr. Chuka University 2026/2027 and Mr. Blue Economy Kenya 2026/2027.",
-      "highlights": [
-        "Mr. Chuka University Target",
-        "Mr. Blue Economy Target",
-        "National Platform"
+        "Fashion Tech Platform Development",
+        "Youth Mentoring Programs",
+        "Cross-Discipline Integration"
       ]
     }
   ],
@@ -998,191 +726,5 @@ export const personalConfig = {
       "Docker",
       "Jupyter"
     ]
-  },
-  "education": [
-    {
-      "degree": "Bachelor of Economics & Statistics",
-      "institution": "Chuka University",
-      "period": "2024 - Present",
-      "status": "Ongoing",
-      "focus": "Econometrics, Statistical Modeling, Quantitative Analysis"
-    },
-    {
-      "degree": "AI Career Essentials",
-      "institution": "ALX Africa",
-      "period": "2023 - 2024",
-      "status": "Completed",
-      "focus": "Artificial Intelligence, Career Development, Soft Skills"
-    },
-    {
-      "degree": "Virtual Assistant",
-      "institution": "ALX Africa",
-      "period": "2023",
-      "status": "Completed",
-      "focus": "Remote Work Operations, Digital Tools, Communication"
-    },
-    {
-      "degree": "Leadership and Management",
-      "institution": "Chuka University",
-      "period": "2022 - 2023",
-      "status": "Completed",
-      "focus": "Organizational Leadership, Team Management"
-    },
-    {
-      "degree": "Full-Stack Software Engineering",
-      "institution": "ALX Africa",
-      "period": "2023 - 2024",
-      "status": "Completed",
-      "focus": "JavaScript, TypeScript, React, Node.js, System Architecture"
-    }
-  ],
-  "experience": [
-    {
-      "role": "CEO & Main Designer",
-      "company": "Afya Connect",
-      "period": "2024 - Present",
-      "description": "Leading the development of a medical internship placement platform bridging the gap between students, hospitals, and supervisors.",
-      "achievements": [
-        "Designed and validated the Afya Connect platform concept to streamline medical internship placements",
-        "Targeting reduction in placement delays and improved mentorship matching for interns",
-        "Currently in fundraising and prototype refinement phase"
-      ]
-    },
-    {
-      "role": "Data Collection Officer",
-      "company": "Cereal Growers Association (CGA)",
-      "period": "2024",
-      "description": "Conducted field data collection and validity surveys for agricultural programs.",
-      "achievements": [
-        "Executed data collection for Tobacco-Free Farms initiative",
-        "Conducted FSC (Forest Stewardship Council) validation surveys",
-        "Ensured data integrity through rigorous validation protocols"
-      ]
-    },
-    {
-      "role": "Full-Stack Developer & Researcher",
-      "period": "2023 - Present",
-      "description": "Developing personal platform and conducting independent research in economics and technology integration.",
-      "achievements": [
-        "Built M-AbbasLab platform using Next.js, TypeScript, and modern web technologies",
-        "Conducted research on AI applications in fashion technology and quantitative finance",
-        "Developed multiple projects integrating economics, statistics, and software engineering",
-        "Created educational content and tutorials on web development and data science"
-      ]
-    },
-    {
-      "role": "Fashion Model & Media Representative",
-      "period": "2021 - Present",
-      "description": "Professional modeling career with multiple titles and media representation.",
-      "achievements": [
-        "Won multiple modeling titles including Mr. Fashion Kitui County and Mr. Glam Haven",
-        "Featured in media campaigns and community events",
-        "Developed personal brand combining fashion, technology, and research",
-        "Collaborated with local businesses and fashion houses"
-      ]
-    }
-  ],
-  "site": {
-    "theme": {
-      "primary": "#3b82f6",
-      "secondary": "#8b5cf6",
-      "accent": "#06b6d4"
-    },
-    "features": {
-      "darkMode": true,
-      "animations": true,
-      "webGLBackground": true,
-      "adminPanel": true
-    },
-    "skillFeatures": [
-      {
-        "id": "research",
-        "title": "Research",
-        "desc": "Economics & Data Analysis",
-        "icon": "Cpu"
-      },
-      {
-        "id": "modeling",
-        "title": "Modeling",
-        "desc": "Statistical & Predictive",
-        "icon": "LineChart"
-      },
-      {
-        "id": "tech",
-        "title": "Technology",
-        "desc": "Full-Stack Development",
-        "icon": "Code"
-      },
-      {
-        "id": "innovation",
-        "title": "Innovation",
-        "desc": "Creative Problem Solving",
-        "icon": "Zap"
-      }
-    ]
-  },
-  "worldQuant": {
-    "username": "MA34970",
-    "rank": "Researcher",
-    "alphas": [
-      {
-        "id": "ALPHA-8502",
-        "name": "Expression Strategy 6",
-        "status": "Testing",
-        "sharpe": "2.42",
-        "fitness": "1.55"
-      },
-      {
-        "id": "alpha-1",
-        "name": "Market Neutral Strategy 1",
-        "status": "Testing",
-        "performance": "-1.2%"
-      },
-      {
-        "id": "alpha-2",
-        "name": "Volatility Capture",
-        "status": "Development",
-        "performance": "N/A"
-      },
-      {
-        "id": "alpha-3",
-        "name": "Trend Following",
-        "status": "Testing",
-        "performance": "+0.5%"
-      },
-      {
-        "id": "alpha-4",
-        "name": "Statistical Arbitrage 1",
-        "status": "Testing",
-        "performance": "-0.8%"
-      },
-      {
-        "id": "alpha-5",
-        "name": "Volume Weighted 1",
-        "status": "Development",
-        "performance": "N/A"
-      }
-    ],
-    "statistics": {
-      "totalAlphas": 5,
-      "acceptedAlphas": 0,
-      "globalRank": 34397
-    }
-  },
-  "jarvisTraining": [
-    {
-      "keyword": "royal icon events",
-      "response": "Royal Icon Events is Mohammed's premium event planning company, organizing outstanding pageantry, modeling runways, and Chuka University events."
-    },
-    {
-      "keyword": "chuka university",
-      "response": "Mohammed studies Economics & Statistics at Chuka University (2024-2028), organizing elite events like the Chuka Royals Awards."
-    },
-    {
-      "keyword": "economics",
-      "response": "Mohammed bridges advanced economic forecasting, econometrics, and quantitative market sentiment tools with software engineering."
-    }
-  ]
+  }
 }
-
-export type PersonalConfig = typeof personalConfig
