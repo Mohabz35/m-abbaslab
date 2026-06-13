@@ -235,6 +235,9 @@ export default function WorldQuantLab() {
   const [expandedBatchId, setExpandedBatchId] = useState<string | null>(null)
   const [batchAlphasMap, setBatchAlphasMap] = useState<Record<string, Alpha[]>>({})
   const [loadingBatchId, setLoadingBatchId] = useState<string | null>(null)
+  const [selectedBatch, setSelectedBatch] = useState<Batch | null>(null)
+  const [selectedBatchAlphas, setSelectedBatchAlphas] = useState<Alpha[]>([])
+  const [selectedBatchLoading, setSelectedBatchLoading] = useState(false)
 
   // Simulate incoming console logs
   useEffect(() => {
@@ -381,6 +384,18 @@ export default function WorldQuantLab() {
     }
   }
 
+  const handleBatchClick = async (batch: Batch) => {
+    setSelectedBatch(batch)
+    setSelectedBatchLoading(true)
+    const { data } = await supabase.from("alphas").select("*").eq("generation_batch", batch.id).order("created_at", { ascending: false })
+    setSelectedBatchAlphas(data ?? [])
+    setSelectedBatchLoading(false)
+  }
+
+  const progressPct = activeBatch && activeBatch.total_generated > 0
+    ? Math.min(100, Math.round((activeBatch.total_tested / activeBatch.total_generated) * 100))
+    : 0
+
   const handleExportReport = (alpha: Alpha) => {
     const report = {
       alpha: alpha.alpha_code,
@@ -478,6 +493,35 @@ export default function WorldQuantLab() {
             </button>
           </div>
         </div>
+
+        {/* PROGRESS BAR */}
+        {isRunning && activeBatch && activeBatch.total_generated > 0 && (
+          <div className="mb-6 bg-slate-900 rounded-xl border border-slate-800 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.7)]" />
+                <span className="text-sm font-mono text-emerald-400">BATCH IN PROGRESS</span>
+              </div>
+              <div className="flex items-center gap-4 text-xs font-mono text-slate-400">
+                <span>Generated: <strong className="text-white">{activeBatch.total_generated}</strong></span>
+                <span>Tested: <strong className="text-white">{activeBatch.total_tested}</strong></span>
+                <span>Passed: <strong className="text-emerald-400">{activeBatch.total_passed}</strong></span>
+                <span>{progressPct}%</span>
+              </div>
+            </div>
+            <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPct}%` }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+              />
+            </div>
+            <div className="mt-1 text-[10px] text-slate-600 font-mono text-right">
+              {activeBatch.total_tested >= activeBatch.total_generated ? "Finalizing..." : `Testing alpha ${activeBatch.total_tested + 1} of ${activeBatch.total_generated}`}
+            </div>
+          </div>
+        )}
 
         {/* MAIN GRID */}
         <div className="grid grid-cols-12 gap-6">
@@ -674,12 +718,13 @@ export default function WorldQuantLab() {
                   <th className="text-left py-2 px-3">HEALTH</th>
                   <th className="text-left py-2 px-3">STARTED</th>
                   <th className="text-center py-2 px-3">DETAILS</th>
+                  <th className="text-left py-2 px-3"></th>
                 </tr>
               </thead>
               <tbody>
                 {batches.map((batch) => (
                   <React.Fragment key={batch.id}>
-                    <tr className="border-b border-slate-800/30 hover:bg-slate-800/30">
+                    <tr className="border-b border-slate-800/30 hover:bg-slate-800/30 cursor-pointer group" onClick={() => handleBatchClick(batch)}>
                       <td className="py-3 px-3 font-mono text-emerald-300">{batch.batch_name}</td>
                       <td className="py-3 px-3">
                         <span className={`px-2 py-1 rounded text-xs font-mono ${batch.status === "running" ? "bg-emerald-500/20 text-emerald-400" : batch.status === "completed" ? "bg-blue-500/20 text-blue-400" : "bg-slate-500/20 text-slate-300"}`}>{batch.status}</span>
@@ -697,12 +742,13 @@ export default function WorldQuantLab() {
                       <td className="py-3 px-3 text-xs text-slate-500">{new Date(batch.started_at).toLocaleString()}</td>
                       <td className="py-3 px-3 text-center">
                         <button
-                          onClick={() => handleExpandBatch(batch.id)}
+                          onClick={(e) => { e.stopPropagation(); handleExpandBatch(batch.id); }}
                           className="inline-flex items-center gap-1 px-2 py-1 text-xs text-emerald-400 hover:bg-emerald-500/20 rounded transition-colors"
                         >
                           {loadingBatchId === batch.id ? <Loader className="w-4 h-4 animate-spin" /> : expandedBatchId === batch.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                         </button>
                       </td>
+                      <td className="py-3 px-3 text-slate-600 text-xs"><span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span></td>
                     </tr>
                     {/* Expanded batch alphas */}
                     <AnimatePresence>
@@ -739,7 +785,7 @@ export default function WorldQuantLab() {
                                       <div className="flex gap-2">
                                         {alpha.is_passed && (
                                           <button
-                                            onClick={() => { setSelectedAlpha(alpha); }}
+                                            onClick={(e) => { e.stopPropagation(); setSelectedAlpha(alpha); }}
                                             className="px-2 py-1 text-xs bg-emerald-500/20 text-emerald-400 rounded hover:bg-emerald-500/30 transition-colors"
                                           >
                                             View
@@ -765,6 +811,71 @@ export default function WorldQuantLab() {
           </div>
         </div>
       </div>
+
+      {/* BATCH DETAIL MODAL */}
+      <AnimatePresence>
+        {selectedBatch && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6" onClick={() => { setSelectedBatch(null); setSelectedBatchAlphas([]) }}>
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h2 className="text-xl font-bold text-emerald-400 font-mono">{selectedBatch.batch_name}</h2>
+                    <p className="text-sm text-slate-500 mt-1">
+                      {new Date(selectedBatch.started_at).toLocaleString()} &bull;
+                      Generated: {selectedBatch.total_generated} &bull;
+                      Tested: {selectedBatch.total_tested} &bull;
+                      Passed: <span className="text-emerald-400">{selectedBatch.total_passed}</span> &bull;
+                      Errors: {selectedBatch.error_count}
+                    </p>
+                  </div>
+                  <button onClick={() => { setSelectedBatch(null); setSelectedBatchAlphas([]) }} className="p-2 hover:bg-slate-800 rounded-lg transition-colors"><X className="w-5 h-5 text-slate-400" /></button>
+                </div>
+
+                {selectedBatchLoading ? (
+                  <div className="text-center py-12 text-slate-500">Loading batch alphas...</div>
+                ) : selectedBatchAlphas.length === 0 ? (
+                  <div className="text-center py-12 text-slate-600">
+                    <Brain className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                    <p className="text-sm">No alphas found for this batch</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-slate-500 text-xs font-mono border-b border-slate-800">
+                          <th className="text-left py-2 px-3">CODE</th>
+                          <th className="text-right py-2 px-3">SHARPE</th>
+                          <th className="text-right py-2 px-3">RETURN</th>
+                          <th className="text-right py-2 px-3">DRAWDOWN</th>
+                          <th className="text-right py-2 px-3">WIN RATE</th>
+                          <th className="text-right py-2 px-3">FITNESS</th>
+                          <th className="text-left py-2 px-3">STATUS</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {selectedBatchAlphas.map((a) => (
+                          <tr key={a.id} className="border-b border-slate-800/30 hover:bg-slate-800/30 cursor-pointer" onClick={() => { setSelectedAlpha(a); setSelectedBatch(null) }}>
+                            <td className="py-3 px-3 font-mono text-emerald-300">{a.alpha_code}</td>
+                            <td className={`py-3 px-3 text-right font-mono ${(a.sharpe_ratio || 0) >= 1.5 ? 'text-emerald-400' : 'text-slate-300'}`}>{a.sharpe_ratio?.toFixed(2) || 'N/A'}</td>
+                            <td className="py-3 px-3 text-right font-mono text-slate-300">{a.annual_return ? `${(a.annual_return * 100).toFixed(1)}%` : 'N/A'}</td>
+                            <td className={`py-3 px-3 text-right font-mono ${(a.max_drawdown || 0) > -0.15 ? 'text-emerald-400' : 'text-red-400'}`}>{a.max_drawdown ? `${(a.max_drawdown * 100).toFixed(1)}%` : 'N/A'}</td>
+                            <td className="py-3 px-3 text-right font-mono text-slate-300">{a.win_rate ? `${(a.win_rate * 100).toFixed(1)}%` : 'N/A'}</td>
+                            <td className="py-3 px-3 text-right font-mono text-slate-300">{a.fitness_score?.toFixed(2) || 'N/A'}</td>
+                            <td className="py-3 px-3">
+                              <span className={`px-2 py-1 rounded text-xs font-mono ${a.status === 'passed' ? 'bg-emerald-500/20 text-emerald-400' : a.status === 'failed' ? 'bg-red-500/20 text-red-400' : 'bg-slate-700/50 text-slate-400'}`}>{a.status?.toUpperCase()}</span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ALPHA DETAIL MODAL */}
       <AnimatePresence>

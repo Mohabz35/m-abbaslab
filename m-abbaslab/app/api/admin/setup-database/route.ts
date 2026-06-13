@@ -32,6 +32,7 @@ export async function POST() {
   }
 
   try {
+    // @ts-ignore - dynamic import types for pg might not resolve correctly
     const { default: { Pool } } = await import('pg')
     const pool = new Pool({
       host: `db.${projectRef}.supabase.co`,
