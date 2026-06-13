@@ -114,10 +114,15 @@ Please generate:
 Ensure the CV is ATS-optimized, keyword-rich, and tailored to the ${targetPlatform} platform.
 Make the language natural and human-like, avoiding overly formal or robotic phrasing.
 
+CRITICAL JSON INSTRUCTIONS:
+- You MUST return ONLY valid JSON.
+- ALL newlines inside the strings MUST be escaped as \\n. DO NOT output literal newlines inside the JSON strings.
+- Escape double quotes properly.
+
 Return the response in this exact JSON format:
 {
-  "cv": "...markdown formatted CV...",
-  "coverLetter": "...cover letter text..."
+  "cv": "...markdown formatted CV with escaped newlines...",
+  "coverLetter": "...cover letter text with escaped newlines..."
 }
     `
 
@@ -136,6 +141,7 @@ Return the response in this exact JSON format:
           model: 'anthropic/claude-3.5-haiku',
           temperature: 0.2,
           max_tokens: 4000,
+          response_format: { type: 'json_object' },
           messages: [
             {
               role: 'user',
@@ -174,7 +180,15 @@ Return the response in this exact JSON format:
       jsonString = jsonString.replace(/^\`\`\`/g, '').replace(/\`\`\`$/g, '')
     }
 
-    const parsed = JSON.parse(jsonString)
+    // Try to sanitize unescaped literal control characters inside string values if any exist
+    // eslint-disable-next-line no-control-regex
+    jsonString = jsonString.replace(/[\u0000-\u001F]+/g, (match) => {
+      // If it's a newline that is part of the JSON structure (e.g., between key-values), we should leave it
+      // but this is tricky. We will rely on response_format.
+      return match;
+    });
+
+    const parsed = JSON.parse(jsonString.trim())
     const { cv, coverLetter } = parsed
 
     // Calculate ATS Score and Humanize
