@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui-cv/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui-cv/card";
@@ -25,7 +25,7 @@ interface CVResult {
   };
 }
 
-export default function CVPreviewPage() {
+function CVPreviewContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
@@ -301,5 +301,17 @@ export default function CVPreviewPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function CVPreviewPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen bg-slate-900">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+      </div>
+    }>
+      <CVPreviewContent />
+    </Suspense>
   );
 }
