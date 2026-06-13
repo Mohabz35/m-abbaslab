@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui-cv/progress";
 import { Loader2, ChevronRight, ChevronLeft, Save, Sparkles } from "lucide-react";
 
-type Step = 1 | 2 | 3 | 4 | 5 | 6;
+type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 interface FormData {
   personalInfo: {
@@ -39,7 +39,9 @@ interface FormData {
     name: string;
     proficiency: "beginner" | "intermediate" | "advanced" | "expert";
   }>;
-  targetPlatform: "linkedin" | "flexjobs" | "remote_co" | "indeed" | "upwork";
+  targetPlatform: "linkedin" | "flexjobs" | "remote_co" | "indeed" | "upwork" | "mercor" | "mindrift" | "rex" | "remo" | "micro1";
+  existingCv?: string;
+  jobDescription?: string;
   customInstructions?: string;
 }
 
@@ -49,6 +51,8 @@ const INITIAL_FORM_DATA: FormData = {
   education: [{ school: "", degree: "", field: "", graduationDate: "" }],
   skills: [{ name: "", proficiency: "intermediate" }],
   targetPlatform: "linkedin",
+  existingCv: "",
+  jobDescription: "",
   customInstructions: "",
 };
 
@@ -61,6 +65,7 @@ export default function CVBuilderPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [saveStatus, setSaveStatus] = useState<"" | "saved" | "error">("");
   const [error, setError] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
 
   // Load email & saved data
   useEffect(() => {
@@ -129,6 +134,36 @@ export default function CVBuilderPage() {
     }
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      if (file.type === "application/pdf") {
+        const formDataPayload = new FormData();
+        formDataPayload.append("file", file);
+        const res = await fetch("/api/cv/parse-pdf", {
+          method: "POST",
+          body: formDataPayload,
+        });
+        const data = await res.json();
+        if (data.text) {
+          setFormData(prev => ({ ...prev, existingCv: prev.existingCv ? prev.existingCv + "\n\n" + data.text : data.text }));
+        } else {
+          throw new Error("Failed to parse PDF");
+        }
+      } else {
+        const text = await file.text();
+        setFormData(prev => ({ ...prev, existingCv: prev.existingCv ? prev.existingCv + "\n\n" + text : text }));
+      }
+    } catch (err: any) {
+      alert("Error parsing file: " + err.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   if (!userEmail) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-slate-900">
@@ -137,17 +172,18 @@ export default function CVBuilderPage() {
     );
   }
 
-  const stepTitles = ["Personal Information", "Work Experience", "Education", "Skills", "Target Platform", "Review & Generate"];
+  const stepTitles = ["Personal Information", "Work Experience", "Education", "Skills", "Target Platform", "Context & Job", "Review & Generate"];
   const stepDescriptions = [
     "Tell us about yourself",
     "Share your professional experience",
     "Add your educational background",
     "List your key skills",
     "Choose where you'll apply",
+    "Job description & existing CV",
     "Add any special instructions and generate",
   ];
 
-  const progressPercentage = (currentStep / 6) * 100;
+  const progressPercentage = (currentStep / 7) * 100;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-8 px-4">
@@ -179,7 +215,7 @@ export default function CVBuilderPage() {
 
         {/* Step Indicators */}
         <div className="flex gap-2 mb-8">
-          {[1, 2, 3, 4, 5, 6].map((step) => (
+          {[1, 2, 3, 4, 5, 6, 7].map((step) => (
             <button
               key={step}
               onClick={() => setCurrentStep(step as Step)}
@@ -363,6 +399,11 @@ export default function CVBuilderPage() {
                     { value: "linkedin", label: "LinkedIn", description: "Professional networking & career", icon: "💼" },
                     { value: "flexjobs", label: "FlexJobs", description: "Remote & flexible work", icon: "🏠" },
                     { value: "remote_co", label: "Remote.co", description: "Remote-first jobs", icon: "🌍" },
+                    { value: "mercor", label: "Mercor AI", description: "AI vetted remote jobs", icon: "🤖" },
+                    { value: "mindrift", label: "Mindrift AI", description: "AI tutoring & expert jobs", icon: "🧠" },
+                    { value: "rex", label: "Rex", description: "Remote tech jobs", icon: "💻" },
+                    { value: "remo", label: "Remo", description: "Distributed teams", icon: "🌐" },
+                    { value: "micro1", label: "Micro1", description: "Vetted engineering jobs", icon: "⚡" },
                     { value: "indeed", label: "Indeed", description: "General job board (ATS-focused)", icon: "🔍" },
                     { value: "upwork", label: "Upwork", description: "Freelance marketplace", icon: "💰" },
                   ].map(platform => (
@@ -380,18 +421,63 @@ export default function CVBuilderPage() {
               </div>
             )}
 
-            {/* Step 6: Review & Generate */}
+            {/* Step 6: Context & Job */}
             {currentStep === 6 && (
               <div className="space-y-6">
                 <div>
+                  <Label htmlFor="jobDescription">Job Description & Requirements</Label>
+                  <p className="text-sm text-slate-400 mb-2 mt-1">Paste the specific job description you are applying for. The AI will tailor your CV to pass the ATS for this role.</p>
+                  <Textarea
+                    id="jobDescription"
+                    value={formData.jobDescription || ""}
+                    onChange={e => setFormData({ ...formData, jobDescription: e.target.value })}
+                    placeholder="Paste job description here..."
+                    rows={6}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="existingCv">Existing CV / Additional Info</Label>
+                  <p className="text-sm text-slate-400 mb-2 mt-1">Paste your existing CV or upload a PDF/text file. The AI will extract relevant information to enhance your new CV.</p>
+                  
+                  <div className="flex items-center gap-4 mb-3">
+                    <Label htmlFor="file-upload" className="cursor-pointer bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                      {isUploading ? "Extracting..." : "Upload PDF/TXT"}
+                    </Label>
+                    <input
+                      id="file-upload"
+                      type="file"
+                      accept=".pdf,.txt,.md"
+                      className="hidden"
+                      onChange={handleFileUpload}
+                      disabled={isUploading}
+                    />
+                    {isUploading && <Loader2 className="h-4 w-4 animate-spin text-blue-500" />}
+                  </div>
+
+                  <Textarea
+                    id="existingCv"
+                    value={formData.existingCv || ""}
+                    onChange={e => setFormData({ ...formData, existingCv: e.target.value })}
+                    placeholder="Or paste your existing CV content here..."
+                    rows={8}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Step 7: Review & Generate */}
+            {currentStep === 7 && (
+              <div className="space-y-6">
+                <div>
                   <Label htmlFor="instructions">Custom Instructions (Optional)</Label>
-                  <p className="text-sm text-slate-400 mb-3 mt-1">Any specific guidance? E.g., "Emphasize leadership" or "Focus on technical skills"</p>
+                  <p className="text-sm text-slate-400 mb-3 mt-1">Any specific guidance? E.g., "Emphasize leadership" or "Keep it under 2 pages"</p>
                   <Textarea
                     id="instructions"
                     value={formData.customInstructions}
                     onChange={e => setFormData({ ...formData, customInstructions: e.target.value })}
                     placeholder="E.g., Emphasize my experience with cloud technologies and team leadership..."
-                    rows={5}
+                    rows={4}
                   />
                 </div>
 
@@ -402,19 +488,19 @@ export default function CVBuilderPage() {
                     <div><span className="text-slate-400">Name:</span> <span className="text-white">{formData.personalInfo.name || "—"}</span></div>
                     <div><span className="text-slate-400">Email:</span> <span className="text-white">{formData.personalInfo.email || "—"}</span></div>
                     <div><span className="text-slate-400">Platform:</span> <span className="text-white capitalize">{formData.targetPlatform}</span></div>
+                    <div><span className="text-slate-400">Targeting JD:</span> <span className="text-white">{formData.jobDescription ? "Yes" : "No"}</span></div>
+                    <div><span className="text-slate-400">Existing CV:</span> <span className="text-white">{formData.existingCv ? "Provided" : "No"}</span></div>
                     <div><span className="text-slate-400">Positions:</span> <span className="text-white">{formData.workExperience.length}</span></div>
-                    <div><span className="text-slate-400">Skills:</span> <span className="text-white">{formData.skills.filter(s => s.name).length}</span></div>
-                    <div><span className="text-slate-400">Education:</span> <span className="text-white">{formData.education.length}</span></div>
                   </div>
                 </div>
 
                 <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-5">
                   <h4 className="font-semibold text-blue-300 mb-2">✨ What happens next?</h4>
                   <ul className="text-sm text-blue-200 space-y-1">
-                    <li>✓ Claude AI generates your tailored CV & cover letter</li>
+                    <li>✓ AI generates 3 tailored CV variants</li>
+                    <li>✓ Interview preparation questions are generated</li>
                     <li>✓ ATS score analysis with improvement suggestions</li>
-                    <li>✓ First CV is completely free</li>
-                    <li>✓ Additional CVs for just 1000 NGN via Paystack</li>
+                    <li>✓ First CV generation is completely free!</li>
                   </ul>
                 </div>
 
@@ -440,23 +526,23 @@ export default function CVBuilderPage() {
             Previous
           </Button>
 
-          {currentStep === 6 ? (
-            <Button
-              onClick={handleGenerate}
-              disabled={isGenerating}
-              className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
-            >
-              {isGenerating ? (
-                <><Loader2 className="h-4 w-4 animate-spin" />Generating...</>
-              ) : (
-                <><Sparkles className="h-4 w-4" />Generate CV</>
-              )}
-            </Button>
-          ) : (
-            <Button
-              onClick={() => setCurrentStep(Math.min(6, currentStep + 1) as Step)}
-              className="gap-2"
-            >
+          {currentStep === 7 ? (
+              <Button
+                onClick={handleGenerate}
+                disabled={isGenerating}
+                className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+              >
+                {isGenerating ? (
+                  <><Loader2 className="h-4 w-4 animate-spin" />Generating...</>
+                ) : (
+                  <><Sparkles className="h-4 w-4" />Generate Models</>
+                )}
+              </Button>
+            ) : (
+              <Button
+                onClick={() => setCurrentStep(Math.min(7, currentStep + 1) as Step)}
+                className="gap-2"
+              >
               Next
               <ChevronRight className="h-4 w-4" />
             </Button>

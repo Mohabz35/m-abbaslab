@@ -1,10 +1,22 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui-cv/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui-cv/card";
 import { Loader2, Download, FileText, CheckCircle2, AlertCircle, ArrowLeft, CreditCard, Copy } from "lucide-react";
+import { marked } from "marked";
+
+interface CVModel {
+  name: string;
+  content: string;
+}
+
+interface InterviewQuestion {
+  question: string;
+  rationale: string;
+  suggestedAnswer: string;
+}
 
 interface ATSCheck {
   name: string;
@@ -15,8 +27,10 @@ interface ATSCheck {
 
 interface CVResult {
   id: string;
-  cv: string;
+  cv?: string;
+  cv_models?: CVModel[];
   coverLetter: string;
+  interviewQuestions?: InterviewQuestion[];
   atsReport: {
     score: number;
     totalPoints: number;
@@ -34,7 +48,8 @@ function CVPreviewContent() {
   const [isPaid, setIsPaid] = useState(false);
   const [isCheckingPayment, setIsCheckingPayment] = useState(false);
   const [isInitiatingPayment, setIsInitiatingPayment] = useState(false);
-  const [activeTab, setActiveTab] = useState<"cv" | "cover-letter" | "ats">("cv");
+  const [activeTab, setActiveTab] = useState<"cv" | "cover-letter" | "ats" | "interview">("cv");
+  const [activeModelIdx, setActiveModelIdx] = useState(0);
   const [copied, setCopied] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
@@ -89,20 +104,60 @@ function CVPreviewContent() {
     }
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!cvResult) return;
-    const blob = new Blob([cvResult.cv], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "cv.md";
-    a.click();
-    URL.revokeObjectURL(url);
+    
+    const markdownContent = activeTab === "cv" && cvResult.cv_models 
+      ? cvResult.cv_models[activeModelIdx].content 
+      : activeTab === "cv" && cvResult.cv 
+        ? cvResult.cv 
+        : cvResult.coverLetter;
+
+    try {
+      // @ts-ignore
+      const html2pdf = (await import('html2pdf.js')).default;
+      
+      const htmlContent = await marked.parse(markdownContent);
+      
+      const element = document.createElement('div');
+      element.innerHTML = htmlContent;
+      // Basic styling for the PDF
+      element.style.padding = '20px';
+      element.style.fontFamily = 'Arial, sans-serif';
+      element.style.color = '#000';
+      element.style.lineHeight = '1.5';
+      
+      const opt = {
+        margin:       10,
+        filename:     activeTab === "cv" ? 'CV.pdf' : 'Cover_Letter.pdf',
+        image:        { type: 'jpeg' as const, quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      
+      html2pdf().set(opt).from(element).save();
+    } catch (e) {
+      console.error("PDF generation error:", e);
+      // Fallback to markdown download
+      const blob = new Blob([markdownContent], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "cv.md";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   };
 
   const handleCopy = () => {
     if (!cvResult) return;
-    navigator.clipboard.writeText(activeTab === "cv" ? cvResult.cv : cvResult.coverLetter);
+    const content = activeTab === "cv" && cvResult.cv_models
+      ? cvResult.cv_models[activeModelIdx].content 
+      : activeTab === "cv" && cvResult.cv 
+        ? cvResult.cv 
+        : cvResult.coverLetter;
+
+    navigator.clipboard.writeText(content);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -167,16 +222,19 @@ function CVPreviewContent() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-4 bg-slate-800 rounded-lg p-1 w-fit">
-          {(["cv", "cover-letter", "ats"] as const).map(tab => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === tab ? "bg-blue-600 text-white" : "text-slate-400 hover:text-white"}`}
-            >
-              {tab === "cv" ? "CV" : tab === "cover-letter" ? "Cover Letter" : "ATS Analysis"}
-            </button>
-          ))}
+        <div className="flex gap-1 mb-4 bg-slate-800 rounded-lg p-1 w-fit flex-wrap">
+          {(["cv", "cover-letter", "ats", "interview"] as const).map(tab => {
+            if (tab === "interview" && !cvResult.interviewQuestions) return null;
+            return (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === tab ? "bg-blue-600 text-white" : "text-slate-400 hover:text-white"}`}
+              >
+                {tab === "cv" ? "CV" : tab === "cover-letter" ? "Cover Letter" : tab === "ats" ? "ATS Analysis" : "Interview Prep"}
+              </button>
+            )
+          })}
         </div>
 
         {/* Content */}
@@ -203,11 +261,30 @@ function CVPreviewContent() {
           {/* CV Tab */}
           {activeTab === "cv" && (
             <Card className="relative">
-              <CardHeader className="flex flex-row items-center justify-between">
+              <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <CardTitle className="text-white flex items-center gap-2">
                   <FileText className="h-5 w-5 text-blue-400" />
                   Your CV
                 </CardTitle>
+                
+                {cvResult.cv_models && cvResult.cv_models.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {cvResult.cv_models.map((model, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setActiveModelIdx(idx)}
+                        className={`px-3 py-1 rounded-full text-xs font-medium border ${
+                          activeModelIdx === idx 
+                            ? "bg-blue-500/20 border-blue-500 text-blue-400" 
+                            : "bg-slate-800 border-slate-700 text-slate-400 hover:text-white"
+                        }`}
+                      >
+                        {model.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
                 {isPaid && (
                   <Button variant="ghost" size="sm" onClick={handleCopy} className="gap-2 text-slate-400">
                     <Copy className="h-4 w-4" />
@@ -217,7 +294,7 @@ function CVPreviewContent() {
               </CardHeader>
               <CardContent>
                 <pre className={`whitespace-pre-wrap text-sm text-slate-200 font-mono leading-relaxed max-h-[600px] overflow-y-auto ${blurredContent ? "select-none" : ""}`}>
-                  {cvResult.cv}
+                  {cvResult.cv_models ? cvResult.cv_models[activeModelIdx].content : cvResult.cv}
                 </pre>
               </CardContent>
             </Card>
@@ -286,6 +363,24 @@ function CVPreviewContent() {
                   </CardContent>
                 </Card>
               )}
+            </div>
+          )}
+
+          {/* Interview Prep Tab */}
+          {activeTab === "interview" && cvResult.interviewQuestions && (
+            <div className="space-y-4">
+              {cvResult.interviewQuestions.map((q, idx) => (
+                <Card key={idx}>
+                  <CardContent className="pt-5">
+                    <h3 className="font-bold text-lg text-white mb-2">Q: {q.question}</h3>
+                    <p className="text-sm text-slate-400 italic mb-4">Why they ask this: {q.rationale}</p>
+                    <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
+                      <span className="text-xs font-bold text-green-400 uppercase tracking-wider mb-2 block">Suggested Answer Approach</span>
+                      <p className="text-sm text-slate-200 whitespace-pre-wrap">{q.suggestedAnswer}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           )}
         </div>

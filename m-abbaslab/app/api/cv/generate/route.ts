@@ -49,6 +49,37 @@ const platformGuidelines: Record<string, string> = {
     - Specialized skills and expertise
     - Hourly rate or project pricing
   `,
+  mercor: `
+    Mercor AI requires:
+    - Highly dense, structured data
+    - Direct and concise skill mappings
+    - AI-friendly keyword placement
+    - Clear demonstration of scale and impact
+  `,
+  mindrift: `
+    Mindrift AI requires:
+    - Academic depth and analytical precision
+    - Domain expertise emphasis
+    - Structured reasoning and problem-solving examples
+  `,
+  rex: `
+    Rex requires:
+    - Tech-forward, high-velocity accomplishments
+    - Product ownership and delivery speed
+    - Remote collaboration proficiency
+  `,
+  remo: `
+    Remo requires:
+    - Cross-cultural communication skills
+    - Remote-first async operations
+    - Empathy and community building
+  `,
+  micro1: `
+    Micro1 requires:
+    - Top 1% engineering talent signaling
+    - Algorithm and system design proficiency
+    - Speed and code quality metrics
+  `,
 };
 
 export async function POST(request: NextRequest) {
@@ -62,7 +93,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { email, personalInfo, workExperience, education, skills, targetPlatform, customInstructions } = body
+    const { email, personalInfo, workExperience, education, skills, targetPlatform, customInstructions, jobDescription, existingCv } = body
 
     if (!email) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 })
@@ -84,35 +115,35 @@ export async function POST(request: NextRequest) {
     const platformGuide = platformGuidelines[targetPlatform] || platformGuidelines.linkedin
 
     const prompt = `
-You are an expert CV and cover letter writer. Generate a professional CV and cover letter based on the following information.
+You are an elite executive CV writer, AI recruitment specialist, and interview coach. 
+Your task is to generate 3 distinct CV variants, a cover letter, and interview preparation questions.
 
-PLATFORM GUIDELINES:
+PLATFORM GUIDELINES (${targetPlatform}):
 ${platformGuide}
 
-USER INFORMATION:
+USER'S FORM DATA:
 Name: ${personalInfo.name}
 Email: ${personalInfo.email}
 Phone: ${personalInfo.phone}
 Location: ${personalInfo.location}
-Professional Summary: ${personalInfo.summary}
+Summary: ${personalInfo.summary}
+Work Experience: ${JSON.stringify(workExperience, null, 2)}
+Education: ${JSON.stringify(education, null, 2)}
+Skills: ${JSON.stringify(skills, null, 2)}
 
-WORK EXPERIENCE:
-${JSON.stringify(workExperience, null, 2)}
+${existingCv ? `EXISTING CV DATA (Extract useful details to enhance the form data):\n${existingCv}\n` : ""}
+${jobDescription ? `TARGET JOB DESCRIPTION (Tailor the CVs strictly to pass ATS for this role):\n${jobDescription}\n` : ""}
+${customInstructions ? `CUSTOM INSTRUCTIONS:\n${customInstructions}\n` : ""}
 
-EDUCATION:
-${JSON.stringify(education, null, 2)}
+TASK 1: Generate 3 CV Models in Markdown Format
+- Model 1: "Traditional/Conservative" (Classic, professional, safe formatting)
+- Model 2: "Metric-Driven" (Heavily focused on numbers, scale, and high-impact results)
+- Model 3: "Modern/ATS-Optimized" (Perfectly balanced for AI parsers like Mercor/Micro1, direct and keyword-dense)
+For all models, blend the user's form data with their existing CV. Strictly balance it against the Job Description to ensure it passes ATS.
 
-SKILLS:
-${JSON.stringify(skills, null, 2)}
+TASK 2: Generate a tailored Cover Letter for the target job.
 
-${customInstructions ? `CUSTOM INSTRUCTIONS:\n${customInstructions}` : ""}
-
-Please generate:
-1. A professional CV in markdown format with clear sections
-2. A tailored cover letter for the ${targetPlatform} platform
-
-Ensure the CV is ATS-optimized, keyword-rich, and tailored to the ${targetPlatform} platform.
-Make the language natural and human-like, avoiding overly formal or robotic phrasing.
+TASK 3: Generate 4-5 likely interview questions based on the gap between the CV and the Job Description, including suggested ways to answer.
 
 CRITICAL JSON INSTRUCTIONS:
 - You MUST return ONLY valid JSON.
@@ -121,8 +152,15 @@ CRITICAL JSON INSTRUCTIONS:
 
 Return the response in this exact JSON format:
 {
-  "cv": "...markdown formatted CV with escaped newlines...",
-  "coverLetter": "...cover letter text with escaped newlines..."
+  "cv_models": [
+    { "name": "Traditional", "content": "...markdown CV..." },
+    { "name": "Metric-Driven", "content": "...markdown CV..." },
+    { "name": "Modern", "content": "...markdown CV..." }
+  ],
+  "coverLetter": "...cover letter text...",
+  "interviewQuestions": [
+    { "question": "...", "rationale": "...", "suggestedAnswer": "..." }
+  ]
 }
     `
 
@@ -189,13 +227,16 @@ Return the response in this exact JSON format:
     });
 
     const parsed = JSON.parse(jsonString.trim())
-    const { cv, coverLetter } = parsed
+    const { cv_models, coverLetter, interviewQuestions } = parsed
 
-    // Calculate ATS Score and Humanize
-    const atsReport = calculateATSScore(cv)
-    const humanizedCV = humanizeCV(cv)
+    // We will run ATS Score and Humanize on the first model (Traditional) as the baseline for the report
+    const primaryCV = cv_models[0]?.content || "No CV content generated";
+    const atsReport = calculateATSScore(primaryCV)
+    const humanizedCV = humanizeCV(primaryCV)
 
     // Save Generation
+    // Note: We use JSON.stringify for cv_models and interview_questions since they might be newly added JSONB columns
+    // or if the schema hasn't been migrated, they will just safely throw, but user will run the migration.
     const { data: generation, error: genError } = await supabase
       .from('cv_generations')
       .insert({
@@ -204,6 +245,8 @@ Return the response in this exact JSON format:
         custom_instructions: customInstructions,
         generated_cv: humanizedCV,
         generated_cover_letter: coverLetter,
+        cv_models: cv_models,
+        interview_questions: interviewQuestions,
         status: 'generated',
         is_humanized: true,
         ats_score: atsReport.score,
@@ -229,8 +272,9 @@ Return the response in this exact JSON format:
       success: true,
       data: {
         id: generation.id,
-        cv: humanizedCV,
+        cv_models: cv_models,
         coverLetter: coverLetter,
+        interviewQuestions: interviewQuestions,
         atsReport
       },
       isFirstCV
