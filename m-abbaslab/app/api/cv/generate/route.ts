@@ -133,7 +133,7 @@ Return the response in this exact JSON format:
           'X-Title': 'M-AbbasLab CV Generator',
         },
         body: JSON.stringify({
-          model: 'anthropic/claude-3.5-sonnet',
+          model: 'anthropic/claude-3.5-haiku',
           temperature: 0.2,
           max_tokens: 4000,
           messages: [
