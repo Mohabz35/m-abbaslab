@@ -1,4 +1,4 @@
-﻿// app/about/page.tsx
+// app/about/page.tsx
 import type { Metadata } from 'next'
 import { personalConfig } from '@/config/personal'
 import {
@@ -18,10 +18,11 @@ export const metadata: Metadata = {
 }
 
 export default function AboutPage() {
-  const skills = personalConfig.skills
-  const education = personalConfig.education
-  const experience = personalConfig.experience
-  const researchInterests = personalConfig.researchInterests
+  const config: any = personalConfig
+  const skills: Record<string, string[]> = config.skills || {}
+  const education: Array<{ degree?: string; institution?: string; period?: string; status?: string; focus?: string }> = config.education || []
+  const experience: Array<{ role?: string; period?: string; description?: string; achievements?: string[] }> = config.experience || []
+  const researchInterests: string[] = config.researchInterests || []
 
   return (
     <div className="min-h-screen">

@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
   const configEntries = [
     { key: 'site_info', value: { name: personalConfig.name, email: personalConfig.email, brandName: personalConfig.brandName, title: personalConfig.title, tagline: personalConfig.tagline, googleAnalyticsId: personalConfig.googleAnalyticsId, roles: personalConfig.roles, researchInterests: personalConfig.researchInterests } },
     { key: 'social_links', value: personalConfig.social || {} },
-    { key: 'site_features', value: personalConfig.site?.features || {} },
+    { key: 'site_features', value: (personalConfig as any).site?.features || {} },
   ]
   results.config = { inserted: 0, errors: [] }
   for (const entry of configEntries) {

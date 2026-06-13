@@ -30,7 +30,7 @@ export default function ServicesSection() {
                 </motion.div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {personalConfig.site.skillFeatures.map((feature, index) => {
+                    {((personalConfig as any).site?.skillFeatures || []).map((feature: any, index: number) => {
                         const Icon = iconMap[feature.icon] || Zap
                         return (
                             <motion.div

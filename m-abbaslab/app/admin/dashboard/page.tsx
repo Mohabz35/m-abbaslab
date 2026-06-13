@@ -89,7 +89,7 @@ export default function AdminDashboardPage() {
   const [adminEmail, setAdminEmail] = useState(personalConfig.email)
   const [adminUsername, setAdminUsername] = useState((personalConfig as any).adminCredentials?.username || 'ceo')
   const [adminPassword, setAdminPassword] = useState((personalConfig as any).adminCredentials?.password || 'admin123')
-  const [siteFeatures, setSiteFeatures] = useState(personalConfig.site.features)
+  const [siteFeatures, setSiteFeatures] = useState((personalConfig as any).site?.features || { fashion: true, research: true, dev: true, about: true, writing: true, finance: true, jarvis: true, worldQuantLab: true })
 
   const [brandName, setBrandName] = useState(personalConfig.brandName || 'M-AbbasLab')
   const [siteTitle, setSiteTitle] = useState(personalConfig.title || '')
@@ -141,7 +141,7 @@ export default function AdminDashboardPage() {
           setAdminEmail(config.email || personalConfig.email)
           setAdminUsername(config.adminCredentials?.username || (personalConfig as any).adminCredentials?.username || 'ceo')
           setAdminPassword(config.adminCredentials?.password || (personalConfig as any).adminCredentials?.password || 'admin123')
-          setSiteFeatures(config.site?.features || personalConfig.site.features)
+          setSiteFeatures(config.site?.features || (personalConfig as any).site?.features || { fashion: true, research: true, dev: true, about: true, writing: true, finance: true, jarvis: true, worldQuantLab: true })
           setBrandName(config.brandName || personalConfig.brandName || 'M-AbbasLab')
           setSiteTitle(config.title || personalConfig.title || '')
           setTagline(config.tagline || personalConfig.tagline || '')
@@ -218,7 +218,7 @@ export default function AdminDashboardPage() {
           alphas
         },
         site: {
-          ...personalConfig.site,
+          ...(personalConfig as any).site,
           features: siteFeatures
         },
         jarvisTraining: jarvisTrainingRules,

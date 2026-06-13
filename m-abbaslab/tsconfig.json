@@ -40,6 +40,7 @@
   "exclude": [
     "node_modules",
     "jarvis-whatsapp-engine",
-    "supabase-functions"
+    "supabase-functions",
+    "cv"
   ]
 }
