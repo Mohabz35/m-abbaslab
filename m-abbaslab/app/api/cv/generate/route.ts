@@ -56,8 +56,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Supabase keys not configured' }, { status: 500 })
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return NextResponse.json({ error: 'Anthropic API key not configured' }, { status: 500 })
+  if (!process.env.ANTHROPIC_API_KEY && !process.env.OPENROUTER_API_KEY) {
+    return NextResponse.json({ error: 'LLM API key not configured (Anthropic or OpenRouter)' }, { status: 500 })
   }
 
   try {
@@ -121,19 +121,50 @@ Return the response in this exact JSON format:
 }
     `
 
-    const response = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-latest',
-      max_tokens: 4000,
-      temperature: 0.2,
-      messages: [
-        {
-          role: 'user',
-          content: prompt
-        }
-      ]
-    })
+    let responseText = ''
 
-    const responseText = (response.content[0] as any).text
+    if (process.env.OPENROUTER_API_KEY) {
+      const orResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://m-abbaslab.vercel.app',
+          'X-Title': 'M-AbbasLab CV Generator',
+        },
+        body: JSON.stringify({
+          model: 'anthropic/claude-3.5-sonnet',
+          temperature: 0.2,
+          max_tokens: 4000,
+          messages: [
+            {
+              role: 'user',
+              content: prompt
+            }
+          ]
+        })
+      })
+
+      if (!orResponse.ok) {
+        throw new Error(`OpenRouter error: ${await orResponse.text()}`)
+      }
+
+      const data = await orResponse.json()
+      responseText = data?.choices?.[0]?.message?.content || ''
+    } else {
+      const response = await anthropic.messages.create({
+        model: 'claude-3-5-sonnet-latest',
+        max_tokens: 4000,
+        temperature: 0.2,
+        messages: [
+          {
+            role: 'user',
+            content: prompt
+          }
+        ]
+      })
+      responseText = (response.content[0] as any).text
+    }
     
     // Parse the JSON out of the response (in case it includes markdown block formatting)
     let jsonString = responseText.trim()
