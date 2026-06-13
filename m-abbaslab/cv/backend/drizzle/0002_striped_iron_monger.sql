@@ -1,0 +1,1 @@
+ALTER TABLE `cv_form_data` ADD CONSTRAINT `cv_form_data_userId_unique` UNIQUE(`userId`);
