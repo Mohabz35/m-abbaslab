@@ -2,85 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { supabase, hasSupabaseKeys } from '@/lib/supabase'
 import { calculateATSScore, humanizeCV } from './ats'
+import { getKnowledgeContext } from './job-knowledge'
+import { researchCompanyAndRole } from './research'
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
 })
 
-const platformGuidelines: Record<string, string> = {
-  linkedin: `
-    LinkedIn CVs should emphasize:
-    - Quantifiable achievements and metrics
-    - Industry-specific keywords
-    - Professional accomplishments
-    - Clear career progression
-    - Leadership and impact statements
-  `,
-  flexjobs: `
-    FlexJobs CVs should highlight:
-    - Remote work experience
-    - Flexibility and adaptability
-    - Self-management skills
-    - Time zone independence
-    - Project-based accomplishments
-  `,
-  remote_co: `
-    Remote.co CVs should focus on:
-    - Async communication skills
-    - Self-motivation and discipline
-    - Remote-specific experience
-    - Time management
-    - Collaboration in distributed teams
-  `,
-  indeed: `
-    Indeed CVs should be:
-    - ATS-optimized with clear formatting
-    - Keyword-rich for job matching
-    - Well-structured with clear sections
-    - Free of graphics and tables
-    - Mobile-friendly
-  `,
-  upwork: `
-    Upwork CVs should showcase:
-    - Freelance portfolio highlights
-    - Client testimonials and ratings
-    - Project-based achievements
-    - Specialized skills and expertise
-    - Hourly rate or project pricing
-  `,
-  mercor: `
-    Mercor AI requires:
-    - Highly dense, structured data
-    - Direct and concise skill mappings
-    - AI-friendly keyword placement
-    - Clear demonstration of scale and impact
-  `,
-  mindrift: `
-    Mindrift AI requires:
-    - Academic depth and analytical precision
-    - Domain expertise emphasis
-    - Structured reasoning and problem-solving examples
-  `,
-  rex: `
-    Rex requires:
-    - Tech-forward, high-velocity accomplishments
-    - Product ownership and delivery speed
-    - Remote collaboration proficiency
-  `,
-  remo: `
-    Remo requires:
-    - Cross-cultural communication skills
-    - Remote-first async operations
-    - Empathy and community building
-  `,
-  micro1: `
-    Micro1 requires:
-    - Top 1% engineering talent signaling
-    - Algorithm and system design proficiency
-    - Speed and code quality metrics
-  `,
-};
+// Removed old platformGuidelines as we now use job-knowledge.ts
 
 export async function POST(request: NextRequest) {
   if (!hasSupabaseKeys) {
@@ -112,14 +42,16 @@ export async function POST(request: NextRequest) {
 
     const isFirstCV = !user.free_credits_used
 
-    const platformGuide = platformGuidelines[targetPlatform] || platformGuidelines.linkedin
+    const knowledgeContext = getKnowledgeContext(targetPlatform, jobDescription || "");
+    const researchContext = await researchCompanyAndRole(jobDescription || "");
 
     const prompt = `
 You are an elite executive CV writer, AI recruitment specialist, and interview coach. 
 Your task is to generate 3 distinct CV variants, a cover letter, and interview preparation questions.
 
-PLATFORM GUIDELINES (${targetPlatform}):
-${platformGuide}
+${knowledgeContext}
+
+${researchContext}
 
 USER'S FORM DATA:
 Name: ${personalInfo.name}
@@ -135,15 +67,18 @@ ${existingCv ? `EXISTING CV DATA (Extract useful details to enhance the form dat
 ${jobDescription ? `TARGET JOB DESCRIPTION (Tailor the CVs strictly to pass ATS for this role):\n${jobDescription}\n` : ""}
 ${customInstructions ? `CUSTOM INSTRUCTIONS:\n${customInstructions}\n` : ""}
 
-TASK 1: Generate 3 CV Models in Markdown Format
+TASK 1: Conduct Research
+Output a brief summary of your findings about the company and role in the "researchSummary" field.
+
+TASK 2: Generate 3 CV Models in Markdown Format
 - Model 1: "Traditional/Conservative" (Classic, professional, safe formatting)
 - Model 2: "Metric-Driven" (Heavily focused on numbers, scale, and high-impact results)
 - Model 3: "Modern/ATS-Optimized" (Perfectly balanced for AI parsers like Mercor/Micro1, direct and keyword-dense)
-For all models, blend the user's form data with their existing CV. Strictly balance it against the Job Description to ensure it passes ATS.
+For all models, blend the user's form data with their existing CV. Strictly balance it against the Job Description and your Research to ensure it passes ATS.
 
-TASK 2: Generate a tailored Cover Letter for the target job.
+TASK 3: Generate a tailored Cover Letter for the target job.
 
-TASK 3: Generate 4-5 likely interview questions based on the gap between the CV and the Job Description, including suggested ways to answer.
+TASK 4: Generate 4-5 likely interview questions based on the gap between the CV and the Job Description, including suggested ways to answer.
 
 CRITICAL JSON INSTRUCTIONS:
 - You MUST return ONLY valid JSON.
@@ -152,6 +87,7 @@ CRITICAL JSON INSTRUCTIONS:
 
 Return the response in this exact JSON format:
 {
+  "researchSummary": "...2-3 paragraphs of your company and role research...",
   "cv_models": [
     { "name": "Traditional", "content": "...markdown CV..." },
     { "name": "Metric-Driven", "content": "...markdown CV..." },
@@ -178,7 +114,7 @@ Return the response in this exact JSON format:
         body: JSON.stringify({
           model: 'anthropic/claude-3.5-haiku',
           temperature: 0.2,
-          max_tokens: 4000,
+          max_tokens: 6000,
           response_format: { type: 'json_object' },
           messages: [
             {
@@ -198,7 +134,7 @@ Return the response in this exact JSON format:
     } else {
       const response = await anthropic.messages.create({
         model: 'claude-3-5-sonnet-latest',
-        max_tokens: 4000,
+        max_tokens: 6000,
         temperature: 0.2,
         messages: [
           {
@@ -227,7 +163,7 @@ Return the response in this exact JSON format:
     });
 
     const parsed = JSON.parse(jsonString.trim())
-    const { cv_models, coverLetter, interviewQuestions } = parsed
+    const { researchSummary, cv_models, coverLetter, interviewQuestions } = parsed
 
     // We will run ATS Score and Humanize on the first model (Traditional) as the baseline for the report
     const primaryCV = cv_models[0]?.content || "No CV content generated";
@@ -272,6 +208,7 @@ Return the response in this exact JSON format:
       success: true,
       data: {
         id: generation.id,
+        researchSummary: researchSummary,
         cv_models: cv_models,
         coverLetter: coverLetter,
         interviewQuestions: interviewQuestions,

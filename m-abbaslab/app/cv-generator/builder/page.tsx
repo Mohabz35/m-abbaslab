@@ -148,17 +148,18 @@ export default function CVBuilderPage() {
           body: formDataPayload,
         });
         const data = await res.json();
-        if (data.text) {
+        if (res.ok && data.text) {
           setFormData(prev => ({ ...prev, existingCv: prev.existingCv ? prev.existingCv + "\n\n" + data.text : data.text }));
         } else {
-          throw new Error("Failed to parse PDF");
+          // PDF extraction failed - show helpful message instead of crash
+          alert("⚠️ Could not extract text from this PDF automatically.\n\nPlease open your PDF, select all text (Ctrl+A), copy it (Ctrl+C), and paste it into the text area below.");
         }
       } else {
         const text = await file.text();
         setFormData(prev => ({ ...prev, existingCv: prev.existingCv ? prev.existingCv + "\n\n" + text : text }));
       }
     } catch (err: any) {
-      alert("Error parsing file: " + err.message);
+      alert("⚠️ Could not parse this file. Please paste the content manually into the text area below.");
     } finally {
       setIsUploading(false);
     }
@@ -191,11 +192,16 @@ export default function CVBuilderPage() {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <button onClick={() => router.push("/cv-generator")} className="text-slate-400 hover:text-white text-sm mb-2 flex items-center gap-1">
-              ← Back to Home
-            </button>
+            <div className="flex items-center gap-4 mb-2">
+              <button onClick={() => router.push("/cv-generator")} className="text-slate-400 hover:text-white text-sm flex items-center gap-1">
+                ← Back to Home
+              </button>
+              <button onClick={() => router.push("/cv-generator/dashboard")} className="text-slate-400 hover:text-white text-sm flex items-center gap-1">
+                Job Tracker
+              </button>
+            </div>
             <h1 className="text-3xl font-bold text-white">Create Your CV</h1>
-            <p className="text-slate-400">Step {currentStep} of 6</p>
+            <p className="text-slate-400">Step {currentStep} of 7</p>
           </div>
           <div className="flex items-center gap-3">
             {saveStatus === "saved" && <span className="text-green-400 text-sm flex items-center gap-1"><Save className="h-3 w-3" />Saved</span>}

@@ -95,3 +95,27 @@ EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 DO $$ BEGIN
   CREATE POLICY "Allow public all paystack_transactions" ON paystack_transactions FOR ALL USING (true) WITH CHECK (true);
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+-- Job Tracker
+CREATE TABLE IF NOT EXISTS cv_tracked_jobs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES cv_users(id) ON DELETE CASCADE,
+    company TEXT NOT NULL,
+    role TEXT NOT NULL,
+    platform TEXT,
+    job_url TEXT,
+    job_description TEXT,
+    status TEXT DEFAULT 'saved' CHECK (status IN ('saved', 'applied', 'interviewing', 'offered', 'rejected')),
+    notes TEXT,
+    applied_at TIMESTAMPTZ,
+    cv_generation_id UUID REFERENCES cv_generations(id) ON DELETE SET NULL,
+    created_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_cv_tracked_jobs_user ON cv_tracked_jobs(user_id);
+ALTER TABLE cv_tracked_jobs ENABLE ROW LEVEL SECURITY;
+
+DO $$ BEGIN
+  CREATE POLICY "Allow public all cv_tracked_jobs" ON cv_tracked_jobs FOR ALL USING (true) WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;

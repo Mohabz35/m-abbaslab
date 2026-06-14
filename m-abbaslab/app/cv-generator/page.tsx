@@ -48,7 +48,10 @@ export default function CVGeneratorHome() {
           <div className="flex items-center gap-4">
             {userEmail ? (
               <>
-                <span className="text-slate-300">Welcome, {userEmail}</span>
+                <span className="text-slate-300 hidden sm:inline">Welcome, {userEmail}</span>
+                <Button onClick={() => router.push("/cv-generator/dashboard")} variant="outline" className="border-slate-600 text-white hover:bg-slate-800 hidden md:flex">
+                  Dashboard
+                </Button>
                 <Button onClick={() => router.push("/cv-generator/history")} variant="outline" className="border-slate-600 text-white hover:bg-slate-800">
                   My CVs
                 </Button>
@@ -93,8 +96,7 @@ export default function CVGeneratorHome() {
         </h1>
 
         <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-          Create ATS-optimized, AI-humanized CVs tailored to your target platform. Get your first CV
-          completely free, then just 1000 NGN for each additional one.
+          Create ATS-optimized, AI-humanized CVs tailored to your target platform. Track your jobs, prepare for interviews, and land remote work. Subscriptions start at just <strong>$0.50/mo</strong>.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -143,12 +145,12 @@ export default function CVGeneratorHome() {
             <p className="text-slate-400 text-sm">ATS Compatible</p>
           </div>
           <div>
-            <div className="text-3xl font-bold text-blue-400">1000 NGN</div>
-            <p className="text-slate-400 text-sm">Per CV</p>
+            <div className="text-3xl font-bold text-blue-400">$0.50/mo</div>
+            <p className="text-slate-400 text-sm">Pro Subscription</p>
           </div>
           <div>
-            <div className="text-3xl font-bold text-blue-400">5 Platforms</div>
-            <p className="text-slate-400 text-sm">Supported</p>
+            <div className="text-3xl font-bold text-blue-400">10+</div>
+            <p className="text-slate-400 text-sm">Platforms Supported</p>
           </div>
         </div>
       </section>
@@ -161,23 +163,23 @@ export default function CVGeneratorHome() {
           {[
             {
               icon: <Zap className="h-6 w-6" />,
-              title: "AI-Powered",
-              description: "Advanced LLM generates tailored CVs in seconds",
+              title: "AI-Powered Research",
+              description: "AI researches the company and role before writing your CV.",
             },
             {
               icon: <Shield className="h-6 w-6" />,
-              title: "AI-Humanized",
-              description: "Passes GPTZero, Turnitin, and Copyleaks detection",
+              title: "3 distinct CV models",
+              description: "Get Traditional, Metric-Driven, and ATS-Optimized variants.",
             },
             {
               icon: <TrendingUp className="h-6 w-6" />,
-              title: "ATS Optimized",
-              description: "Scores and suggestions to maximize job applications",
+              title: "Job Tracker",
+              description: "Manage all your job applications in one kanban dashboard.",
             },
             {
               icon: <CheckCircle2 className="h-6 w-6" />,
-              title: "Platform-Specific",
-              description: "Tailored for LinkedIn, FlexJobs, Indeed, and more",
+              title: "Interview Prep Coach",
+              description: "Predicts the exact questions you'll be asked based on JD gaps.",
             },
           ].map((feature, idx) => (
             <Card key={idx} className="bg-slate-800 border-slate-700 hover:border-blue-500/50 transition-all">
@@ -200,7 +202,7 @@ export default function CVGeneratorHome() {
         <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
           <Card className="bg-slate-800 border-slate-700">
             <CardHeader>
-              <CardTitle className="text-white">First CV</CardTitle>
+              <CardTitle className="text-white">Free Trial</CardTitle>
               <CardDescription>Get started free</CardDescription>
             </CardHeader>
             <CardContent>
@@ -208,7 +210,7 @@ export default function CVGeneratorHome() {
               <ul className="space-y-2 text-slate-300 mb-6">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-green-500" />
-                  Full CV generation
+                  1 Full CV generation
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-green-500" />
@@ -216,11 +218,11 @@ export default function CVGeneratorHome() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-green-500" />
-                  Download as PDF
+                  Basic PDF Download
                 </li>
               </ul>
               {userEmail ? (
-                <Button onClick={() => router.push("/cv-generator/builder")} className="w-full bg-blue-600 hover:bg-blue-700">Get Started</Button>
+                <Button onClick={() => router.push("/cv-generator/builder")} className="w-full bg-blue-600 hover:bg-blue-700">Create CV</Button>
               ) : (
                 <form onSubmit={handleStart} className="w-full flex gap-2">
                   <Input 
@@ -242,22 +244,30 @@ export default function CVGeneratorHome() {
               <Badge className="w-fit bg-blue-500/30 text-blue-300 border-blue-500/50 mb-2">
                 Best Value
               </Badge>
-              <CardTitle className="text-white">Additional CVs</CardTitle>
-              <CardDescription>Per CV</CardDescription>
+              <CardTitle className="text-white">Pro Plan</CardTitle>
+              <CardDescription>Unlock everything</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold text-blue-300 mb-4">1000 NGN</div>
+              <div className="text-4xl font-bold text-blue-300 mb-4">$0.50<span className="text-lg font-normal text-blue-200">/mo</span></div>
               <ul className="space-y-2 text-blue-100 mb-6">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-green-400" />
-                  Platform-specific tailoring
+                  Unlimited CVs & 3 Models
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-green-400" />
-                  AI humanization included
+                  Job Application Tracker
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-green-400" />
+                  AI Interview Prep Coach
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-green-400" />
+                  Live AI Company Research
                 </li>
               </ul>
-              <Button onClick={() => router.push(userEmail ? "/cv-generator/builder" : "/")} className="w-full bg-white text-blue-600 hover:bg-blue-50">Create CV</Button>
+              <Button onClick={() => router.push(userEmail ? "/cv-generator/builder" : "/")} className="w-full bg-white text-blue-600 hover:bg-blue-50">Subscribe via Paystack</Button>
             </CardContent>
           </Card>
         </div>

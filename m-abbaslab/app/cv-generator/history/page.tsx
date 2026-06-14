@@ -43,6 +43,11 @@ export default function CVHistoryPage() {
     remote_co: "🌍",
     indeed: "🔍",
     upwork: "💰",
+    mercor: "🤖",
+    mindrift: "🧠",
+    rex: "💻",
+    remo: "🌐",
+    micro1: "⚡",
   };
 
   return (
@@ -56,10 +61,15 @@ export default function CVHistoryPage() {
             <h1 className="text-3xl font-bold text-white">My CVs</h1>
             <p className="text-slate-400">{userEmail}</p>
           </div>
-          <Button onClick={() => router.push("/cv-generator/builder")} className="gap-2">
-            <Plus className="h-4 w-4" />
-            Create New CV
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={() => router.push("/cv-generator/dashboard")} variant="outline" className="border-slate-600 text-white hidden sm:flex">
+              Job Tracker
+            </Button>
+            <Button onClick={() => router.push("/cv-generator/builder")} className="gap-2">
+              <Plus className="h-4 w-4" />
+              New CV
+            </Button>
+          </div>
         </div>
 
         {isLoading ? (
@@ -101,13 +111,7 @@ export default function CVHistoryPage() {
                         </div>
                         <div className="text-xs text-slate-400">ATS Score</div>
                       </div>
-                      <div>
-                        {gen.is_paid ? (
-                          <span className="flex items-center gap-1 text-green-400 text-sm"><CheckCircle2 className="h-4 w-4" />Unlocked</span>
-                        ) : (
-                          <span className="text-yellow-400 text-sm">🔒 Locked</span>
-                        )}
-                      </div>
+                        <span className="flex items-center gap-1 text-green-400 text-sm"><CheckCircle2 className="h-4 w-4" />Ready</span>
                     </div>
                   </div>
                 </CardContent>
