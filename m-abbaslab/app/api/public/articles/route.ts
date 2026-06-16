@@ -1,14 +1,17 @@
 import { NextResponse } from 'next/server'
-import { getLiveConfig } from '@/lib/dbConfig'
+import { supabase, hasSupabaseKeys } from '@/lib/supabase'
 
-/** Public read-only list of published articles (no credentials). */
 export async function GET() {
-  try {
-    const config = await getLiveConfig()
-    const raw = (config as { articles?: { published?: boolean }[] }).articles ?? []
-    const articles = raw.filter((a) => a.published !== false)
-    return NextResponse.json(articles)
-  } catch {
+  if (!hasSupabaseKeys) {
     return NextResponse.json([], { status: 500 })
   }
+
+  const { data, error } = await supabase.from('articles').select('*').order('created_at', { ascending: false })
+  if (error) {
+    return NextResponse.json([], { status: 500 })
+  }
+
+  const articles = (data || []).filter((a: any) => a.published !== false)
+  return NextResponse.json(articles)
 }
+

@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Filter, FolderOpen } from 'lucide-react'
 import ProjectCard from '@/components/ProjectCard'
-import { personalConfig } from '@/config/personal'
 
 type Project = {
   id: string
@@ -21,9 +20,23 @@ type Project = {
 }
 
 export default function WorkPage() {
-  const projects = (personalConfig.projects || []) as Project[]
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('all')
-  const [filteredProjects, setFilteredProjects] = useState<Project[]>([...projects])
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>([])
+
+  useEffect(() => {
+    fetch('/api/public/projects')
+      .then(r => r.json())
+      .then(res => {
+        if (res.success) {
+          setProjects(res.projects || [])
+          setFilteredProjects(res.projects || [])
+        }
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [])
 
   useEffect(() => {
     if (selectedCategory === 'all') {
@@ -42,6 +55,16 @@ export default function WorkPage() {
     { id: 'analysis', name: 'Analysis', count: projects.filter((p) => p.category === 'analysis').length },
     { id: 'platform', name: 'Platform', count: projects.filter((p) => p.category === 'platform').length },
   ]
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-gray-400 text-lg">Loading projects...</div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">

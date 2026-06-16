@@ -1,16 +1,45 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useParams, notFound } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { ExternalLink, Github, Code, ArrowLeft, Layers, Calendar, CheckCircle2 } from 'lucide-react'
+import { ExternalLink, Github, Code, ArrowLeft, Layers, Calendar, CheckCircle2, Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import { personalConfig } from '@/config/personal'
 
 export default function ProjectDetailPage() {
     const params = useParams()
     const id = params.id as string
+    const [project, setProject] = useState<any | null>(null)
+    const [loading, setLoading] = useState(true)
 
-    const project = (personalConfig.projects as any[]).find((p: any) => p.id === id)
+    useEffect(() => {
+        const load = async () => {
+            try {
+                const res = await fetch('/api/public/projects', { cache: 'no-store' })
+                if (res.ok) {
+                    const data = await res.json()
+                    const found = (data.projects || []).find((p: any) => p.id === id)
+                    if (found) {
+                        setProject(found)
+                        setLoading(false)
+                        return
+                    }
+                }
+            } catch { /* fallback handled below */ }
+            notFound()
+        }
+        load()
+    }, [id])
+
+    if (loading) {
+        return (
+            <div className="max-w-7xl mx-auto px-4 py-20">
+                <div className="flex items-center justify-center min-h-[60vh]">
+                    <Loader2 className="w-8 h-8 text-[#00f0ff] animate-spin" />
+                </div>
+            </div>
+        )
+    }
 
     if (!project) {
         notFound()

@@ -1,6 +1,5 @@
-// app/about/page.tsx
 import type { Metadata } from 'next'
-import { personalConfig } from '@/config/personal'
+import { getLiveConfig } from '@/lib/dbConfig'
 import {
   BookOpen,
   Code,
@@ -17,8 +16,8 @@ export const metadata: Metadata = {
   description: 'Learn about Mohammed Abbas - Student, Engineer, Researcher, and Model. Exploring the intersection of economics, technology, and fashion.',
 }
 
-export default function AboutPage() {
-  const config: any = personalConfig
+export default async function AboutPage() {
+  const config: any = await getLiveConfig()
   const skills: Record<string, string[]> = config.skills || {}
   const education: Array<{ degree?: string; institution?: string; period?: string; status?: string; focus?: string }> = config.education || []
   const experience: Array<{ role?: string; period?: string; description?: string; achievements?: string[] }> = config.experience || []
@@ -34,7 +33,7 @@ export default function AboutPage() {
             About Me
           </h1>
           <p className="text-gray-600 dark:text-gray-300 text-lg max-w-3xl mx-auto">
-            {personalConfig.tagline}
+            {config.tagline}
           </p>
         </div>
 

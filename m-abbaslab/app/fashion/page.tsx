@@ -1,11 +1,25 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Camera, Filter, Calendar, MapPin, Users, Trophy, Star, TrendingUp, Layers, ArrowRight, Sparkles, Award, ExternalLink, Heart } from 'lucide-react'
-import { personalConfig } from '@/config/personal'
 import Link from 'next/link'
 import Image from 'next/image'
+
+type FashionItem = {
+  id: string
+  title: string
+  collection?: string
+  category?: string
+  status?: string
+  image_url?: string
+  gallery_images?: string[]
+  description?: string
+  location?: string
+  event_date?: string
+  tags?: string[]
+  created_at?: string
+}
 
 type FashionProject = {
   id: string
@@ -16,26 +30,68 @@ type FashionProject = {
   technologies?: string[]
 }
 
-type FashionConfig = {
-  categories?: Array<{ id: string; name: string; count: number }>
-  titles?: Array<{ id: string; image: string; title: string; category?: string; achievement?: string; year?: string; description?: string; location?: string }>
-  representation?: Array<{ name: string; type?: string; since?: string }>
-  note?: string
-}
-
 type RunwayMilestone = {
   id: string
   year?: string
   title?: string
   description?: string
   highlights?: string[]
+  image_url?: string
+  category?: string
 }
 
 export default function FashionPage() {
-  const fashion = (personalConfig.fashion || {}) as FashionConfig
-  const projects = (personalConfig.projects || []) as FashionProject[]
-  const runwayJourney = (personalConfig.runwayJourney || []) as RunwayMilestone[]
+  const [fashionItems, setFashionItems] = useState<FashionItem[]>([])
+  const [projects, setProjects] = useState<FashionProject[]>([])
+  const [runwayJourney, setRunwayJourney] = useState<RunwayMilestone[]>([])
+  const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('all')
+
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/public/fashion').then(r => r.json()),
+      fetch('/api/public/projects').then(r => r.json()),
+      fetch('/api/public/runway').then(r => r.json()),
+    ]).then(([fashionRes, projectsRes, runwayRes]) => {
+      if (fashionRes.success) setFashionItems(fashionRes.items || [])
+      if (projectsRes.success) setProjects(projectsRes.projects || [])
+      if (runwayRes.success) setRunwayJourney(runwayRes.items || [])
+    }).catch(console.error).finally(() => setLoading(false))
+  }, [])
+
+  // Build fashion config from fashion_items
+  const categories = (() => {
+    const counts: Record<string, number> = {}
+    for (const item of fashionItems) {
+      const cat = item.collection || item.category || 'Other'
+      counts[cat] = (counts[cat] || 0) + 1
+    }
+    return Object.entries(counts).map(([name, count]) => ({ id: name, name, count }))
+  })()
+
+  const titles = fashionItems.map((f: FashionItem) => {
+    const achievementTag = f.tags?.find((t: string) => ['Winner', 'Finalist', 'Featured', 'Published'].includes(t))
+    return {
+      id: f.id,
+      image: f.image_url || '',
+      title: f.title,
+      category: f.collection || f.category || '',
+      achievement: achievementTag || '',
+      year: f.event_date ? new Date(f.event_date).getFullYear().toString() : '',
+      description: f.description || '',
+      location: f.location || '',
+    }
+  })
+
+  const representation = (() => {
+    const agencies: Array<{ name: string; type?: string; since?: string }> = []
+    for (const item of fashionItems) {
+      if (item.collection === 'Representation' || item.tags?.includes('agency')) {
+        agencies.push({ name: item.title, type: item.category, since: item.event_date })
+      }
+    }
+    return agencies
+  })()
 
   const fashionProjects = projects.filter((p: FashionProject) => {
     const isFashionCategory = p.category === 'fashion-tech'
@@ -43,6 +99,16 @@ export default function FashionPage() {
     const hasFashionTech = p.technologies?.some((t: string) => ['Fashion Tech', '3D Modeling', 'WebGL'].includes(t))
     return isFashionCategory || hasFashionTag || hasFashionTech
   })
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-gray-400 text-lg">Loading fashion portfolio...</div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -89,7 +155,7 @@ export default function FashionPage() {
         transition={{ duration: 0.5, delay: 0.1 }}
         className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-24"
       >
-        {(fashion.categories || []).map((cat) => (
+        {(categories || []).map((cat) => (
           <div key={cat.id} className="glass-panel p-6 rounded-2xl border border-white/5 text-center hover:border-pink-500/30 transition-colors group relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <h3 className="text-3xl font-bold text-white mb-2 relative z-10">{cat.count}</h3>
@@ -109,7 +175,7 @@ export default function FashionPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {(fashion.titles || []).map((item, index) => (
+          {titles.map((item, index) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 30 }}
@@ -137,19 +203,21 @@ export default function FashionPage() {
                     {item.category}
                   </span>
                 </div>
-                <div className="absolute top-4 right-4 z-20">
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/90 text-black border border-amber-500/30 flex items-center shadow-[0_0_15px_rgba(245,158,11,0.5)]">
-                    <Trophy className="w-3 h-3 mr-1" />
-                    {item.achievement}
-                  </span>
-                </div>
+                {item.achievement && (
+                  <div className="absolute top-4 right-4 z-20">
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/90 text-black border border-amber-500/30 flex items-center shadow-[0_0_15px_rgba(245,158,11,0.5)]">
+                      <Trophy className="w-3 h-3 mr-1" />
+                      {item.achievement}
+                    </span>
+                  </div>
+                )}
 
                 <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
                   <div className="flex justify-between items-end mb-2">
                     <h3 className="text-xl font-bold text-white leading-tight group-hover:text-pink-400 transition-colors">
                       {item.title}
                     </h3>
-                    <span className="text-gray-300 font-mono text-sm bg-white/10 px-2 py-1 rounded">{item.year}</span>
+                    {item.year && <span className="text-gray-300 font-mono text-sm bg-white/10 px-2 py-1 rounded">{item.year}</span>}
                   </div>
                   <p className="text-gray-300 text-sm line-clamp-2 mb-3">
                     {item.description}
@@ -274,7 +342,7 @@ export default function FashionPage() {
             <div>
               <h3 className="text-xl font-semibold text-white mb-6">Agencies</h3>
               <div className="space-y-4">
-                {(fashion.representation || []).map((agency) => (
+                {(representation || []).map((agency) => (
                   <div key={agency.name} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
                     <div>
                       <h4 className="text-white font-bold">{agency.name}</h4>
@@ -298,7 +366,7 @@ export default function FashionPage() {
                 ))}
               </div>
               <p className="mt-8 text-gray-500 text-sm italic border-t border-white/5 pt-4">
-                "{fashion.note}"
+                "Representing elegance, diversity, and innovation in every frame."
               </p>
             </div>
           </div>
