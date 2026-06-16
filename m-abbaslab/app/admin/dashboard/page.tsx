@@ -206,8 +206,8 @@ export default function AdminDashboardPage() {
           whatsapp: socialWhatsapp,
           telegram: socialTelegram
         },
-        roles: rolesStr.split(',').map(r => r.trim()).filter(Boolean),
-        researchInterests: researchInterestsStr.split(',').map(r => r.trim()).filter(Boolean),
+        roles: rolesStr.split(',').map((r: string) => r.trim()).filter(Boolean),
+        researchInterests: researchInterestsStr.split(',').map((r: string) => r.trim()).filter(Boolean),
         projects,
         articles,
         fashion: {

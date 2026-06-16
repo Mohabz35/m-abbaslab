@@ -22,6 +22,7 @@ export default function AboutPage() {
   const skills: Record<string, string[]> = config.skills || {}
   const education: Array<{ degree?: string; institution?: string; period?: string; status?: string; focus?: string }> = config.education || []
   const experience: Array<{ role?: string; period?: string; description?: string; achievements?: string[] }> = config.experience || []
+  const roles: string[] = config.roles || []
   const researchInterests: string[] = config.researchInterests || []
 
   return (
@@ -39,7 +40,7 @@ export default function AboutPage() {
 
         {/* Identity Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {personalConfig.roles.map((role, index) => {
+          {roles.map((role, index) => {
             const icons = [GraduationCap, Code, BookOpen, Users]
             const Icon = icons[index] || Users
             return (

@@ -6,26 +6,41 @@ import { Filter, FolderOpen } from 'lucide-react'
 import ProjectCard from '@/components/ProjectCard'
 import { personalConfig } from '@/config/personal'
 
+type Project = {
+  id: string
+  title: string
+  description: string
+  longDescription?: string
+  technologies: string[]
+  github_url: string
+  live_url: string
+  category: string
+  featured?: boolean
+  status?: string
+  year?: string
+}
+
 export default function WorkPage() {
+  const projects = (personalConfig.projects || []) as Project[]
   const [selectedCategory, setSelectedCategory] = useState('all')
-  const [filteredProjects, setFilteredProjects] = useState<any[]>([...personalConfig.projects])
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>([...projects])
 
   useEffect(() => {
     if (selectedCategory === 'all') {
-      setFilteredProjects([...personalConfig.projects])
+      setFilteredProjects([...projects])
     } else {
-      setFilteredProjects([...personalConfig.projects].filter(project => project.category === selectedCategory))
+      setFilteredProjects([...projects].filter((project) => project.category === selectedCategory))
     }
-  }, [selectedCategory])
+  }, [selectedCategory, projects])
 
   // Dynamic category generation based on available projects
   const categories = [
-    { id: 'all', name: 'All Projects', count: personalConfig.projects.length },
-    { id: 'research', name: 'Research', count: personalConfig.projects.filter(p => p.category === 'research').length },
-    { id: 'academic', name: 'Academic', count: personalConfig.projects.filter(p => p.category === 'academic').length },
-    { id: 'technology', name: 'Technology', count: personalConfig.projects.filter(p => p.category === 'technology').length },
-    { id: 'analysis', name: 'Analysis', count: personalConfig.projects.filter(p => p.category === 'analysis').length },
-    { id: 'platform', name: 'Platform', count: personalConfig.projects.filter(p => p.category === 'platform').length },
+    { id: 'all', name: 'All Projects', count: projects.length },
+    { id: 'research', name: 'Research', count: projects.filter((p) => p.category === 'research').length },
+    { id: 'academic', name: 'Academic', count: projects.filter((p) => p.category === 'academic').length },
+    { id: 'technology', name: 'Technology', count: projects.filter((p) => p.category === 'technology').length },
+    { id: 'analysis', name: 'Analysis', count: projects.filter((p) => p.category === 'analysis').length },
+    { id: 'platform', name: 'Platform', count: projects.filter((p) => p.category === 'platform').length },
   ]
 
   return (

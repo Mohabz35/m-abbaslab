@@ -7,14 +7,40 @@ import { personalConfig } from '@/config/personal'
 import Link from 'next/link'
 import Image from 'next/image'
 
+type FashionProject = {
+  id: string
+  title: string
+  description?: string
+  category?: string
+  tags?: string[]
+  technologies?: string[]
+}
+
+type FashionConfig = {
+  categories?: Array<{ id: string; name: string; count: number }>
+  titles?: Array<{ id: string; image: string; title: string; category?: string; achievement?: string; year?: string; description?: string; location?: string }>
+  representation?: Array<{ name: string; type?: string; since?: string }>
+  note?: string
+}
+
+type RunwayMilestone = {
+  id: string
+  year?: string
+  title?: string
+  description?: string
+  highlights?: string[]
+}
+
 export default function FashionPage() {
-  const { fashion, projects } = personalConfig
+  const fashion = (personalConfig.fashion || {}) as FashionConfig
+  const projects = (personalConfig.projects || []) as FashionProject[]
+  const runwayJourney = (personalConfig.runwayJourney || []) as RunwayMilestone[]
   const [selectedCategory, setSelectedCategory] = useState('all')
 
-  const fashionProjects = projects.filter(p => {
+  const fashionProjects = projects.filter((p: FashionProject) => {
     const isFashionCategory = p.category === 'fashion-tech'
-    const hasFashionTag = (p as any).tags?.some((t: string) => ['Fashion Tech', 'Modeling'].includes(t))
-    const hasFashionTech = p.technologies?.some(t => ['Fashion Tech', '3D Modeling', 'WebGL'].includes(t))
+    const hasFashionTag = p.tags?.some((t: string) => ['Fashion Tech', 'Modeling'].includes(t))
+    const hasFashionTech = p.technologies?.some((t: string) => ['Fashion Tech', '3D Modeling', 'WebGL'].includes(t))
     return isFashionCategory || hasFashionTag || hasFashionTech
   })
 
@@ -63,7 +89,7 @@ export default function FashionPage() {
         transition={{ duration: 0.5, delay: 0.1 }}
         className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-24"
       >
-        {fashion.categories.map((cat, index) => (
+        {(fashion.categories || []).map((cat) => (
           <div key={cat.id} className="glass-panel p-6 rounded-2xl border border-white/5 text-center hover:border-pink-500/30 transition-colors group relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <h3 className="text-3xl font-bold text-white mb-2 relative z-10">{cat.count}</h3>
@@ -83,7 +109,7 @@ export default function FashionPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {fashion.titles.map((item, index) => (
+          {(fashion.titles || []).map((item, index) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 30 }}
@@ -149,7 +175,7 @@ export default function FashionPage() {
         </div>
 
         <div className="relative border-l-2 border-white/10 ml-4 md:ml-10 space-y-12">
-          {personalConfig.runwayJourney?.map((milestone, index) => (
+          {runwayJourney.map((milestone, index) => (
             <motion.div
               key={milestone.id}
               initial={{ opacity: 0, x: -20 }}
@@ -171,7 +197,7 @@ export default function FashionPage() {
                 <p className="text-gray-400 mb-6 max-w-2xl">{milestone.description}</p>
 
                 <div className="flex flex-wrap gap-3">
-                  {milestone.highlights.map(highlight => (
+                  {(milestone.highlights || []).map((highlight) => (
                     <span key={highlight} className="px-3 py-1 bg-white/5 rounded-full text-sm text-gray-300 border border-white/5 flex items-center">
                       <Star className="w-3 h-3 mr-2 text-yellow-500" />
                       {highlight}
@@ -217,7 +243,7 @@ export default function FashionPage() {
                 </div>
                 <p className="text-gray-400 mb-6 line-clamp-2">{project.description}</p>
                 <div className="flex flex-wrap gap-2">
-                  {project.technologies.slice(0, 3).map(tech => (
+                  {(project.technologies || []).slice(0, 3).map((tech) => (
                     <span key={tech} className="px-3 py-1 rounded bg-blue-500/10 text-blue-300 text-xs border border-blue-500/20">
                       {tech}
                     </span>
@@ -248,7 +274,7 @@ export default function FashionPage() {
             <div>
               <h3 className="text-xl font-semibold text-white mb-6">Agencies</h3>
               <div className="space-y-4">
-                {fashion.representation.map((agency) => (
+                {(fashion.representation || []).map((agency) => (
                   <div key={agency.name} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
                     <div>
                       <h4 className="text-white font-bold">{agency.name}</h4>

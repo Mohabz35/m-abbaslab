@@ -6,25 +6,35 @@ import { ArrowRight, FileText, Calendar, Clock } from 'lucide-react'
 import Link from 'next/link'
 import { personalConfig } from '@/config/personal'
 
+type Article = {
+    id: string
+    title: string
+    excerpt?: string
+    category?: string
+    published?: boolean
+    published_at?: string
+    read_time?: number
+}
+
 export default function LatestArticles() {
-    const [articles, setArticles] = useState<any[]>([])
+    const [articles, setArticles] = useState<Article[]>([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const load = async () => {
             try {
                 const res = await fetch('/api/public/articles', { cache: 'no-store' })
-                const list = res.ok
+                const list: Article[] = res.ok
                     ? await res.json()
-                    : personalConfig.articles.filter((a: { published?: boolean }) => a.published !== false)
+                    : (personalConfig.articles as Article[]).filter((a) => a.published !== false)
                 const sorted = [...list].sort(
                     (a, b) =>
                         new Date(b.published_at || 0).getTime() - new Date(a.published_at || 0).getTime(),
                 )
                 setArticles(sorted.slice(0, 3))
             } catch {
-                const fallback = personalConfig.articles
-                    .filter((a: { published?: boolean }) => a.published !== false)
+                const fallback = (personalConfig.articles as Article[])
+                    .filter((a) => a.published !== false)
                     .sort(
                         (a, b) =>
                             new Date(b.published_at || 0).getTime() -

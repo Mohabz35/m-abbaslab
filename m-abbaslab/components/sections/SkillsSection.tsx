@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { personalConfig } from '@/config/personal'
 
 export default function SkillsSection() {
-    const skills = personalConfig.skills
+    const skills = personalConfig.skills as Record<string, string[]>
 
     return (
         <section className="py-20 bg-black/30">

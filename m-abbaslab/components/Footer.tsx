@@ -62,6 +62,7 @@ function MagneticSocialIcon({
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
+  const socialLinks = (personalConfig.social || {}) as Record<string, string>
 
   return (
     <footer className="relative mt-auto border-t border-white/10 bg-black/40 backdrop-blur-md">
@@ -114,9 +115,9 @@ export default function Footer() {
               Connect
             </h3>
             <div className="grid grid-cols-3 gap-3">
-              {Object.entries(personalConfig.social).map(([platform, url]) => {
+              {Object.entries(socialLinks).map(([platform, url]) => {
                 const Icon = socialIconMap[platform]
-                if (!Icon) return null
+                if (!Icon || !url) return null
 
                 return (
                   <MagneticSocialIcon
