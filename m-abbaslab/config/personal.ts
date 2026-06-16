@@ -15,19 +15,19 @@ export const personalConfig: any = {
     whatsapp: ""
   },
   googleAnalyticsId: "",
-  roles: [],
-  researchInterests: [],
-  articles: [],
-  projects: [],
-  skills: [],
-  adminCredentials: {},
+  roles: [] as string[],
+  researchInterests: [] as string[],
+  articles: [] as any[],
+  projects: [] as any[],
+  skills: [] as any[],
+  adminCredentials: {} as { username?: string; password?: string },
   fashion: {
-    categories: [],
-    titles: [],
-    representation: [],
+    categories: [] as string[],
+    titles: [] as any[],
+    representation: [] as any[],
     note: ""
   },
-  runwayJourney: [],
+  runwayJourney: [] as any[],
   worldQuant: {
     statistics: {
       totalAlphas: 0
