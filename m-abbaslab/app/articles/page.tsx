@@ -164,7 +164,7 @@ export default function ArticlesPage() {
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-4">
                       <span className="px-4 py-1.5 rounded-full text-sm font-semibold bg-[#00f0ff]/10 text-[#00f0ff] border border-[#00f0ff]/20">
-                        {article.category.charAt(0).toUpperCase() + article.category.slice(1)}
+                        {article.category ? article.category.charAt(0).toUpperCase() + article.category.slice(1) : 'General'}
                       </span>
                       <span className="px-3 py-1 rounded-full text-sm font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/20">
                         Featured
@@ -242,7 +242,7 @@ export default function ArticlesPage() {
                       article.category === 'technical' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
                         'bg-green-500/10 text-green-400 border-green-500/20'
                       }`}>
-                      {article.category.charAt(0).toUpperCase() + article.category.slice(1)}
+                      {article.category ? article.category.charAt(0).toUpperCase() + article.category.slice(1) : 'General'}
                     </span>
                   </div>
 

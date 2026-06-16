@@ -98,7 +98,7 @@ export default function ProjectCard({ project, featured = false }: ProjectCardPr
         </p>
 
         <div className="flex flex-wrap gap-2 mb-8">
-          {project.technologies.slice(0, 4).map((tech) => (
+          {(project.technologies || []).slice(0, 4).map((tech) => (
             <span
               key={tech}
               className="px-3 py-1.5 text-xs bg-white/5 text-gray-300 border border-white/5 rounded-full group-hover:border-[#00f0ff]/20 transition-colors"
