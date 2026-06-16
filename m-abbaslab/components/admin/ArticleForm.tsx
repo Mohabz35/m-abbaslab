@@ -15,6 +15,7 @@ export type ArticleFormValues = {
   read_time: number
   published: boolean
   featured: boolean
+  cover_image: string
 }
 
 type ArticleFormProps = {
@@ -35,6 +36,7 @@ const defaultValues: ArticleFormValues = {
   read_time: 5,
   published: true,
   featured: false,
+  cover_image: '',
 }
 
 export function articleToFormValues(article: Partial<ConfigArticle>): ArticleFormValues {
