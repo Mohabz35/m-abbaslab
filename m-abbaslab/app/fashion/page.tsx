@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Camera, Filter, Calendar, MapPin, Users, Trophy, Star, TrendingUp, Layers, ArrowRight, Sparkles, Award, ExternalLink, Heart, Search, Eye, ChevronDown } from 'lucide-react'
+import { Camera, Calendar, MapPin, Users, Trophy, Star, TrendingUp, Layers, ArrowRight, Sparkles, ExternalLink, Heart, Search, Eye } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Lightbox from '@/components/ui/Lightbox'
