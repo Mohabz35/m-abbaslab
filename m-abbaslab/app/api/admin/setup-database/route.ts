@@ -47,8 +47,27 @@ export async function POST() {
     const client = await pool.connect()
 
     try {
-      await client.query(sql)
-      return NextResponse.json({ success: true, message: 'All SQL executed successfully' })
+      // Split SQL by semicolon and execute each statement
+      const statements = sql.split(';').filter(s => s.trim().length > 0)
+      const results = []
+      for (const stmt of statements) {
+        try {
+          const result = await client.query(stmt + ';')
+          results.push({ success: true, rows: result.rowCount })
+        } catch (err: any) {
+          // Ignore duplicate object errors for idempotency
+          if (err.code === '42710' || err.code === '42P07' || err.message?.includes('already exists') || err.message?.includes('duplicate')) {
+            results.push({ success: true, skipped: err.message })
+          } else {
+            results.push({ success: false, error: err.message, statement: stmt.substring(0, 100) })
+          }
+        }
+      }
+      const failed = results.filter(r => !r.success)
+      if (failed.length > 0) {
+        return NextResponse.json({ success: false, errors: failed, results }, { status: 500 })
+      }
+      return NextResponse.json({ success: true, message: `All ${statements.length} SQL statements executed`, results })
     } catch (err: any) {
       return NextResponse.json({ success: false, error: err.message }, { status: 500 })
     } finally {

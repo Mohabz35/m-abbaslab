@@ -26,18 +26,24 @@ export async function GET() {
   }
 }
 
+async function isAuthorized(request: NextRequest): Promise<boolean> {
+  const header = request.headers.get('x-admin-secret')
+  if (process.env.ADMIN_SECRET && header === process.env.ADMIN_SECRET) return true
+  const session = request.cookies.get('admin_session')
+  if (!session?.value) return false
+  try {
+    await jwtVerify(session.value, JWT_SECRET)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     // 1. Verify Authentication
-    const session = request.cookies.get('admin_session')
-    if (!session) {
+    if (!(await isAuthorized(request))) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-    
-    try {
-      await jwtVerify(session.value, JWT_SECRET)
-    } catch {
-      return NextResponse.json({ error: 'Invalid Token' }, { status: 401 })
     }
 
     const body = await request.json()

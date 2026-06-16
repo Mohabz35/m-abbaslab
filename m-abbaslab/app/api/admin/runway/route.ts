@@ -1,16 +1,8 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const collection = searchParams.get('collection')
-  const status = searchParams.get('status')
-
-  let query = supabase.from('fashion_items').select('*').order('created_at', { ascending: false })
-  if (collection && collection !== 'all') query = query.eq('collection', collection)
-  if (status && status !== 'all') query = query.eq('status', status)
-
-  const { data, error } = await query
+export async function GET() {
+  const { data, error } = await supabase.from('runway_journey').select('*').order('year', { ascending: false })
   if (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 })
   }
@@ -20,20 +12,15 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json()
-    const { data, error } = await supabase.from('fashion_items').insert([{
+    const { data, error } = await supabase.from('runway_journey').insert([{
+      year: body.year,
       title: body.title,
-      collection: body.collection,
-      category: body.category,
-      status: body.status || 'design',
-      size: body.size,
-      stock: body.stock || 0,
-      price: body.price || 0,
+      description: body.description,
+      highlights: body.highlights || [],
+      featured: body.featured || false,
       image_url: body.image_url || '',
-      gallery_images: body.gallery_images || [],
-      description: body.description || '',
-      location: body.location || '',
-      event_date: body.event_date || null,
-      tags: body.tags || [],
+      category: body.category || 'Collection',
+      display_order: body.display_order || 0,
     }]).select()
     if (error) throw error
     return NextResponse.json({ success: true, item: data[0] })
@@ -46,7 +33,7 @@ export async function PUT(req: Request) {
   try {
     const body = await req.json()
     const { id, ...updates } = body
-    const { data, error } = await supabase.from('fashion_items').update(updates).eq('id', id).select()
+    const { data, error } = await supabase.from('runway_journey').update(updates).eq('id', id).select()
     if (error) throw error
     return NextResponse.json({ success: true, item: data[0] })
   } catch (error: any) {
@@ -59,8 +46,7 @@ export async function DELETE(req: Request) {
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')
     if (!id) return NextResponse.json({ success: false, error: 'ID required' }, { status: 400 })
-    
-    const { error } = await supabase.from('fashion_items').delete().eq('id', id)
+    const { error } = await supabase.from('runway_journey').delete().eq('id', id)
     if (error) throw error
     return NextResponse.json({ success: true })
   } catch (error: any) {

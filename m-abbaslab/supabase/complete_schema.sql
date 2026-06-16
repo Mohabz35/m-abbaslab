@@ -44,6 +44,7 @@ EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 CREATE TABLE IF NOT EXISTS articles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
     excerpt TEXT,
     content TEXT,
     category TEXT,
@@ -68,6 +69,7 @@ ALTER TABLE articles ADD COLUMN IF NOT EXISTS read_time INTEGER DEFAULT 5;
 ALTER TABLE articles ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'draft';
 ALTER TABLE articles ADD COLUMN IF NOT EXISTS published_at TIMESTAMPTZ;
 ALTER TABLE articles ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT now();
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS slug TEXT UNIQUE;
 
 DO $$ BEGIN
   ALTER TABLE articles DROP CONSTRAINT IF EXISTS articles_status_check;
@@ -82,11 +84,16 @@ CREATE TABLE IF NOT EXISTS fashion_items (
     title TEXT NOT NULL,
     collection TEXT,
     category TEXT,
-    status TEXT DEFAULT 'design' CHECK (status IN ('design','production','shipped','archived')),
+    status TEXT DEFAULT 'design'design' CHECK (status IN ('design','production','shipped','archived')),
     size TEXT,
     stock INTEGER DEFAULT 0,
     image_url TEXT,
+    gallery_images TEXT[] DEFAULT '{}',
     price DECIMAL(10,2),
+    event_date DATE,
+    location TEXT,
+    description TEXT,
+    tags TEXT[] DEFAULT '{}',
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
@@ -97,7 +104,12 @@ ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS category TEXT;
 ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS size TEXT;
 ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS stock INTEGER DEFAULT 0;
 ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS image_url TEXT;
+ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS gallery_images TEXT[] DEFAULT '{}';
 ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS price DECIMAL(10,2);
+ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS event_date DATE;
+ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS location TEXT;
+ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS description TEXT;
+ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS tags TEXT[] DEFAULT '{}';
 ALTER TABLE fashion_items ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT now();
 
 DO $$ BEGIN
@@ -106,6 +118,31 @@ EXCEPTION WHEN undefined_object THEN NULL; END $$;
 DO $$ BEGIN
   ALTER TABLE fashion_items ADD CONSTRAINT fashion_items_status_check CHECK (status IN ('design','production','shipped','archived'));
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+-- Runway Journey (modeling career timeline)
+CREATE TABLE IF NOT EXISTS runway_journey (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    year TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    highlights TEXT[] DEFAULT '{}',
+    featured BOOLEAN DEFAULT false,
+    image_url TEXT,
+    category TEXT,
+    display_order INTEGER DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE runway_journey ADD COLUMN IF NOT EXISTS year TEXT;
+ALTER TABLE runway_journey ADD COLUMN IF NOT EXISTS title TEXT;
+ALTER TABLE runway_journey ADD COLUMN IF NOT EXISTS description TEXT;
+ALTER TABLE runway_journey ADD COLUMN IF NOT EXISTS highlights TEXT[] DEFAULT '{}';
+ALTER TABLE runway_journey ADD COLUMN IF NOT EXISTS featured BOOLEAN DEFAULT false;
+ALTER TABLE runway_journey ADD COLUMN IF NOT EXISTS image_url TEXT;
+ALTER TABLE runway_journey ADD COLUMN IF NOT EXISTS category TEXT;
+ALTER TABLE runway_journey ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
+ALTER TABLE runway_journey ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT now();
 
 -- Finance entries
 CREATE TABLE IF NOT EXISTS finance_entries (

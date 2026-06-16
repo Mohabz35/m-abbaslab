@@ -1,5 +1,7 @@
 {
   "days": {},
-  "goals": null,
+  "goals": [
+    "test goal"
+  ],
   "reviews": {}
 }

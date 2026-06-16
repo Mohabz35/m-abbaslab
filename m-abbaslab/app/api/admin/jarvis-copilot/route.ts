@@ -29,18 +29,19 @@ RULES FOR ACTIONS:
 - If no action is required, set "actions": [].
 - DO NOT return markdown formatting around the JSON object. Return ONLY raw JSON, starting with { and ending with }.`;
 
+async function isAuthorized(request: NextRequest): Promise<boolean> {
+  const header = request.headers.get('x-admin-secret')
+  if (process.env.ADMIN_SECRET && header === process.env.ADMIN_SECRET) return true
+  const session = request.cookies.get('admin_session')
+  if (!session?.value) return false
+  try { await jwtVerify(session.value, JWT_SECRET); return true } catch { return false }
+}
+
 export async function POST(request: NextRequest) {
   try {
     // 1. Verify Admin Authentication
-    const session = request.cookies.get('admin_session')
-    if (!session) {
+    if (!(await isAuthorized(request))) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-    
-    try {
-      await jwtVerify(session.value, JWT_SECRET)
-    } catch {
-      return NextResponse.json({ error: 'Invalid Token' }, { status: 401 })
     }
 
     // 2. Parse payload
