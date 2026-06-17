@@ -15,7 +15,7 @@ export async function GET(
         .eq('id', id)
         .single()
 
-      if (!error && data && data.published !== false) {
+      if (!error && data && (data.status === 'published' || data.published === true)) {
         return NextResponse.json(data)
       }
     }

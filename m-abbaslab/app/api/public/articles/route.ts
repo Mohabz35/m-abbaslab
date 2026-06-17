@@ -11,7 +11,7 @@ export async function GET() {
     return NextResponse.json([], { status: 500 })
   }
 
-  const articles = (data || []).filter((a: any) => a.published !== false)
+  const articles = (data || []).filter((a: any) => a.status === 'published' || a.published === true)
   return NextResponse.json(articles)
 }
 

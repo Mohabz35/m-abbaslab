@@ -106,11 +106,11 @@ export default function ArticlesPage() {
         if (res.ok) {
           setAllArticles(await res.json())
         } else {
-          const published = (personalConfig.articles as any[]).filter((a) => a.published !== false)
+        const published = (personalConfig.articles as any[]).filter((a) => a.status === 'published' || a.published !== false)
           setAllArticles(published.length > 0 ? published : fallbackArticles())
         }
       } catch {
-        const published = (personalConfig.articles as any[]).filter((a) => a.published !== false)
+        const published = (personalConfig.articles as any[]).filter((a) => a.status === 'published' || a.published !== false)
         setAllArticles(published.length > 0 ? published : fallbackArticles())
       } finally {
         setLoading(false)
