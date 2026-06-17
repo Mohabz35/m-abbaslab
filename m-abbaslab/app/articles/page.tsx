@@ -4,7 +4,73 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Calendar, Clock, Tag, User, BookOpen, Search, TrendingUp, Loader2 } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { personalConfig } from '@/config/personal'
+
+function fallbackArticles() {
+  return [
+    {
+      id: 'econ-1',
+      title: 'Supply and Demand: The Foundation of Economics',
+      excerpt: 'Understand how prices are set in markets through the timeless forces of supply and demand.',
+      content: '',
+      category: 'economics',
+      read_time: 6,
+      published_at: '2026-06-01',
+      tags: ['economics', 'markets', 'pricing'],
+      featured: true,
+      cover_image: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/supply-demand-hero.jpg',
+    },
+    {
+      id: 'stats-1',
+      title: 'Correlation vs. Causation: The Most Important Distinction',
+      excerpt: 'Stop mistaking correlation for causation. Learn the difference with real-world examples.',
+      content: '',
+      category: 'statistics',
+      read_time: 5,
+      published_at: '2026-06-05',
+      tags: ['statistics', 'data literacy', 'research methods'],
+      featured: true,
+      cover_image: 'https://res.cloudinary.com/YOUR_CLOUD_NAME/image/upload/correlation-causation.jpg',
+    },
+    {
+      id: 'econ-2',
+      title: 'Why Prices Keep Going Up: Understanding Inflation',
+      excerpt: 'A plain-language guide to what inflation is, why it happens, and how it affects your daily life.',
+      content: '',
+      category: 'economics',
+      read_time: 7,
+      published_at: '2026-06-10',
+      tags: ['economics', 'inflation', 'personal finance'],
+      featured: false,
+      cover_image: '',
+    },
+    {
+      id: 'stats-2',
+      title: 'P-Values: What They Really Mean (And Don\'t Mean)',
+      excerpt: 'Demystify p-values and statistical significance without the jargon.',
+      content: '',
+      category: 'statistics',
+      read_time: 8,
+      published_at: '2026-06-12',
+      tags: ['statistics', 'hypothesis testing', 'data science'],
+      featured: true,
+      cover_image: '',
+    },
+    {
+      id: 'concept-1',
+      title: 'Quantitative Easing: What Central Banks Really Do',
+      excerpt: 'Breaking down one of the most misunderstood tools in modern monetary policy.',
+      content: '',
+      category: 'complex-concepts',
+      read_time: 10,
+      published_at: '2026-06-14',
+      tags: ['monetary policy', 'central banks', 'macroeconomics'],
+      featured: false,
+      cover_image: '',
+    },
+  ]
+}
 
 export default function ArticlesPage() {
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -19,14 +85,12 @@ export default function ArticlesPage() {
         if (res.ok) {
           setAllArticles(await res.json())
         } else {
-          setAllArticles(
-            personalConfig.articles.filter((a: { published?: boolean }) => a.published !== false),
-          )
+          const published = (personalConfig.articles as any[]).filter((a) => a.published !== false)
+          setAllArticles(published.length > 0 ? published : fallbackArticles())
         }
       } catch {
-        setAllArticles(
-          personalConfig.articles.filter((a: { published?: boolean }) => a.published !== false),
-        )
+        const published = (personalConfig.articles as any[]).filter((a) => a.published !== false)
+        setAllArticles(published.length > 0 ? published : fallbackArticles())
       } finally {
         setLoading(false)
       }
@@ -45,6 +109,10 @@ export default function ArticlesPage() {
     { id: 'technical', name: 'Technical Guides', count: allArticles.filter((a: any) => a.category === 'technical').length },
     { id: 'fashion-tech', name: 'Fashion Tech', count: allArticles.filter((a: any) => a.category === 'fashion-tech').length },
     { id: 'economics', name: 'Economics', count: allArticles.filter((a: any) => a.category === 'economics').length },
+    { id: 'statistics', name: 'Statistics', count: allArticles.filter((a: any) => a.category === 'statistics').length },
+    { id: 'complex-concepts', name: 'Complex Concepts', count: allArticles.filter((a: any) => a.category === 'complex-concepts').length },
+    { id: 'problem-solving', name: 'Problem Solving', count: allArticles.filter((a: any) => a.category === 'problem-solving').length },
+    { id: 'books-writing', name: 'Books & Writing', count: allArticles.filter((a: any) => a.category === 'books-writing').length },
   ]
 
   const filteredArticles = allArticles.filter((article: any) => {
@@ -232,19 +300,37 @@ export default function ArticlesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -5 }}
-                className="group glass-panel rounded-2xl border border-white/5 hover:border-[#7000ff]/50 p-6 transition-all duration-500 relative overflow-hidden"
+                className="group glass-panel rounded-2xl border border-white/5 hover:border-[#7000ff]/50 transition-all duration-500 relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-[#7000ff]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                 <div className="relative z-10">
-                  <div className="mb-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${article.category === 'research' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                      article.category === 'technical' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
-                        'bg-green-500/10 text-green-400 border-green-500/20'
-                      }`}>
-                      {article.category ? article.category.charAt(0).toUpperCase() + article.category.slice(1) : 'General'}
-                    </span>
-                  </div>
+                  {article.cover_image && (
+                    <div className="relative h-48 w-full overflow-hidden rounded-t-2xl">
+                      <Image
+                        src={article.cover_image}
+                        alt={article.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+                  )}
+
+                  <div className="p-6">
+                    <div className="mb-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${article.category === 'research' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
+                        article.category === 'technical' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
+                          article.category === 'fashion-tech' ? 'bg-pink-500/10 text-pink-400 border-pink-500/20' :
+                            article.category === 'economics' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                              article.category === 'statistics' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
+                                article.category === 'complex-concepts' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
+                                  article.category === 'problem-solving' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
+                                    article.category === 'books-writing' ? 'bg-teal-500/10 text-teal-400 border-teal-500/20' :
+                                      'bg-green-500/10 text-green-400 border-green-500/20'
+                        }`}>
+                        {article.category ? article.category.charAt(0).toUpperCase() + article.category.slice(1).replace('-', ' ') : 'General'}
+                      </span>
+                    </div>
 
                   <h3 className="text-xl font-bold mb-3 text-white group-hover:text-[#7000ff] transition-colors line-clamp-2">
                     {article.title}
