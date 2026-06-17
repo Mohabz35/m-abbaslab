@@ -358,6 +358,7 @@ export default function ArticlesPage() {
                     </Link>
                   </div>
                 </div>
+                </div>
               </motion.article>
             ))}
           </div>
