@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getLiveConfig } from '@/lib/dbConfig'
+import { supabase, hasSupabaseKeys } from '@/lib/supabase'
 
 export async function GET(
   _request: Request,
@@ -7,13 +7,20 @@ export async function GET(
 ) {
   try {
     const { id } = await context.params
-    const config = await getLiveConfig()
-    const articles = (config as { articles?: { id: string; published?: boolean }[] }).articles ?? []
-    const article = articles.find((a) => a.id === id)
-    if (!article || article.published === false) {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+    if (hasSupabaseKeys) {
+      const { data, error } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+      if (!error && data && data.published !== false) {
+        return NextResponse.json(data)
+      }
     }
-    return NextResponse.json(article)
+
+    return NextResponse.json({ error: 'Not found' }, { status: 404 })
   } catch {
     return NextResponse.json({ error: 'Failed to load article' }, { status: 500 })
   }
