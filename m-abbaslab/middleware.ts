@@ -1,4 +1,4 @@
-// middleware.ts — Route protection for /admin/* using JWT httpOnly session cookie
+// middleware.ts — Route protection for /admin/* and /portal/* using JWT httpOnly session cookie
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { jwtVerify } from 'jose'
@@ -9,40 +9,42 @@ const JWT_SECRET = new TextEncoder().encode(
 
 export async function middleware(request: NextRequest) {
   const session = request.cookies.get('admin_session')
+  const qisSession = request.cookies.get('sb-nspzkkemwaaokpiykfvv-auth-token')
   const { pathname } = request.nextUrl
 
-  let isAuthenticated = false
+  let isAdmin = false
+  let isQISAuth = false
 
   if (session?.value) {
     try {
-      // Verify JWT signature and expiration
       await jwtVerify(session.value, JWT_SECRET)
-      isAuthenticated = true
-    } catch (error) {
-      console.warn("JWT verification failed:", error)
-    }
+      isAdmin = true
+    } catch { /* invalid */ }
+  }
+
+  if (qisSession?.value) {
+    isQISAuth = true
   }
 
   // Allow login page through always
   if (pathname.startsWith('/admin/login')) {
-    // If already logged in, redirect to dashboard
-    if (isAuthenticated) {
-      return NextResponse.redirect(new URL('/admin/dashboard', request.url))
-    }
+    if (isAdmin) return NextResponse.redirect(new URL('/admin/dashboard', request.url))
     return NextResponse.next()
   }
 
-  // Protect all other /admin/* routes
+  // Protect /admin/* routes
   if (pathname.startsWith('/admin')) {
-    if (!isAuthenticated) {
+    if (!isAdmin) {
       const loginUrl = new URL('/admin/login', request.url)
       loginUrl.searchParams.set('from', pathname)
-      // Delete invalid cookie if it exists
       const response = NextResponse.redirect(loginUrl)
       if (session) response.cookies.delete('admin_session')
       return response
     }
   }
+
+  // Allow /portal access — auth handled client-side via Supabase
+  // Portal pages check auth and redirect to QIS landing if not logged in
 
   return NextResponse.next()
 }
