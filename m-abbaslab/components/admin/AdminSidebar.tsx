@@ -13,7 +13,13 @@ import {
   Zap,
   LogOut,
   Menu,
-  X
+  X,
+  Mail,
+  Users,
+  BarChart3,
+  Shield,
+  Database,
+  FileBarChart
 } from 'lucide-react'
 import { personalConfig } from '@/config/personal'
 
@@ -23,6 +29,13 @@ const navItems = [
   { name: 'Projects', href: '/admin/projects', icon: <Briefcase className="w-5 h-5" /> },
   { name: 'Articles', href: '/admin/articles', icon: <FileText className="w-5 h-5" /> },
   { name: 'Fashion', href: '/admin/fashion', icon: <User className="w-5 h-5" /> },
+  { name: 'Messages', href: '/admin/messages', icon: <Mail className="w-5 h-5" /> },
+  { name: 'Subscribers', href: '/admin/subscribers', icon: <Users className="w-5 h-5" /> },
+  { name: 'Analytics', href: '/admin/analytics', icon: <BarChart3 className="w-5 h-5" /> },
+  { name: 'Reports', href: '/admin/reports', icon: <FileBarChart className="w-5 h-5" /> },
+  { name: 'Team', href: '/admin/team', icon: <Shield className="w-5 h-5" /> },
+  { name: 'Backups', href: '/admin/backups', icon: <Database className="w-5 h-5" /> },
+  { name: 'Audit Logs', href: '/admin/audit-logs', icon: <FileBarChart className="w-5 h-5" /> },
   { name: 'Settings', href: '/admin/settings', icon: <Settings className="w-5 h-5" /> },
 ]
 
