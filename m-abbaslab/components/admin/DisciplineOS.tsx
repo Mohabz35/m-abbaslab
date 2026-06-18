@@ -8,7 +8,7 @@ import {
   Clock, Sun, Moon, Coffee, Dumbbell, Laptop, Users,
   AlertCircle, Plus, Trash2, BarChart2, Activity,
   FileDown, Send, CheckCircle2, MessageSquare,
-  Droplets, Snowflake, Footprints
+  Droplets, Snowflake, Footprints, FileText
 } from 'lucide-react'
 
 // ── Types ──────────────────────────────────────────────────────────────────────
