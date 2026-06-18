@@ -363,7 +363,7 @@ export default function DisciplineOS() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`/api/admin/discipline?date=${selectedDate}&section=all`)
+        const res = await fetch(`/api/admin/discipline?date=${selectedDate}&section=all`, { headers: apiHeaders() })
         if (!res.ok) throw new Error('Failed to load')
         const data = await res.json()
 
@@ -520,7 +520,7 @@ export default function DisciplineOS() {
     try {
       const res = await fetch('/api/admin/discipline', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: apiHeaders(),
         body: JSON.stringify({ type: 'day', date: selectedDate, data: dayData })
       })
       const result = await res.json()
@@ -552,7 +552,7 @@ export default function DisciplineOS() {
       )
       const res = await fetch('/api/admin/discipline', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: apiHeaders(),
         body: JSON.stringify({ type: 'goals', goals: goalsPayload })
       })
       const result = await res.json()
@@ -570,7 +570,7 @@ export default function DisciplineOS() {
     try {
       const res = await fetch('/api/admin/discipline', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: apiHeaders(),
         body: JSON.stringify({ type: 'review', reviewType, date: selectedDate, answers: reviewAnswers })
       })
       const result = await res.json()
@@ -593,7 +593,7 @@ export default function DisciplineOS() {
     try {
       await fetch('/api/admin/discipline', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: apiHeaders(),
         body: JSON.stringify({
           type: 'habit-toggle',
           date: selectedDate,
@@ -711,7 +711,7 @@ export default function DisciplineOS() {
 
       const res = await fetch('/api/admin/discipline/coaching', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: apiHeaders(),
         body: JSON.stringify({ mode, context }),
       })
       const data = await res.json()
@@ -1113,7 +1113,7 @@ export default function DisciplineOS() {
                   try {
                     const res = await fetch('/api/admin/discipline', {
                       method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
+                      headers: apiHeaders(),
                       body: JSON.stringify({
                         type: 'habits-bulk',
                         date: selectedDate,
