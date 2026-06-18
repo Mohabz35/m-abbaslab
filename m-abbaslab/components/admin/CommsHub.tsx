@@ -356,7 +356,7 @@ export default function CommsHub() {
                 className={`flex items-center gap-2 px-4 py-3.5 text-xs font-bold uppercase tracking-widest border-b-2 transition-all whitespace-nowrap shrink-0 ${
                   activeTab === id
                     ? 'border-blue-500 text-blue-400 bg-blue-500/5'
-                    : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-slate-700/30'
+                    : 'border-transparent text-slate-400 hover:text-slate-300 hover:bg-slate-700/30'
                 }`}
               >
                 <Icon className="w-4 h-4" />

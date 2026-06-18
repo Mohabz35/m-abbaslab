@@ -160,7 +160,7 @@ export default function JarvisLearning() {
             <Brain className="w-5 h-5 text-indigo-500" />
             Learning Dashboard
           </h3>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-400">
             Monitor Jarvis learning stats, rate recent model responses, and review conversation topics.
           </p>
         </div>
@@ -193,7 +193,7 @@ export default function JarvisLearning() {
           <div className="text-3xl font-extrabold text-gray-900 dark:text-white mt-1">
             {stats.totalInteractions}
           </div>
-          <p className="text-xs text-gray-500 mt-2">Combined user messages & auto-replies logged</p>
+          <p className="text-xs text-gray-400 mt-2">Combined user messages & auto-replies logged</p>
         </div>
 
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col justify-between">
@@ -202,7 +202,7 @@ export default function JarvisLearning() {
             <Star className="w-6 h-6 fill-amber-400 text-amber-400" />
             {stats.averageScore > 0 ? `${stats.averageScore}/5` : 'N/A'}
           </div>
-          <p className="text-xs text-gray-500 mt-2">Based on rated responses in learning archive</p>
+          <p className="text-xs text-gray-400 mt-2">Based on rated responses in learning archive</p>
         </div>
 
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col justify-between">
@@ -223,7 +223,7 @@ export default function JarvisLearning() {
               ))}
             </div>
           )}
-          <p className="text-xs text-gray-500 mt-2">Extracted from recent user queries</p>
+          <p className="text-xs text-gray-400 mt-2">Extracted from recent user queries</p>
         </div>
       </div>
 
@@ -237,12 +237,12 @@ export default function JarvisLearning() {
             </div>
 
             {isLoading ? (
-              <div className="py-12 text-center text-gray-500 flex justify-center items-center">
+              <div className="py-12 text-center text-gray-400 flex justify-center items-center">
                 <RefreshCw className="w-5 h-5 animate-spin mr-2 text-indigo-500" />
                 <span>Loading interactions...</span>
               </div>
             ) : interactions.length === 0 ? (
-              <div className="p-8 text-center text-sm text-gray-500">
+              <div className="p-8 text-center text-sm text-gray-400">
                 No recent conversations found. Wait for Jarvis to respond to messages.
               </div>
             ) : (
@@ -257,7 +257,7 @@ export default function JarvisLearning() {
                     <div key={item.id} className="p-5 space-y-3 hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-colors">
                       {/* Interaction Metadata Header */}
                       <div className="flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-2 text-gray-500">
+                        <div className="flex items-center gap-2 text-gray-400">
                           <User className="w-3.5 h-3.5 text-gray-400" />
                           <span className="font-semibold text-gray-700 dark:text-gray-300">
                             {item.sender_number.split('@')[0]}
@@ -329,7 +329,7 @@ export default function JarvisLearning() {
                           </div>
 
                           <div className="space-y-1">
-                            <label className="block text-[11px] text-gray-500 font-bold uppercase">Feedback Comment (Optional)</label>
+                            <label className="block text-[11px] text-gray-400 font-bold uppercase">Feedback Comment (Optional)</label>
                             <input
                               type="text"
                               value={feedbackVal}
@@ -361,7 +361,7 @@ export default function JarvisLearning() {
                       ) : (
                         <div className="flex items-center justify-between pt-1">
                           {feedback ? (
-                            <p className="text-xs italic text-gray-500 truncate max-w-[70%]">
+                            <p className="text-xs italic text-gray-400 truncate max-w-[70%]">
                               <span className="font-bold font-sans not-italic text-gray-600 dark:text-gray-400">Feedback: </span>
                               "{feedback}"
                             </p>
@@ -397,7 +397,7 @@ export default function JarvisLearning() {
               <Brain className="w-4 h-4 text-indigo-500" />
               How Jarvis Learns
             </h4>
-            <p className="text-xs text-gray-500 leading-relaxed">
+            <p className="text-xs text-gray-400 leading-relaxed">
               Jarvis stores every message transaction to analyze communication success. By rating answers here, you help establish a dataset of optimal responses.
             </p>
             <div className="space-y-3 pt-2">
@@ -433,7 +433,7 @@ export default function JarvisLearning() {
               <CheckCircle className="w-4 h-4 text-indigo-500" />
               <h5 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Reinforcement Guidelines</h5>
             </div>
-            <p className="text-xs text-gray-500 leading-relaxed">
+            <p className="text-xs text-gray-400 leading-relaxed">
               For optimal performance, check in once a day to review recent interactions and flag responses that felt overly verbose or out-of-character.
             </p>
           </div>

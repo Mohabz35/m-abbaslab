@@ -52,7 +52,7 @@ export default function StatsSection() {
                 <div className="text-lg font-semibold text-gray-800 mb-1">
                   {stat.label}
                 </div>
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-gray-400">
                   {stat.suffix}
                 </div>
               </motion.div>

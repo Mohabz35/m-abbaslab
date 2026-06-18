@@ -260,7 +260,7 @@ export default function CVBuilder() {
                     rows={5}
                     className="mt-2"
                   />
-                  <p className="text-sm text-slate-500 mt-2">Minimum 10 characters</p>
+                  <p className="text-sm text-slate-400 mt-2">Minimum 10 characters</p>
                 </div>
               </div>
             )}

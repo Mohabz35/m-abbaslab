@@ -1,14 +1,13 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Send, Calendar, Save, List, BarChart3,
   Edit2, Trash2, CheckCircle2, Clock, FileText, AlertCircle,
   Twitter, Linkedin, MessageCircle, RefreshCw,
   Plus, Github, Instagram, Facebook, Youtube, Music, Sparkles,
-  Upload, Video, Image as ImageIcon, X, FileVideo, Newspaper,
-  Bot, Zap, Eye, TrendingUp, BookOpen
+  Newspaper, Bot, Zap, Eye, TrendingUp, BookOpen
 } from 'lucide-react'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -108,13 +107,6 @@ export default function ContentScheduler() {
   const [generationTopic, setGenerationTopic] = useState('')
   const [queueFilter, setQueueFilter] = useState<'all' | PostStatus>('all')
 
-  // Media upload state
-  const [mediaFile, setMediaFile] = useState<File | null>(null)
-  const [mediaPreview, setMediaPreview] = useState<string | null>(null)
-  const [mediaType, setMediaType] = useState<'image' | 'video' | null>(null)
-  const [isUploading, setIsUploading] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
   // Article AI state
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
   const [articlePostPlatforms, setArticlePostPlatforms] = useState<string[]>(['twitter', 'linkedin'])
@@ -162,26 +154,6 @@ export default function ContentScheduler() {
     setter(current.includes(id) ? current.filter(p => p !== id) : [...current, id])
   }
 
-  const handleMediaSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const isVideo = file.type.startsWith('video/')
-    const isImage = file.type.startsWith('image/')
-    if (!isVideo && !isImage) { showToast('Only images and videos are supported.', 'error'); return }
-    if (isVideo && file.size > 500 * 1024 * 1024) { showToast('Video must be under 500MB.', 'error'); return }
-    if (isImage && file.size > 1 * 1024 * 1024) { showToast('Image must be under 1MB.', 'error'); return }
-    setMediaFile(file)
-    setMediaType(isVideo ? 'video' : 'image')
-    setMediaPreview(URL.createObjectURL(file))
-  }
-
-  const removeMedia = () => {
-    setMediaFile(null)
-    setMediaPreview(null)
-    setMediaType(null)
-    if (fileInputRef.current) fileInputRef.current.value = ''
-  }
-
   const charCount = content.length
   const twitterOver = platforms.includes('twitter') && charCount > 280
 
@@ -191,7 +163,6 @@ export default function ContentScheduler() {
     setMode('now')
     setScheduledAt('')
     setEditingId(null)
-    removeMedia()
   }
 
   const handleGenerateContent = async () => {
@@ -367,7 +338,7 @@ export default function ContentScheduler() {
           {TABS.map(({ id, label, Icon }) => (
             <button key={id} onClick={() => setTab(id)}
               className={`flex items-center gap-2 px-5 py-3.5 text-xs font-bold uppercase tracking-widest border-b-2 transition-all whitespace-nowrap shrink-0 ${
-                tab === id ? 'border-indigo-500 text-indigo-400 bg-indigo-500/5' : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-slate-700/30'
+                tab === id ? 'border-indigo-500 text-indigo-400 bg-indigo-500/5' : 'border-transparent text-slate-400 hover:text-slate-300 hover:bg-slate-700/30'
               }`}>
               <Icon className="w-4 h-4" />
               {id === 'queue' ? `Queue (${counts.all})` : label}
@@ -398,7 +369,7 @@ export default function ContentScheduler() {
                         return (
                           <button key={id} onClick={() => togglePlatform(id, setPlatforms, platforms)}
                             style={active ? { borderColor: color, color } : {}}
-                            className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-bold transition-all ${active ? 'bg-white/5' : 'border-slate-700 text-slate-500 hover:border-slate-600 hover:text-slate-300'}`}>
+                            className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-bold transition-all ${active ? 'bg-white/5' : 'border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-300'}`}>
                             <Icon className="w-4 h-4" /> {label}
                           </button>
                         )
@@ -430,48 +401,9 @@ export default function ContentScheduler() {
                       placeholder="What do you want to share today?"
                       rows={5}
                       className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm resize-none outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder-slate-600" />
-                    <div className={`text-right text-xs mt-1 ${twitterOver ? 'text-rose-400 font-bold' : charCount > 240 ? 'text-amber-400' : 'text-slate-500'}`}>
+                    <div className={`text-right text-xs mt-1 ${twitterOver ? 'text-rose-400 font-bold' : charCount > 240 ? 'text-amber-400' : 'text-slate-400'}`}>
                       {charCount} chars {twitterOver && '— exceeds X limit of 280'}
                     </div>
-                  </div>
-
-                  {/* Media Upload */}
-                  <div>
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
-                      <Upload className="w-4 h-4" /> Attach Media (Image / Video)
-                    </label>
-                    {!mediaFile ? (
-                      <div
-                        onClick={() => fileInputRef.current?.click()}
-                        className="border-2 border-dashed border-slate-700 hover:border-indigo-500/50 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-colors group">
-                        <div className="flex gap-4 mb-2">
-                          <ImageIcon className="w-8 h-8 text-slate-600 group-hover:text-slate-400 transition-colors" />
-                          <FileVideo className="w-8 h-8 text-slate-600 group-hover:text-slate-400 transition-colors" />
-                        </div>
-                        <p className="text-sm text-slate-500 group-hover:text-slate-400 transition-colors">Click to upload image or video</p>
-                        <p className="text-xs text-slate-600 mt-1">Images up to 1MB · Videos up to 500MB</p>
-                        <input ref={fileInputRef} type="file" accept="image/*,video/*" onChange={handleMediaSelect} className="hidden" />
-                      </div>
-                    ) : (
-                      <div className="relative border border-slate-700 rounded-xl overflow-hidden">
-                        {mediaType === 'image' ? (
-                          <img src={mediaPreview!} alt="Upload preview" className="w-full max-h-64 object-cover" />
-                        ) : (
-                          <video src={mediaPreview!} className="w-full max-h-64 object-cover" controls />
-                        )}
-                        <div className="absolute top-2 right-2 flex gap-2">
-                          <div className={`px-2 py-1 rounded text-[10px] font-bold ${mediaType === 'video' ? 'bg-rose-500 text-white' : 'bg-blue-500 text-white'}`}>
-                            {mediaType === 'video' ? '🎥 VIDEO' : '🖼 IMAGE'}
-                          </div>
-                          <button onClick={removeMedia} className="p-1 bg-slate-900/80 hover:bg-slate-900 text-white rounded-lg">
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
-                        <div className="p-3 bg-slate-900/50">
-                          <p className="text-xs text-slate-400 truncate">{mediaFile.name} · {(mediaFile.size / 1024 / 1024).toFixed(1)}MB</p>
-                        </div>
-                      </div>
-                    )}
                   </div>
 
                   {/* Timing Mode */}
@@ -484,7 +416,7 @@ export default function ContentScheduler() {
                         { id: 'draft', label: '💾 Save Draft' },
                       ] as const).map(({ id, label }) => (
                         <button key={id} onClick={() => setMode(id)}
-                          className={`px-4 py-2.5 rounded-xl border text-sm font-bold transition-all ${mode === id ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400' : 'border-slate-700 text-slate-500 hover:border-slate-600 hover:text-slate-300'}`}>
+                          className={`px-4 py-2.5 rounded-xl border text-sm font-bold transition-all ${mode === id ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400' : 'border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-300'}`}>
                           {label}
                         </button>
                       ))}
@@ -502,9 +434,7 @@ export default function ContentScheduler() {
                   {/* Submit */}
                   <button onClick={handleSubmit} disabled={loading || !content.trim() || platforms.length === 0}
                     className="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold text-sm transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                    {isUploading ? (
-                      <><RefreshCw className="w-4 h-4 animate-spin" /> Uploading media...</>
-                    ) : loading ? (
+                    {loading ? (
                       <><RefreshCw className="w-4 h-4 animate-spin" /> Processing...</>
                     ) : mode === 'now' ? '🚀 Post Now'
                       : mode === 'draft' ? '💾 Save Draft'
@@ -548,9 +478,9 @@ export default function ContentScheduler() {
 
                   {/* Article List */}
                   {loadingArticles ? (
-                    <div className="text-center py-10 text-slate-500">Loading articles...</div>
+                    <div className="text-center py-10 text-slate-400">Loading articles...</div>
                   ) : articles.length === 0 ? (
-                    <div className="text-center py-10 text-slate-500">
+                    <div className="text-center py-10 text-slate-400">
                       <BookOpen className="w-10 h-10 mx-auto mb-3 opacity-30" />
                       No articles found. Create some in the Articles section first.
                     </div>
@@ -561,7 +491,7 @@ export default function ContentScheduler() {
                           className={`text-left p-4 rounded-xl border transition-all ${selectedArticle?.id === article.id ? 'bg-indigo-500/20 border-indigo-500/50' : 'bg-slate-800/60 border-slate-700 hover:border-slate-600 hover:bg-slate-800'}`}>
                           <p className="font-bold text-white text-sm leading-snug line-clamp-2">{article.title}</p>
                           {article.category && <p className="text-xs text-indigo-400 mt-1 capitalize">{article.category}</p>}
-                          <p className="text-xs text-slate-500 mt-1">{new Date(article.created_at).toLocaleDateString()}</p>
+                          <p className="text-xs text-slate-400 mt-1">{new Date(article.created_at).toLocaleDateString()}</p>
                           {article.tags && article.tags.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
                               {article.tags.slice(0, 3).map((t, i) => <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-slate-700 text-slate-400">#{t}</span>)}
@@ -595,7 +525,7 @@ export default function ContentScheduler() {
                                 return (
                                   <button key={id} onClick={() => togglePlatform(id, setArticlePostPlatforms, articlePostPlatforms)}
                                     style={active ? { borderColor: color, color } : {}}
-                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${active ? 'bg-white/5' : 'border-slate-700 text-slate-500 hover:border-slate-600'}`}>
+                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${active ? 'bg-white/5' : 'border-slate-700 text-slate-400 hover:border-slate-600'}`}>
                                     <Icon className="w-3.5 h-3.5" /> {label}
                                   </button>
                                 )
@@ -611,7 +541,7 @@ export default function ContentScheduler() {
                               { id: 'draft', label: '💾 Save Draft' },
                             ] as const).map(({ id, label }) => (
                               <button key={id} onClick={() => setArticleScheduleMode(id)}
-                                className={`px-4 py-2 rounded-xl border text-xs font-bold transition-all ${articleScheduleMode === id ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400' : 'border-slate-700 text-slate-500 hover:border-slate-600 hover:text-slate-300'}`}>
+                                className={`px-4 py-2 rounded-xl border text-xs font-bold transition-all ${articleScheduleMode === id ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400' : 'border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-300'}`}>
                                 {label}
                               </button>
                             ))}
@@ -644,7 +574,7 @@ export default function ContentScheduler() {
                       return (
                         <button key={f} onClick={() => setQueueFilter(f)}
                           style={queueFilter === f ? { borderColor: cfg?.color || '#6366f1', color: cfg?.color || '#6366f1' } : {}}
-                          className={`px-3 py-1.5 rounded-full text-xs font-bold border uppercase tracking-wide transition-all ${queueFilter === f ? 'bg-white/5' : 'border-slate-700 text-slate-500 hover:border-slate-600'}`}>
+                          className={`px-3 py-1.5 rounded-full text-xs font-bold border uppercase tracking-wide transition-all ${queueFilter === f ? 'bg-white/5' : 'border-slate-700 text-slate-400 hover:border-slate-600'}`}>
                           {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)} ({count})
                         </button>
                       )
@@ -652,7 +582,7 @@ export default function ContentScheduler() {
                   </div>
 
                   {filteredPosts.length === 0 ? (
-                    <div className="text-center py-12 text-slate-500">
+                    <div className="text-center py-12 text-slate-400">
                       <List className="w-10 h-10 mx-auto mb-3 opacity-30" />
                       <p className="text-sm">No posts here yet.</p>
                     </div>
@@ -689,7 +619,7 @@ export default function ContentScheduler() {
                                    return <div key={pid} title={pl.label}><pl.Icon style={{ color: pl.color }} className="w-4 h-4 opacity-80" /></div>
                                  })}
                               </div>
-                              <span className="text-xs text-slate-500">
+                              <span className="text-xs text-slate-400">
                                 {post.status === 'scheduled' && post.scheduled_at ? `📅 ${new Date(post.scheduled_at).toLocaleString()}`
                                   : post.status === 'published' && post.published_at ? `✅ ${new Date(post.published_at).toLocaleString()}`
                                   : `Created ${new Date(post.created_at).toLocaleDateString()}`}

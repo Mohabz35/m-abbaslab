@@ -121,7 +121,7 @@ export default function TeamManagement() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Team Management</h1>
-          <p className="text-sm text-gray-500">{users.length} admin users</p>
+          <p className="text-sm text-gray-400">{users.length} admin users</p>
         </div>
         <div className="flex gap-2">
           <button onClick={exportUsers} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium flex items-center gap-2">
@@ -151,10 +151,10 @@ export default function TeamManagement() {
             <input type="text" placeholder="Search users..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="w-full pl-10 pr-4 py-3 border rounded-xl text-sm" />
           </div>
 
-          {loading ? <div className="text-center py-12 text-gray-500">Loading...</div> : filtered.length === 0 ? (
+          {loading ? <div className="text-center py-12 text-gray-400">Loading...</div> : filtered.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-xl border">
               <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No users found</p>
+              <p className="text-gray-400">No users found</p>
             </div>
           ) : (
             <div className="bg-white rounded-xl border overflow-hidden">
@@ -181,7 +181,7 @@ export default function TeamManagement() {
                             </div>
                             <div>
                               <div className="font-medium">{u.full_name || u.username}</div>
-                              <div className="text-xs text-gray-500">{u.email}</div>
+                              <div className="text-xs text-gray-400">{u.email}</div>
                             </div>
                           </div>
                         </td>
@@ -191,12 +191,12 @@ export default function TeamManagement() {
                           </span>
                         </td>
                         <td className="px-4 py-3">
-                          <button onClick={() => toggleActive(u.id, u.is_active)} className={`px-2 py-1 rounded-full text-xs font-medium ${u.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                          <button onClick={() => toggleActive(u.id, u.is_active)} className={`px-2 py-1 rounded-full text-xs font-medium ${u.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
                             {u.is_active ? 'Active' : 'Inactive'}
                           </button>
                         </td>
                         <td className="px-4 py-3 text-xs">{u.two_factor_enabled ? <span className="text-green-600">Enabled</span> : <span className="text-gray-400">Disabled</span>}</td>
-                        <td className="px-4 py-3 text-xs text-gray-500">{u.last_login ? new Date(u.last_login).toLocaleDateString() : 'Never'}</td>
+                        <td className="px-4 py-3 text-xs text-gray-400">{u.last_login ? new Date(u.last_login).toLocaleDateString() : 'Never'}</td>
                         <td className="px-4 py-3 text-right">
                           <button onClick={() => { setEditingUser(u); setForm({ username: u.username, email: u.email, full_name: u.full_name || '', role: u.role, password: '' }); setShowForm(true) }} className="text-gray-400 hover:text-blue-600 p-1"><Edit className="w-4 h-4" /></button>
                           <button onClick={() => deleteUser(u.id)} className="text-gray-400 hover:text-red-600 p-1 ml-1"><Trash2 className="w-4 h-4" /></button>
@@ -214,10 +214,10 @@ export default function TeamManagement() {
       {/* Activity Log View */}
       {view === 'activity' && (
         <div className="bg-white rounded-xl border p-6">
-          {loading ? <div className="text-center py-8 text-gray-500">Loading...</div> : activityLogs.length === 0 ? (
+          {loading ? <div className="text-center py-8 text-gray-400">Loading...</div> : activityLogs.length === 0 ? (
             <div className="text-center py-8">
               <Activity className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No activity logs yet</p>
+              <p className="text-gray-400">No activity logs yet</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -226,7 +226,7 @@ export default function TeamManagement() {
                   <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-medium">{log.username.charAt(0).toUpperCase()}</div>
                   <div className="flex-1">
                     <span className="font-medium">{log.username}</span>
-                    <span className="text-gray-500 mx-1">{log.action}</span>
+                    <span className="text-gray-400 mx-1">{log.action}</span>
                     {log.resource_type && <span className="text-blue-600">{log.resource_type}</span>}
                   </div>
                   <span className="text-xs text-gray-400">{new Date(log.created_at).toLocaleString()}</span>

@@ -211,7 +211,7 @@ export default function WorkPage() {
               }`}
             >
               <span>{category.name}</span>
-              <span className={`px-2 py-0.5 rounded-full text-xs ${selectedCategory === category.id ? 'bg-[#00f0ff]/20 text-white' : 'bg-white/10 text-gray-500'}`}>
+              <span className={`px-2 py-0.5 rounded-full text-xs ${selectedCategory === category.id ? 'bg-[#00f0ff]/20 text-white' : 'bg-white/10 text-gray-400'}`}>
                 {category.count}
               </span>
             </button>
@@ -242,7 +242,7 @@ export default function WorkPage() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 glass-panel rounded-3xl border border-white/5 mb-24">
           <div className="text-6xl mb-6 grayscale opacity-50">📂</div>
           <h3 className="text-2xl font-bold mb-3 text-white">No Projects Found</h3>
-          <p className="text-gray-500 mb-8">Try selecting a different category or search term</p>
+          <p className="text-gray-400 mb-8">Try selecting a different category or search term</p>
           <button onClick={() => { setSelectedCategory('all'); setSearchQuery('') }} className="px-6 py-3 bg-gradient-to-r from-[#00f0ff] to-[#7000ff] text-white font-semibold rounded-xl hover:shadow-[0_0_20px_rgba(112,0,255,0.4)] transition-all">
             Show All Projects
           </button>

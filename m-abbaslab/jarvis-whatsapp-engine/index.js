@@ -289,7 +289,33 @@ async function startJarvis() {
   }
 }
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
+  const url = new URL(req.url || '/', `http://localhost:${PORT}`)
+
+  if (url.pathname === '/reconnect' && req.method === 'POST') {
+    res.writeHead(200, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ message: 'Reconnecting...', connectionState }))
+    isStarting = false
+    reconnectAttempts = 0
+    setTimeout(startJarvis, 1000)
+    return
+  }
+
+  if (url.pathname === '/health') {
+    res.writeHead(200, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({
+      status: connectionState,
+      isConnected,
+      pairingCode: latestPairingCode,
+      reconnectAttempts,
+      lastConnectedAt,
+      lastDisconnectedAt,
+      lastError,
+      timestamp: new Date().toISOString()
+    }))
+    return
+  }
+
   res.writeHead(200, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({ status: connectionState, isConnected, pairingCode: latestPairingCode }))
 })

@@ -1,10 +1,10 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   Plus, Edit, Trash2, Loader2, X, MapPin, Calendar, Tag, Star,
   Image, ChevronDown, ChevronUp, Eye, ArrowUp, ArrowDown,
-  Award
+  Award, Upload
 } from 'lucide-react'
 
 interface RunwayEntry {
@@ -27,6 +27,8 @@ export default function RunwayJourneyManager() {
   const [editing, setEditing] = useState<RunwayEntry | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [selected, setSelected] = useState<RunwayEntry | null>(null)
+  const [isUploadingImage, setIsUploadingImage] = useState(false)
+  const imageFileInputRef = useRef<HTMLInputElement>(null)
 
   const fetchItems = async () => {
     setLoading(true)
@@ -42,6 +44,31 @@ export default function RunwayJourneyManager() {
   }
 
   useEffect(() => { fetchItems() }, [])
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 1 * 1024 * 1024) {
+      alert('Image must be under 1MB')
+      return
+    }
+    setIsUploadingImage(true)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+      const data = await res.json()
+      if (data.success && data.url) {
+        const imageInput = document.querySelector<HTMLInputElement>('input[name="image_url"]')
+        if (imageInput) imageInput.value = data.url
+      }
+    } catch (err) {
+      console.error('Upload failed', err)
+    } finally {
+      setIsUploadingImage(false)
+      if (imageFileInputRef.current) imageFileInputRef.current.value = ''
+    }
+  }
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -136,7 +163,14 @@ export default function RunwayJourneyManager() {
             </div>
             <div className="col-span-2">
               <label className="block text-xs font-medium text-slate-400 mb-1">Image URL</label>
-              <input name="image_url" defaultValue={editing?.image_url || ''} className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none" />
+              <div className="flex gap-2">
+                <input name="image_url" defaultValue={editing?.image_url || ''} className="flex-1 bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none" />
+                <label className="flex items-center gap-1 px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg cursor-pointer transition-colors shrink-0">
+                  {isUploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-pink-400" /> : <Upload className="w-4 h-4 text-slate-300" />}
+                  <input ref={imageFileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                </label>
+              </div>
+              <p className="text-xs text-slate-400 mt-1">Paste URL or upload image (max 1MB)</p>
             </div>
             <div>
               <label className="block text-xs font-medium text-slate-400 mb-1">Display Order</label>
@@ -165,7 +199,7 @@ export default function RunwayJourneyManager() {
       {loading ? (
         <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-pink-500" /></div>
       ) : sorted.length === 0 ? (
-        <div className="text-center py-20 text-slate-500">
+        <div className="text-center py-20 text-slate-400">
           <Award className="w-16 h-16 mx-auto mb-4 opacity-20" />
           <p className="text-lg font-medium">No runway milestones yet</p>
           <p className="text-sm mt-1">Add your first collection or show milestone</p>
@@ -190,7 +224,7 @@ export default function RunwayJourneyManager() {
                   <div className="p-5">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-xs font-bold text-pink-400">{item.year}</span>
-                      <span className="text-[10px] text-slate-500 uppercase">{item.category}</span>
+                      <span className="text-[10px] text-slate-400 uppercase">{item.category}</span>
                     </div>
                     <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
                     <p className="text-sm text-slate-400 line-clamp-2">{item.description}</p>
@@ -221,7 +255,7 @@ export default function RunwayJourneyManager() {
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-3">
                           <span className="text-2xl font-bold text-pink-400">{item.year}</span>
-                          <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">{item.category}</span>
+                          <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">{item.category}</span>
                         </div>
                         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity" onClick={e => e.stopPropagation()}>
                           <button onClick={() => toggleFeatured(item)} className={`p-1.5 rounded-lg ${item.featured ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-700 text-slate-400 hover:text-amber-400'}`}>
@@ -239,7 +273,7 @@ export default function RunwayJourneyManager() {
                             <span key={i} className="px-2 py-0.5 bg-slate-700 text-slate-300 rounded text-xs">{h}</span>
                           ))}
                           {item.highlights.length > 3 && (
-                            <span className="px-2 py-0.5 bg-slate-700 text-slate-500 rounded text-xs">+{item.highlights.length - 3}</span>
+                            <span className="px-2 py-0.5 bg-slate-700 text-slate-400 rounded text-xs">+{item.highlights.length - 3}</span>
                           )}
                         </div>
                       )}
@@ -265,7 +299,7 @@ export default function RunwayJourneyManager() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl font-bold text-pink-400">{selected.year}</span>
-                  <span className="text-xs font-medium text-slate-500 uppercase">{selected.category}</span>
+                  <span className="text-xs font-medium text-slate-400 uppercase">{selected.category}</span>
                 </div>
                 {selected.featured && (
                   <span className="px-2 py-1 bg-amber-500/20 text-amber-400 text-xs font-bold rounded flex items-center gap-1"><Star className="w-3 h-3" /> FEATURED</span>
@@ -275,7 +309,7 @@ export default function RunwayJourneyManager() {
               <p className="text-sm text-slate-400 leading-relaxed">{selected.description}</p>
               {selected.highlights && selected.highlights.length > 0 && (
                 <div>
-                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Highlights</h4>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Highlights</h4>
                   <ul className="space-y-1">
                     {selected.highlights.map((h, i) => (
                       <li key={i} className="flex items-center gap-2 text-sm text-slate-300"><span className="w-1.5 h-1.5 rounded-full bg-pink-500 shrink-0" />{h}</li>

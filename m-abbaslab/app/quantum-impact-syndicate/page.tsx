@@ -151,7 +151,7 @@ export default function QuantumImpactSyndicate() {
               <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
               <div className="text-3xl md:text-4xl font-extrabold text-white font-mono">{stat.val}</div>
               <div className="text-xs text-blue-400 font-bold uppercase tracking-wider mt-2">{stat.label}</div>
-              <div className="text-[10px] text-gray-500 mt-1">{stat.desc}</div>
+              <div className="text-[10px] text-gray-400 mt-1">{stat.desc}</div>
             </motion.div>
           ))}
         </div>
@@ -180,7 +180,7 @@ export default function QuantumImpactSyndicate() {
         <div>
           <div className="text-center mb-12">
             <h2 className="text-2xl font-bold uppercase tracking-widest text-white mb-3">Membership Structure</h2>
-            <p className="text-gray-500 text-sm max-w-2xl mx-auto">QIS operates on a tiered membership framework governed by the <span className="text-gray-300">QIS Membership Agreement Form</span> and <span className="text-gray-300">Leadership Appointment Template</span>.</p>
+            <p className="text-gray-400 text-sm max-w-2xl mx-auto">QIS operates on a tiered membership framework governed by the <span className="text-gray-300">QIS Membership Agreement Form</span> and <span className="text-gray-300">Leadership Appointment Template</span>.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {tiers.map((tier, idx) => {
@@ -216,7 +216,7 @@ export default function QuantumImpactSyndicate() {
         <div>
           <div className="text-center mb-12">
             <h2 className="text-2xl font-bold uppercase tracking-widest text-white mb-3">Governance & Legal Framework</h2>
-            <p className="text-gray-500 text-sm max-w-2xl mx-auto">QIS is governed by a comprehensive suite of founding documents. These are available to verified members following NDA execution.</p>
+            <p className="text-gray-400 text-sm max-w-2xl mx-auto">QIS is governed by a comprehensive suite of founding documents. These are available to verified members following NDA execution.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {documents.map((doc, idx) => {
@@ -232,7 +232,7 @@ export default function QuantumImpactSyndicate() {
                       <h4 className="text-sm font-bold text-white">{doc.name}</h4>
                       <Lock className="w-3 h-3 text-gray-600" />
                     </div>
-                    <p className="text-xs text-gray-500 leading-relaxed">{doc.desc}</p>
+                    <p className="text-xs text-gray-400 leading-relaxed">{doc.desc}</p>
                   </div>
                 </motion.div>
               )
@@ -274,7 +274,7 @@ export default function QuantumImpactSyndicate() {
               <Lock className="w-3 h-3" /> QIS Member Portal
             </div>
             <h2 className="text-2xl font-bold text-white mb-1 uppercase tracking-wide">Syndicate Access Gateway</h2>
-            <p className="text-xs text-gray-500 mb-6">Existing members sign in. New applicants request association below.</p>
+            <p className="text-xs text-gray-400 mb-6">Existing members sign in. New applicants request association below.</p>
 
             {/* Tabs */}
             {!isAuthenticated && !invited && (

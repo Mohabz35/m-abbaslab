@@ -60,7 +60,7 @@ function DefaultErrorFallback({ error, resetError }: { error?: Error; resetError
         </p>
         {process.env.NODE_ENV === 'development' && error && (
           <details className="text-left mb-4">
-            <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
+            <summary className="cursor-pointer text-sm text-gray-400 hover:text-gray-700">
               Error details
             </summary>
             <pre className="mt-2 text-xs bg-gray-100 p-2 rounded overflow-auto">

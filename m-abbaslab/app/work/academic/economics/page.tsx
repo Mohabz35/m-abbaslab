@@ -56,7 +56,7 @@ export default function EconomicsDocsPage() {
                                     <Icon className="w-6 h-6" />
                                 </div>
                                 <div className="flex-1">
-                                    <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2">Section 0{index + 1}</div>
+                                    <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-2">Section 0{index + 1}</div>
                                     <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors mb-2">
                                         {chapter.title}
                                     </h3>

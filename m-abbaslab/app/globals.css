@@ -117,6 +117,46 @@ html {
   perspective: 1000px;
 }
 
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-float,
+  .animate-scan,
+  .animate-pulse-slow {
+    animation: none !important;
+  }
+}
+
+/* Accessibility: Skip to content */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  padding: 0.75rem 1.5rem;
+  background: #00f0ff;
+  color: #030014;
+  font-weight: 700;
+  border-radius: 0 0 0.5rem 0.5rem;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-to-content:focus {
+  top: 0;
+  outline: 2px solid #00f0ff;
+  outline-offset: 2px;
+}
+
 /* ── CV Print / PDF Export Styles ─────────────────────────────────────────── */
 @media print {
   /* Hide everything on the page */

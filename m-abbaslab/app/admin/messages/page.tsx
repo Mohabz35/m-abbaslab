@@ -28,7 +28,7 @@ const statusColors: Record<string, string> = {
   read: 'bg-gray-100 text-gray-700 border-gray-200',
   in_progress: 'bg-amber-100 text-amber-700 border-amber-200',
   replied: 'bg-green-100 text-green-700 border-green-200',
-  archived: 'bg-gray-100 text-gray-500 border-gray-200',
+  archived: 'bg-gray-100 text-gray-400 border-gray-200',
   spam: 'bg-red-100 text-red-700 border-red-200',
 }
 
@@ -123,7 +123,7 @@ export default function ContactSubmissionsManager() {
           </button>
           <div>
             <h2 className="text-xl font-bold">{selectedSubmission.name}</h2>
-            <p className="text-sm text-gray-500">{selectedSubmission.email}</p>
+            <p className="text-sm text-gray-400">{selectedSubmission.email}</p>
           </div>
           <div className="ml-auto flex gap-2">
             <select
@@ -173,10 +173,10 @@ export default function ContactSubmissionsManager() {
             <div className="bg-white rounded-xl border p-6">
               <h3 className="font-bold mb-4">Details</h3>
               <dl className="space-y-3 text-sm">
-                <div className="flex justify-between"><dt className="text-gray-500">Subject</dt><dd className="font-medium">{selectedSubmission.subject || 'N/A'}</dd></div>
-                <div className="flex justify-between"><dt className="text-gray-500">Type</dt><dd className="font-medium capitalize">{selectedSubmission.inquiry_type}</dd></div>
-                <div className="flex justify-between"><dt className="text-gray-500">Date</dt><dd className="font-medium">{new Date(selectedSubmission.created_at).toLocaleString()}</dd></div>
-                <div className="flex justify-between"><dt className="text-gray-500">Status</dt><dd><span className={`px-2 py-1 rounded-full text-xs font-medium border ${statusColors[selectedSubmission.status]}`}>{statusLabels[selectedSubmission.status]}</span></dd></div>
+                <div className="flex justify-between"><dt className="text-gray-400">Subject</dt><dd className="font-medium">{selectedSubmission.subject || 'N/A'}</dd></div>
+                <div className="flex justify-between"><dt className="text-gray-400">Type</dt><dd className="font-medium capitalize">{selectedSubmission.inquiry_type}</dd></div>
+                <div className="flex justify-between"><dt className="text-gray-400">Date</dt><dd className="font-medium">{new Date(selectedSubmission.created_at).toLocaleString()}</dd></div>
+                <div className="flex justify-between"><dt className="text-gray-400">Status</dt><dd><span className={`px-2 py-1 rounded-full text-xs font-medium border ${statusColors[selectedSubmission.status]}`}>{statusLabels[selectedSubmission.status]}</span></dd></div>
               </dl>
             </div>
 
@@ -190,7 +190,7 @@ export default function ContactSubmissionsManager() {
                   <CheckCircle className="w-4 h-4 text-green-500" /> Mark Replied
                 </button>
                 <button onClick={() => updateStatus(selectedSubmission.id, 'archived')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded-lg flex items-center gap-2">
-                  <Archive className="w-4 h-4 text-gray-500" /> Archive
+                  <Archive className="w-4 h-4 text-gray-400" /> Archive
                 </button>
                 <button onClick={() => updateStatus(selectedSubmission.id, 'spam')} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 rounded-lg flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 text-red-500" /> Mark Spam
@@ -211,7 +211,7 @@ export default function ContactSubmissionsManager() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Contact Submissions</h1>
-          <p className="text-sm text-gray-500">{submissions.length} total submissions</p>
+          <p className="text-sm text-gray-400">{submissions.length} total submissions</p>
         </div>
         <button onClick={exportCSV} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium flex items-center gap-2">
           <Download className="w-4 h-4" /> Export CSV
@@ -233,7 +233,7 @@ export default function ContactSubmissionsManager() {
             className={`p-3 rounded-xl border text-center transition-all ${filter === s.key ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-white border-gray-200 hover:border-gray-300'}`}
           >
             <div className="text-xl font-bold">{s.value}</div>
-            <div className="text-xs text-gray-500">{s.label}</div>
+            <div className="text-xs text-gray-400">{s.label}</div>
           </button>
         ))}
       </div>
@@ -252,11 +252,11 @@ export default function ContactSubmissionsManager() {
 
       {/* Submissions List */}
       {loading ? (
-        <div className="text-center py-12 text-gray-500">Loading...</div>
+        <div className="text-center py-12 text-gray-400">Loading...</div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl border">
           <Mail className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500">No submissions found</p>
+          <p className="text-gray-400">No submissions found</p>
         </div>
       ) : (
         <div className="space-y-2">

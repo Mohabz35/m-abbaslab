@@ -1,0 +1,8 @@
+node_modules
+auth_state
+auth_backup
+.env
+.env.*
+README.md
+DEPLOY.md
+*.md

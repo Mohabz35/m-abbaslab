@@ -72,9 +72,14 @@ export default function ArticleForm({
     if (initial?.id) setFormData(articleToFormValues(initial))
   }, [initial?.id])
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+
+    if (file.size > 1 * 1024 * 1024) {
+      setUploadError('Image must be under 1MB. Current size: ' + (file.size / 1024 / 1024).toFixed(1) + 'MB')
+      return
+    }
 
     setUploading(true)
     setUploadError(null)
@@ -232,7 +237,7 @@ export default function ArticleForm({
             {uploadError && (
               <p className="text-sm text-red-400">{uploadError}</p>
             )}
-            <p className="text-xs text-gray-500">Uploads are stored via Cloudinary. Recommended size: 1200x630px.</p>
+            <p className="text-xs text-gray-400">Uploads are stored via Cloudinary. Recommended size: 1200x630px.</p>
           </div>
         </div>
 

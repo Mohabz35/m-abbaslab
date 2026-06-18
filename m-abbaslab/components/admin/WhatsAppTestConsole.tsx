@@ -101,7 +101,7 @@ export default function WhatsAppTestConsole() {
             <Send className={`w-5 h-5 ${sending ? 'animate-pulse' : ''}`} />
           </button>
         </div>
-        <p className="text-[10px] text-slate-500 mt-2">Messages are sent via the JARVIS WhatsApp Engine at {JARVIS_ENGINE_URL}</p>
+        <p className="text-[10px] text-slate-400 mt-2">Messages are sent via the JARVIS WhatsApp Engine at {JARVIS_ENGINE_URL}</p>
       </div>
     </div>
   )

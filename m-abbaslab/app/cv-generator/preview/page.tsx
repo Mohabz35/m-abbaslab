@@ -392,13 +392,13 @@ function CVPreviewContent() {
 
               <div className="text-center mb-6">
                 <div className="text-4xl font-bold text-white">$0<span className="text-2xl">.50</span><span className="text-lg text-slate-400 font-normal">/mo</span></div>
-                <p className="text-slate-500 text-sm mt-1">Cancel anytime. No commitment.</p>
+                <p className="text-slate-400 text-sm mt-1">Cancel anytime. No commitment.</p>
               </div>
 
               <Button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-6 text-lg font-semibold" onClick={() => { setShowProModal(false); alert("🚀 Pro subscriptions launching soon! You'll be the first to know."); }}>
                 Coming Soon — Join Waitlist
               </Button>
-              <button onClick={() => setShowProModal(false)} className="w-full text-slate-500 text-sm mt-3 hover:text-slate-300 transition-colors">
+              <button onClick={() => setShowProModal(false)} className="w-full text-slate-400 text-sm mt-3 hover:text-slate-300 transition-colors">
                 Maybe later
               </button>
             </div>

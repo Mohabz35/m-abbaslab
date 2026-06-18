@@ -1,4 +1,4 @@
-﻿// components/admin/AdminSidebar.tsx
+// components/admin/AdminSidebar.tsx
 'use client'
 
 import { useState } from 'react'
@@ -56,7 +56,7 @@ export default function AdminSidebar() {
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg"></div>
             <div>
               <h1 className="font-bold">Admin</h1>
-              <p className="text-xs text-gray-500">M-AbbasLab</p>
+              <p className="text-xs text-gray-400">M-AbbasLab</p>
             </div>
           </div>
           <button
@@ -78,7 +78,7 @@ export default function AdminSidebar() {
             </div>
             <div>
               <h1 className="font-bold text-lg">M-AbbasLab</h1>
-              <p className="text-sm text-gray-500">Admin Panel</p>
+              <p className="text-sm text-gray-400">Admin Panel</p>
             </div>
           </div>
         </div>
@@ -91,7 +91,7 @@ export default function AdminSidebar() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-medium truncate">{personalConfig.name}</p>
-              <p className="text-sm text-gray-500 truncate">{personalConfig.email}</p>
+              <p className="text-sm text-gray-400 truncate">{personalConfig.email}</p>
             </div>
           </div>
         </div>
@@ -147,7 +147,7 @@ export default function AdminSidebar() {
             </div>
             <div>
               <p className="font-bold">{personalConfig.name}</p>
-              <p className="text-sm text-gray-500">{personalConfig.email}</p>
+              <p className="text-sm text-gray-400">{personalConfig.email}</p>
             </div>
           </div>
 

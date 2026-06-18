@@ -279,7 +279,7 @@ function SectionHeader({ icon: Icon, title, subtitle, accent = 'text-cyan-400' }
       </div>
       <div>
         <h3 className={`text-lg font-bold tracking-tight ${accent}`}>{title}</h3>
-        {subtitle && <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>}
+        {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
       </div>
     </div>
   )
@@ -480,7 +480,7 @@ export default function DisciplineOS() {
       const fetchWisdom = async () => {
         setLoadingWisdom(true)
         try {
-          const res = await fetch('/api/admin/wisdom')
+          const res = await fetch('/api/admin/wisdom', { headers: apiHeaders() })
           const data = await res.json()
           if (data.success) setWisdomFeed(data.feed)
         } catch (e) {
@@ -656,7 +656,7 @@ export default function DisciplineOS() {
 
       const res = await fetch('/api/admin/zapier', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: apiHeaders(),
         body: JSON.stringify({
           eventName: 'discipline_report',
           payload
@@ -759,7 +759,7 @@ export default function DisciplineOS() {
       <div className="flex items-center justify-center py-32">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 rounded-full border-2 border-cyan-500/30 border-t-cyan-500 animate-spin" />
-          <p className="text-gray-500 text-sm tracking-widest uppercase">Loading System 12×</p>
+          <p className="text-gray-400 text-sm tracking-widest uppercase">Loading System 12×</p>
         </div>
       </div>
     )
@@ -777,7 +777,7 @@ export default function DisciplineOS() {
               </div>
               <div>
                 <h2 className="text-base font-black tracking-tight">DISCIPLINE OS</h2>
-                <p className="text-[10px] text-gray-500 uppercase tracking-widest">System 12×</p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest">System 12×</p>
               </div>
             </div>
 
@@ -828,7 +828,7 @@ export default function DisciplineOS() {
                 className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold tracking-wide border-b-2 transition-all whitespace-nowrap ${
                   isActive
                     ? 'border-cyan-500 text-cyan-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-300'
+                    : 'border-transparent text-gray-400 hover:text-gray-300'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -861,7 +861,7 @@ export default function DisciplineOS() {
                       key={cat}
                       onClick={() => setSelectedHourCat(cat)}
                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-                        isSelected ? `${info.bg} ${info.color} border-current scale-105` : 'bg-white/5 text-gray-500 border-white/10 hover:border-white/20'
+                        isSelected ? `${info.bg} ${info.color} border-current scale-105` : 'bg-white/5 text-gray-400 border-white/10 hover:border-white/20'
                       }`}
                     >
                       <Icon className="w-3 h-3" />
@@ -896,15 +896,15 @@ export default function DisciplineOS() {
               <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-3 gap-4">
                 <div className="text-center">
                   <p className="text-2xl font-black text-cyan-400">{deepWorkHours}h</p>
-                  <p className="text-[10px] text-gray-500 uppercase tracking-widest">Deep Work</p>
+                  <p className="text-[10px] text-gray-400 uppercase tracking-widest">Deep Work</p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-black text-indigo-400">{sleepHours}h</p>
-                  <p className="text-[10px] text-gray-500 uppercase tracking-widest">Sleep</p>
+                  <p className="text-[10px] text-gray-400 uppercase tracking-widest">Sleep</p>
                 </div>
                 <div className="text-center">
                   <p className={`text-2xl font-black ${wastedHours > 2 ? 'text-red-400' : 'text-gray-400'}`}>{wastedHours}h</p>
-                  <p className="text-[10px] text-gray-500 uppercase tracking-widest">Wasted</p>
+                  <p className="text-[10px] text-gray-400 uppercase tracking-widest">Wasted</p>
                 </div>
               </div>
             </GlassPanel>
@@ -1088,7 +1088,7 @@ export default function DisciplineOS() {
                               habit.completed ? 'text-emerald-300 line-through opacity-70' : 'text-gray-200'
                             }`}>{habit.name}</span>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <span className={`text-[10px] font-bold uppercase ${diffColors[habit.difficulty] || 'text-gray-500'}`}>
+                              <span className={`text-[10px] font-bold uppercase ${diffColors[habit.difficulty] || 'text-gray-400'}`}>
                                 {habit.difficulty}
                               </span>
                               {habit.streak > 0 && (
@@ -1178,7 +1178,7 @@ export default function DisciplineOS() {
               {aiLoading ? (
                 <div className="flex flex-col items-center py-12 gap-4">
                   <div className="w-12 h-12 rounded-full border-2 border-purple-500/30 border-t-purple-500 animate-spin" />
-                  <p className="text-gray-500 text-sm">JARVIS is analyzing your discipline data...</p>
+                  <p className="text-gray-400 text-sm">JARVIS is analyzing your discipline data...</p>
                 </div>
               ) : aiCoaching ? (
                 <div className="bg-gradient-to-br from-purple-500/5 to-blue-500/5 border border-purple-500/20 rounded-xl p-6">
@@ -1211,19 +1211,19 @@ export default function DisciplineOS() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <GlassPanel className="text-center">
                 <p className="text-2xl font-black text-cyan-400">{deepWorkHours}h</p>
-                <p className="text-[10px] text-gray-500 uppercase">Deep Work</p>
+                <p className="text-[10px] text-gray-400 uppercase">Deep Work</p>
               </GlassPanel>
               <GlassPanel className="text-center">
                 <p className="text-2xl font-black text-purple-400">{avgPillarScore}</p>
-                <p className="text-[10px] text-gray-500 uppercase">Avg Score</p>
+                <p className="text-[10px] text-gray-400 uppercase">Avg Score</p>
               </GlassPanel>
               <GlassPanel className="text-center">
                 <p className="text-2xl font-black text-emerald-400">{habitsCompleted}/{habits.length}</p>
-                <p className="text-[10px] text-gray-500 uppercase">Habits Done</p>
+                <p className="text-[10px] text-gray-400 uppercase">Habits Done</p>
               </GlassPanel>
               <GlassPanel className="text-center">
                 <p className="text-2xl font-black text-amber-400">{goalsCompleted}/48</p>
-                <p className="text-[10px] text-gray-500 uppercase">Goals Done</p>
+                <p className="text-[10px] text-gray-400 uppercase">Goals Done</p>
               </GlassPanel>
             </div>
           </div>
@@ -1239,7 +1239,7 @@ export default function DisciplineOS() {
 
               {/* Mood Selector */}
               <div className="mb-4">
-                <label className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-2 block">How are you feeling?</label>
+                <label className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-2 block">How are you feeling?</label>
                 <div className="flex gap-2">
                   {[
                     { mood: 'great', emoji: '😄', label: 'Great' },
@@ -1254,7 +1254,7 @@ export default function DisciplineOS() {
                       className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl border text-xs transition-all ${
                         diaryMood === m.mood
                           ? 'bg-amber-500/20 border-amber-500/50 text-amber-400'
-                          : 'border-white/10 text-gray-500 hover:border-white/20'
+                          : 'border-white/10 text-gray-400 hover:border-white/20'
                       }`}>
                       <span className="text-lg">{m.emoji}</span>
                       <span>{m.label}</span>
@@ -1265,7 +1265,7 @@ export default function DisciplineOS() {
 
               {/* Title */}
               <div className="mb-4">
-                <label className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-2 block">Title (optional)</label>
+                <label className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-2 block">Title (optional)</label>
                 <input type="text" value={diaryTitle} onChange={e => setDiaryTitle(e.target.value)}
                   placeholder="What's on your mind today?"
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-500/50 outline-none placeholder-gray-600" />
@@ -1273,7 +1273,7 @@ export default function DisciplineOS() {
 
               {/* Content */}
               <div className="mb-4">
-                <label className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-2 block">Journal Entry</label>
+                <label className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-2 block">Journal Entry</label>
                 <textarea value={diaryContent} onChange={e => setDiaryContent(e.target.value)}
                   placeholder="Write about your day, thoughts, goals, challenges, or anything you want to reflect on..."
                   rows={12}
@@ -1283,7 +1283,7 @@ export default function DisciplineOS() {
 
               {/* Tags */}
               <div className="mb-4">
-                <label className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-2 block">Tags</label>
+                <label className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-2 block">Tags</label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {diaryTags.map((tag, i) => (
                     <span key={i} className="px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full text-xs text-amber-400 flex items-center gap-1">
@@ -1391,7 +1391,7 @@ export default function DisciplineOS() {
                 {savedDiary && (
                   <div className="p-4 bg-white/5 rounded-xl border border-white/10">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs text-gray-500">{savedDiary.date}</span>
+                      <span className="text-xs text-gray-400">{savedDiary.date}</span>
                       <span className="text-xs">{savedDiary.mood}</span>
                     </div>
                     {savedDiary.title && <p className="text-sm font-bold text-white mb-1">{savedDiary.title}</p>}
@@ -1415,7 +1415,7 @@ export default function DisciplineOS() {
                 <SectionHeader icon={Target} title="12× Parallel Goals Tracker" subtitle="Track all 48 targets across your 4 goal categories" accent="text-cyan-400" />
                 <div className="text-right">
                   <p className="text-3xl font-black text-cyan-400">{goalsCompleted}/48</p>
-                  <p className="text-[10px] text-gray-500 uppercase">goals done</p>
+                  <p className="text-[10px] text-gray-400 uppercase">goals done</p>
                 </div>
               </div>
               <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden">
@@ -1424,7 +1424,7 @@ export default function DisciplineOS() {
                   style={{ width: `${(goalsCompleted / 48) * 100}%` }}
                 />
               </div>
-              <div className="mt-2 text-right text-xs text-gray-500">{((goalsCompleted / 48) * 100).toFixed(1)}% complete</div>
+              <div className="mt-2 text-right text-xs text-gray-400">{((goalsCompleted / 48) * 100).toFixed(1)}% complete</div>
             </GlassPanel>
 
             {/* Goal Category Grids */}
@@ -1434,7 +1434,7 @@ export default function DisciplineOS() {
                 <GlassPanel key={category.id}>
                   <div className="flex items-center justify-between mb-5">
                     <h3 className={`text-lg font-black tracking-tight ${category.color}`}>{category.label}</h3>
-                    <span className="text-xs text-gray-500">{catDone}/12 done</span>
+                    <span className="text-xs text-gray-400">{catDone}/12 done</span>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                     {category.goals.map((goal, idx) => (
@@ -1465,7 +1465,7 @@ export default function DisciplineOS() {
                             placeholder="Metric (KSh / %)..."
                             value={goal.metric}
                             onChange={e => updateGoal(category.id, goal.id, 'metric', e.target.value)}
-                            className="flex-1 text-[10px] bg-transparent outline-none text-gray-500 placeholder-gray-700"
+                            className="flex-1 text-[10px] bg-transparent outline-none text-gray-400 placeholder-gray-700"
                           />
                         </div>
                         <input
@@ -1498,7 +1498,7 @@ export default function DisciplineOS() {
                     className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
                       passiveChecked[i]
                         ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-                        : 'bg-white/[0.02] border-white/5 text-gray-500 hover:border-white/10'
+                        : 'bg-white/[0.02] border-white/5 text-gray-400 hover:border-white/10'
                     }`}
                   >
                     {passiveChecked[i]
@@ -1560,7 +1560,7 @@ export default function DisciplineOS() {
                     className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide border transition-all ${
                       reviewType === type
                         ? 'bg-amber-500/20 text-amber-400 border-amber-500/40'
-                        : 'bg-white/5 text-gray-500 border-white/10 hover:border-white/20'
+                        : 'bg-white/5 text-gray-400 border-white/10 hover:border-white/20'
                     }`}
                   >
                     {type}
@@ -1570,7 +1570,7 @@ export default function DisciplineOS() {
 
               <div className="mb-8 border-b border-white/10 pb-4">
                 <h3 className="text-xl font-black text-amber-400 uppercase tracking-widest">{REVIEW_TEMPLATES[reviewType].title}</h3>
-                <p className="text-gray-500 text-sm mt-1 font-mono">Date: {selectedDate}</p>
+                <p className="text-gray-400 text-sm mt-1 font-mono">Date: {selectedDate}</p>
               </div>
 
               <div className="space-y-6">
@@ -1625,13 +1625,13 @@ export default function DisciplineOS() {
                       {item.type === 'news' && <MessageSquare className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />}
                       <div>
                         <p className="text-sm text-gray-200">{item.message}</p>
-                        <p className="text-xs text-gray-500 mt-1">{new Date(item.timestamp).toLocaleString()}</p>
+                        <p className="text-xs text-gray-400 mt-1">{new Date(item.timestamp).toLocaleString()}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 text-gray-500">No new intelligence available today.</div>
+                <div className="text-center py-8 text-gray-400">No new intelligence available today.</div>
               )}
             </GlassPanel>
 
@@ -1645,11 +1645,11 @@ export default function DisciplineOS() {
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className={`font-black text-base ${mentor.accent}`}>{mentor.name}</h4>
-                        <p className="text-xs text-gray-500 italic">{mentor.title}</p>
+                        <p className="text-xs text-gray-400 italic">{mentor.title}</p>
                       </div>
                       {expandedMentor === mentor.name
-                        ? <ChevronUp className="w-4 h-4 text-gray-500" />
-                        : <ChevronDown className="w-4 h-4 text-gray-500" />
+                        ? <ChevronUp className="w-4 h-4 text-gray-400" />
+                        : <ChevronDown className="w-4 h-4 text-gray-400" />
                       }
                     </div>
                   </button>
@@ -1677,11 +1677,11 @@ export default function DisciplineOS() {
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className={`font-black text-base ${wisdom.accent}`}>{wisdom.name}</h4>
-                        <p className="text-xs text-gray-500 italic">"{wisdom.book}"</p>
+                        <p className="text-xs text-gray-400 italic">"{wisdom.book}"</p>
                       </div>
                       {expandedWisdom === wisdom.name
-                        ? <ChevronUp className="w-4 h-4 text-gray-500" />
-                        : <ChevronDown className="w-4 h-4 text-gray-500" />
+                        ? <ChevronUp className="w-4 h-4 text-gray-400" />
+                        : <ChevronDown className="w-4 h-4 text-gray-400" />
                       }
                     </div>
                   </button>
@@ -1711,7 +1711,7 @@ export default function DisciplineOS() {
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {DEBT_RULES.map(rule => (
                   <div key={rule.rule} className={`rounded-xl p-4 border ${rule.color}`}>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">{rule.rule}</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">{rule.rule}</p>
                     <h4 className="text-sm font-black text-white mb-1">{rule.title}</h4>
                     <p className="text-xs text-cyan-400 font-mono font-bold mb-2">{rule.formula}</p>
                     <p className="text-xs text-gray-400 leading-relaxed">{rule.desc}</p>

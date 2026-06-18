@@ -325,7 +325,7 @@ function ResponseDemo() {
                                     <Icon className="w-4 h-4" style={{ color: active ? step.color : '#555' }} />
                                 </div>
                                 <div>
-                                    <div className="text-xs font-mono text-gray-500 mb-1">{step.label}</div>
+                                    <div className="text-xs font-mono text-gray-400 mb-1">{step.label}</div>
                                     <div className="text-sm font-medium" style={{ color: active ? '#fff' : '#444' }}>
                                         {step.value}
                                     </div>
@@ -392,7 +392,7 @@ export default function MAbbasAIPage() {
                         <div>
                             <Link
                                 href="/work"
-                                className="inline-flex items-center text-gray-500 hover:text-[#00f0ff] mb-10 transition-colors group text-sm"
+                                className="inline-flex items-center text-gray-400 hover:text-[#00f0ff] mb-10 transition-colors group text-sm"
                             >
                                 <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
                                 Back to Projects
@@ -421,7 +421,7 @@ export default function MAbbasAIPage() {
 
                                 <p className="text-2xl text-gray-400 font-light mb-4">Interactive Cyborg</p>
 
-                                <p className="text-lg text-gray-500 leading-relaxed mb-10 max-w-xl">
+                                <p className="text-lg text-gray-400 leading-relaxed mb-10 max-w-xl">
                                     A biomimetic android built as an exact physical replica of me — with compliant robotic actuators,
                                     a motion-capture movement library, and a multimodal large action model that fuses vision,
                                     audio, and touch into a single, eerily natural social intelligence.
@@ -483,7 +483,7 @@ export default function MAbbasAIPage() {
                             Challenges
                         </span>
                     </h2>
-                    <p className="text-xl text-gray-500 max-w-3xl mx-auto">
+                    <p className="text-xl text-gray-400 max-w-3xl mx-auto">
                         Building a natural-feeling android requires solving Structure, Movement, and Intelligence in sync.
                     </p>
                 </motion.div>
@@ -572,7 +572,7 @@ export default function MAbbasAIPage() {
                                                     </div>
                                                     <div>
                                                         <h4 className="font-bold text-white mb-2">{feat.title}</h4>
-                                                        <p className="text-sm text-gray-500 leading-relaxed">{feat.detail}</p>
+                                                        <p className="text-sm text-gray-400 leading-relaxed">{feat.detail}</p>
                                                     </div>
                                                 </div>
                                             </motion.div>
@@ -603,7 +603,7 @@ export default function MAbbasAIPage() {
                                 Large Action Model
                             </span>
                         </h2>
-                        <p className="text-xl text-gray-500 max-w-3xl mx-auto">
+                        <p className="text-xl text-gray-400 max-w-3xl mx-auto">
                             Watch how a single input is transformed into a synchronized, tri-layer response: words, tone, and body language — all in real time.
                         </p>
                     </motion.div>
@@ -627,7 +627,7 @@ export default function MAbbasAIPage() {
                         >
                             <div>
                                 <h3 className="text-3xl font-bold text-white mb-4">Tri-Layer Response Generation</h3>
-                                <p className="text-gray-500 leading-relaxed">
+                                <p className="text-gray-400 leading-relaxed">
                                     A response is never just words. The Large Action Model simultaneously outputs three synchronized layers,
                                     making every interaction feel instinctively human.
                                 </p>
@@ -649,7 +649,7 @@ export default function MAbbasAIPage() {
                                         </div>
                                         <div>
                                             <div className="font-bold text-white mb-1">{item.label}</div>
-                                            <div className="text-sm text-gray-500">{item.desc}</div>
+                                            <div className="text-sm text-gray-400">{item.desc}</div>
                                         </div>
                                     </div>
                                 )
@@ -660,7 +660,7 @@ export default function MAbbasAIPage() {
                                     <RotateCcw className="w-4 h-4 text-[#ff006e]" />
                                     <span className="text-sm font-bold text-white">Continuous Learning Loop</span>
                                 </div>
-                                <p className="text-sm text-gray-500">
+                                <p className="text-sm text-gray-400">
                                     Every interaction is logged. The model learns what resonated, refines its personality model of you, and grows more natural with each conversation.
                                 </p>
                             </div>

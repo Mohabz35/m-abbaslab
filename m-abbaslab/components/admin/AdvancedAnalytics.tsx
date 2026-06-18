@@ -180,7 +180,7 @@ export default function AdvancedAnalytics() {
       {loading && <div className="text-slate-400 text-center py-12">Loading analytics...</div>}
 
       {!loading && !hasSupabaseKeys && (
-        <div className="text-center py-12 text-slate-500 bg-slate-800/50 rounded-xl border border-slate-700">
+        <div className="text-center py-12 text-slate-400 bg-slate-800/50 rounded-xl border border-slate-700">
           <Database className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p>Supabase not configured. Analytics require database connection.</p>
         </div>
@@ -200,7 +200,7 @@ export default function AdvancedAnalytics() {
                 </div>
                 <div className="text-2xl font-bold text-white mb-1">{kpi.value}</div>
                 <div className="text-xs text-slate-400">{kpi.label}</div>
-                <div className="text-[10px] text-slate-500 mt-1">{kpi.sub}</div>
+                <div className="text-[10px] text-slate-400 mt-1">{kpi.sub}</div>
               </motion.div>
             ))}
           </div>
@@ -219,7 +219,7 @@ export default function AdvancedAnalytics() {
                   <h3 className="text-sm font-bold text-white">{chart.title}</h3>
                 </div>
                 <Sparkline data={chart.data} color={chart.color} />
-                <div className="flex justify-between text-[10px] text-slate-500 mt-2">
+                <div className="flex justify-between text-[10px] text-slate-400 mt-2">
                   <span>{chart.data.length} periods</span>
                   <span>Total: {chart.data.reduce((a, b) => a + b, 0)}</span>
                 </div>
@@ -249,7 +249,7 @@ export default function AdvancedAnalytics() {
                     <div className="w-full h-3 bg-slate-700 rounded-full overflow-hidden">
                       <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 1, delay: 0.3 }} className={`h-full rounded-full ${prog.color} shadow-[0_0_8px_rgba(255,255,255,0.1)]`} />
                     </div>
-                    <div className="text-xs text-slate-500">{prog.current} / {prog.total} units</div>
+                    <div className="text-xs text-slate-400">{prog.current} / {prog.total} units</div>
                   </div>
                 )
               })}

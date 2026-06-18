@@ -303,7 +303,7 @@ export default function SettingsHub() {
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 isActive
                   ? 'bg-blue-500/10 text-blue-400 border border-blue-500/30'
-                  : 'text-slate-500 hover:text-slate-300 border border-transparent'
+                  : 'text-slate-400 hover:text-slate-300 border border-transparent'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -322,7 +322,7 @@ export default function SettingsHub() {
                 <Sliders className="text-blue-500 w-6 h-6" />
                 Global System Configuration
               </h3>
-              <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest font-bold">Manage Core Modules</p>
+              <p className="text-xs text-slate-400 mt-1 uppercase tracking-widest font-bold">Manage Core Modules</p>
             </div>
             <div className="flex gap-2">
               <button onClick={loadSystemConfig} className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg flex items-center gap-2 text-sm">
@@ -431,7 +431,7 @@ export default function SettingsHub() {
                   ? 'bg-emerald-600 text-white'
                   : hasChanges
                     ? 'bg-blue-600 hover:bg-blue-500 text-white'
-                    : 'bg-slate-700 text-slate-500 cursor-not-allowed'
+                    : 'bg-slate-700 text-slate-400 cursor-not-allowed'
               }`}
             >
               {saving ? (
@@ -459,10 +459,10 @@ export default function SettingsHub() {
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-white text-sm">{mod.label}</div>
-                      <div className="text-xs text-slate-500">{mod.settings.length} settings</div>
+                      <div className="text-xs text-slate-400">{mod.settings.length} settings</div>
                     </div>
                   </div>
-                  {isExpanded ? <ChevronDown className="w-5 h-5 text-slate-400" /> : <ChevronRight className="w-5 h-5 text-slate-500" />}
+                  {isExpanded ? <ChevronDown className="w-5 h-5 text-slate-400" /> : <ChevronRight className="w-5 h-5 text-slate-400" />}
                 </button>
                 <AnimatePresence>
                   {isExpanded && (
@@ -472,7 +472,7 @@ export default function SettingsHub() {
                           <div key={setting.key} className="flex items-center justify-between py-3 border-b border-slate-700/30 last:border-0">
                             <div className="flex-1 mr-4">
                               <div className="text-sm font-medium text-white">{setting.label}</div>
-                              <div className="text-xs text-slate-500 mt-0.5">{setting.description}</div>
+                              <div className="text-xs text-slate-400 mt-0.5">{setting.description}</div>
                             </div>
                             <div className="shrink-0">
                               {setting.type === 'toggle' ? (
@@ -516,11 +516,11 @@ export default function SettingsHub() {
             </h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Display Name</label>
+                <label className="block text-xs font-bold text-slate-400 uppercase mb-2">Display Name</label>
                 <input type="text" value={displayName} onChange={e => setDisplayName(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">System Biography</label>
+                <label className="block text-xs font-bold text-slate-400 uppercase mb-2">System Biography</label>
                 <textarea value={bio} onChange={e => setBio(e.target.value)} rows={4} className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none resize-none" />
               </div>
               <button onClick={handleUpdateProfile} disabled={saving} className="px-6 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg flex items-center gap-2 disabled:opacity-50 text-sm">
@@ -533,14 +533,14 @@ export default function SettingsHub() {
             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
               <Key className="w-5 h-5 text-amber-500" /> Change Master Password
             </h3>
-            <p className="text-xs text-slate-500 mb-6">Updating this will revoke all existing admin sessions.</p>
+            <p className="text-xs text-slate-400 mb-6">Updating this will revoke all existing admin sessions.</p>
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">New Password</label>
+                <label className="block text-xs font-bold text-slate-400 uppercase mb-2">New Password</label>
                 <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2 text-white focus:border-amber-500 outline-none" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Confirm New Password</label>
+                <label className="block text-xs font-bold text-slate-400 uppercase mb-2">Confirm New Password</label>
                 <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2 text-white focus:border-amber-500 outline-none" />
               </div>
               <button onClick={handleChangePassword} disabled={saving || !newPassword} className="px-6 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg flex items-center gap-2 disabled:opacity-50 text-sm">
@@ -576,7 +576,7 @@ export default function SettingsHub() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-slate-800 text-slate-500 text-xs uppercase tracking-wider">
+                <tr className="border-b border-slate-800 text-slate-400 text-xs uppercase tracking-wider">
                   <th className="pb-3 font-bold">Timestamp</th>
                   <th className="pb-3 font-bold">Action Event</th>
                   <th className="pb-3 font-bold">Entity</th>
@@ -584,14 +584,14 @@ export default function SettingsHub() {
               </thead>
               <tbody className="divide-y divide-slate-800/50">
                 {auditLogs.length === 0 && !auditLoading && (
-                  <tr><td colSpan={3} className="py-8 text-center text-slate-500">No audit events yet.</td></tr>
+                  <tr><td colSpan={3} className="py-8 text-center text-slate-400">No audit events yet.</td></tr>
                 )}
-                {auditLoading && <tr><td colSpan={3} className="py-8 text-center text-slate-500">Loading...</td></tr>}
+                {auditLoading && <tr><td colSpan={3} className="py-8 text-center text-slate-400">Loading...</td></tr>}
                 {auditLogs.map(log => (
                   <tr key={log.id} className="hover:bg-slate-800/30">
                     <td className="py-3 text-slate-400 font-mono text-xs">{new Date(log.created_at).toLocaleString()}</td>
                     <td className="py-3 text-cyan-400 font-bold tracking-wide">{log.action}</td>
-                    <td className="py-3 text-slate-500 font-mono text-xs">{log.entity_type || '-'}</td>
+                    <td className="py-3 text-slate-400 font-mono text-xs">{log.entity_type || '-'}</td>
                   </tr>
                 ))}
               </tbody>

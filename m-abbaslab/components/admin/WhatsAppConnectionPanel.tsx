@@ -192,7 +192,7 @@ export default function WhatsAppConnectionPanel() {
 
       {/* Last Updated */}
       {pairingData?.updated_at && (
-        <p className="text-xs text-slate-500 mt-4 text-center">
+        <p className="text-xs text-slate-400 mt-4 text-center">
           Last updated: {new Date(pairingData.updated_at).toLocaleTimeString()}
         </p>
       )}

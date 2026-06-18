@@ -1,4 +1,4 @@
-﻿// components/ContactForm.tsx
+// components/ContactForm.tsx
 'use client'
 
 import { useState } from 'react'
@@ -147,7 +147,7 @@ export default function ContactForm() {
             onFocus={() => setFocusedField('name')}
             onBlur={() => setFocusedField(null)}
             placeholder="John Doe"
-            className={`w-full px-4 py-3 rounded-lg bg-white/5 border transition-all duration-300 text-white placeholder:text-gray-500 ${focusedField === 'name'
+            className={`w-full px-4 py-3 rounded-lg bg-white/5 border transition-all duration-300 text-white placeholder:text-gray-400 ${focusedField === 'name'
               ? 'border-[#00f0ff] shadow-[0_0_20px_rgba(0,240,255,0.3)]'
               : 'border-white/10 hover:border-white/20'
               }`}
@@ -178,7 +178,7 @@ export default function ContactForm() {
             onFocus={() => setFocusedField('email')}
             onBlur={() => setFocusedField(null)}
             placeholder="john@example.com"
-            className={`w-full px-4 py-3 rounded-lg bg-white/5 border transition-all duration-300 text-white placeholder:text-gray-500 ${focusedField === 'email'
+            className={`w-full px-4 py-3 rounded-lg bg-white/5 border transition-all duration-300 text-white placeholder:text-gray-400 ${focusedField === 'email'
               ? 'border-[#00f0ff] shadow-[0_0_20px_rgba(0,240,255,0.3)]'
               : 'border-white/10 hover:border-white/20'
               }`}
@@ -239,7 +239,7 @@ export default function ContactForm() {
           onBlur={() => setFocusedField(null)}
           rows={6}
           placeholder="Tell me about your project, idea, or question..."
-          className={`w-full px-4 py-3 rounded-lg bg-white/5 border transition-all duration-300 text-white placeholder:text-gray-500 resize-none ${focusedField === 'message'
+          className={`w-full px-4 py-3 rounded-lg bg-white/5 border transition-all duration-300 text-white placeholder:text-gray-400 resize-none ${focusedField === 'message'
             ? 'border-[#00f0ff] shadow-[0_0_20px_rgba(0,240,255,0.3)]'
             : 'border-white/10 hover:border-white/20'
             }`}
@@ -288,7 +288,7 @@ export default function ContactForm() {
       </motion.div>
 
       {/* Privacy Note */}
-      <p className="text-xs text-gray-500 text-center">
+      <p className="text-xs text-gray-400 text-center">
         Your information is secure. I'll only use it to respond to your message.
       </p>
     </form>

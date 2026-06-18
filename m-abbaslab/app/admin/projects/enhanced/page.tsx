@@ -110,7 +110,7 @@ export default function ProjectsEnhancedManager() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Projects Manager</h1>
-          <p className="text-sm text-gray-500">{projects.length} projects | {projects.filter(p => p.featured).length} featured</p>
+          <p className="text-sm text-gray-400">{projects.length} projects | {projects.filter(p => p.featured).length} featured</p>
         </div>
         <button onClick={() => { resetForm(); setEditingProject(null); setShowForm(true) }} className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg text-sm font-medium flex items-center gap-2">
           <Plus className="w-4 h-4" /> Add Project
@@ -128,10 +128,10 @@ export default function ProjectsEnhancedManager() {
         </select>
       </div>
 
-      {loading ? <div className="text-center py-12 text-gray-500">Loading...</div> : filtered.length === 0 ? (
+      {loading ? <div className="text-center py-12 text-gray-400">Loading...</div> : filtered.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl border">
           <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500">No projects found</p>
+          <p className="text-gray-400">No projects found</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -156,10 +156,10 @@ export default function ProjectsEnhancedManager() {
                   {project.start_date && <span>{new Date(project.start_date).toLocaleDateString()}</span>}
                 </div>
                 <div className="flex gap-1">
-                  {project.github_url && <a href={project.github_url} target="_blank" rel="noopener noreferrer" className="p-1.5 hover:bg-gray-100 rounded"><Github className="w-3.5 h-3.5 text-gray-500" /></a>}
-                  {project.demo_url && <a href={project.demo_url} target="_blank" rel="noopener noreferrer" className="p-1.5 hover:bg-gray-100 rounded"><ExternalLink className="w-3.5 h-3.5 text-gray-500" /></a>}
-                  <button onClick={() => startEdit(project)} className="p-1.5 hover:bg-gray-100 rounded"><Edit className="w-3.5 h-3.5 text-gray-500" /></button>
-                  <button onClick={() => toggleFeatured(project.id, project.featured)} className="p-1.5 hover:bg-gray-100 rounded"><Star className="w-3.5 h-3.5 text-gray-500" /></button>
+                  {project.github_url && <a href={project.github_url} target="_blank" rel="noopener noreferrer" className="p-1.5 hover:bg-gray-100 rounded"><Github className="w-3.5 h-3.5 text-gray-400" /></a>}
+                  {project.demo_url && <a href={project.demo_url} target="_blank" rel="noopener noreferrer" className="p-1.5 hover:bg-gray-100 rounded"><ExternalLink className="w-3.5 h-3.5 text-gray-400" /></a>}
+                  <button onClick={() => startEdit(project)} className="p-1.5 hover:bg-gray-100 rounded"><Edit className="w-3.5 h-3.5 text-gray-400" /></button>
+                  <button onClick={() => toggleFeatured(project.id, project.featured)} className="p-1.5 hover:bg-gray-100 rounded"><Star className="w-3.5 h-3.5 text-gray-400" /></button>
                   <button onClick={() => deleteProject(project.id)} className="p-1.5 hover:bg-red-50 rounded text-red-500"><Trash2 className="w-3.5 h-3.5" /></button>
                 </div>
               </div>

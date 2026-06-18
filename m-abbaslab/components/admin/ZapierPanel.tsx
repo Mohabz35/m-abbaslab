@@ -240,7 +240,7 @@ export default function ZapierPanel() {
         <div className="flex border-b border-slate-700 bg-slate-800/40 px-2 overflow-x-auto">
           {TABS.map(({ id, label, icon: Icon }) => (
             <button key={id} onClick={() => setActiveTab(id as any)}
-              className={`flex items-center gap-2 px-5 py-3.5 text-xs font-bold uppercase tracking-widest border-b-2 transition-all whitespace-nowrap shrink-0 ${activeTab === id ? 'border-orange-500 text-orange-400 bg-orange-500/5' : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-slate-700/30'}`}>
+              className={`flex items-center gap-2 px-5 py-3.5 text-xs font-bold uppercase tracking-widest border-b-2 transition-all whitespace-nowrap shrink-0 ${activeTab === id ? 'border-orange-500 text-orange-400 bg-orange-500/5' : 'border-transparent text-slate-400 hover:text-slate-300 hover:bg-slate-700/30'}`}>
               <Icon className="w-4 h-4" />{label}
             </button>
           ))}
@@ -275,7 +275,7 @@ export default function ZapierPanel() {
                             <h3 className="font-bold text-white text-sm leading-snug">{template.name}</h3>
                             <p className="text-xs text-slate-400 mt-1 leading-relaxed">{template.description}</p>
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-slate-500">
+                          <div className="flex items-center gap-2 text-xs text-slate-400">
                             <ArrowRight className="w-3.5 h-3.5" style={{ color: template.color }} />
                             <span className="text-slate-400">{template.zapierAction}</span>
                           </div>
@@ -300,7 +300,7 @@ export default function ZapierPanel() {
                           <p className="text-xs font-bold text-orange-400">Using Template: {selectedTemplate.name}</p>
                           <p className="text-xs text-slate-400 mt-0.5">{selectedTemplate.zapierAction}</p>
                         </div>
-                        <button onClick={() => setSelectedTemplate(null)} className="ml-auto p-1 rounded text-slate-500 hover:text-white"><X className="w-4 h-4" /></button>
+                        <button onClick={() => setSelectedTemplate(null)} className="ml-auto p-1 rounded text-slate-400 hover:text-white"><X className="w-4 h-4" /></button>
                       </div>
                     )}
 
@@ -319,7 +319,7 @@ export default function ZapierPanel() {
                         <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">JSON Payload</label>
                         <button onClick={() => {
                           try { setPayloadText(JSON.stringify(JSON.parse(payloadText), null, 2)) } catch {}
-                        }} className="text-xs text-slate-500 hover:text-slate-300 transition-colors">Format JSON</button>
+                        }} className="text-xs text-slate-400 hover:text-slate-300 transition-colors">Format JSON</button>
                       </div>
                       <textarea value={payloadText} onChange={e => setPayloadText(e.target.value)}
                         rows={10}
@@ -353,8 +353,8 @@ export default function ZapierPanel() {
                       {(() => { try { return JSON.stringify(JSON.parse(payloadText), null, 2) } catch { return payloadText } })()}
                     </pre>
                     <div className="pt-3 border-t border-slate-800 space-y-2">
-                      <p className="text-xs text-slate-500">This payload will be sent to your Zapier webhook URL as a POST request with <code className="text-orange-400">Content-Type: application/json</code>.</p>
-                      <p className="text-xs text-slate-500">Zapier will receive <code className="text-orange-400">event_name</code> + <code className="text-orange-400">payload</code> as a single JSON body.</p>
+                      <p className="text-xs text-slate-400">This payload will be sent to your Zapier webhook URL as a POST request with <code className="text-orange-400">Content-Type: application/json</code>.</p>
+                      <p className="text-xs text-slate-400">Zapier will receive <code className="text-orange-400">event_name</code> + <code className="text-orange-400">payload</code> as a single JSON body.</p>
                     </div>
                   </div>
                 </div>
@@ -429,7 +429,7 @@ Content-Type: application/json
                   </div>
 
                   {logs.length === 0 ? (
-                    <div className="text-center py-12 text-slate-500">
+                    <div className="text-center py-12 text-slate-400">
                       <Activity className="w-10 h-10 mx-auto mb-3 opacity-30" />
                       <p className="text-sm">No webhook triggers yet. Fire your first zap to see results here.</p>
                     </div>
@@ -445,7 +445,7 @@ Content-Type: application/json
                                 {log.status}
                               </span>
                             </div>
-                            <span className="text-xs text-slate-500"><Clock className="w-3 h-3 inline mr-1" />{new Date(log.timestamp).toLocaleString()}</span>
+                            <span className="text-xs text-slate-400"><Clock className="w-3 h-3 inline mr-1" />{new Date(log.timestamp).toLocaleString()}</span>
                           </div>
                           {log.response && (
                             <p className={`text-xs ${log.status === 'error' ? 'text-rose-400' : 'text-emerald-400'}`}>{log.response}</p>

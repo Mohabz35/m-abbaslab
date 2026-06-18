@@ -101,7 +101,7 @@ export default function LatestArticles() {
                                 {article.excerpt}
                             </p>
 
-                            <div className="flex items-center justify-between pt-4 border-t border-white/10 text-xs text-gray-500">
+                            <div className="flex items-center justify-between pt-4 border-t border-white/10 text-xs text-gray-400">
                                 <div className="flex items-center space-x-3">
                                     <div className="flex items-center">
                                         <Calendar className="w-3 h-3 mr-1" />

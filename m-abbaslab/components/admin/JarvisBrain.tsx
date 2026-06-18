@@ -86,7 +86,7 @@ export default function JarvisBrain({
             <Brain className="text-blue-500 w-6 h-6 animate-pulse" />
             M-JARVIS Brain Training Panel
           </h2>
-          <p className="text-sm text-gray-500 mt-1">Train your AI Chatbot and WhatsApp bot on custom keywords and rules.</p>
+          <p className="text-sm text-gray-400 mt-1">Train your AI Chatbot and WhatsApp bot on custom keywords and rules.</p>
         </div>
         <div className="mt-4 md:mt-0 px-3 py-1 bg-blue-500/10 text-blue-500 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-2">
           🧠 Active Rules: {rules.length}
@@ -99,7 +99,7 @@ export default function JarvisBrain({
           <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-2">Trained Knowledge Base</h3>
           
           {rules.length === 0 ? (
-            <div className="p-8 border border-dashed border-gray-300 dark:border-gray-700 rounded-xl text-center text-gray-500">
+            <div className="p-8 border border-dashed border-gray-300 dark:border-gray-700 rounded-xl text-center text-gray-400">
               No knowledge rules trained yet. Add rules on the right to start training!
             </div>
           ) : (
@@ -149,13 +149,13 @@ export default function JarvisBrain({
                         <div className="flex gap-1">
                           <button
                             onClick={() => handleStartEdit(idx)}
-                            className="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-gray-500 hover:text-blue-500 transition-colors"
+                            className="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-gray-400 hover:text-blue-500 transition-colors"
                           >
                             <Edit className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDeleteRule(idx)}
-                            className="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-gray-500 hover:text-red-500 transition-colors"
+                            className="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-gray-400 hover:text-red-500 transition-colors"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -178,7 +178,7 @@ export default function JarvisBrain({
           
           <div className="bg-gray-50 dark:bg-black/40 border border-gray-150 dark:border-white/5 rounded-2xl p-5 space-y-4">
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Trigger Keyword</label>
+              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Trigger Keyword</label>
               <input
                 type="text"
                 placeholder="e.g. royal icon events"
@@ -190,7 +190,7 @@ export default function JarvisBrain({
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Jarvis Reply</label>
+              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Jarvis Reply</label>
               <textarea
                 placeholder="Write exactly what Jarvis should reply when this keyword is triggered..."
                 value={newResponse}
@@ -219,7 +219,7 @@ export default function JarvisBrain({
             
             <div className="bg-gray-50 dark:bg-black/40 border border-gray-150 dark:border-white/5 rounded-2xl p-5 space-y-4 shadow-sm">
               <div>
-                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Active Mode</label>
+                <label className="block text-xs font-bold text-gray-400 dark:text-gray-400 uppercase tracking-wider mb-2">Active Mode</label>
                 <div className="grid grid-cols-2 gap-2">
                   {[
                     { id: 'always', label: '24/7 Always', desc: 'Active always' },
@@ -237,7 +237,7 @@ export default function JarvisBrain({
                       }`}
                     >
                       <div className="font-bold">{mode.label}</div>
-                      <div className="text-[9px] text-gray-400 dark:text-gray-500 mt-0.5 leading-tight">{mode.desc}</div>
+                      <div className="text-[9px] text-gray-400 dark:text-gray-400 mt-0.5 leading-tight">{mode.desc}</div>
                     </button>
                   ))}
                 </div>
@@ -267,7 +267,7 @@ export default function JarvisBrain({
               )}
 
               <div>
-                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Timezone</label>
+                <label className="block text-xs font-bold text-gray-400 dark:text-gray-400 uppercase tracking-wider mb-2">Timezone</label>
                 <select
                   value={schedule.timezone || 'Africa/Nairobi'}
                   onChange={(e) => onScheduleChange && onScheduleChange({ ...schedule, timezone: e.target.value })}
@@ -279,7 +279,7 @@ export default function JarvisBrain({
                   <option value="America/New_York">America/New_York (EST/EDT)</option>
                   <option value="Asia/Dubai">Asia/Dubai (GST, UTC+4)</option>
                 </select>
-                <div className="mt-1 flex items-center gap-1 text-[9px] text-gray-400 dark:text-gray-500">
+                <div className="mt-1 flex items-center gap-1 text-[9px] text-gray-400 dark:text-gray-400">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
                   Active timezone synced with WhatsApp Daemon.
                 </div>
@@ -293,7 +293,7 @@ export default function JarvisBrain({
               <HelpCircle className="w-4 h-4" />
               How it works
             </h4>
-            <p className="text-[11px] text-gray-500 leading-relaxed">
+            <p className="text-[11px] text-gray-400 leading-relaxed">
               Trained keyword rules provide **instant, 100% free response matches** on both your website AI widget and your WhatsApp engine, saving paid API tokens and ensuring consistent custom answers!
             </p>
           </div>

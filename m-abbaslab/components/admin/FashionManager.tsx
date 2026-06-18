@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   Plus, Edit, Trash2, Scissors, ShoppingBag, Loader2, PackageOpen,
   X, Image, MapPin, Calendar, Tag, Layers, List, Grid3X3, Filter,
   ChevronDown, ChevronUp, Eye, Download, ExternalLink, Archive,
-  CheckCircle, Clock, AlertTriangle
+  CheckCircle, Clock, AlertTriangle, Upload
 } from 'lucide-react'
 
 interface FashionItem {
@@ -38,6 +38,8 @@ export default function FashionManager() {
   const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [isUploadingImage, setIsUploadingImage] = useState(false)
+  const imageFileInputRef = useRef<HTMLInputElement>(null)
 
   const fetchItems = async () => {
     setLoading(true)
@@ -53,6 +55,31 @@ export default function FashionManager() {
   }
 
   useEffect(() => { fetchItems() }, [])
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 1 * 1024 * 1024) {
+      alert('Image must be under 1MB')
+      return
+    }
+    setIsUploadingImage(true)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+      const data = await res.json()
+      if (data.success && data.url) {
+        const imageInput = document.querySelector<HTMLInputElement>('input[name="image_url"]')
+        if (imageInput) imageInput.value = data.url
+      }
+    } catch (err) {
+      console.error('Upload failed', err)
+    } finally {
+      setIsUploadingImage(false)
+      if (imageFileInputRef.current) imageFileInputRef.current.value = ''
+    }
+  }
 
   const collections = Array.from(new Set(items.map(i => i.collection || 'Uncategorized')))
   const statuses = Array.from(new Set(items.map(i => i.status)))
@@ -163,14 +190,14 @@ export default function FashionManager() {
         ].map(s => (
           <div key={s.label} className={`${s.bg} rounded-xl p-4 text-center border border-transparent`}>
             <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
-            <div className="text-xs text-slate-500 uppercase tracking-wider mt-1">{s.label}</div>
+            <div className="text-xs text-slate-400 uppercase tracking-wider mt-1">{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4">
-        <div className="flex items-center gap-2 text-slate-500">
+        <div className="flex items-center gap-2 text-slate-400">
           <Filter className="w-4 h-4" />
           <span className="text-sm font-medium">Filters</span>
         </div>
@@ -203,7 +230,7 @@ export default function FashionManager() {
       <div className="flex gap-6">
         {/* Collection Sidebar */}
         <div className="hidden md:block w-48 shrink-0">
-          <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Collections</h3>
+          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Collections</h3>
           <div className="space-y-1">
             <button onClick={() => setFilterCollection('all')} className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${filterCollection === 'all' ? 'bg-pink-100 dark:bg-pink-900/20 text-pink-600 font-medium' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
               All ({items.length})
@@ -228,19 +255,19 @@ export default function FashionManager() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Title</label>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Title</label>
                   <input name="title" defaultValue={editingItem?.title || ''} required className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Collection</label>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Collection</label>
                   <input name="collection" defaultValue={editingItem?.collection || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Category</label>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Category</label>
                   <input name="category" defaultValue={editingItem?.category || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Status</label>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Status</label>
                   <select name="status" defaultValue={editingItem?.status || 'design'} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none">
                     <option value="design">Design Phase</option>
                     <option value="production">In Production</option>
@@ -249,39 +276,46 @@ export default function FashionManager() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Size</label>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Size</label>
                   <input name="size" defaultValue={editingItem?.size || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Stock</label>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Stock</label>
                   <input name="stock" type="number" defaultValue={editingItem?.stock || 0} min="0" className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Price</label>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Price</label>
                   <input name="price" type="number" step="0.01" defaultValue={editingItem?.price || 0} min="0" className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Event Date</label>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Event Date</label>
                   <input name="event_date" type="date" defaultValue={editingItem?.event_date || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Location</label>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Location</label>
                   <input name="location" defaultValue={editingItem?.location || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Image URL</label>
-                  <input name="image_url" defaultValue={editingItem?.image_url || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Image URL</label>
+                  <div className="flex gap-2">
+                    <input name="image_url" defaultValue={editingItem?.image_url || ''} className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
+                    <label className="flex items-center gap-1 px-3 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded-lg cursor-pointer transition-colors shrink-0">
+                      {isUploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-pink-500" /> : <Upload className="w-4 h-4 text-slate-400" />}
+                      <input ref={imageFileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                    </label>
+                  </div>
+                  <p className="text-xs text-slate-400 mt-1">Paste URL or upload image (max 1MB)</p>
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Gallery Images (comma-separated URLs)</label>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Gallery Images (comma-separated URLs)</label>
                   <input name="gallery_images" defaultValue={(editingItem?.gallery_images || []).join(', ')} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Description</label>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Description</label>
                   <textarea name="description" rows={3} defaultValue={editingItem?.description || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none resize-none" />
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs font-medium text-slate-500 mb-1">Tags (comma-separated)</label>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Tags (comma-separated)</label>
                   <input name="tags" defaultValue={(editingItem?.tags || []).join(', ')} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
               </div>
@@ -291,7 +325,7 @@ export default function FashionManager() {
               </div>
             </form>
           ) : filtered.length === 0 ? (
-            <div className="text-center py-20 text-slate-500">
+            <div className="text-center py-20 text-slate-400">
               <PackageOpen className="w-16 h-16 mx-auto mb-4 opacity-20" />
               <p className="text-lg font-medium">No items found</p>
               <p className="text-sm mt-1">{searchQuery ? 'Try a different search' : 'Add your first fashion item'}</p>
@@ -321,7 +355,7 @@ export default function FashionManager() {
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{item.collection || 'No Collection'}</span>
                     </div>
                     <h3 className="font-bold text-slate-800 dark:text-white text-sm mb-2 line-clamp-1">{item.title}</h3>
-                    {item.description && <p className="text-xs text-slate-500 line-clamp-2 mb-3">{item.description}</p>}
+                    {item.description && <p className="text-xs text-slate-400 line-clamp-2 mb-3">{item.description}</p>}
                     <div className="flex items-center justify-between text-xs text-slate-400">
                       <div className="flex items-center gap-3">
                         {item.location && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {item.location}</span>}
@@ -339,7 +373,7 @@ export default function FashionManager() {
             <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-200 dark:border-slate-800 text-xs text-slate-500 uppercase tracking-wider">
+                  <tr className="border-b border-slate-200 dark:border-slate-800 text-xs text-slate-400 uppercase tracking-wider">
                     <th className="text-left p-3 w-8"><input type="checkbox" onChange={e => { if (e.target.checked) setSelectedIds(new Set(filtered.map(i => i.id))); else setSelectedIds(new Set()) }} className="accent-pink-600" /></th>
                     <th className="text-left p-3">Title</th>
                     <th className="text-left p-3">Collection</th>
@@ -355,14 +389,14 @@ export default function FashionManager() {
                     <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer" onClick={() => setSelectedItem(item)}>
                       <td className="p-3" onClick={e => e.stopPropagation()}><input type="checkbox" checked={selectedIds.has(item.id)} onChange={() => toggleSelect(item.id)} className="accent-pink-600" /></td>
                       <td className="p-3 font-medium text-slate-800 dark:text-white">{item.title}</td>
-                      <td className="p-3 text-slate-500">{item.collection || '-'}</td>
+                      <td className="p-3 text-slate-400">{item.collection || '-'}</td>
                       <td className="p-3"><span className={`px-2 py-0.5 rounded text-[10px] font-bold ${statusColor(item.status)}`}>{item.status.toUpperCase()}</span></td>
                       <td className="p-3 text-right font-mono">{item.stock}</td>
                       <td className="p-3 text-right font-mono">{item.price > 0 ? `KES ${item.price}` : '-'}</td>
-                      <td className="p-3 text-slate-500 text-xs">{item.location || '-'}</td>
+                      <td className="p-3 text-slate-400 text-xs">{item.location || '-'}</td>
                       <td className="p-3 text-right" onClick={e => e.stopPropagation()}>
                         <div className="flex gap-1 justify-end">
-                          <button onClick={() => { setEditingItem(item); setShowForm(true) }} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded"><Edit className="w-3.5 h-3.5 text-slate-500" /></button>
+                          <button onClick={() => { setEditingItem(item); setShowForm(true) }} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded"><Edit className="w-3.5 h-3.5 text-slate-400" /></button>
                           <button onClick={() => handleDelete(item.id)} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded"><Trash2 className="w-3.5 h-3.5 text-red-500" /></button>
                         </div>
                       </td>

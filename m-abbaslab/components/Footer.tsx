@@ -48,7 +48,7 @@ function MagneticSocialIcon({
       onMouseLeave={handleMouseLeave}
       animate={{ x: position.x, y: position.y }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="group relative p-3 rounded-xl bg-white/5 border border-white/10 hover:border-[#00f0ff]/50 hover:bg-white/10 transition-all duration-300 flex items-center justify-center"
+      className="group relative p-3 rounded-xl bg-white/5 border border-white/10 hover:border-[#00f0ff]/50 hover:bg-white/10 focus:border-[#00f0ff]/50 focus:bg-white/10 transition-all duration-300 flex items-center justify-center"
       aria-label={label}
       title={label}
     >
@@ -83,7 +83,7 @@ export default function Footer() {
             <p className="text-sm text-gray-400 leading-relaxed">
               {personalConfig.tagline}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-400">
               © {currentYear} {personalConfig.name}
               <br />
               All rights reserved.
@@ -95,7 +95,7 @@ export default function Footer() {
             <h3 className="text-sm font-bold uppercase tracking-wider text-white">
               Quick Links
             </h3>
-            <nav className="flex flex-col space-y-2">
+            <nav className="flex flex-col space-y-2" aria-label="Quick links">
               {quickLinks.map((link) => (
                 <Link
                   key={link.name}
@@ -158,7 +158,7 @@ export default function Footer() {
 
         {/* Bottom section */}
         <div className="mt-12 pt-8 border-t border-white/10">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 text-sm text-gray-500">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 text-sm text-gray-400">
             <div className="flex items-center">
               Crafted with <Heart className="w-4 h-4 mx-1 text-pink-500 fill-pink-500 animate-pulse" /> using Next.js & Framer Motion
             </div>

@@ -38,7 +38,7 @@ function PortalSidebar() {
           </div>
           <div>
             <div className="text-sm font-bold text-white">QIS Portal</div>
-            <div className="text-[10px] text-gray-500 uppercase tracking-wider">Member Access</div>
+            <div className="text-[10px] text-gray-400 uppercase tracking-wider">Member Access</div>
           </div>
         </Link>
       </div>
@@ -58,7 +58,7 @@ function PortalSidebar() {
                   : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-blue-400' : 'text-gray-500 group-hover:text-white'}`} />
+              <Icon className={`w-4 h-4 ${isActive ? 'text-blue-400' : 'text-gray-400 group-hover:text-white'}`} />
               <span className="flex-1">{item.label}</span>
               {isActive && <ChevronRight className="w-3 h-3 text-blue-400" />}
             </Link>
@@ -83,7 +83,7 @@ function PortalSidebar() {
           </div>
           <button
             onClick={signOut}
-            className="w-full flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium text-gray-500 hover:text-red-400 hover:bg-red-500/5 transition-all"
+            className="w-full flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium text-gray-400 hover:text-red-400 hover:bg-red-500/5 transition-all"
           >
             <LogOut className="w-3.5 h-3.5" />
             Sign Out
@@ -98,14 +98,14 @@ function PortalHeader() {
   const { member } = useQISAuth()
   return (
     <header className="h-16 border-b border-white/5 bg-black/20 backdrop-blur-sm flex items-center justify-between px-8">
-      <div className="flex items-center gap-2 text-xs text-gray-500">
+      <div className="flex items-center gap-2 text-xs text-gray-400">
         <Zap className="w-3 h-3 text-blue-400" />
         <span>Quantum Impact Syndicate</span>
         <span className="text-gray-700">/</span>
         <span className="text-gray-400">Member Portal</span>
       </div>
       {member && (
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-gray-400">
           {member.email}
         </div>
       )}

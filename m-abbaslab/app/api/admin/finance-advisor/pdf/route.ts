@@ -11,6 +11,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: 'No file uploaded' }, { status: 400 })
     }
 
+    const MAX_PDF_SIZE = 5 * 1024 * 1024
+    if (file.size > MAX_PDF_SIZE) {
+      return NextResponse.json({ success: false, error: 'PDF must be under 5MB. Current size: ' + (file.size / 1024 / 1024).toFixed(1) + 'MB' }, { status: 400 })
+    }
+
     // @ts-ignore
     const pdfParse = require('pdf-parse')
     const arrayBuffer = await file.arrayBuffer()

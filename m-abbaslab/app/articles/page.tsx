@@ -216,13 +216,13 @@ export default function ArticlesPage() {
                 <div className="text-2xl font-bold text-[#00f0ff] drop-shadow-[0_0_5px_rgba(0,240,255,0.5)]">
                   {loading ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : totalArticles}
                 </div>
-                <div className="text-sm text-gray-500">Total Articles</div>
+                <div className="text-sm text-gray-400">Total Articles</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-[#7000ff] drop-shadow-[0_0_5px_rgba(112,0,255,0.5)]">
                   {featuredCount}
                 </div>
-                <div className="text-sm text-gray-500">Featured</div>
+                <div className="text-sm text-gray-400">Featured</div>
               </div>
             </div>
           </div>
@@ -292,7 +292,7 @@ export default function ArticlesPage() {
                         {article.title}
                       </h3>
                       <p className="text-gray-400 text-sm line-clamp-2 mb-4">{article.excerpt}</p>
-                      <div className="flex items-center text-sm text-gray-500">
+                      <div className="flex items-center text-sm text-gray-400">
                         <Clock className="w-3 h-3 mr-1" />
                         {article.read_time} min read
                       </div>
@@ -355,7 +355,7 @@ export default function ArticlesPage() {
                           ))}
                         </div>
                         <div className="flex items-center justify-between pt-6 border-t border-white/10">
-                          <div className="flex items-center space-x-4 text-sm text-gray-500">
+                          <div className="flex items-center space-x-4 text-sm text-gray-400">
                             <div className="flex items-center">
                               <User className="w-4 h-4 mr-2" />
                               {personalConfig.name}
@@ -420,7 +420,7 @@ export default function ArticlesPage() {
                           <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${cat.borderColor} ${cat.bgColor} ${cat.textColor}`}>
                             {cat.label}
                           </span>
-                          <div className="flex items-center text-xs text-gray-500">
+                          <div className="flex items-center text-xs text-gray-400">
                             <Clock className="w-3 h-3 mr-1" />
                             {article.read_time} min
                           </div>
@@ -441,11 +441,11 @@ export default function ArticlesPage() {
                             </span>
                           ))}
                           {article.tags && article.tags.length > 3 && (
-                            <span className="px-2 py-0.5 text-gray-500 text-xs">+{article.tags.length - 3}</span>
+                            <span className="px-2 py-0.5 text-gray-400 text-xs">+{article.tags.length - 3}</span>
                           )}
                         </div>
                         <div className="flex items-center justify-between pt-4 border-t border-white/5">
-                          <div className="flex items-center text-sm text-gray-500">
+                          <div className="flex items-center text-sm text-gray-400">
                             <Calendar className="w-3 h-3 mr-1" />
                             {article.published_at ? new Date(article.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent'}
                           </div>
@@ -466,7 +466,7 @@ export default function ArticlesPage() {
             <div className="text-center py-20 glass-panel rounded-3xl border border-white/5">
               <div className="text-6xl mb-6 grayscale opacity-50">📝</div>
               <h3 className="text-2xl font-bold mb-3 text-white">No Articles Found</h3>
-              <p className="text-gray-500 mb-8">
+              <p className="text-gray-400 mb-8">
                 {searchQuery
                   ? `No articles found for "${searchQuery}". Try a different search term.`
                   : 'No articles in this category. Try selecting "All Articles".'

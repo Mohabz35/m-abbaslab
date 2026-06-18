@@ -393,7 +393,7 @@ export default function FashionPage() {
           <div className="text-center py-20 glass-panel rounded-3xl border border-white/5">
             <Camera className="w-12 h-12 text-gray-600 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">No Items Found</h3>
-            <p className="text-gray-500">Upload portfolio photos via the admin panel to see them here.</p>
+            <p className="text-gray-400">Upload portfolio photos via the admin panel to see them here.</p>
           </div>
         )}
       </div>
@@ -464,7 +464,7 @@ export default function FashionPage() {
                     <span className="text-blue-400 text-xs font-bold uppercase tracking-wider mb-2 block">{project.category}</span>
                     <h3 className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">{project.title}</h3>
                   </div>
-                  <ArrowRight className="w-6 h-6 text-gray-500 group-hover:text-blue-400 group-hover:-rotate-45 transition-all" />
+                  <ArrowRight className="w-6 h-6 text-gray-400 group-hover:text-blue-400 group-hover:-rotate-45 transition-all" />
                 </div>
                 <p className="text-gray-400 mb-6 line-clamp-2">{project.description}</p>
                 <div className="flex flex-wrap gap-2">
@@ -570,7 +570,7 @@ export default function FashionPage() {
                     <div key={agency.name} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
                       <div>
                         <h4 className="text-white font-bold">{agency.name}</h4>
-                        <span className="text-sm text-gray-500">{agency.type}</span>
+                        <span className="text-sm text-gray-400">{agency.type}</span>
                       </div>
                       {agency.since && <span className="text-xs font-mono text-pink-400 border border-pink-500/20 px-2 py-1 rounded">Since {agency.since}</span>}
                     </div>

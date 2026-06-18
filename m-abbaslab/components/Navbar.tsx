@@ -74,6 +74,8 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
+        role="navigation"
+        aria-label="Main navigation"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, type: "spring" }}
@@ -128,6 +130,11 @@ export default function Navbar() {
                       setHoveredItem(null)
                       if (hasDropdown) setOpenDropdown(null)
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Escape' && openDropdown === item.name) {
+                        setOpenDropdown(null)
+                      }
+                    }}
                   >
                     <Link
                       href={item.href}
@@ -144,7 +151,7 @@ export default function Navbar() {
                         {item.name}
                       </span>
                       {hasDropdown && (
-                        <ChevronDown className={`w-3 h-3 transition-transform ${openDropdown === item.name ? 'rotate-180 text-[#00f0ff]' : 'text-gray-500'
+                        <ChevronDown className={`w-3 h-3 transition-transform ${openDropdown === item.name ? 'rotate-180 text-[#00f0ff]' : 'text-gray-400'
                           }`} aria-hidden="true" />
                       )}
 
@@ -174,6 +181,8 @@ export default function Navbar() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         className="absolute top-full left-0 mt-4 w-56 glass-panel rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)] overflow-hidden z-50"
+                        role="menu"
+                        aria-label={`${item.name} submenu`}
                       >
                         <div className="py-2">
                           {item.dropdown!.map((dropdownItem) => (
@@ -181,6 +190,7 @@ export default function Navbar() {
                               key={dropdownItem.name}
                               href={dropdownItem.href}
                               className="flex items-center px-4 py-3 hover:bg-white/10 transition-colors group/item"
+                              role="menuitem"
                               onClick={() => setOpenDropdown(null)}
                             >
                               <span className="text-gray-300 group-hover/item:text-[#00f0ff] transition-colors text-sm">
@@ -251,6 +261,7 @@ export default function Navbar() {
                           ? 'bg-blue-500/10 text-[#00f0ff] border border-[#00f0ff]/30'
                           : 'hover:bg-white/5 text-gray-300'
                           }`}
+                        aria-current={active ? 'page' : undefined}
                         onClick={() => {
                           if (!hasDropdown) setIsOpen(false)
                         }}
@@ -265,6 +276,8 @@ export default function Navbar() {
                               dropdownOpen ? null : item.name
                             )
                           }
+                          aria-label={`${dropdownOpen ? 'Collapse' : 'Expand'} ${item.name} submenu`}
+                          aria-expanded={dropdownOpen}
                           className="p-3 ml-2 text-gray-400 hover:text-white"
                         >
                           <ChevronDown className={`w-4 h-4 transition-transform ${dropdownOpen ? 'rotate-180' : ''

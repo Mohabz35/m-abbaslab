@@ -133,7 +133,7 @@ export default function PaymentGate({ cvId, isOpen, onClose, onPaymentSuccess }:
                 )}
               </Button>
 
-              <p className="text-xs text-slate-500 text-center">
+              <p className="text-xs text-slate-400 text-center">
                 Secure payment powered by Paystack. Your first CV is free!
               </p>
             </>
@@ -143,7 +143,7 @@ export default function PaymentGate({ cvId, isOpen, onClose, onPaymentSuccess }:
             <div className="text-center py-8">
               <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto mb-4" />
               <p className="text-slate-600">Processing your payment...</p>
-              <p className="text-sm text-slate-500 mt-2">
+              <p className="text-sm text-slate-400 mt-2">
                 You will be redirected to Paystack to complete the payment.
               </p>
             </div>

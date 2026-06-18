@@ -75,7 +75,7 @@ function LoginForm() {
               <label className="text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">Username</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <User className="w-5 h-5 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
+                  <User className="w-5 h-5 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
                 </div>
                 <input
                   type="text"
@@ -94,7 +94,7 @@ function LoginForm() {
               <label className="text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">Password</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="w-5 h-5 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
+                  <Lock className="w-5 h-5 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
                 </div>
                 <input
                   type="password"

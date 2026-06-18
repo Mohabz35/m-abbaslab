@@ -83,7 +83,7 @@ export default function ProfilePage() {
         <h3 className="text-sm font-bold text-white">Personal Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs text-gray-500 uppercase tracking-wider mb-2">Full Name</label>
+            <label className="block text-xs text-gray-400 uppercase tracking-wider mb-2">Full Name</label>
             <input
               type="text"
               value={fullName}
@@ -92,16 +92,16 @@ export default function ProfilePage() {
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-500 uppercase tracking-wider mb-2">Email</label>
+            <label className="block text-xs text-gray-400 uppercase tracking-wider mb-2">Email</label>
             <input
               type="email"
               value={member.email}
               disabled
-              className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm text-gray-500 cursor-not-allowed"
+              className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-sm text-gray-400 cursor-not-allowed"
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-500 uppercase tracking-wider mb-2">Discipline</label>
+            <label className="block text-xs text-gray-400 uppercase tracking-wider mb-2">Discipline</label>
             <input
               type="text"
               value={discipline}
@@ -111,7 +111,7 @@ export default function ProfilePage() {
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-500 uppercase tracking-wider mb-2">Institution</label>
+            <label className="block text-xs text-gray-400 uppercase tracking-wider mb-2">Institution</label>
             <input
               type="text"
               value={institution}
@@ -150,7 +150,7 @@ export default function ProfilePage() {
             { label: 'Approved', value: member.approved_at ? new Date(member.approved_at).toLocaleDateString() : 'Pending' },
           ].map((item, idx) => (
             <div key={idx}>
-              <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">{item.label}</div>
+              <div className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">{item.label}</div>
               <div className="text-sm font-semibold text-white">{item.value}</div>
             </div>
           ))}

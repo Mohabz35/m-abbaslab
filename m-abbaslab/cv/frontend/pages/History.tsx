@@ -73,7 +73,7 @@ export default function History() {
         ) : cvs.length === 0 ? (
           <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
             <CardContent className="pt-12 text-center">
-              <div className="text-slate-400 dark:text-slate-500 mb-4">
+              <div className="text-slate-400 dark:text-slate-400 mb-4">
                 <Eye className="h-12 w-12 mx-auto opacity-50" />
               </div>
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">No CVs yet</h3>

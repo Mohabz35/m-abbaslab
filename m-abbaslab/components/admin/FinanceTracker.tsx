@@ -333,7 +333,7 @@ export default function FinanceTracker() {
     }
   }
 
-  if (!isLoaded) return <div className="p-8 text-center text-gray-500 animate-pulse">Loading secure finance module...</div>
+  if (!isLoaded) return <div className="p-8 text-center text-gray-400 animate-pulse">Loading secure finance module...</div>
 
   return (
     <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm font-sans w-full max-w-5xl mx-auto">
@@ -344,7 +344,7 @@ export default function FinanceTracker() {
             <Wallet className="text-blue-500 w-7 h-7" />
             CEO Finance Tracker
           </h2>
-          <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest font-bold">Encrypted Ledger Analytics</p>
+          <p className="text-xs text-gray-400 mt-1 uppercase tracking-widest font-bold">Encrypted Ledger Analytics</p>
         </div>
         
         <div className="flex items-center gap-3">
@@ -375,7 +375,7 @@ export default function FinanceTracker() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="bg-gray-50 dark:bg-gray-800/50 p-5 rounded-2xl border border-gray-100 dark:border-gray-800">
-          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
+          <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-400 mb-2">
             <TrendingUp className="w-4 h-4 text-emerald-500" />
             Total Income
           </div>
@@ -385,7 +385,7 @@ export default function FinanceTracker() {
         </div>
         
         <div className="bg-gray-50 dark:bg-gray-800/50 p-5 rounded-2xl border border-gray-100 dark:border-gray-800">
-          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
+          <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-400 mb-2">
             <TrendingDown className="w-4 h-4 text-rose-500" />
             Total Expenses
           </div>
@@ -419,7 +419,7 @@ export default function FinanceTracker() {
               onChange={e => setDailyTarget(Math.max(0, parseInt(e.target.value) || 0))}
               className="w-20 bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-xs text-white text-right outline-none focus:border-emerald-500/50"
             />
-            <span className="text-xs text-gray-500">/day</span>
+            <span className="text-xs text-gray-400">/day</span>
           </div>
         </div>
         
@@ -444,7 +444,7 @@ export default function FinanceTracker() {
             </div>
             <div className="flex justify-between text-xs">
               <span className="text-emerald-400 font-bold">{formatMoney(todayIncome)}</span>
-              <span className="text-gray-500">of {formatMoney(dailyTarget)}</span>
+              <span className="text-gray-400">of {formatMoney(dailyTarget)}</span>
             </div>
           </div>
 
@@ -468,7 +468,7 @@ export default function FinanceTracker() {
             </div>
             <div className="flex justify-between text-xs">
               <span className="text-emerald-400 font-bold">{formatMoney(monthIncome)}</span>
-              <span className="text-gray-500">of {formatMoney(monthTarget)}</span>
+              <span className="text-gray-400">of {formatMoney(monthTarget)}</span>
             </div>
           </div>
         </div>
@@ -518,13 +518,13 @@ export default function FinanceTracker() {
                 <div className="flex gap-3 p-1 bg-gray-100 dark:bg-gray-800/50 rounded-xl inline-flex">
                   <button 
                     onClick={() => { setEntryType('expense'); setCategory(''); }}
-                    className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${entryType === 'expense' ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'}`}
+                    className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${entryType === 'expense' ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-400 hover:text-gray-700 dark:text-gray-400'}`}
                   >
                     Expense
                   </button>
                   <button 
                     onClick={() => { setEntryType('income'); setCategory(''); }}
-                    className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${entryType === 'income' ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'}`}
+                    className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${entryType === 'income' ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-400 hover:text-gray-700 dark:text-gray-400'}`}
                   >
                     Income
                   </button>
@@ -532,7 +532,7 @@ export default function FinanceTracker() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Amount (KSh)</label>
+                    <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1.5">Amount (KSh)</label>
                     <input 
                       type="number" 
                       value={amount}
@@ -542,7 +542,7 @@ export default function FinanceTracker() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Category</label>
+                    <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1.5">Category</label>
                     <select 
                       value={category}
                       onChange={e => setCategory(e.target.value)}
@@ -572,7 +572,7 @@ export default function FinanceTracker() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Date</label>
+                    <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1.5">Date</label>
                     <input 
                       type="date" 
                       value={date}
@@ -581,7 +581,7 @@ export default function FinanceTracker() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Description (Optional)</label>
+                    <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1.5">Description (Optional)</label>
                     <input 
                       type="text" 
                       value={desc}
@@ -612,7 +612,7 @@ export default function FinanceTracker() {
                     <div className="w-16 h-16 bg-gray-50 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
                       <List className="w-8 h-8 text-gray-400" />
                     </div>
-                    <p className="text-gray-500">No transactions recorded yet.</p>
+                    <p className="text-gray-400">No transactions recorded yet.</p>
                   </div>
                 ) : (
                   entries.map((e) => (
@@ -629,7 +629,7 @@ export default function FinanceTracker() {
                         <div>
                           <p className="font-semibold text-gray-900 dark:text-white">{e.desc}</p>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="text-xs text-gray-500">{e.date}</span>
+                            <span className="text-xs text-gray-400">{e.date}</span>
                             <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
                             <span className="text-xs px-2 py-0.5 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300">
                               {e.category}
@@ -657,7 +657,7 @@ export default function FinanceTracker() {
             {/* BREAKDOWN TAB */}
             {activeTab === 'breakdown' && (() => {
               const expenses = entries.filter(e => e.type === 'expense')
-              if (expenses.length === 0) return <p className="text-gray-500 text-center py-12">No expense data available for breakdown.</p>
+              if (expenses.length === 0) return <p className="text-gray-400 text-center py-12">No expense data available for breakdown.</p>
               
               const catTotals: Record<string, number> = {}
               expenses.forEach(e => { catTotals[e.category] = (catTotals[e.category] || 0) + e.amount })
@@ -667,7 +667,7 @@ export default function FinanceTracker() {
 
               return (
                 <div className="space-y-6 max-w-3xl">
-                  <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">Expense Categories</h3>
+                  <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">Expense Categories</h3>
                   {sorted.map(([cat, amt], i) => (
                     <div key={cat} className="space-y-2">
                       <div className="flex justify-between text-sm">
@@ -694,7 +694,7 @@ export default function FinanceTracker() {
               <div>
                 <div className="flex flex-col sm:flex-row gap-4 mb-8 p-5 bg-gray-50 dark:bg-gray-800/30 rounded-2xl border border-gray-100 dark:border-gray-800 items-end">
                   <div className="flex-1 w-full">
-                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Goal Name</label>
+                    <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1.5">Goal Name</label>
                     <input 
                       type="text" 
                       value={goalName}
@@ -704,7 +704,7 @@ export default function FinanceTracker() {
                     />
                   </div>
                   <div className="flex-1 w-full">
-                    <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Target Amount</label>
+                    <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-1.5">Target Amount</label>
                     <input 
                       type="number" 
                       value={goalTarget}
@@ -723,7 +723,7 @@ export default function FinanceTracker() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {goals.length === 0 ? (
-                    <p className="text-gray-500 col-span-full">No goals set yet.</p>
+                    <p className="text-gray-400 col-span-full">No goals set yet.</p>
                   ) : (
                     goals.map(g => {
                       const pct = Math.min(100, Math.round((g.saved / g.target) * 100))
@@ -732,7 +732,7 @@ export default function FinanceTracker() {
                           <div className="flex justify-between items-start mb-4">
                             <div>
                               <h4 className="font-bold text-gray-900 dark:text-white text-lg">{g.name}</h4>
-                              <p className="text-sm text-gray-500 mt-1">
+                              <p className="text-sm text-gray-400 mt-1">
                                 <span className="text-emerald-600 font-semibold">{formatMoney(g.saved)}</span> 
                                 {' '}of {formatMoney(g.target)}
                               </p>
@@ -791,14 +791,14 @@ export default function FinanceTracker() {
                     <Cloud className="w-5 h-5 text-blue-500" />
                     Bulk Bank Statement Import
                   </h3>
-                  <p className="text-sm text-gray-500 mb-4">Upload a .CSV or .PDF statement file. PDF will be parsed and sent directly to AI.</p>
+                  <p className="text-sm text-gray-400 mb-4">Upload a .CSV or .PDF statement file. PDF will be parsed and sent directly to AI.</p>
                   
                   <div className="flex flex-col sm:flex-row items-center gap-4">
                     <input 
                       type="file" 
                       accept=".csv,.pdf"
                       onChange={e => setStatementFile(e.target.files?.[0] || null)}
-                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/30 dark:file:text-blue-400"
+                      className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/30 dark:file:text-blue-400"
                     />
                     <button
                       onClick={handleUploadStatement}
@@ -819,7 +819,7 @@ export default function FinanceTracker() {
                         <Target className="w-5 h-5" />
                         AI Financial Analyst
                       </h3>
-                      <p className="text-sm text-gray-500">Scan your entire ledger and receive automated wealth-building advice.</p>
+                      <p className="text-sm text-gray-400">Scan your entire ledger and receive automated wealth-building advice.</p>
                     </div>
                     <button
                       onClick={handleAIAdvisor}

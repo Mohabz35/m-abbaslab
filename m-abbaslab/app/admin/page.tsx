@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { personalConfig } from '@/config/personal'
@@ -63,10 +63,10 @@ export default function AdminPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold tracking-wider">MISSION CONTROL</h1>
-              <p className="text-gray-500 text-sm">System Administrator: {personalConfig.name}</p>
+              <p className="text-gray-400 text-sm">System Administrator: {personalConfig.name}</p>
             </div>
           </div>
-          <div className="flex items-center space-x-2 text-xs text-gray-500">
+          <div className="flex items-center space-x-2 text-xs text-gray-400">
             <span className={`w-2 h-2 ${dbStatus === 'connected' ? 'bg-green-500' : dbStatus === 'error' ? 'bg-red-500' : 'bg-yellow-500'} rounded-full animate-ping`} />
             <span>{dbStatus === 'connected' ? 'LIVE DATABASE CONNECTED' : dbStatus === 'error' ? 'DB CONNECTION ERROR' : 'LOCAL CONFIG ONLY'}</span>
           </div>
@@ -103,7 +103,7 @@ export default function AdminPage() {
                   <div className={`w-2 h-2 ${dbStatus === 'connected' ? 'bg-green-500' : 'bg-yellow-500'} rounded-full mr-3`} />
                   <span>Supabase Database</span>
                 </div>
-                <span className="text-xs font-mono text-gray-500">{hasSupabaseKeys ? 'Connected' : 'No Keys'}</span>
+                <span className="text-xs font-mono text-gray-400">{hasSupabaseKeys ? 'Connected' : 'No Keys'}</span>
                 <span className={`px-2 py-1 text-xs rounded ${dbStatus === 'connected' ? 'bg-green-500/10 text-green-400' : 'bg-yellow-500/10 text-yellow-400'}`}>
                   {dbStatus === 'connected' ? 'LIVE' : dbStatus === 'error' ? 'ERROR' : 'STANDBY'}
                 </span>
@@ -113,7 +113,7 @@ export default function AdminPage() {
                   <div className="w-2 h-2 bg-green-500 rounded-full mr-3" />
                   <span>3D Engine</span>
                 </div>
-                <span className="text-xs font-mono text-gray-500">Three.js / R3F</span>
+                <span className="text-xs font-mono text-gray-400">Three.js / R3F</span>
                 <span className="px-2 py-1 bg-green-500/10 text-green-400 text-xs rounded">ACTIVE</span>
               </div>
               <div className="flex items-center justify-between p-4 bg-black/40 rounded-lg border border-white/5">
@@ -121,7 +121,7 @@ export default function AdminPage() {
                   <div className="w-2 h-2 bg-green-500 rounded-full mr-3" />
                   <span>JARVIS WhatsApp Engine</span>
                 </div>
-                <span className="text-xs font-mono text-gray-500">Port 3009</span>
+                <span className="text-xs font-mono text-gray-400">Port 3009</span>
                 <span className="px-2 py-1 bg-green-500/10 text-green-400 text-xs rounded">ACTIVE</span>
               </div>
             </div>
@@ -145,7 +145,7 @@ export default function AdminPage() {
               </a>
               <a href="/api/admin/migrate-data" onClick={(e) => { e.preventDefault(); fetch('/api/admin/migrate-data', { method: 'POST' }).then(r => r.json()).then(d => alert(JSON.stringify(d.results, null, 2))).catch(() => alert('Migration endpoint not available')) }}
                 className="block w-full text-center py-3 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 rounded-lg transition-colors border border-emerald-500/30 font-semibold">
-                Migrate personal.json → Supabase
+                Migrate personal.json ? Supabase
               </a>
             </div>
           </div>

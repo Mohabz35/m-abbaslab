@@ -199,7 +199,7 @@ export default function OverviewDashboard() {
               </div>
               <div className="text-3xl font-bold text-white mb-1">{loading ? '...' : metrics.totalAlphas}</div>
               <div className="text-sm text-slate-400 font-medium">Total Alphas Tested</div>
-              <div className="mt-4 pt-4 border-t border-slate-700/50 text-xs text-slate-500 flex justify-between">
+              <div className="mt-4 pt-4 border-t border-slate-700/50 text-xs text-slate-400 flex justify-between">
                 <span>Passed: <strong className="text-emerald-400">{metrics.passedAlphas}</strong></span>
                 <span>Failed: <strong className="text-red-400">{metrics.totalAlphas - metrics.passedAlphas}</strong></span>
               </div>
@@ -212,7 +212,7 @@ export default function OverviewDashboard() {
               </div>
               <div className="text-3xl font-bold text-white mb-1">{loading ? '...' : `$${metrics.financeTotal.toLocaleString()}`}</div>
               <div className="text-sm text-slate-400 font-medium">Net Cash Flow</div>
-              <div className="mt-4 pt-4 border-t border-slate-700/50 text-xs text-slate-500 flex justify-between">
+              <div className="mt-4 pt-4 border-t border-slate-700/50 text-xs text-slate-400 flex justify-between">
                 <span>Status: <strong className={metrics.financeTotal >= 0 ? 'text-emerald-400' : 'text-red-400'}>{metrics.financeTotal >= 0 ? 'Positive' : 'Negative'}</strong></span>
               </div>
             </motion.div>
@@ -224,7 +224,7 @@ export default function OverviewDashboard() {
               </div>
               <div className="text-3xl font-bold text-white mb-1">{loading ? '...' : metrics.projects}</div>
               <div className="text-sm text-slate-400 font-medium">Total Projects</div>
-              <div className="mt-4 pt-4 border-t border-slate-700/50 text-xs text-slate-500 flex justify-between">
+              <div className="mt-4 pt-4 border-t border-slate-700/50 text-xs text-slate-400 flex justify-between">
                 <span>Active: <strong className="text-amber-400">{metrics.projects - metrics.shippedProjects}</strong></span>
                 <span>Shipped: <strong className="text-emerald-400">{metrics.shippedProjects}</strong></span>
               </div>
@@ -262,7 +262,7 @@ export default function OverviewDashboard() {
           <div className="bg-slate-800 rounded-xl border border-slate-700 p-6 mt-6">
             <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-6"><Activity className="w-5 h-5 text-amber-400"/> Recent Activity</h3>
             {timeline.length === 0 ? (
-              <p className="text-sm text-slate-500">No recent activity detected.</p>
+              <p className="text-sm text-slate-400">No recent activity detected.</p>
             ) : (
               <div className="space-y-6">
                 {timeline.map((item, idx) => {
@@ -275,7 +275,7 @@ export default function OverviewDashboard() {
                       </div>
                       <div>
                         <div className="text-sm font-medium text-white">{item.action}</div>
-                        <div className="text-xs text-slate-500">{item.time}</div>
+                        <div className="text-xs text-slate-400">{item.time}</div>
                       </div>
                     </div>
                   )

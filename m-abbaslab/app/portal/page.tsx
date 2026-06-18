@@ -97,7 +97,7 @@ export default function PortalDashboard() {
                 <Icon className={`w-5 h-5 ${stat.color}`} />
                 <span className="text-2xl font-bold text-white">{stat.value}</span>
               </div>
-              <div className="text-xs text-gray-500 uppercase tracking-wider">{stat.label}</div>
+              <div className="text-xs text-gray-400 uppercase tracking-wider">{stat.label}</div>
             </div>
           )
         })}
@@ -111,7 +111,7 @@ export default function PortalDashboard() {
               <FileText className="w-5 h-5 text-blue-400" />
               <h3 className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">QIS Doctrine</h3>
             </div>
-            <p className="text-xs text-gray-500 leading-relaxed">
+            <p className="text-xs text-gray-400 leading-relaxed">
               Access founding documents, charters, and governance frameworks.
               {member.role === 'associate' && <span className="block mt-2 text-amber-400/60"><Lock className="w-3 h-3 inline mr-1" />Some documents require Core+ access</span>}
             </p>
@@ -124,7 +124,7 @@ export default function PortalDashboard() {
               <TrendingUp className="w-5 h-5 text-purple-400" />
               <h3 className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors">Strategy Decks</h3>
             </div>
-            <p className="text-xs text-gray-500 leading-relaxed">
+            <p className="text-xs text-gray-400 leading-relaxed">
               Alignment decks, budget presentations, and strategic roadmaps.
             </p>
           </div>
@@ -136,7 +136,7 @@ export default function PortalDashboard() {
               <FolderKanban className="w-5 h-5 text-emerald-400" />
               <h3 className="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors">Projects</h3>
             </div>
-            <p className="text-xs text-gray-500 leading-relaxed">
+            <p className="text-xs text-gray-400 leading-relaxed">
               View and contribute to QIS flagship R&D projects.
             </p>
           </div>
@@ -148,7 +148,7 @@ export default function PortalDashboard() {
               <Shield className="w-5 h-5 text-amber-400" />
               <h3 className="text-sm font-bold text-white group-hover:text-amber-400 transition-colors">My Profile</h3>
             </div>
-            <p className="text-xs text-gray-500 leading-relaxed">
+            <p className="text-xs text-gray-400 leading-relaxed">
               Manage your membership details and skill DNA profile.
             </p>
           </div>
@@ -166,7 +166,7 @@ export default function PortalDashboard() {
             { label: 'Applied', value: member.applied_at ? new Date(member.applied_at).toLocaleDateString() : 'N/A' },
           ].map((item, idx) => (
             <div key={idx}>
-              <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">{item.label}</div>
+              <div className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">{item.label}</div>
               <div className="text-sm font-semibold text-white">{item.value}</div>
             </div>
           ))}

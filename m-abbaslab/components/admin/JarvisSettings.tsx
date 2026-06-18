@@ -234,7 +234,7 @@ export default function JarvisSettings() {
     return (
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-8 flex justify-center items-center">
         <Clock className="w-6 h-6 text-blue-500 animate-spin mr-3" />
-        <span className="text-gray-500 text-sm">Loading unified settings...</span>
+        <span className="text-gray-400 text-sm">Loading unified settings...</span>
       </div>
     )
   }
@@ -261,7 +261,7 @@ export default function JarvisSettings() {
             <Settings className="w-5 h-5 text-blue-600" />
             Jarvis Control Panel
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-400 mt-1">
             Configure system states, communications styles, responders, working schedules, and database backups.
           </p>
         </div>
@@ -294,7 +294,7 @@ export default function JarvisSettings() {
                 className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors ${
                   activeTab === id
                     ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                    : 'text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-200'
+                    : 'text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-200'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -316,7 +316,7 @@ export default function JarvisSettings() {
                   <div className="flex items-center justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-850 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1 pr-4">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Master Enable</div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-400">
                         Global toggle for Jarvis AI services. Disabling this turns off all WhatsApp reply logic.
                       </div>
                     </div>
@@ -335,7 +335,7 @@ export default function JarvisSettings() {
                   <div className="flex items-center justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-850 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1 pr-4">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Group Monitoring</div>
-                      <div className="text-xs text-gray-500 font-medium">
+                      <div className="text-xs text-gray-400 font-medium">
                         Jarvis scans and responds to group messages when mentioned.
                       </div>
                     </div>
@@ -354,7 +354,7 @@ export default function JarvisSettings() {
                   <div className="flex items-center justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-850 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1 pr-4">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Status Monitoring</div>
-                      <div className="text-xs text-gray-500 font-medium">
+                      <div className="text-xs text-gray-400 font-medium">
                         Jarvis watches status updates from contacts and runs AI content classifications.
                       </div>
                     </div>
@@ -373,7 +373,7 @@ export default function JarvisSettings() {
                   <div className="flex items-center justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-850 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1 pr-4">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Auto-Like Statuses</div>
-                      <div className="text-xs text-gray-500 font-medium">
+                      <div className="text-xs text-gray-400 font-medium">
                         Auto-like (react ❤️) statuses matching categories of interest.
                       </div>
                     </div>
@@ -398,7 +398,7 @@ export default function JarvisSettings() {
             <div className="space-y-6">
               <div>
                 <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-2">AI Response Preferences</h3>
-                <p className="text-xs text-gray-500 mb-6">
+                <p className="text-xs text-gray-400 mb-6">
                   Fine-tune Jarvis's writing tone sliders to adjust the OpenRouter prompt guidelines.
                 </p>
                 
@@ -407,7 +407,7 @@ export default function JarvisSettings() {
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-sm">
                       <label className="font-bold text-gray-700 dark:text-gray-300">Formality Level</label>
-                      <span className="text-xs text-gray-500">{jarvisConfig.communicationPreferences.formality * 100}% (Casual ↔ Formal)</span>
+                      <span className="text-xs text-gray-400">{jarvisConfig.communicationPreferences.formality * 100}% (Casual ↔ Formal)</span>
                     </div>
                     <input
                       type="range"
@@ -427,7 +427,7 @@ export default function JarvisSettings() {
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-sm">
                       <label className="font-bold text-gray-700 dark:text-gray-300">Verbosity / Detail</label>
-                      <span className="text-xs text-gray-500">{jarvisConfig.communicationPreferences.verbosity * 100}% (Brief ↔ Detailed)</span>
+                      <span className="text-xs text-gray-400">{jarvisConfig.communicationPreferences.verbosity * 100}% (Brief ↔ Detailed)</span>
                     </div>
                     <input
                       type="range"
@@ -447,7 +447,7 @@ export default function JarvisSettings() {
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-sm">
                       <label className="font-bold text-gray-700 dark:text-gray-300">Humor / Playfulness</label>
-                      <span className="text-xs text-gray-500">{jarvisConfig.communicationPreferences.humor * 100}% (Serious ↔ Witty)</span>
+                      <span className="text-xs text-gray-400">{jarvisConfig.communicationPreferences.humor * 100}% (Serious ↔ Witty)</span>
                     </div>
                     <input
                       type="range"
@@ -467,7 +467,7 @@ export default function JarvisSettings() {
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-sm">
                       <label className="font-bold text-gray-700 dark:text-gray-300">Emoji Density</label>
-                      <span className="text-xs text-gray-500">{jarvisConfig.communicationPreferences.emoji * 100}% (None ↔ Rich)</span>
+                      <span className="text-xs text-gray-400">{jarvisConfig.communicationPreferences.emoji * 100}% (None ↔ Rich)</span>
                     </div>
                     <input
                       type="range"
@@ -497,7 +497,7 @@ export default function JarvisSettings() {
                   <div className="flex items-center justify-between p-4 rounded-xl border border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1 pr-4">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Auto-respond to Direct Messages</div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-400">
                         When disabled, direct message auto-replies are paused.
                       </div>
                     </div>
@@ -519,7 +519,7 @@ export default function JarvisSettings() {
                   <div className="flex items-center justify-between p-4 rounded-xl border border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1 pr-4">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Auto-respond in Groups</div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-400">
                         Respond in groups when mentioned or asked questions.
                       </div>
                     </div>
@@ -541,7 +541,7 @@ export default function JarvisSettings() {
                   <div className="flex items-center justify-between p-4 rounded-xl border border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1 pr-4">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Log All Incoming Messages</div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-400">
                         Logs all WhatsApp conversations to Supabase (even if Jarvis skips answering).
                       </div>
                     </div>
@@ -562,7 +562,7 @@ export default function JarvisSettings() {
                   {/* Max Length */}
                   <div className="space-y-1.5 p-4 rounded-xl border border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
                     <label className="block text-sm font-bold text-gray-900 dark:text-white">Max Response Character Count</label>
-                    <p className="text-xs text-gray-500 mb-2">Max token cutoff for generating replies (defaults to 512).</p>
+                    <p className="text-xs text-gray-400 mb-2">Max token cutoff for generating replies (defaults to 512).</p>
                     <input
                       type="number"
                       value={jarvisConfig.whatsappSettings.maxResponseLength}
@@ -607,7 +607,7 @@ export default function JarvisSettings() {
                   {jarvisConfig.schedule.type !== 'always' && jarvisConfig.schedule.type !== 'disabled' && (
                     <div className="grid grid-cols-2 gap-4 max-w-md p-4 rounded-xl border border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
                       <div className="space-y-1.5">
-                        <label className="block text-xs font-bold text-gray-500 uppercase">Working Hours Start</label>
+                        <label className="block text-xs font-bold text-gray-400 uppercase">Working Hours Start</label>
                         <input
                           type="time"
                           value={jarvisConfig.schedule.workingHoursStart}
@@ -619,7 +619,7 @@ export default function JarvisSettings() {
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="block text-xs font-bold text-gray-500 uppercase">Working Hours End</label>
+                        <label className="block text-xs font-bold text-gray-400 uppercase">Working Hours End</label>
                         <input
                           type="time"
                           value={jarvisConfig.schedule.workingHoursEnd}
@@ -661,7 +661,7 @@ export default function JarvisSettings() {
             <div className="space-y-6">
               <div>
                 <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-2">Configuration Backup</h3>
-                <p className="text-xs text-gray-500 mb-6">
+                <p className="text-xs text-gray-400 mb-6">
                   Export settings to local file backups or restore configuration states.
                 </p>
 
@@ -673,7 +673,7 @@ export default function JarvisSettings() {
                         <Download className="w-4 h-4 text-blue-500" />
                         Export Settings
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-400">
                         Downloads a JSON copy of all communication settings.
                       </div>
                     </div>
@@ -692,7 +692,7 @@ export default function JarvisSettings() {
                         <Upload className="w-4 h-4 text-emerald-500" />
                         Import Settings
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-400">
                         Uploads and overwrites settings from an exported config JSON file.
                       </div>
                     </div>
@@ -723,7 +723,7 @@ export default function JarvisSettings() {
                       <RotateCcw className="w-4 h-4" />
                       Reset to Factory Defaults
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-400">
                       Restores all Jarvis preferences to initial settings. This action is irreversible.
                     </div>
                   </div>

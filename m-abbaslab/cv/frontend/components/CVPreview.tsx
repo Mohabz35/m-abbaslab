@@ -53,7 +53,7 @@ export default function CVPreview({
                 <Streamdown>{cv}</Streamdown>
               </div>
             ) : (
-              <div className="text-center py-12 text-slate-500">
+              <div className="text-center py-12 text-slate-400">
                 Your CV will appear here after generation
               </div>
             )}
@@ -141,7 +141,7 @@ export default function CVPreview({
                 </div>
               ))
             ) : (
-              <div className="text-sm text-slate-500">ATS checks will appear after generation</div>
+              <div className="text-sm text-slate-400">ATS checks will appear after generation</div>
             )}
           </CardContent>
         </Card>

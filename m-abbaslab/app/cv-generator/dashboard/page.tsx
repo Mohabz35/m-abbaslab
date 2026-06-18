@@ -177,7 +177,7 @@ export default function JobDashboardPage() {
                   </div>
                   
                   <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-700/50">
-                    <div className="flex items-center gap-1 text-xs text-slate-500">
+                    <div className="flex items-center gap-1 text-xs text-slate-400">
                       <Calendar className="h-3 w-3" />
                       {new Date(job.created_at).toLocaleDateString()}
                     </div>
@@ -190,7 +190,7 @@ export default function JobDashboardPage() {
                       <button onClick={() => router.push(`/cv-generator/builder?role=${encodeURIComponent(job.role)}&company=${encodeURIComponent(job.company)}`)} className="p-1.5 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 rounded transition-colors" title="Generate CV for this job">
                         <FileText className="h-4 w-4" />
                       </button>
-                      <button onClick={() => deleteJob(job.id)} className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors">
+                      <button onClick={() => deleteJob(job.id)} className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors">
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>

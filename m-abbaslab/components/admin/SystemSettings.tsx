@@ -84,7 +84,7 @@ export default function SystemSettings() {
             <Sliders className="text-blue-500 w-6 h-6" />
             Global System Configuration
           </h2>
-          <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest font-bold">Manage Core Modules</p>
+          <p className="text-xs text-gray-400 mt-1 uppercase tracking-widest font-bold">Manage Core Modules</p>
         </div>
         <div className="flex gap-2">
           <button onClick={loadConfig} className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg flex items-center gap-2">

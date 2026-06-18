@@ -533,7 +533,7 @@ export default function WorldQuantLab() {
                   <Network className="w-5 h-5 text-emerald-400" />
                   <span className="font-mono text-sm text-emerald-300">NEURAL ALPHA NETWORK</span>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-slate-500">
+                <div className="flex items-center gap-2 text-xs text-slate-400">
                   <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Nodes: 28</span>
                   <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-400/50" /> Connections: 156</span>
                 </div>
@@ -550,7 +550,7 @@ export default function WorldQuantLab() {
                   <span className="font-mono text-sm text-emerald-300">QUANT AGENTS AT WORK</span>
                 </div>
                 {activeBatch && (
-                  <div className="flex items-center gap-4 text-xs text-slate-500">
+                  <div className="flex items-center gap-4 text-xs text-slate-400">
                     <span>Generated: {activeBatch.total_generated}</span>
                     <span>Tested: {activeBatch.total_tested}</span>
                     <span className="text-emerald-400">Passed: {activeBatch.total_passed}</span>
@@ -569,7 +569,7 @@ export default function WorldQuantLab() {
                 {healthLogs.map((log) => (
                   <motion.div key={log.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className={`flex items-center gap-3 p-2 rounded-lg text-xs font-mono ${log.status === "healthy" ? "text-emerald-400 bg-emerald-500/5" : log.status === "warning" ? "text-amber-400 bg-amber-500/5" : "text-red-400 bg-red-500/5"}`}>
                     {log.status === "healthy" ? <CheckCircle className="w-4 h-4" /> : log.status === "warning" ? <AlertTriangle className="w-4 h-4" /> : <X className="w-4 h-4" />}
-                    <span className="text-slate-500">{new Date(log.created_at).toLocaleTimeString()}</span>
+                    <span className="text-slate-400">{new Date(log.created_at).toLocaleTimeString()}</span>
                     <span className="uppercase">{log.component}</span>
                     <span className="text-slate-300">{log.message}</span>
                   </motion.div>
@@ -583,20 +583,20 @@ export default function WorldQuantLab() {
           <div className="col-span-12 lg:col-span-5 space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="rounded-xl border border-slate-800 bg-slate-900 p-4">
-                <div className="flex items-center gap-2 mb-2"><Database className="w-4 h-4 text-emerald-400" /><span className="text-xs text-slate-500 font-mono">TOTAL ALPHAS</span></div>
+                <div className="flex items-center gap-2 mb-2"><Database className="w-4 h-4 text-emerald-400" /><span className="text-xs text-slate-400 font-mono">TOTAL ALPHAS</span></div>
                 <motion.div key={stats.totalAlphas} initial={{ scale: 1.2, color: "#00ff88" }} animate={{ scale: 1, color: "#fff" }} className="text-3xl font-bold">{stats.totalAlphas.toLocaleString()}</motion.div>
               </div>
               <div className="rounded-xl border border-slate-800 bg-slate-900 p-4">
-                <div className="flex items-center gap-2 mb-2"><CheckCircle className="w-4 h-4 text-emerald-400" /><span className="text-xs text-slate-500 font-mono">PASSED</span></div>
+                <div className="flex items-center gap-2 mb-2"><CheckCircle className="w-4 h-4 text-emerald-400" /><span className="text-xs text-slate-400 font-mono">PASSED</span></div>
                 <div className="text-3xl font-bold text-emerald-400">{stats.passedAlphas}</div>
-                <div className="text-xs text-slate-500 mt-1">{stats.successRate.toFixed(1)}% success rate</div>
+                <div className="text-xs text-slate-400 mt-1">{stats.successRate.toFixed(1)}% success rate</div>
               </div>
               <div className="rounded-xl border border-slate-800 bg-slate-900 p-4">
-                <div className="flex items-center gap-2 mb-2"><TrendingUp className="w-4 h-4 text-emerald-400" /><span className="text-xs text-slate-500 font-mono">AVG SHARPE</span></div>
+                <div className="flex items-center gap-2 mb-2"><TrendingUp className="w-4 h-4 text-emerald-400" /><span className="text-xs text-slate-400 font-mono">AVG SHARPE</span></div>
                 <div className="text-3xl font-bold">{stats.avgSharpe.toFixed(2)}</div>
               </div>
               <div className="rounded-xl border border-slate-800 bg-slate-900 p-4">
-                <div className="flex items-center gap-2 mb-2"><Zap className="w-4 h-4 text-amber-400" /><span className="text-xs text-slate-500 font-mono">BEST SHARPE</span></div>
+                <div className="flex items-center gap-2 mb-2"><Zap className="w-4 h-4 text-amber-400" /><span className="text-xs text-slate-400 font-mono">BEST SHARPE</span></div>
                 <div className="text-3xl font-bold text-amber-400">{stats.bestSharpe.toFixed(2)}</div>
               </div>
             </div>
@@ -614,7 +614,7 @@ export default function WorldQuantLab() {
                     <Terminal className="w-4 h-4" /> LIVE CONSOLE
                   </button>
                 </div>
-                <span className="text-xs text-slate-500">Live</span>
+                <span className="text-xs text-slate-400">Live</span>
               </div>
               <div className="max-h-[500px] overflow-y-auto">
                 <AnimatePresence mode="wait">
@@ -645,15 +645,15 @@ export default function WorldQuantLab() {
                           <div className="flex items-start justify-between mb-2">
                             <div>
                               <div className="font-mono text-sm text-emerald-300">{alpha.alpha_code}</div>
-                              <div className="text-xs text-slate-500 mt-1">{new Date(alpha.created_at).toLocaleString()}</div>
+                              <div className="text-xs text-slate-400 mt-1">{new Date(alpha.created_at).toLocaleString()}</div>
                             </div>
                             <div className={`px-2 py-1 rounded text-xs font-mono ${alpha.status === "passed" ? "bg-emerald-500/20 text-emerald-400" : alpha.status === "failed" ? "bg-red-500/20 text-red-400" : "bg-slate-600/20 text-slate-300"}`}>{alpha.status}</div>
                           </div>
                           <div className="grid grid-cols-4 gap-2 text-xs">
-                            <div><span className="text-slate-500">Sharpe</span><div className={`font-mono font-bold ${(alpha.sharpe_ratio || 0) >= 1.5 ? "text-emerald-400" : "text-slate-300"}`}>{(alpha.sharpe_ratio || 0).toFixed(2)}</div></div>
-                            <div><span className="text-slate-500">Return</span><div className="font-mono text-slate-300">{alpha.annual_return ? `${(alpha.annual_return * 100).toFixed(1)}%` : "N/A"}</div></div>
-                            <div><span className="text-slate-500">Drawdown</span><div className={`font-mono ${(alpha.max_drawdown || 0) > -0.15 ? "text-emerald-400" : "text-red-400"}`}>{alpha.max_drawdown ? `${(alpha.max_drawdown * 100).toFixed(1)}%` : "N/A"}</div></div>
-                            <div><span className="text-slate-500">Win Rate</span><div className="font-mono text-slate-300">{alpha.win_rate ? `${(alpha.win_rate * 100).toFixed(1)}%` : "N/A"}</div></div>
+                            <div><span className="text-slate-400">Sharpe</span><div className={`font-mono font-bold ${(alpha.sharpe_ratio || 0) >= 1.5 ? "text-emerald-400" : "text-slate-300"}`}>{(alpha.sharpe_ratio || 0).toFixed(2)}</div></div>
+                            <div><span className="text-slate-400">Return</span><div className="font-mono text-slate-300">{alpha.annual_return ? `${(alpha.annual_return * 100).toFixed(1)}%` : "N/A"}</div></div>
+                            <div><span className="text-slate-400">Drawdown</span><div className={`font-mono ${(alpha.max_drawdown || 0) > -0.15 ? "text-emerald-400" : "text-red-400"}`}>{alpha.max_drawdown ? `${(alpha.max_drawdown * 100).toFixed(1)}%` : "N/A"}</div></div>
+                            <div><span className="text-slate-400">Win Rate</span><div className="font-mono text-slate-300">{alpha.win_rate ? `${(alpha.win_rate * 100).toFixed(1)}%` : "N/A"}</div></div>
                           </div>
                           {alpha.pnl_curve && alpha.pnl_curve.length > 0 && (
                             <div className="mt-3"><PnLChart data={alpha.pnl_curve} color={alpha.is_passed ? "#00ff88" : "#64748b"} /></div>
@@ -675,15 +675,15 @@ export default function WorldQuantLab() {
                           <div className="flex items-start justify-between mb-2">
                             <div>
                               <div className="font-mono text-sm text-purple-300">{fAlpha.alpha_code}</div>
-                              <div className="text-xs text-slate-500 mt-1">{new Date(fAlpha.created_at).toLocaleString()}</div>
+                              <div className="text-xs text-slate-400 mt-1">{new Date(fAlpha.created_at).toLocaleString()}</div>
                             </div>
                             <div className="px-2 py-1 rounded text-xs font-mono bg-purple-500/20 text-purple-400">{fAlpha.failed_reason}</div>
                           </div>
                           <div className="grid grid-cols-4 gap-2 text-xs">
-                            <div><span className="text-slate-500">Sharpe</span><div className="font-mono text-slate-300">{fAlpha.sharpe_ratio?.toFixed(2) || "N/A"}</div></div>
-                            <div><span className="text-slate-500">Return</span><div className="font-mono text-slate-300">{fAlpha.annual_return ? `${(fAlpha.annual_return * 100).toFixed(1)}%` : "N/A"}</div></div>
-                            <div><span className="text-slate-500">Drawdown</span><div className="font-mono text-slate-300">{fAlpha.max_drawdown ? `${(fAlpha.max_drawdown * 100).toFixed(1)}%` : "N/A"}</div></div>
-                            <div><span className="text-slate-500">Win Rate</span><div className="font-mono text-slate-300">{fAlpha.win_rate ? `${(fAlpha.win_rate * 100).toFixed(1)}%` : "N/A"}</div></div>
+                            <div><span className="text-slate-400">Sharpe</span><div className="font-mono text-slate-300">{fAlpha.sharpe_ratio?.toFixed(2) || "N/A"}</div></div>
+                            <div><span className="text-slate-400">Return</span><div className="font-mono text-slate-300">{fAlpha.annual_return ? `${(fAlpha.annual_return * 100).toFixed(1)}%` : "N/A"}</div></div>
+                            <div><span className="text-slate-400">Drawdown</span><div className="font-mono text-slate-300">{fAlpha.max_drawdown ? `${(fAlpha.max_drawdown * 100).toFixed(1)}%` : "N/A"}</div></div>
+                            <div><span className="text-slate-400">Win Rate</span><div className="font-mono text-slate-300">{fAlpha.win_rate ? `${(fAlpha.win_rate * 100).toFixed(1)}%` : "N/A"}</div></div>
                           </div>
                         </motion.div>
                       ))}
@@ -708,7 +708,7 @@ export default function WorldQuantLab() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-slate-500 text-xs font-mono border-b border-slate-800">
+                <tr className="text-slate-400 text-xs font-mono border-b border-slate-800">
                   <th className="text-left py-2 px-3">BATCH</th>
                   <th className="text-left py-2 px-3">STATUS</th>
                   <th className="text-right py-2 px-3">GENERATED</th>
@@ -739,7 +739,7 @@ export default function WorldQuantLab() {
                           <span className="text-xs text-slate-400 uppercase">{batch.health_status}</span>
                         </div>
                       </td>
-                      <td className="py-3 px-3 text-xs text-slate-500">{new Date(batch.started_at).toLocaleString()}</td>
+                      <td className="py-3 px-3 text-xs text-slate-400">{new Date(batch.started_at).toLocaleString()}</td>
                       <td className="py-3 px-3 text-center">
                         <button
                           onClick={(e) => { e.stopPropagation(); handleExpandBatch(batch.id); }}
@@ -821,7 +821,7 @@ export default function WorldQuantLab() {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h2 className="text-xl font-bold text-emerald-400 font-mono">{selectedBatch.batch_name}</h2>
-                    <p className="text-sm text-slate-500 mt-1">
+                    <p className="text-sm text-slate-400 mt-1">
                       {new Date(selectedBatch.started_at).toLocaleString()} &bull;
                       Generated: {selectedBatch.total_generated} &bull;
                       Tested: {selectedBatch.total_tested} &bull;
@@ -833,7 +833,7 @@ export default function WorldQuantLab() {
                 </div>
 
                 {selectedBatchLoading ? (
-                  <div className="text-center py-12 text-slate-500">Loading batch alphas...</div>
+                  <div className="text-center py-12 text-slate-400">Loading batch alphas...</div>
                 ) : selectedBatchAlphas.length === 0 ? (
                   <div className="text-center py-12 text-slate-600">
                     <Brain className="w-12 h-12 mx-auto mb-3 opacity-30" />
@@ -843,7 +843,7 @@ export default function WorldQuantLab() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="text-slate-500 text-xs font-mono border-b border-slate-800">
+                        <tr className="text-slate-400 text-xs font-mono border-b border-slate-800">
                           <th className="text-left py-2 px-3">CODE</th>
                           <th className="text-right py-2 px-3">SHARPE</th>
                           <th className="text-right py-2 px-3">RETURN</th>
@@ -886,7 +886,7 @@ export default function WorldQuantLab() {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h2 className="text-xl font-bold text-emerald-400 font-mono">{selectedAlpha.alpha_code}</h2>
-                    <p className="text-sm text-slate-500 mt-1">Discovered {new Date(selectedAlpha.created_at).toLocaleString()}</p>
+                    <p className="text-sm text-slate-400 mt-1">Discovered {new Date(selectedAlpha.created_at).toLocaleString()}</p>
                   </div>
                   <button onClick={() => setSelectedAlpha(null)} className="p-2 hover:bg-slate-800 rounded-lg transition-colors"><X className="w-5 h-5 text-slate-400" /></button>
                 </div>
@@ -900,7 +900,7 @@ export default function WorldQuantLab() {
                     { label: "Fitness Score", value: selectedAlpha.fitness_score?.toFixed(3), good: (selectedAlpha.fitness_score || 0) > 1.0 },
                   ].map((metric) => (
                     <div key={metric.label} className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-                      <div className="text-xs text-slate-500 mb-1">{metric.label}</div>
+                      <div className="text-xs text-slate-400 mb-1">{metric.label}</div>
                       <div className={`text-lg font-mono font-bold ${metric.good ? "text-emerald-400" : "text-red-400"}`}>{metric.value}</div>
                     </div>
                   ))}

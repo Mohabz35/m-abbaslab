@@ -48,7 +48,7 @@ export default function ProjectsPage() {
       {projects.length === 0 ? (
         <div className="text-center py-20 rounded-2xl border border-white/5 bg-black/20">
           <FolderKanban className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-500 mb-2">No projects registered yet.</p>
+          <p className="text-gray-400 mb-2">No projects registered yet.</p>
           <p className="text-xs text-gray-600">Projects will appear here once created by Leadership or Admin members.</p>
         </div>
       ) : (
@@ -70,14 +70,14 @@ export default function ProjectsPage() {
                         {project.status}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-500 leading-relaxed mb-3">{project.description}</p>
+                    <p className="text-xs text-gray-400 leading-relaxed mb-3">{project.description}</p>
                     <div className="flex items-center gap-4 text-[10px] text-gray-600">
                       <span className="uppercase">{project.division}</span>
                       {project.budget > 0 && <span>${project.budget.toLocaleString()} budget</span>}
                     </div>
                   </div>
                   {project.github_repo && (
-                    <a href={project.github_repo} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg hover:bg-white/5 text-gray-500 hover:text-white transition-colors">
+                    <a href={project.github_repo} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors">
                       <ExternalLink className="w-4 h-4" />
                     </a>
                   )}

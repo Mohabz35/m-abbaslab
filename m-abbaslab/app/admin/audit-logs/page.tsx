@@ -113,7 +113,7 @@ export default function AuditLogsSecurity() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Audit Logs & Security</h1>
-          <p className="text-sm text-gray-500">Monitor security events and admin activity</p>
+          <p className="text-sm text-gray-400">Monitor security events and admin activity</p>
         </div>
         <div className="flex gap-2">
           <select value={timeRange} onChange={e => setTimeRange(Number(e.target.value))} className="px-3 py-2 border rounded-lg text-sm">
@@ -137,7 +137,7 @@ export default function AuditLogsSecurity() {
         ].map(s => (
           <div key={s.label} className="bg-white rounded-xl border p-4 text-center">
             <div className="text-xl font-bold">{s.value}</div>
-            <div className="text-xs text-gray-500">{s.label}</div>
+            <div className="text-xs text-gray-400">{s.label}</div>
           </div>
         ))}
       </div>
@@ -169,13 +169,13 @@ export default function AuditLogsSecurity() {
       </div>
 
       {/* Content */}
-      {loading ? <div className="text-center py-12 text-gray-500">Loading...</div> : (
+      {loading ? <div className="text-center py-12 text-gray-400">Loading...</div> : (
         <div className="bg-white rounded-xl border overflow-hidden">
           {view === 'security' ? (
             filteredSecurity.length === 0 ? (
               <div className="text-center py-12">
                 <Shield className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">No security events</p>
+                <p className="text-gray-400">No security events</p>
               </div>
             ) : (
               <div className="divide-y">
@@ -191,7 +191,7 @@ export default function AuditLogsSecurity() {
                           <span className="font-medium text-sm">{e.event_type.replace(/_/g, ' ')}</span>
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${severityColors[e.severity]}`}>{e.severity}</span>
                         </div>
-                        {e.username && <div className="text-xs text-gray-500">User: {e.username}</div>}
+                        {e.username && <div className="text-xs text-gray-400">User: {e.username}</div>}
                       </div>
                       <div className="text-right text-xs text-gray-400">
                         {e.ip_address && <div>{e.ip_address}</div>}
@@ -206,7 +206,7 @@ export default function AuditLogsSecurity() {
             filteredAudit.length === 0 ? (
               <div className="text-center py-12">
                 <Activity className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">No audit logs</p>
+                <p className="text-gray-400">No audit logs</p>
               </div>
             ) : (
               <div className="divide-y">
@@ -216,7 +216,7 @@ export default function AuditLogsSecurity() {
                     <div className="flex-1">
                       <div className="text-sm">
                         <span className="font-medium">{l.username}</span>
-                        <span className="text-gray-500 mx-1">{l.action}</span>
+                        <span className="text-gray-400 mx-1">{l.action}</span>
                         {l.resource_type && <span className="text-blue-600">{l.resource_type}</span>}
                         {l.resource_id && <span className="text-gray-400 ml-1">({l.resource_id.slice(0, 8)})</span>}
                       </div>

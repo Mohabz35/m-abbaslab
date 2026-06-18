@@ -156,7 +156,7 @@ export default function AnalyticsDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Analytics Dashboard</h1>
-          <p className="text-sm text-gray-500">Site traffic and engagement metrics</p>
+          <p className="text-sm text-gray-400">Site traffic and engagement metrics</p>
         </div>
         <div className="flex gap-2">
           <select value={timeRange} onChange={e => setTimeRange(Number(e.target.value))} className="px-3 py-2 border rounded-lg text-sm">
@@ -169,11 +169,11 @@ export default function AnalyticsDashboard() {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-gray-500">Loading analytics...</div>
+        <div className="text-center py-12 text-gray-400">Loading analytics...</div>
       ) : !data ? (
         <div className="text-center py-12 bg-white rounded-xl border">
           <BarChart3 className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500">No analytics data yet</p>
+          <p className="text-gray-400">No analytics data yet</p>
           <p className="text-xs text-gray-400 mt-1">Data will appear as visitors browse your site</p>
         </div>
       ) : (
@@ -193,7 +193,7 @@ export default function AnalyticsDashboard() {
                   </div>
                   <div>
                     <div className="text-2xl font-bold">{s.value}</div>
-                    <div className="text-xs text-gray-500">{s.label}</div>
+                    <div className="text-xs text-gray-400">{s.label}</div>
                   </div>
                 </div>
               </div>
@@ -229,7 +229,7 @@ export default function AnalyticsDashboard() {
                   <div key={i} className="flex items-center gap-3 text-sm">
                     <span className="w-5 text-gray-400 text-xs">{i + 1}</span>
                     <span className="flex-1 truncate font-medium">{p.path}</span>
-                    <span className="text-gray-500">{p.views} views</span>
+                    <span className="text-gray-400">{p.views} views</span>
                     <span className="text-gray-400 text-xs">{p.avg_time}s</span>
                   </div>
                 ))}
@@ -249,7 +249,7 @@ export default function AnalyticsDashboard() {
                       <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden">
                         <div className="h-full bg-blue-500 rounded-full" style={{ width: `${pct}%` }} />
                       </div>
-                      <span className="text-sm text-gray-500 w-12 text-right">{pct}%</span>
+                      <span className="text-sm text-gray-400 w-12 text-right">{pct}%</span>
                     </div>
                   )
                 })}
@@ -268,7 +268,7 @@ export default function AnalyticsDashboard() {
                       <div className="w-32 h-2 bg-gray-100 rounded-full overflow-hidden">
                         <div className="h-full bg-purple-500 rounded-full" style={{ width: `${pct}%` }} />
                       </div>
-                      <span className="w-12 text-right text-gray-500">{pct}%</span>
+                      <span className="w-12 text-right text-gray-400">{pct}%</span>
                     </div>
                   )
                 })}
@@ -282,7 +282,7 @@ export default function AnalyticsDashboard() {
                 {data.referrerSources.slice(0, 8).map(r => (
                   <div key={r.referrer} className="flex items-center gap-3 text-sm">
                     <span className="flex-1 truncate">{r.referrer}</span>
-                    <span className="text-gray-500">{r.count}</span>
+                    <span className="text-gray-400">{r.count}</span>
                   </div>
                 ))}
               </div>
@@ -297,7 +297,7 @@ export default function AnalyticsDashboard() {
                 {data.countryBreakdown.map(c => (
                   <div key={c.country} className="text-center p-3 bg-gray-50 rounded-lg">
                     <div className="font-bold">{c.count}</div>
-                    <div className="text-xs text-gray-500">{c.country}</div>
+                    <div className="text-xs text-gray-400">{c.country}</div>
                   </div>
                 ))}
               </div>

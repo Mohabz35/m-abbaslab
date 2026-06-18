@@ -137,7 +137,7 @@ export default function SubscribersManager() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Email & Subscribers</h1>
-          <p className="text-sm text-gray-500">{stats.active} active subscribers</p>
+          <p className="text-sm text-gray-400">{stats.active} active subscribers</p>
         </div>
         <div className="flex gap-2">
           <button onClick={exportCSV} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium flex items-center gap-2">
@@ -166,7 +166,7 @@ export default function SubscribersManager() {
               </div>
               <div>
                 <div className="text-xl font-bold">{s.value}</div>
-                <div className="text-xs text-gray-500">{s.label}</div>
+                <div className="text-xs text-gray-400">{s.label}</div>
               </div>
             </div>
           </div>
@@ -216,11 +216,11 @@ export default function SubscribersManager() {
           </div>
 
           {loading ? (
-            <div className="text-center py-12 text-gray-500">Loading...</div>
+            <div className="text-center py-12 text-gray-400">Loading...</div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-xl border">
               <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No subscribers found</p>
+              <p className="text-gray-400">No subscribers found</p>
             </div>
           ) : (
             <div className="bg-white rounded-xl border overflow-hidden">
@@ -241,7 +241,7 @@ export default function SubscribersManager() {
                     <tr key={s.id} className="border-b last:border-0 hover:bg-gray-50">
                       <td className="px-4 py-3">
                         <div className="font-medium">{s.email}</div>
-                        <div className="text-xs text-gray-500">{[s.first_name, s.last_name].filter(Boolean).join(' ') || 'No name'}</div>
+                        <div className="text-xs text-gray-400">{[s.first_name, s.last_name].filter(Boolean).join(' ') || 'No name'}</div>
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex flex-wrap gap-1">
@@ -251,9 +251,9 @@ export default function SubscribersManager() {
                           {(s.segments || []).length > 2 && <span className="text-[10px] text-gray-400">+{(s.segments || []).length - 2}</span>}
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-gray-500 capitalize">{s.source}</td>
+                      <td className="px-4 py-3 text-gray-400 capitalize">{s.source}</td>
                       <td className="px-4 py-3">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${s.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${s.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'}`}>
                           {s.status}
                         </span>
                       </td>
@@ -262,7 +262,7 @@ export default function SubscribersManager() {
                           <div className="h-full bg-blue-500 rounded-full" style={{ width: `${Math.min(s.engagement_score, 100)}%` }} />
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-gray-500 text-xs">{new Date(s.subscribed_at).toLocaleDateString()}</td>
+                      <td className="px-4 py-3 text-gray-400 text-xs">{new Date(s.subscribed_at).toLocaleDateString()}</td>
                       <td className="px-4 py-3 text-right">
                         <button onClick={() => updateSubscriberStatus(s.id, s.status === 'active' ? 'unsubscribed' : 'active')} className="text-gray-400 hover:text-blue-600 p-1" title="Toggle status">
                           {s.status === 'active' ? <XCircle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
@@ -284,11 +284,11 @@ export default function SubscribersManager() {
       {view === 'campaigns' && (
         <>
           {loading ? (
-            <div className="text-center py-12 text-gray-500">Loading...</div>
+            <div className="text-center py-12 text-gray-400">Loading...</div>
           ) : campaigns.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-xl border">
               <Send className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No campaigns yet</p>
+              <p className="text-gray-400">No campaigns yet</p>
               <button onClick={() => setShowCampaignForm(true)} className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">
                 Create Campaign
               </button>
@@ -302,13 +302,13 @@ export default function SubscribersManager() {
                   </div>
                   <div className="flex-1">
                     <div className="font-bold text-sm">{c.title}</div>
-                    <div className="text-xs text-gray-500">{c.subject}</div>
+                    <div className="text-xs text-gray-400">{c.subject}</div>
                   </div>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${c.status === 'sent' ? 'bg-green-100 text-green-700' : c.status === 'draft' ? 'bg-gray-100 text-gray-500' : 'bg-amber-100 text-amber-700'}`}>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${c.status === 'sent' ? 'bg-green-100 text-green-700' : c.status === 'draft' ? 'bg-gray-100 text-gray-400' : 'bg-amber-100 text-amber-700'}`}>
                     {c.status}
                   </span>
                   {c.status === 'sent' && (
-                    <div className="text-right text-xs text-gray-500">
+                    <div className="text-right text-xs text-gray-400">
                       <div>{c.total_sent} sent</div>
                       <div>{(c.open_rate * 100).toFixed(1)}% open</div>
                     </div>
@@ -350,7 +350,7 @@ export default function SubscribersManager() {
               className="w-full border rounded-lg px-4 py-3 text-sm resize-none"
             />
             <div>
-              <p className="text-xs text-gray-500 mb-2">Target segments:</p>
+              <p className="text-xs text-gray-400 mb-2">Target segments:</p>
               <div className="flex flex-wrap gap-2">
                 {segmentOptions.map(seg => (
                   <button

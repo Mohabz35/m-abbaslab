@@ -38,7 +38,7 @@ export default function DecksPage() {
       {allDecks.length === 0 ? (
         <div className="text-center py-20 rounded-2xl border border-white/5 bg-black/20">
           <Presentation className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-500">No strategy decks uploaded yet.</p>
+          <p className="text-gray-400">No strategy decks uploaded yet.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -53,7 +53,7 @@ export default function DecksPage() {
                   {locked ? <Lock className="w-4 h-4 text-gray-600" /> : <Presentation className="w-4 h-4 text-purple-400" />}
                   <h3 className="text-sm font-bold text-white">{deck.title}</h3>
                 </div>
-                <p className="text-xs text-gray-500 leading-relaxed mb-4">{deck.description}</p>
+                <p className="text-xs text-gray-400 leading-relaxed mb-4">{deck.description}</p>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1 text-[10px] text-gray-600">
                     <Calendar className="w-3 h-3" />
@@ -61,10 +61,10 @@ export default function DecksPage() {
                   </div>
                   {!locked && (
                     <div className="flex gap-1">
-                      <button className="p-1.5 rounded-lg hover:bg-white/5 text-gray-500 hover:text-white transition-colors">
+                      <button className="p-1.5 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors">
                         <Eye className="w-3.5 h-3.5" />
                       </button>
-                      <button className="p-1.5 rounded-lg hover:bg-white/5 text-gray-500 hover:text-white transition-colors">
+                      <button className="p-1.5 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors">
                         <Download className="w-3.5 h-3.5" />
                       </button>
                     </div>

@@ -373,7 +373,7 @@ export default function AdminDashboardPage() {
                     : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border border-transparent'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? (isJarvis ? 'text-purple-400' : 'text-blue-400') : 'text-slate-500'}`} />
+                <Icon className={`w-4 h-4 ${isActive ? (isJarvis ? 'text-purple-400' : 'text-blue-400') : 'text-slate-400'}`} />
                 {tab.label}
               </button>
             )

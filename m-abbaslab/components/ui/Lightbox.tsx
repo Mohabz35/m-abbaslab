@@ -59,10 +59,14 @@ export default function Lightbox({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm flex items-center justify-center"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Image lightbox"
         onClick={onClose}
       >
         <button
           onClick={onClose}
+          aria-label="Close lightbox"
           className="absolute top-4 right-4 z-[10001] p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
         >
           <X className="w-6 h-6" />
@@ -71,6 +75,7 @@ export default function Lightbox({
         {currentIndex > 0 && (
           <button
             onClick={(e) => { e.stopPropagation(); onNavigate(currentIndex - 1) }}
+            aria-label="Previous image"
             className="absolute left-4 z-[10001] p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -80,6 +85,7 @@ export default function Lightbox({
         {currentIndex < items.length - 1 && (
           <button
             onClick={(e) => { e.stopPropagation(); onNavigate(currentIndex + 1) }}
+            aria-label="Next image"
             className="absolute right-4 z-[10001] p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
           >
             <ChevronRight className="w-6 h-6" />
@@ -122,13 +128,13 @@ export default function Lightbox({
                 </div>
               )}
               {item.location && (
-                <div className="flex items-center gap-2 text-gray-500 mb-2">
+                <div className="flex items-center gap-2 text-gray-400 mb-2">
                   <MapPin className="w-4 h-4" />
                   <span className="text-sm">{item.location}</span>
                 </div>
               )}
               {item.eventDate && (
-                <div className="flex items-center gap-2 text-gray-500 mb-2">
+                <div className="flex items-center gap-2 text-gray-400 mb-2">
                   <Calendar className="w-4 h-4" />
                   <span className="text-sm">{item.eventDate}</span>
                 </div>

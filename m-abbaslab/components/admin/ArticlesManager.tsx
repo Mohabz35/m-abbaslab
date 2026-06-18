@@ -146,7 +146,7 @@ export default function ArticlesManager() {
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-slate-900/80 p-4 rounded-lg border border-slate-700">
                   <div className="flex justify-between items-start mb-2">
                     <span className="text-xs font-mono text-purple-400 uppercase">Jarvis Response</span>
-                    <button onClick={() => setAiResponse('')} className="text-slate-500 hover:text-white"><X className="w-3 h-3"/></button>
+                    <button onClick={() => setAiResponse('')} className="text-slate-400 hover:text-white"><X className="w-3 h-3"/></button>
                   </div>
                   <div className="text-sm text-slate-300 whitespace-pre-wrap">{aiResponse}</div>
                 </motion.div>
@@ -167,7 +167,7 @@ export default function ArticlesManager() {
         </div>
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input type="text" placeholder="Search articles..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 pr-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-1 focus:ring-emerald-500 outline-none" />
           </div>
           <button onClick={() => { setEditingArticle(null); setIsEditing(true) }} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors whitespace-nowrap">
@@ -215,7 +215,7 @@ export default function ArticlesManager() {
                 <tr key={article.id} className="hover:bg-slate-700/30 transition-colors group">
                   <td className="px-6 py-4">
                     <div className="font-medium text-white mb-1">{article.title}</div>
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
                       <span>{article.category}</span>
                       <span>•</span>
                       <span>{new Date(article.created_at).toLocaleDateString()}</span>
@@ -236,9 +236,9 @@ export default function ArticlesManager() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-xs text-slate-300 font-mono space-y-1">
-                      <div><span className="text-slate-500">Reads:</span> {Math.floor(Math.random() * 5000) + 100}</div>
-                      <div><span className="text-slate-500">Completion:</span> {Math.floor(Math.random() * 40) + 40}%</div>
-                      <div><span className="text-slate-500">Time:</span> {article.read_time}m</div>
+                      <div><span className="text-slate-400">Reads:</span> {Math.floor(Math.random() * 5000) + 100}</div>
+                      <div><span className="text-slate-400">Completion:</span> {Math.floor(Math.random() * 40) + 40}%</div>
+                      <div><span className="text-slate-400">Time:</span> {article.read_time}m</div>
                     </div>
                   </td>
                   <td className="px-6 py-4 text-right">
@@ -263,13 +263,13 @@ export default function ArticlesManager() {
           </h3>
           <div className="space-y-3">
             {projects.length === 0 ? (
-              <p className="text-xs text-slate-500 italic">No active projects found.</p>
+              <p className="text-xs text-slate-400 italic">No active projects found.</p>
             ) : (
               projects.map(project => (
                 <div key={project.id} className="p-3 bg-slate-900 rounded-lg border border-slate-700">
                   <div className="font-medium text-sm text-white">{project.title}</div>
                   <div className="flex justify-between items-center mt-2">
-                    <span className="text-xs text-slate-500">{project.category}</span>
+                    <span className="text-xs text-slate-400">{project.category}</span>
                     <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-400">{project.status}</span>
                   </div>
                 </div>

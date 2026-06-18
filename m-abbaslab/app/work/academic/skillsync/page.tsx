@@ -50,7 +50,7 @@ export default function SkillSyncDocsPage() {
                                     <Icon className="w-8 h-8" />
                                 </div>
                                 <div className="flex-1">
-                                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-2">Chapter {index + 1}</div>
+                                    <div className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-2">Chapter {index + 1}</div>
                                     <h3 className="text-2xl font-bold text-white group-hover:text-[#7000ff] transition-colors mb-3">
                                         {chapter.title}
                                     </h3>

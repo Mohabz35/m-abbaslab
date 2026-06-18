@@ -219,7 +219,7 @@ export default function JarvisAdvanced() {
       case 'work':
         return <Briefcase className="w-4 h-4 text-blue-500" />
       default:
-        return <Layers className="w-4 h-4 text-gray-500" />
+        return <Layers className="w-4 h-4 text-gray-400" />
     }
   }
 
@@ -245,7 +245,7 @@ export default function JarvisAdvanced() {
             <Zap className="w-5 h-5 text-indigo-500" />
             Advanced Features
           </h3>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-400">
             Control Jarvis's group auto-responses, monitor contact status updates, and configure AI auto-likes.
           </p>
         </div>
@@ -290,7 +290,7 @@ export default function JarvisAdvanced() {
           className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold border-b-2 transition-colors -mb-px ${
             subTab === 'groups'
               ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
-              : 'border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
+              : 'border-transparent text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
           }`}
         >
           <Users className="w-4 h-4" />
@@ -301,7 +301,7 @@ export default function JarvisAdvanced() {
           className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold border-b-2 transition-colors -mb-px ${
             subTab === 'statuses'
               ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
-              : 'border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
+              : 'border-transparent text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
           }`}
         >
           <Heart className="w-4 h-4" />
@@ -312,7 +312,7 @@ export default function JarvisAdvanced() {
           className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold border-b-2 transition-colors -mb-px ${
             subTab === 'settings'
               ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
-              : 'border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
+              : 'border-transparent text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
           }`}
         >
           <Settings className="w-4 h-4" />
@@ -325,7 +325,7 @@ export default function JarvisAdvanced() {
         {isLoading ? (
           <div className="py-12 flex justify-center items-center">
             <RefreshCw className="w-8 h-8 text-indigo-500 animate-spin" />
-            <span className="ml-3 text-sm text-gray-500">Loading details...</span>
+            <span className="ml-3 text-sm text-gray-400">Loading details...</span>
           </div>
         ) : (
           <>
@@ -336,7 +336,7 @@ export default function JarvisAdvanced() {
                   <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300">WhatsApp Groups Discovered</h4>
                 </div>
                 {groups.length === 0 ? (
-                  <div className="p-8 text-center text-sm text-gray-500">
+                  <div className="p-8 text-center text-sm text-gray-400">
                     No WhatsApp groups discovered yet. Ensure Jarvis engine is running and active in groups.
                   </div>
                 ) : (
@@ -347,7 +347,7 @@ export default function JarvisAdvanced() {
                         <div key={group.group_jid} className="p-4 flex items-center justify-between hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-colors">
                           <div className="space-y-1">
                             <div className="font-bold text-sm text-gray-900 dark:text-white">{group.group_name}</div>
-                            <div className="flex items-center gap-4 text-xs text-gray-500">
+                            <div className="flex items-center gap-4 text-xs text-gray-400">
                               <span>JID: {group.group_jid}</span>
                               <span>•</span>
                               <span>Participants: {group.participant_count}</span>
@@ -364,7 +364,7 @@ export default function JarvisAdvanced() {
                             <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${
                               monitored
                                 ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400'
-                                : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
+                                : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-400'
                             }`}>
                               {monitored ? 'Monitored' : 'Ignored'}
                             </span>
@@ -395,7 +395,7 @@ export default function JarvisAdvanced() {
                   <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300">WhatsApp Status Analytics Log</h4>
                 </div>
                 {statuses.length === 0 ? (
-                  <div className="p-8 text-center text-sm text-gray-500">
+                  <div className="p-8 text-center text-sm text-gray-400">
                     No status updates analyzed yet. Ensure status monitoring is enabled and contacts upload statuses.
                   </div>
                 ) : (
@@ -438,7 +438,7 @@ export default function JarvisAdvanced() {
                             <p className="line-clamp-2">{status.status_text}</p>
                           </div>
 
-                          <div className="text-xs text-gray-500 flex items-start gap-1">
+                          <div className="text-xs text-gray-400 flex items-start gap-1">
                             <MessageSquare className="w-3.5 h-3.5 text-gray-400 mt-0.5 flex-shrink-0" />
                             <div>
                               <span className="font-bold text-gray-600 dark:text-gray-400">Jarvis analysis: </span>
@@ -458,7 +458,7 @@ export default function JarvisAdvanced() {
               <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 space-y-6">
                 <div>
                   <h4 className="text-base font-bold text-gray-900 dark:text-white">Configure Advanced Features</h4>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-400 mt-1">
                     Control engine permissions. Turning features off halts background routines immediately.
                   </p>
                 </div>
@@ -468,7 +468,7 @@ export default function JarvisAdvanced() {
                   <div className="flex items-center justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Respond to Group Chats</div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-400">
                         When enabled, Jarvis responds to questions or mentions in monitored groups.
                       </div>
                     </div>
@@ -487,7 +487,7 @@ export default function JarvisAdvanced() {
                   <div className="flex items-center justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Monitor Contacts' Status Updates</div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-400">
                         Jarvis scans and analyzes statuses every 2 minutes for classification insights.
                       </div>
                     </div>
@@ -506,7 +506,7 @@ export default function JarvisAdvanced() {
                   <div className="flex items-center justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Auto-Like Interesting Statuses</div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-400">
                         Automatically react with a heart (❤️) if AI determines status content is interesting.
                       </div>
                     </div>

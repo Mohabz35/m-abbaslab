@@ -86,7 +86,7 @@ export default function JarvisInbox() {
             <MessageSquare className="w-5 h-5 text-green-500" />
             JARVIS WhatsApp Inbox
           </h2>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p className="text-xs text-gray-400 mt-0.5">
             {unreadCount > 0
               ? <span className="text-green-500 font-bold">{unreadCount} unread messages</span>
               : 'All messages read'}
@@ -100,7 +100,7 @@ export default function JarvisInbox() {
           )}
           <button
             onClick={() => { setIsLoading(true); fetchMessages() }}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-500 transition-colors"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-400 transition-colors"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
           </button>
@@ -121,7 +121,7 @@ export default function JarvisInbox() {
         </div>
         <button
           onClick={() => setFilterUnread(v => !v)}
-          className={`px-3 py-2 rounded-xl text-xs font-bold transition-all ${filterUnread ? 'bg-green-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}
+          className={`px-3 py-2 rounded-xl text-xs font-bold transition-all ${filterUnread ? 'bg-green-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-400'}`}
         >
           Unread Only
         </button>

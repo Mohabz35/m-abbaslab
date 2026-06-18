@@ -213,7 +213,7 @@ export default function AboutClient({ config }: { config: any }) {
                 >
                   <Icon className={`w-6 h-6 ${item.color} mx-auto mb-3`} />
                   <h3 className="text-sm font-bold text-white mb-1">{item.title}</h3>
-                  <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
+                  <p className="text-xs text-gray-400 leading-relaxed">{item.desc}</p>
                 </motion.div>
               )
             })}
@@ -305,7 +305,7 @@ export default function AboutClient({ config }: { config: any }) {
                 >
                   <Icon className="w-5 h-5 text-[#00f0ff] mx-auto mb-3" />
                   <div className="text-3xl font-bold text-white font-mono mb-2">{h.metric}</div>
-                  <div className="text-xs text-gray-500 leading-relaxed">{h.label}</div>
+                  <div className="text-xs text-gray-400 leading-relaxed">{h.label}</div>
                 </motion.div>
               )
             })}
@@ -334,12 +334,12 @@ export default function AboutClient({ config }: { config: any }) {
                       <div className="absolute left-0 top-2 w-3 h-3 bg-purple-500 rounded-full" />
                       <div className="absolute left-[5px] top-5 bottom-0 w-0.5 bg-white/10" />
                       <h3 className="font-bold text-white">{exp.role}</h3>
-                      <p className="text-xs text-gray-500 mb-2">{exp.period}</p>
+                      <p className="text-xs text-gray-400 mb-2">{exp.period}</p>
                       <p className="text-sm text-gray-400 mb-2">{exp.description}</p>
                       {exp.achievements && (
                         <ul className="space-y-1">
                           {exp.achievements.map((a: string, i: number) => (
-                            <li key={i} className="text-xs text-gray-500 flex items-start gap-2">
+                            <li key={i} className="text-xs text-gray-400 flex items-start gap-2">
                               <CheckCircle className="w-3 h-3 text-emerald-400 mt-0.5 flex-shrink-0" />
                               {a}
                             </li>
@@ -358,7 +358,7 @@ export default function AboutClient({ config }: { config: any }) {
                       <div className="absolute left-[5px] top-5 bottom-0 w-0.5 bg-white/10" />
                       <h3 className="font-bold text-white">{edu.degree}</h3>
                       <p className="text-sm text-[#00f0ff]">{edu.institution}</p>
-                      <p className="text-xs text-gray-500 mb-1">{edu.period} {edu.status && `• ${edu.status}`}</p>
+                      <p className="text-xs text-gray-400 mb-1">{edu.period} {edu.status && `• ${edu.status}`}</p>
                       {edu.focus && <p className="text-sm text-gray-400">{edu.focus}</p>}
                     </div>
                   ))}

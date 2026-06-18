@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { getLiveConfig } from '../../../lib/dbConfig';
+import { MABBAS_AI, detectConversationContext, buildDynamicSystemPrompt } from '@/lib/ai-personality';
 
 // Initialize Anthropic client. It will automatically use the ANTHROPIC_API_KEY environment variable.
 const client = new Anthropic({
@@ -69,9 +70,27 @@ export async function POST(request: Request) {
     const lastUserQuery = userMessages.length > 0 ? userMessages[userMessages.length - 1].content.trim() : '';
     const lastQueryLower = lastUserQuery.toLowerCase();
 
+    // Detect conversation context for dynamic tone
+    const context = detectConversationContext(lastUserQuery)
+    const dynamicSystemPrompt = buildDynamicSystemPrompt(MABBAS_AI, context)
+
     // Load dynamic real-time config from Supabase / file
     const config = await getLiveConfig();
     const trainedRules = config.jarvisTraining || [];
+
+    // Build enriched prompt with live data (shared by all AI providers)
+    const enrichedSystemPrompt = `${dynamicSystemPrompt}
+
+LIVE SYSTEM STATE (Mohammed's live site portfolio data is synced below, updating automatically):
+- Email: ${config.email || 'mohammedabbasofficial100@gmail.com'}
+- Current Brand Name: ${config.brandName || 'M-AbbasLab'}
+- Professional Title: ${config.title || ''}
+- Active Roles: ${JSON.stringify(config.roles || [])}
+- Quantitative Finance Alphas: ${JSON.stringify(config.worldQuant?.alphas || [])}
+- Selected Projects: ${JSON.stringify((config.projects || []).map((p: any) => ({ title: p.title, description: p.description, category: p.category, status: p.status })))}
+- Modeling Titles: ${JSON.stringify((config.fashion?.titles || []).map((t: any) => ({ title: t.title, year: t.year, description: t.description })))}
+- Social Channels: ${JSON.stringify(config.social || {})}
+`;
 
     // ─── RULE 1: Trained Keyword Exact/Substring Match (100% Free & Customizable) ───
     for (const rule of trainedRules) {
@@ -85,19 +104,6 @@ export async function POST(request: Request) {
     if (process.env.OPENROUTER_API_KEY) {
       console.log('[JARVIS BRAIN] OpenRouter API Key active. Dispatching Gemini request.');
 
-      const dynamicSystemPrompt = `${SYSTEM_PROMPT}
-
-LIVE SYSTEM STATE (Mohammed's live site portfolio data is synced below, updating automatically):
-- Email: ${config.email || 'mohammedabbasofficial100@gmail.com'}
-- Current Brand Name: ${config.brandName || 'M-AbbasLab'}
-- Professional Title: ${config.title || ''}
-- Active Roles: ${JSON.stringify(config.roles || [])}
-- Quantitative Finance Alphas: ${JSON.stringify(config.worldQuant?.alphas || [])}
-- Selected Projects: ${JSON.stringify((config.projects || []).map((p: any) => ({ title: p.title, description: p.description, category: p.category, status: p.status })))}
-- Modeling Titles: ${JSON.stringify((config.fashion?.titles || []).map((t: any) => ({ title: t.title, year: t.year, description: t.description })))}
-- Social Channels: ${JSON.stringify(config.social || {})}
-`;
-
       const sanitized = messages
         .filter((m: any) => m.role && m.content && typeof m.content === 'string')
         .map((m: any) => ({
@@ -107,7 +113,7 @@ LIVE SYSTEM STATE (Mohammed's live site portfolio data is synced below, updating
         .slice(-20);
 
       const messagesToSend = [
-        { role: 'system', content: dynamicSystemPrompt },
+        { role: 'system', content: enrichedSystemPrompt },
         ...sanitized
       ];
 
@@ -208,7 +214,7 @@ LIVE SYSTEM STATE (Mohammed's live site portfolio data is synced below, updating
     const response = await client.messages.create({
       model: 'claude-3-5-haiku-latest',
       max_tokens: 512,
-      system: SYSTEM_PROMPT,
+      system: enrichedSystemPrompt,
       messages: sanitized as any,
     });
 

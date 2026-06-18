@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { Plus, Edit, Trash2, Search, Briefcase, Calendar, Users, FileText, Sparkles, Paperclip, CheckCircle2 } from 'lucide-react'
+import React, { useState, useEffect, useRef } from 'react'
+import { Plus, Edit, Trash2, Search, Briefcase, Calendar, Users, FileText, Sparkles, Paperclip, CheckCircle2, Upload, Loader2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function ProjectsManager() {
@@ -14,6 +14,8 @@ export default function ProjectsManager() {
   // AI State
   const [aiInsights, setAiInsights] = useState('')
   const [isAiLoading, setIsAiLoading] = useState(false)
+  const [isUploadingFile, setIsUploadingFile] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const fetchProjects = async () => {
     setLoading(true)
@@ -94,6 +96,31 @@ export default function ProjectsManager() {
     { id: 'in-progress', label: 'In Progress', color: 'border-amber-500' },
     { id: 'shipped', label: 'Shipped', color: 'border-emerald-500' }
   ]
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 1 * 1024 * 1024) {
+      alert('Image must be under 1MB')
+      return
+    }
+    setIsUploadingFile(true)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+      const data = await res.json()
+      if (data.success && data.url) {
+        const current = formData.file_uploads
+        setFormData({ ...formData, file_uploads: current ? current + ', ' + data.url : data.url })
+      }
+    } catch (err) {
+      console.error('Upload failed', err)
+    } finally {
+      setIsUploadingFile(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
 
   const handleGenerateInsights = async () => {
     setIsAiLoading(true)
@@ -191,7 +218,7 @@ export default function ProjectsManager() {
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between gap-4 text-xs text-slate-500">
+                    <div className="flex items-center justify-between gap-4 text-xs text-slate-400">
                       <span className="flex items-center gap-1 bg-slate-800 px-2 py-1 rounded"><Calendar className="w-3 h-3"/> {new Date(project.created_at).toLocaleDateString()}</span>
                       {(project.file_uploads ? (typeof project.file_uploads === 'string' ? project.file_uploads : JSON.stringify(project.file_uploads)) : '').split(',').filter(Boolean).length > 0 && (
                         <span className="flex items-center gap-1 text-blue-400"><Paperclip className="w-3 h-3"/></span>
@@ -246,8 +273,15 @@ export default function ProjectsManager() {
               </div>
 
               <div>
-                <label className="block text-sm text-slate-400 mb-1">File Uploads (URLs, comma separated)</label>
-                <input type="text" placeholder="https://..." value={formData.file_uploads || (editingProject?.file_uploads ? (typeof editingProject.file_uploads === 'string' ? editingProject.file_uploads : JSON.stringify(editingProject.file_uploads)) : '')} onChange={e => setFormData({...formData, file_uploads: e.target.value})} className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white" />
+                <label className="block text-sm text-slate-400 mb-1">File Uploads</label>
+                <div className="flex gap-2">
+                  <input type="text" placeholder="https://..." value={formData.file_uploads || (editingProject?.file_uploads ? (typeof editingProject.file_uploads === 'string' ? editingProject.file_uploads : JSON.stringify(editingProject.file_uploads)) : '')} onChange={e => setFormData({...formData, file_uploads: e.target.value})} className="flex-1 bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white" />
+                  <label className="flex items-center gap-1 px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg cursor-pointer transition-colors shrink-0">
+                    {isUploadingFile ? <Loader2 className="w-4 h-4 animate-spin text-blue-400" /> : <Upload className="w-4 h-4 text-slate-300" />}
+                    <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+                  </label>
+                </div>
+                <p className="text-xs text-slate-400 mt-1">URLs or upload image (max 1MB)</p>
               </div>
 
               <div className="flex justify-end gap-3 mt-6">

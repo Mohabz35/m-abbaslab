@@ -235,7 +235,7 @@ export default function ContactPage() {
                   <p className="text-sm text-gray-400 mb-4">{booking.description}</p>
                   <div className="flex items-baseline gap-2 mb-6">
                     <span className="text-3xl font-bold text-white">{booking.price}</span>
-                    <span className="text-sm text-gray-500">/ {booking.duration}</span>
+                    <span className="text-sm text-gray-400">/ {booking.duration}</span>
                   </div>
                   <button className={`w-full py-3 ${booking.buttonBg} text-white rounded-xl font-bold text-sm transition-all`}>
                     Book Now
@@ -274,7 +274,7 @@ export default function ContactPage() {
                 <Mail className="w-4 h-4" />
                 {personalConfig.email}
               </a>
-              <p className="mt-4 text-sm text-gray-500 flex items-center gap-2">
+              <p className="mt-4 text-sm text-gray-400 flex items-center gap-2">
                 <Clock className="w-4 h-4" />
                 Response within 24 hours
               </p>
@@ -305,7 +305,7 @@ export default function ContactPage() {
                 <MessageSquare className="w-4 h-4" />
                 Send WhatsApp DM
               </a>
-              <p className="mt-4 text-sm text-gray-500 flex items-center gap-2">
+              <p className="mt-4 text-sm text-gray-400 flex items-center gap-2">
                 <Zap className="w-4 h-4 text-green-500 animate-pulse" />
                 Online Now — AI-Autonomous reply
               </p>
@@ -476,7 +476,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <div className="text-sm font-bold text-white">{t.name}</div>
-                    <div className="text-[10px] text-gray-500">{t.role}</div>
+                    <div className="text-[10px] text-gray-400">{t.role}</div>
                   </div>
                 </div>
                 <p className="text-sm text-gray-400 leading-relaxed mb-4">&ldquo;{t.text}&rdquo;</p>

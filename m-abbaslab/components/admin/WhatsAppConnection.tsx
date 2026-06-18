@@ -151,7 +151,7 @@ export default function WhatsAppConnection() {
             <Wifi className="w-5 h-5 text-emerald-500" />
             WhatsApp Connection Manager
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-400 mt-1">
             Monitor WhatsApp socket connectivity, link phone sessions, and inspect system logs.
           </p>
         </div>
@@ -161,7 +161,7 @@ export default function WhatsAppConnection() {
           className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           title="Refresh connection status"
         >
-          <RefreshCw className={`w-4 h-4 text-gray-500 ${isRefreshing ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-4 h-4 text-gray-400 ${isRefreshing ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
@@ -192,7 +192,7 @@ export default function WhatsAppConnection() {
                 </span>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs text-gray-500 mt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs text-gray-400 mt-2">
                 <div className="flex items-center gap-1.5">
                   <Calendar className="w-3.5 h-3.5" />
                   <span>Last connected: {status?.last_connected_at ? new Date(status.last_connected_at).toLocaleString() : 'Never'}</span>
@@ -259,7 +259,7 @@ export default function WhatsAppConnection() {
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-colors ${
                   activeMethod === 'qr'
                     ? 'bg-blue-600 text-white'
-                    : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800'
+                    : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               >
                 <QrCode className="w-3.5 h-3.5" />
@@ -270,7 +270,7 @@ export default function WhatsAppConnection() {
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-colors ${
                   activeMethod === 'pairing'
                     ? 'bg-blue-600 text-white'
-                    : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800'
+                    : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               >
                 <Smartphone className="w-3.5 h-3.5" />
@@ -293,7 +293,7 @@ export default function WhatsAppConnection() {
                       </div>
                       <div>
                         <h4 className="font-bold text-sm text-gray-900 dark:text-white">Scan this QR Code</h4>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-gray-400 mt-1">
                           Open WhatsApp on your phone ➔ Menu ➔ Linked Devices ➔ Link a Device ➔ Point your camera at this screen.
                         </p>
                       </div>
@@ -302,7 +302,7 @@ export default function WhatsAppConnection() {
                     <div className="py-8 space-y-2">
                       <QrCode className="w-12 h-12 text-gray-300 mx-auto" />
                       <h4 className="font-bold text-sm text-gray-700 dark:text-gray-300">No QR Code Available</h4>
-                      <p className="text-xs text-gray-500 max-w-xs mx-auto">
+                      <p className="text-xs text-gray-400 max-w-xs mx-auto">
                         The engine has not shared a QR code. If the engine is starting or reconnecting, wait a moment or click "Reconnect Socket" to generate a code.
                       </p>
                     </div>
@@ -317,7 +317,7 @@ export default function WhatsAppConnection() {
                       </div>
                       <div>
                         <h4 className="font-bold text-sm text-gray-900 dark:text-white">Enter Pairing Code on Phone</h4>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-gray-400 mt-1">
                           Open WhatsApp on your phone ➔ Linked Devices ➔ Link with phone number instead. Enter the code above when prompted.
                         </p>
                       </div>
@@ -326,7 +326,7 @@ export default function WhatsAppConnection() {
                     <div className="py-8 space-y-2">
                       <Smartphone className="w-12 h-12 text-gray-300 mx-auto" />
                       <h4 className="font-bold text-sm text-gray-700 dark:text-gray-300">No Pairing Code Available</h4>
-                      <p className="text-xs text-gray-500 max-w-xs mx-auto">
+                      <p className="text-xs text-gray-400 max-w-xs mx-auto">
                         To use this method, set the <code className="px-1 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-[11px] text-gray-600 dark:text-gray-400">PHONE_NUMBER</code> environment variable in your Render engine (e.g. 254702894309) and restart the service.
                       </p>
                     </div>

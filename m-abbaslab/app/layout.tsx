@@ -124,6 +124,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} text-white bg-[#030014] selection:bg-[#00f0ff]/30 selection:text-[#00f0ff]`}>
         <PWAStatusBar />
+        <a href="#main-content" className="skip-to-content">Skip to content</a>
         <Suspense fallback={null}>
           <Analytics gaId={personalConfig.googleAnalyticsId || ''} />
         </Suspense>
@@ -134,7 +135,7 @@ export default function RootLayout({
           <div className="relative min-h-screen flex flex-col z-10">
             <Navbar />
 
-            <main className="flex-1 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full py-8 md:py-12">
+            <main id="main-content" className="flex-1 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full py-8 md:py-12">
               <PageTransition>
                 {children}
               </PageTransition>

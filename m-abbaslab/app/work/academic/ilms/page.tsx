@@ -60,7 +60,7 @@ export default function ILMSDocsPage() {
                                     <Icon className="w-6 h-6" />
                                 </div>
                                 <div className="flex-1">
-                                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">Chapter {index + 1}</div>
+                                    <div className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-1">Chapter {index + 1}</div>
                                     <h3 className="text-lg font-bold text-white group-hover:text-[#00f0ff] transition-colors leading-tight">
                                         {chapter.title}
                                     </h3>

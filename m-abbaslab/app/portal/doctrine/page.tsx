@@ -71,14 +71,14 @@ export default function DoctrinePage() {
             >
               <div className="flex items-start gap-4">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${colorClass}`}>
-                  {locked ? <Lock className="w-4 h-4 text-gray-500" /> : <Icon className="w-4 h-4" />}
+                  {locked ? <Lock className="w-4 h-4 text-gray-400" /> : <Icon className="w-4 h-4" />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="text-sm font-bold text-white">{doc.title}</h3>
                     {locked && <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase font-bold">Locked</span>}
                   </div>
-                  <p className="text-xs text-gray-500 leading-relaxed mb-3">{doc.description}</p>
+                  <p className="text-xs text-gray-400 leading-relaxed mb-3">{doc.description}</p>
                   <div className="flex items-center gap-2 text-[10px] text-gray-600 uppercase tracking-wider">
                     <span>{doc.type}</span>
                     <span>·</span>
@@ -86,7 +86,7 @@ export default function DoctrinePage() {
                   </div>
                 </div>
                 {!locked && (
-                  <button className="p-2 rounded-lg hover:bg-white/5 text-gray-500 hover:text-white transition-colors">
+                  <button className="p-2 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors">
                     <Download className="w-4 h-4" />
                   </button>
                 )}
