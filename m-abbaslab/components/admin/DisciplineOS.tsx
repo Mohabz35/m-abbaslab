@@ -82,8 +82,8 @@ interface HabitItem {
 
 interface HabitTemplate {
   name: string
-  category: string
-  difficulty: string
+  category: 'morning' | 'hygiene' | 'fitness' | 'mind' | 'evening' | 'daily'
+  difficulty: 'simple' | 'medium' | 'hard' | 'extreme'
   icon: any
   color: string
   bg: string
