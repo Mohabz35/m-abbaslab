@@ -19,6 +19,12 @@ export default function OverviewDashboard() {
     articles: 0,
     commsSent: 0,
     financeTotal: 0,
+    fashionItems: 0,
+    subscribers: 0,
+    messageCount: 0,
+    habitStreak: 0,
+    todayHabits: 0,
+    todayHabitsTotal: 0,
   })
   
   const [wisdomFeed, setWisdomFeed] = useState<any[]>([])
@@ -56,6 +62,10 @@ export default function OverviewDashboard() {
             { data: recentArticles },
             { data: recentAlphas },
             { count: commsCount },
+            { count: fashionCount },
+            { count: subscriberCount },
+            { count: messageCount },
+            { data: disciplineDays },
           ] = await Promise.all([
             supabase.from('alphas').select('*', { count: 'exact', head: true }),
             supabase.from('alphas').select('*', { count: 'exact', head: true }).eq('is_passed', true),
@@ -67,6 +77,10 @@ export default function OverviewDashboard() {
             supabase.from('articles').select('id, title, created_at').order('created_at', { ascending: false }).limit(3),
             supabase.from('alphas').select('id, alpha_code, is_passed, created_at').order('created_at', { ascending: false }).limit(3),
             supabase.from('whatsapp_messages').select('*', { count: 'exact', head: true }),
+            supabase.from('fashion_items').select('*', { count: 'exact', head: true }),
+            supabase.from('email_subscribers').select('*', { count: 'exact', head: true }),
+            supabase.from('whatsapp_messages').select('*', { count: 'exact', head: true }),
+            supabase.from('discipline_days').select('date, overall_score').order('date', { ascending: false }).limit(30),
           ])
 
           // Calculate Finance Total
@@ -77,6 +91,32 @@ export default function OverviewDashboard() {
               if (f.type === 'expense') totalFinance -= f.amount
             })
           }
+
+          // Calculate engagement streak from discipline data
+          let streak = 0
+          if (disciplineDays && disciplineDays.length > 0) {
+            const today = new Date()
+            let checkDate = new Date(today)
+            for (const day of disciplineDays) {
+              const dayDate = new Date(day.date)
+              const diffDays = Math.floor((checkDate.getTime() - dayDate.getTime()) / 86400000)
+              if (diffDays <= 1 && day.overall_score > 0) {
+                streak++
+                checkDate = dayDate
+              } else if (diffDays > 1) {
+                break
+              }
+            }
+          }
+
+          // Get today's habits
+          const todayStr = new Date().toISOString().split('T')[0]
+          const { data: todayHabits } = await supabase
+            .from('discipline_habits')
+            .select('completed')
+            .eq('date', todayStr)
+          const todayCompleted = todayHabits?.filter(h => h.completed).length || 0
+          const todayTotal = todayHabits?.length || 0
 
           // Build dynamic timeline
           const allEvents: any[] = []
@@ -103,6 +143,12 @@ export default function OverviewDashboard() {
             articles: articleCount || 0,
             financeTotal: totalFinance,
             commsSent: commsCount || 0,
+            fashionItems: fashionCount || 0,
+            subscribers: subscriberCount || 0,
+            messageCount: messageCount || 0,
+            habitStreak: streak,
+            todayHabits: todayCompleted,
+            todayHabitsTotal: todayTotal,
           }))
         }
       } catch (e) {
@@ -129,8 +175,12 @@ export default function OverviewDashboard() {
             <Flame className="w-6 h-6 text-orange-500" />
             <div>
               <div className="text-xs text-orange-200 font-bold uppercase tracking-wider">Engagement Streak</div>
-              <div className="text-xl font-bold text-white leading-none">12 Days</div>
+              <div className="text-xl font-bold text-white leading-none">{loading ? '...' : `${metrics.habitStreak} Days`}</div>
             </div>
+          </div>
+          <div className="border-l border-white/10 pl-4">
+            <div className="text-xs text-blue-200 font-bold uppercase tracking-wider">Today</div>
+            <div className="text-xl font-bold text-white leading-none">{loading ? '...' : `${metrics.todayHabits}/${metrics.todayHabitsTotal}`}</div>
           </div>
         </div>
       </div>
@@ -146,7 +196,6 @@ export default function OverviewDashboard() {
             <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} className="bg-slate-800 p-5 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
               <div className="flex justify-between items-start mb-2">
                 <div className="p-2 bg-blue-500/20 rounded-lg"><Zap className="w-5 h-5 text-blue-400" /></div>
-                <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-full flex items-center gap-1"><TrendingUp className="w-3 h-3"/> +12%</span>
               </div>
               <div className="text-3xl font-bold text-white mb-1">{loading ? '...' : metrics.totalAlphas}</div>
               <div className="text-sm text-slate-400 font-medium">Total Alphas Tested</div>
@@ -161,10 +210,10 @@ export default function OverviewDashboard() {
               <div className="flex justify-between items-start mb-2">
                 <div className="p-2 bg-amber-500/20 rounded-lg"><TrendingUp className="w-5 h-5 text-amber-400" /></div>
               </div>
-              <div className="text-3xl font-bold text-white mb-1">{loading ? '...' : `KSh ${metrics.financeTotal.toLocaleString()}`}</div>
+              <div className="text-3xl font-bold text-white mb-1">{loading ? '...' : `$${metrics.financeTotal.toLocaleString()}`}</div>
               <div className="text-sm text-slate-400 font-medium">Net Cash Flow</div>
               <div className="mt-4 pt-4 border-t border-slate-700/50 text-xs text-slate-500 flex justify-between">
-                <span>Status: <strong className="text-emerald-400">Positive</strong></span>
+                <span>Status: <strong className={metrics.financeTotal >= 0 ? 'text-emerald-400' : 'text-red-400'}>{metrics.financeTotal >= 0 ? 'Positive' : 'Negative'}</strong></span>
               </div>
             </motion.div>
 
@@ -188,9 +237,24 @@ export default function OverviewDashboard() {
               </div>
               <div className="text-3xl font-bold text-white mb-1">{loading ? '...' : metrics.articles}</div>
               <div className="text-sm text-slate-400 font-medium">Published Articles</div>
-              <div className="mt-4 pt-4 border-t border-slate-700/50 text-xs text-slate-500 flex justify-between">
-                <span>Avg Read Time: <strong className="text-white">6 mins</strong></span>
+            </motion.div>
+
+            {/* Fashion Card */}
+            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} transition={{delay: 0.25}} className="bg-slate-800 p-5 rounded-xl border border-slate-700 hover:border-pink-500/50 transition-colors">
+              <div className="flex justify-between items-start mb-2">
+                <div className="p-2 bg-pink-500/20 rounded-lg"><Sparkles className="w-5 h-5 text-pink-400" /></div>
               </div>
+              <div className="text-3xl font-bold text-white mb-1">{loading ? '...' : metrics.fashionItems}</div>
+              <div className="text-sm text-slate-400 font-medium">Fashion Items</div>
+            </motion.div>
+
+            {/* Subscribers Card */}
+            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} transition={{delay: 0.3}} className="bg-slate-800 p-5 rounded-xl border border-slate-700 hover:border-cyan-500/50 transition-colors">
+              <div className="flex justify-between items-start mb-2">
+                <div className="p-2 bg-cyan-500/20 rounded-lg"><MessageSquare className="w-5 h-5 text-cyan-400" /></div>
+              </div>
+              <div className="text-3xl font-bold text-white mb-1">{loading ? '...' : metrics.subscribers}</div>
+              <div className="text-sm text-slate-400 font-medium">Subscribers</div>
             </motion.div>
           </div>
 

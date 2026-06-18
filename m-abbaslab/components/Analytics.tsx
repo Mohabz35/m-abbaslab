@@ -4,16 +4,34 @@ import Script from 'next/script'
 import { useEffect } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 
+async function trackToSupabase(pathname: string) {
+  try {
+    await fetch('/api/analytics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_type: 'pageview',
+        page_path: pathname,
+        page_title: document.title,
+        referrer: document.referrer || '',
+      }),
+    })
+  } catch {}
+}
+
 export default function Analytics({ gaId }: { gaId: string }) {
     const pathname = usePathname()
     const searchParams = useSearchParams()
 
     useEffect(() => {
-        if (gaId) {
-            // @ts-ignore
+        if (gaId && typeof window !== 'undefined' && window.gtag) {
             window.gtag('config', gaId, {
                 page_path: pathname + searchParams.toString(),
             })
+        }
+        // Track to Supabase
+        if (pathname) {
+            trackToSupabase(pathname)
         }
     }, [pathname, searchParams, gaId])
 

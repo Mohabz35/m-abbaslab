@@ -278,16 +278,20 @@ export default function ContentScheduler() {
     setLoading(true)
     try {
       if (mode === 'now') {
-        const res = await fetch('/api/post-now', {
+        const res = await fetch('/api/schedule', {
           method: 'POST',
           headers: apiHeaders(),
-          body: JSON.stringify({ content, platforms }),
+          body: JSON.stringify({ content, platforms, isNow: true }),
         })
         const data = await res.json()
-        if (data.success) { showToast('Posted! 🚀'); resetCompose(); fetchPosts() }
-        else {
-          const errs = Object.entries(data.results || {}).filter(([, r]: any) => !r.success).map(([p, r]: any) => `${p}: ${r.error}`).join(' | ')
-          showToast(errs || 'Failed to post.', 'error')
+        if (data.success) {
+          const errs = data.post?.results ? Object.entries(data.post.results).filter(([, r]: any) => !r.success).map(([p, r]: any) => `${p}: ${r.error}`).join(' | ') : ''
+          if (errs) showToast(`Partial: ${errs}`, 'error')
+          else showToast('Posted!')
+          resetCompose()
+          fetchPosts()
+        } else {
+          showToast(data.error || 'Failed to post.', 'error')
         }
       } else {
         const method = editingId ? 'PATCH' : 'POST'

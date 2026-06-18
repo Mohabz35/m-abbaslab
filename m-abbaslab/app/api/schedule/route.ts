@@ -68,22 +68,53 @@ async function authCheck(request: NextRequest): Promise<boolean> {
 // ─── POST — Add new scheduled/draft post ──────────────────────────────────────
 
 export async function POST(request: NextRequest) {
-  if (!authCheck(request)) {
+  if (!(await authCheck(request))) {
     return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 })
   }
 
   try {
-    const { content, platforms, scheduledAt, isDraft } = await request.json()
+    const { content, platforms, scheduledAt, isDraft, isNow } = await request.json()
 
     if (!content?.trim()) {
       return NextResponse.json({ error: 'Content required.' }, { status: 400 })
     }
 
-    if (!isDraft && (!scheduledAt || new Date(scheduledAt) <= new Date())) {
+    if (!isDraft && !isNow && (!scheduledAt || new Date(scheduledAt) <= new Date())) {
       return NextResponse.json({ error: 'Scheduled time must be in the future.' }, { status: 400 })
     }
 
     const queue = await readQueue()
+
+    // If posting now, process immediately
+    if (isNow && !isDraft) {
+      const results: Record<string, { success: boolean; id?: string; error?: string }> = {}
+      const tasks: Promise<void>[] = []
+
+      if (platforms?.includes('twitter')) {
+        tasks.push(postTweet(content.trim()).then((r) => { results.twitter = r }))
+      }
+      if (platforms?.includes('linkedin')) {
+        tasks.push(postLinkedIn(content.trim()).then((r) => { results.linkedin = r }))
+      }
+
+      if (tasks.length > 0) await Promise.all(tasks)
+
+      const anySuccess = Object.values(results).some((r) => r.success)
+      const newPost: ScheduledPost = {
+        id: `post_${Date.now()}`,
+        content: content.trim(),
+        platforms: platforms || [],
+        scheduledAt: null,
+        isDraft: false,
+        status: anySuccess ? 'published' : 'failed',
+        createdAt: new Date().toISOString(),
+        publishedAt: anySuccess ? new Date().toISOString() : undefined,
+        results,
+      }
+      queue.push(newPost)
+      await writeQueue(queue)
+      return NextResponse.json({ success: true, post: newPost })
+    }
 
     const newPost: ScheduledPost = {
       id: `post_${Date.now()}`,
@@ -109,7 +140,7 @@ export async function POST(request: NextRequest) {
 // ─── GET — Fetch queue OR process due posts ────────────────────────────────────
 
 export async function GET(request: NextRequest) {
-  if (!authCheck(request)) {
+  if (!(await authCheck(request))) {
     return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 })
   }
 
@@ -168,7 +199,7 @@ export async function GET(request: NextRequest) {
 // ─── DELETE — Remove a post ────────────────────────────────────────────────────
 
 export async function DELETE(request: NextRequest) {
-  if (!authCheck(request)) {
+  if (!(await authCheck(request))) {
     return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 })
   }
 
@@ -189,7 +220,7 @@ export async function DELETE(request: NextRequest) {
 // ─── PATCH — Edit a draft or reschedule ───────────────────────────────────────
 
 export async function PATCH(request: NextRequest) {
-  if (!authCheck(request)) {
+  if (!(await authCheck(request))) {
     return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 })
   }
 

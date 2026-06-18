@@ -34,6 +34,7 @@ export default function FinanceTracker() {
   const [entries, setEntries] = useState<FinanceEntry[]>([])
   const [goals, setGoals] = useState<SavingsGoal[]>([])
   const [isLoaded, setIsLoaded] = useState(false)
+  const [dailyTarget, setDailyTarget] = useState(25)
 
   // Log Form State
   const [entryType, setEntryType] = useState<EntryType>('expense')
@@ -178,6 +179,20 @@ export default function FinanceTracker() {
   const formatMoney = (val: number) => {
     return 'KSh ' + Math.round(val).toLocaleString()
   }
+
+  // Daily income tracking
+  const todayStr = new Date().toISOString().split('T')[0]
+  const todayIncome = entries
+    .filter(e => e.type === 'income' && e.date === todayStr)
+    .reduce((sum, e) => sum + e.amount, 0)
+  const dailyProgress = Math.min(100, Math.round((todayIncome / dailyTarget) * 100))
+  const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate()
+  const dayOfMonth = new Date().getDate()
+  const monthTarget = dailyTarget * daysInMonth
+  const monthIncome = entries
+    .filter(e => e.type === 'income' && e.date.startsWith(todayStr.substring(0, 7)))
+    .reduce((sum, e) => sum + e.amount, 0)
+  const monthProgress = Math.min(100, Math.round((monthIncome / monthTarget) * 100))
 
   // Handlers
   const handleAddEntry = () => {
@@ -386,6 +401,75 @@ export default function FinanceTracker() {
           </div>
           <div className={`text-3xl font-bold ${balance >= 0 ? 'text-blue-600 dark:text-blue-400' : 'text-rose-600 dark:text-rose-400'}`}>
             {formatMoney(balance)}
+          </div>
+        </div>
+      </div>
+
+      {/* Daily Income Target Tracker */}
+      <div className="bg-gradient-to-r from-emerald-900/20 to-green-900/20 dark:from-emerald-900/30 dark:to-green-900/30 p-5 rounded-2xl border border-emerald-500/20 mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+            <Target className="w-4 h-4" /> Daily Income Target
+          </h3>
+          <div className="flex items-center gap-2">
+            <label className="text-xs text-gray-400">Target:</label>
+            <input
+              type="number"
+              value={dailyTarget}
+              onChange={e => setDailyTarget(Math.max(0, parseInt(e.target.value) || 0))}
+              className="w-20 bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-xs text-white text-right outline-none focus:border-emerald-500/50"
+            />
+            <span className="text-xs text-gray-500">/day</span>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Today */}
+          <div className="bg-black/20 rounded-xl p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-gray-400">Today ({dayOfMonth}/{daysInMonth})</span>
+              <span className={`text-sm font-bold ${dailyProgress >= 100 ? 'text-emerald-400' : dailyProgress >= 50 ? 'text-amber-400' : 'text-red-400'}`}>
+                {dailyProgress}%
+              </span>
+            </div>
+            <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden mb-2">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${
+                  dailyProgress >= 100 ? 'bg-gradient-to-r from-emerald-500 to-green-500' :
+                  dailyProgress >= 50 ? 'bg-gradient-to-r from-amber-500 to-yellow-500' :
+                  'bg-gradient-to-r from-red-500 to-orange-500'
+                }`}
+                style={{ width: `${dailyProgress}%` }}
+              />
+            </div>
+            <div className="flex justify-between text-xs">
+              <span className="text-emerald-400 font-bold">{formatMoney(todayIncome)}</span>
+              <span className="text-gray-500">of {formatMoney(dailyTarget)}</span>
+            </div>
+          </div>
+
+          {/* Monthly */}
+          <div className="bg-black/20 rounded-xl p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-gray-400">Month Total</span>
+              <span className={`text-sm font-bold ${monthProgress >= 100 ? 'text-emerald-400' : monthProgress >= 50 ? 'text-amber-400' : 'text-red-400'}`}>
+                {monthProgress}%
+              </span>
+            </div>
+            <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden mb-2">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${
+                  monthProgress >= 100 ? 'bg-gradient-to-r from-emerald-500 to-green-500' :
+                  monthProgress >= 50 ? 'bg-gradient-to-r from-amber-500 to-yellow-500' :
+                  'bg-gradient-to-r from-red-500 to-orange-500'
+                }`}
+                style={{ width: `${monthProgress}%` }}
+              />
+            </div>
+            <div className="flex justify-between text-xs">
+              <span className="text-emerald-400 font-bold">{formatMoney(monthIncome)}</span>
+              <span className="text-gray-500">of {formatMoney(monthTarget)}</span>
+            </div>
           </div>
         </div>
       </div>

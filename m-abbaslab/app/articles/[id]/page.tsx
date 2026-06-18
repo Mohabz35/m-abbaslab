@@ -332,6 +332,17 @@ export default function ArticleDetailPage() {
                 >
                   <Linkedin className="w-5 h-5" />
                 </a>
+                <a
+                  href={`https://substack.com/share?publication_url=&p=${encodeURIComponent(shareUrl)}&utm_source=substack`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2.5 rounded-full hover:bg-white/5 text-gray-400 hover:text-[#FF6719] transition-colors"
+                  title="Share on Substack"
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/>
+                  </svg>
+                </a>
                 <button
                   onClick={handleCopyLink}
                   className="p-2.5 rounded-full hover:bg-white/5 text-gray-400 hover:text-[#00f0ff] transition-colors"

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, notFound } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { ExternalLink, Github, Code, ArrowLeft, Layers, Calendar, CheckCircle2, Loader2 } from 'lucide-react'
+import { ExternalLink, Github, Code, ArrowLeft, Layers, Calendar, CheckCircle2, Loader2, Share2 } from 'lucide-react'
 import Link from 'next/link'
 
 export default function ProjectDetailPage() {
@@ -175,6 +175,16 @@ export default function ProjectDetailPage() {
                             <div className="flex items-center gap-3">
                                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
                                 <span className="text-white font-medium">{project.status || 'Active'}</span>
+                            </div>
+                        </div>
+
+                        <div className="p-8 glass-panel rounded-3xl border border-white/10">
+                            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2"><Share2 className="w-5 h-5 text-[#00f0ff]" /> Share Project</h3>
+                            <div className="flex flex-wrap gap-2">
+                                <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out "${project.title}" by ${typeof window !== 'undefined' ? window.location.hostname : 'm-abbaslab.com'}`)}&url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-[#1DA1F2]/10 border border-[#1DA1F2]/20 rounded-lg text-[#1DA1F2] text-xs font-bold hover:bg-[#1DA1F2]/20 transition-colors">Twitter</a>
+                                <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-[#0A66C2]/10 border border-[#0A66C2]/20 rounded-lg text-[#0A66C2] text-xs font-bold hover:bg-[#0A66C2]/20 transition-colors">LinkedIn</a>
+                                <a href={`https://substack.com/share?publication_url=&p=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}&utm_source=substack`} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-[#FF6719]/10 border border-[#FF6719]/20 rounded-lg text-[#FF6719] text-xs font-bold hover:bg-[#FF6719]/20 transition-colors">Substack</a>
+                                <a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Check out "${project.title}": ${typeof window !== 'undefined' ? window.location.href : ''}`)}`} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-[#25D366]/10 border border-[#25D366]/20 rounded-lg text-[#25D366] text-xs font-bold hover:bg-[#25D366]/20 transition-colors">WhatsApp</a>
                             </div>
                         </div>
                     </aside>

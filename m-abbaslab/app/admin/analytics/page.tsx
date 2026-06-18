@@ -43,7 +43,7 @@ export default function AnalyticsDashboard() {
     const since = new Date(Date.now() - timeRange * 24 * 60 * 60 * 1000).toISOString()
 
     const [analyticsRes, articlesRes, projectsRes] = await Promise.all([
-      supabase.from('site_analytics').select('*').gte('created_at', since),
+      supabase.from('analytics_events').select('*').gte('created_at', since),
       supabase.from('articles').select('id, title, view_count, like_count').order('view_count', { ascending: false }).limit(10),
       supabase.from('projects').select('id, title, view_count').order('view_count', { ascending: false }).limit(10),
     ])

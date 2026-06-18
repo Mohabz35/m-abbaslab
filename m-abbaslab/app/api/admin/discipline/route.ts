@@ -2,87 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
 import { supabase, hasSupabaseKeys } from '@/lib/supabase'
 import { logAudit } from '@/lib/audit'
-import path from 'path'
-import { promises as fs } from 'fs'
 
 const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || 'm-abbaslab-jwt-secret-2026-change-in-production'
 )
-
-// The generic project ID where we store discipline data
-const DISCIPLINE_STORAGE_TITLE = '__SYSTEM_DISCIPLINE_OS__'
-
-// Helper: Ensure the local data/discipline.json file exists and is initialized
-const DATA_PATH = path.join(process.cwd(), 'data', 'discipline.json')
-async function getLocalData() {
-  try {
-    const fileContent = await fs.readFile(DATA_PATH, 'utf8')
-    return JSON.parse(fileContent)
-  } catch (error) {
-    return { days: {}, goals: null, reviews: {} }
-  }
-}
-
-async function saveLocalData(data: any) {
-  try {
-    const dataDir = path.dirname(DATA_PATH)
-    await fs.mkdir(dataDir, { recursive: true })
-    await fs.writeFile(DATA_PATH, JSON.stringify(data, null, 2), 'utf8')
-  } catch (error) {}
-}
-
-async function getSupabaseData() {
-  if (!hasSupabaseKeys) return null
-  try {
-    const { data, error } = await supabase
-      .from('projects')
-      .select('description')
-      .eq('title', DISCIPLINE_STORAGE_TITLE)
-      .single()
-    
-    if (data && data.description) {
-      return JSON.parse(data.description)
-    }
-  } catch (e) {
-    console.error('Failed to read discipline from Supabase projects:', e)
-  }
-  return null
-}
-
-async function saveSupabaseData(data: any) {
-  if (!hasSupabaseKeys) return false
-  try {
-    // Check if it exists
-    const { data: existing } = await supabase
-      .from('projects')
-      .select('id')
-      .eq('title', DISCIPLINE_STORAGE_TITLE)
-      .single()
-
-    const payload = JSON.stringify(data)
-
-    if (existing) {
-      const { error } = await supabase
-        .from('projects')
-        .update({ description: payload })
-        .eq('id', existing.id)
-      return !error
-    } else {
-      const { error } = await supabase
-        .from('projects')
-        .insert({
-          title: DISCIPLINE_STORAGE_TITLE,
-          description: payload,
-          category: 'System',
-          status: 'planning'
-        })
-      return !error
-    }
-  } catch (e) {
-    console.error('Failed to save discipline to Supabase projects:', e)
-    return false
-  }
-}
 
 async function isAuthorized(request: NextRequest): Promise<boolean> {
   const header = request.headers.get('x-admin-secret')
@@ -94,23 +17,80 @@ async function isAuthorized(request: NextRequest): Promise<boolean> {
 
 export async function GET(request: NextRequest) {
   try {
-    // 1. Verify Authentication
     if (!(await isAuthorized(request))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    // First try Supabase (persistent), fallback to local
-    let data = await getSupabaseData()
-    if (!data) {
-      data = await getLocalData()
+    const url = new URL(request.url)
+    const date = url.searchParams.get('date')
+    const section = url.searchParams.get('section') || 'all'
+
+    const result: Record<string, unknown> = {}
+
+    if (!hasSupabaseKeys) {
+      return NextResponse.json({ days: [], goals: { categories: [], passive: [] }, reviews: [], habits: [] })
     }
 
-    const days = Object.values(data.days || {})
-    const goals = data.goals
-    const reviews = Object.values(data.reviews || {})
+    if (section === 'all' || section === 'days') {
+      let query = supabase.from('discipline_days').select('*').order('date', { ascending: false })
+      if (date) query = query.eq('date', date)
+      else query = query.limit(30)
+      const { data: days } = await query
+      result.days = days || []
+    }
 
-    return NextResponse.json({ days, goals, reviews })
+    if (section === 'all' || section === 'goals') {
+      const { data: goals } = await supabase.from('discipline_goals').select('*').order('created_at', { ascending: true })
+      result.goals = goals || []
+    }
+
+    if (section === 'all' || section === 'habits') {
+      let query = supabase.from('discipline_habits').select('*').order('created_at', { ascending: false })
+      if (date) query = query.eq('date', date)
+      else query = query.limit(100)
+      const { data: habits } = await query
+      result.habits = habits || []
+    }
+
+    if (section === 'all' || section === 'passive') {
+      let query = supabase.from('discipline_passive').select('*').order('date', { ascending: false })
+      if (date) query = query.eq('date', date)
+      else query = query.limit(10)
+      const { data: passive } = await query
+      result.passive = passive || []
+    }
+
+    if (section === 'all' || section === 'reviews') {
+      let query = supabase.from('discipline_reviews').select('*').order('created_at', { ascending: false })
+      if (date) query = query.eq('date', date)
+      else query = query.limit(20)
+      const { data: reviews } = await query
+      result.reviews = reviews || []
+    }
+
+    if (section === 'habits-stats') {
+      const today = new Date().toISOString().split('T')[0]
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]
+      const { data: recentHabits } = await supabase
+        .from('discipline_habits')
+        .select('habit_name, completed, date')
+        .gte('date', thirtyDaysAgo)
+        .order('date', { ascending: false })
+
+      const habitStats: Record<string, { total: number; completed: number; streak: number; lastDate: string }> = {}
+      if (recentHabits) {
+        for (const h of recentHabits) {
+          if (!habitStats[h.habit_name]) habitStats[h.habit_name] = { total: 0, completed: 0, streak: 0, lastDate: '' }
+          habitStats[h.habit_name].total++
+          if (h.completed) habitStats[h.habit_name].completed++
+          if (!habitStats[h.habit_name].lastDate) habitStats[h.habit_name].lastDate = h.date
+        }
+      }
+      result.habitStats = habitStats
+    }
+
+    return NextResponse.json(result)
   } catch (error) {
     console.error('Error fetching discipline data:', error)
-    return NextResponse.json({ error: 'Failed to retrieve discipline parameters' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to retrieve discipline data' }, { status: 500 })
   }
 }
 
@@ -120,45 +100,116 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
     if (!body || typeof body !== 'object' || !body.type) {
-      return NextResponse.json({ error: 'Invalid payload request' }, { status: 400 })
+      return NextResponse.json({ error: 'Invalid payload' }, { status: 400 })
+    }
+
+    if (!hasSupabaseKeys) {
+      return NextResponse.json({ success: false, message: 'Supabase not configured' }, { status: 503 })
     }
 
     const { type } = body
-    let data = await getSupabaseData()
-    if (!data) {
-      data = await getLocalData()
-    }
 
     if (type === 'day') {
       const { date, data: dayData } = body
-      if (!data.days) data.days = {}
-      data.days[date] = dayData
-      await logAudit('DISCIPLINE_DAY_UPDATE', `Logged daily accountability scores for date: ${date}`)
-    } else if (type === 'goals') {
-      const { goalsData } = body
-      data.goals = goalsData
-      await logAudit('DISCIPLINE_GOALS_UPDATE', `Updated parallel goals checklist.`)
-    } else if (type === 'review') {
-      const { id, reviewType, date, answers } = body
-      if (!data.reviews) data.reviews = {}
-      data.reviews[id] = { id, type: reviewType, date, answers }
-      await logAudit('DISCIPLINE_REVIEW_UPDATE', `Saved ${reviewType} radical honesty review for ${date}.`)
-    } else {
-      return NextResponse.json({ error: 'Action type not recognized' }, { status: 400 })
+      const { error } = await supabase.from('discipline_days').upsert({
+        date,
+        hours: dayData.hours || [],
+        pillars: dayData.pillars || {},
+        wins: dayData.wins || [],
+        losses: dayData.losses || [],
+        gratitude: dayData.gratitude || '',
+        tomorrow: dayData.tomorrow || '',
+        deep_work_hours: dayData.deepWorkHours || 0,
+        sleep_hours: dayData.sleepHours || 0,
+        wasted_hours: dayData.wastedHours || 0,
+        overall_score: dayData.overallScore || 0,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'date' })
+      if (error) throw error
+      await logAudit('DISCIPLINE_DAY_UPDATE', `Logged daily data for ${date}`)
+      return NextResponse.json({ success: true, message: 'Day data synced to Supabase' })
     }
 
-    // Save to both Supabase and local
-    const dbSaved = await saveSupabaseData(data)
-    await saveLocalData(data)
+    if (type === 'goals') {
+      const { goals } = body
+      if (Array.isArray(goals)) {
+        for (const g of goals) {
+          await supabase.from('discipline_goals').upsert({
+            id: g.id,
+            category_id: g.categoryId,
+            category_label: g.categoryLabel,
+            category_color: g.categoryColor,
+            goal_id: g.goalId,
+            name: g.name,
+            status: g.status,
+            metric: g.metric || '',
+            note: g.note || '',
+            updated_at: new Date().toISOString(),
+          }, { onConflict: 'id' })
+        }
+      }
+      await logAudit('DISCIPLINE_GOALS_UPDATE', 'Updated goals')
+      return NextResponse.json({ success: true, message: 'Goals synced' })
+    }
 
-    return NextResponse.json({
-      success: true,
-      message: dbSaved 
-        ? 'Data synchronized successfully with Supabase Cloud.' 
-        : 'Data saved to local fallback system (volatile).'
-    })
+    if (type === 'habit-toggle') {
+      const { date, habitName, habitCategory, completed, difficulty, streak } = body
+      const { error } = await supabase.from('discipline_habits').upsert({
+        date,
+        habit_name: habitName,
+        habit_category: habitCategory || 'daily',
+        completed,
+        completed_at: completed ? new Date().toISOString() : null,
+        difficulty: difficulty || 'simple',
+        streak: streak || 0,
+      }, { onConflict: 'date,habit_name' })
+      if (error) throw error
+      return NextResponse.json({ success: true, message: 'Habit toggled' })
+    }
+
+    if (type === 'habits-bulk') {
+      const { date, habits } = body
+      if (Array.isArray(habits)) {
+        for (const h of habits) {
+          await supabase.from('discipline_habits').upsert({
+            date,
+            habit_name: h.name,
+            habit_category: h.category || 'daily',
+            completed: h.completed,
+            completed_at: h.completed ? new Date().toISOString() : null,
+            difficulty: h.difficulty || 'simple',
+            streak: h.streak || 0,
+          }, { onConflict: 'date,habit_name' })
+        }
+      }
+      return NextResponse.json({ success: true, message: 'Habits synced' })
+    }
+
+    if (type === 'passive') {
+      const { date, checks } = body
+      const { error } = await supabase.from('discipline_passive').upsert({
+        date,
+        checks,
+      }, { onConflict: 'date' })
+      if (error) throw error
+      return NextResponse.json({ success: true, message: 'Passive checks synced' })
+    }
+
+    if (type === 'review') {
+      const { reviewType, date, answers } = body
+      const { error } = await supabase.from('discipline_reviews').insert({
+        type: reviewType,
+        date,
+        answers,
+      })
+      if (error) throw error
+      await logAudit('DISCIPLINE_REVIEW_UPDATE', `Saved ${reviewType} review for ${date}`)
+      return NextResponse.json({ success: true, message: 'Review saved' })
+    }
+
+    return NextResponse.json({ error: 'Unknown action type' }, { status: 400 })
   } catch (error) {
-    console.error('Error updating discipline tracking data:', error)
-    return NextResponse.json({ error: 'Failed to save discipline parameters' }, { status: 500 })
+    console.error('Error saving discipline data:', error)
+    return NextResponse.json({ error: 'Failed to save discipline data' }, { status: 500 })
   }
 }

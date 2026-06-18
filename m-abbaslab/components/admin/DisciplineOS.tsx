@@ -7,7 +7,8 @@ import {
   CheckSquare, Square, Save, RefreshCcw, Award, Star,
   Clock, Sun, Moon, Coffee, Dumbbell, Laptop, Users,
   AlertCircle, Plus, Trash2, BarChart2, Activity,
-  FileDown, Send, CheckCircle2, MessageSquare
+  FileDown, Send, CheckCircle2, MessageSquare,
+  Droplets, Snowflake, Footprints
 } from 'lucide-react'
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -66,6 +67,26 @@ interface WisdomItem {
   type: 'alert' | 'insight' | 'action' | 'news'
   message: string
   timestamp: string
+}
+
+interface HabitItem {
+  name: string
+  category: 'morning' | 'hygiene' | 'fitness' | 'mind' | 'evening' | 'daily'
+  difficulty: 'simple' | 'medium' | 'hard' | 'extreme'
+  completed: boolean
+  streak: number
+  icon: any
+  color: string
+  bg: string
+}
+
+interface HabitTemplate {
+  name: string
+  category: string
+  difficulty: string
+  icon: any
+  color: string
+  bg: string
 }
 
 // ── Constants ──────────────────────────────────────────────────────────────────
@@ -182,6 +203,34 @@ const ANCIENT_WISDOM = [
   }
 ]
 
+const DEFAULT_HABITS: HabitTemplate[] = [
+  { name: 'Brush Teeth (Morning)', category: 'hygiene', difficulty: 'simple', icon: Sun, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
+  { name: 'Brush Teeth (Night)', category: 'hygiene', difficulty: 'simple', icon: Moon, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
+  { name: 'Shower', category: 'hygiene', difficulty: 'simple', icon: Droplets, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+  { name: 'Make Bed', category: 'morning', difficulty: 'simple', icon: Coffee, color: 'text-amber-400', bg: 'bg-amber-500/10' },
+  { name: 'Exercise (30 min)', category: 'fitness', difficulty: 'medium', icon: Dumbbell, color: 'text-orange-400', bg: 'bg-orange-500/10' },
+  { name: 'Drink 2L Water', category: 'fitness', difficulty: 'simple', icon: Droplets, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+  { name: 'Read (20 min)', category: 'mind', difficulty: 'medium', icon: BookOpen, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+  { name: 'Meditate (10 min)', category: 'mind', difficulty: 'medium', icon: Brain, color: 'text-purple-400', bg: 'bg-purple-500/10' },
+  { name: 'No Social Media', category: 'daily', difficulty: 'hard', icon: Shield, color: 'text-red-400', bg: 'bg-red-500/10' },
+  { name: 'Healthy Meal', category: 'fitness', difficulty: 'simple', icon: Heart, color: 'text-pink-400', bg: 'bg-pink-500/10' },
+  { name: 'Journal', category: 'evening', difficulty: 'simple', icon: FileText, color: 'text-yellow-400', bg: 'bg-yellow-500/10' },
+  { name: 'Sleep by 10pm', category: 'evening', difficulty: 'hard', icon: Moon, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
+  { name: 'Cold Shower', category: 'hygiene', difficulty: 'extreme', icon: Snowflake, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
+  { name: '10K Steps', category: 'fitness', difficulty: 'hard', icon: Footprints, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+  { name: 'No Sugar', category: 'daily', difficulty: 'medium', icon: Shield, color: 'text-amber-400', bg: 'bg-amber-500/10' },
+  { name: 'Deep Work (2h+)', category: 'daily', difficulty: 'hard', icon: Laptop, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
+]
+
+const HABIT_CATEGORY_LABELS: Record<string, { label: string; color: string }> = {
+  morning: { label: 'Morning', color: 'text-amber-400' },
+  hygiene: { label: 'Hygiene', color: 'text-blue-400' },
+  fitness: { label: 'Fitness', color: 'text-orange-400' },
+  mind: { label: 'Mind', color: 'text-purple-400' },
+  evening: { label: 'Evening', color: 'text-indigo-400' },
+  daily: { label: 'Daily', color: 'text-emerald-400' },
+}
+
 const REVIEW_TEMPLATES: Record<string, { title: string; prompts: string[] }> = {
   daily:     { title: 'Daily Debrief', prompts: ['What were my 3 non-negotiable wins today?', 'Where did I waste time or energy?', 'What am I grateful for right now?', 'What is my single most important task tomorrow?', 'Score the day 1-10 and justify the score.'] },
   weekly:    { title: 'Weekly War Room', prompts: ['Did I execute on my main weekly goal?', 'What patterns hurt my performance this week?', 'What were the 3 biggest lessons?', 'Am I on track with my 90-day targets?', 'What must be different next week?'] },
@@ -262,7 +311,7 @@ function ScoreSlider({ value, onChange, color = 'cyan' }: { value: number; onCha
 // ── Main Component ──────────────────────────────────────────────────────────────
 
 export default function DisciplineOS() {
-  const [activeSection, setActiveSection] = useState<'day' | 'goals' | 'reviews' | 'mentors' | 'finance'>('day')
+  const [activeSection, setActiveSection] = useState<'day' | 'habits' | 'ai-coach' | 'goals' | 'reviews' | 'mentors' | 'finance'>('day')
   const [selectedDate, setSelectedDate] = useState(todayStr())
   const [hours, setHours] = useState<HourBlock[]>(getDefaultHours())
   const [pillars, setPillars] = useState<Pillar[]>(getDefaultPillars())
@@ -287,21 +336,25 @@ export default function DisciplineOS() {
   const [wisdomFeed, setWisdomFeed] = useState<WisdomItem[]>([])
   const [loadingWisdom, setLoadingWisdom] = useState(false)
 
+  // Habit Tracker State
+  const [habits, setHabits] = useState<HabitItem[]>(DEFAULT_HABITS.map(h => ({
+    ...h, completed: false, streak: 0
+  })))
+
+  // AI Coaching State
+  const [aiCoaching, setAiCoaching] = useState<string>('')
+  const [aiLoading, setAiLoading] = useState(false)
+  const [aiMode, setAiMode] = useState<'daily-review' | 'habit-coaching' | 'weekly-summary'>('daily-review')
+
   // ── Load from API ──
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch('/api/admin/discipline')
+        const res = await fetch(`/api/admin/discipline?date=${selectedDate}&section=all`)
         if (!res.ok) throw new Error('Failed to load')
         const data = await res.json()
 
-        if (data.goals?.categories) {
-          setGoalCategories(data.goals.categories)
-        }
-        if (data.goals?.passive) {
-          setPassiveChecked(data.goals.passive)
-        }
-
+        // Load day data
         const todayData = data.days?.find((d: any) => d.date === selectedDate)
         if (todayData) {
           if (todayData.hours) setHours(todayData.hours)
@@ -317,8 +370,47 @@ export default function DisciplineOS() {
           if (todayData.gratitude) setGratitude(todayData.gratitude)
           if (todayData.tomorrow) setTomorrow(todayData.tomorrow)
         }
+
+        // Load goals from Supabase
+        if (data.goals && data.goals.length > 0) {
+          const categories: Record<string, GoalCategory> = {}
+          for (const g of data.goals) {
+            const catId = g.category_id || g.categoryId || 'uncategorized'
+            if (!categories[catId]) {
+              categories[catId] = {
+                id: catId,
+                label: g.category_label || g.categoryLabel || catId,
+                color: g.category_color || g.categoryColor || 'text-gray-400',
+                goals: []
+              }
+            }
+            categories[catId].goals.push({
+              id: g.goal_id || g.goalId || g.id,
+              name: g.name || '',
+              status: g.status || 'planning',
+              metric: g.metric || '',
+              note: g.note || '',
+            })
+          }
+          if (Object.keys(categories).length > 0) {
+            setGoalCategories(Object.values(categories))
+          }
+        }
+
+        // Load habits from Supabase
+        if (data.habits && data.habits.length > 0) {
+          const loadedHabits = DEFAULT_HABITS.map(template => {
+            const db = data.habits.find((h: any) => h.habit_name === template.name)
+            return {
+              ...template,
+              completed: db?.completed || false,
+              streak: db?.streak || 0,
+            }
+          })
+          setHabits(loadedHabits)
+        }
       } catch (e) {
-        // Use localStorage fallback
+        // Fallback to localStorage
         try {
           const cached = localStorage.getItem(`discipline_day_${selectedDate}`)
           if (cached) {
@@ -332,8 +424,8 @@ export default function DisciplineOS() {
           }
           const cachedGoals = localStorage.getItem('discipline_goals')
           if (cachedGoals) setGoalCategories(JSON.parse(cachedGoals))
-          const cachedPassive = localStorage.getItem('discipline_passive')
-          if (cachedPassive) setPassiveChecked(JSON.parse(cachedPassive))
+          const cachedHabits = localStorage.getItem(`discipline_habits_${selectedDate}`)
+          if (cachedHabits) setHabits(JSON.parse(cachedHabits))
         } catch {}
       } finally {
         setIsLoading(false)
@@ -379,6 +471,10 @@ export default function DisciplineOS() {
       hours,
       pillars: Object.fromEntries(pillars.map(p => [p.id, { score: p.score, note: p.note }])),
       wins, losses, gratitude, tomorrow,
+      deepWorkHours,
+      sleepHours,
+      wastedHours,
+      overallScore: parseFloat(avgPillarScore),
     }
     localStorage.setItem(`discipline_day_${selectedDate}`, JSON.stringify(dayData))
     try {
@@ -399,14 +495,25 @@ export default function DisciplineOS() {
 
   const handleSaveGoals = async () => {
     setIsSaving(true)
-    const goalsData = { categories: goalCategories, passive: passiveChecked }
     localStorage.setItem('discipline_goals', JSON.stringify(goalCategories))
-    localStorage.setItem('discipline_passive', JSON.stringify(passiveChecked))
     try {
+      const goalsPayload = goalCategories.flatMap(cat =>
+        cat.goals.map(g => ({
+          id: g.id,
+          categoryId: cat.id,
+          categoryLabel: cat.label,
+          categoryColor: cat.color,
+          goalId: g.id,
+          name: g.name,
+          status: g.status,
+          metric: g.metric,
+          note: g.note,
+        }))
+      )
       const res = await fetch('/api/admin/discipline', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'goals', goalsData })
+        body: JSON.stringify({ type: 'goals', goals: goalsPayload })
       })
       const result = await res.json()
       setSaveStatus(result.message || 'Goals saved')
@@ -420,12 +527,11 @@ export default function DisciplineOS() {
 
   const handleSaveReview = async () => {
     setIsSaving(true)
-    const id = `${reviewType}_${selectedDate}_${Date.now()}`
     try {
       const res = await fetch('/api/admin/discipline', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'review', id, reviewType, date: selectedDate, answers: reviewAnswers })
+        body: JSON.stringify({ type: 'review', reviewType, date: selectedDate, answers: reviewAnswers })
       })
       const result = await res.json()
       setSaveStatus(result.message || 'Review saved')
@@ -436,6 +542,34 @@ export default function DisciplineOS() {
       setTimeout(() => setSaveStatus(null), 3000)
     }
   }
+
+  // ── Habit Tracker Functions ──
+  const toggleHabit = async (index: number) => {
+    const habit = habits[index]
+    const newCompleted = !habit.completed
+    const updatedHabits = habits.map((h, i) => i === index ? { ...h, completed: newCompleted } : h)
+    setHabits(updatedHabits)
+    localStorage.setItem(`discipline_habits_${selectedDate}`, JSON.stringify(updatedHabits))
+    try {
+      await fetch('/api/admin/discipline', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'habit-toggle',
+          date: selectedDate,
+          habitName: habit.name,
+          habitCategory: habit.category,
+          completed: newCompleted,
+          difficulty: habit.difficulty,
+          streak: newCompleted ? habit.streak + 1 : 0,
+        })
+      })
+    } catch {}
+  }
+
+  const habitsCompleted = habits.filter(h => h.completed).length
+  const habitCompletionRate = habits.length > 0 ? Math.round((habitsCompleted / habits.length) * 100) : 0
+  const habitCategories = [...new Set(habits.map(h => h.category))]
 
   // ── Advanced Automation ──
   
@@ -503,6 +637,52 @@ export default function DisciplineOS() {
     }
   }
 
+  // ── AI Coaching ──
+  const requestAiCoaching = async (mode: 'daily-review' | 'habit-coaching' | 'weekly-summary') => {
+    setAiLoading(true)
+    setAiCoaching('')
+    try {
+      const context = mode === 'habit-coaching'
+        ? {
+            completed: habits.filter(h => h.completed).length,
+            total: habits.length,
+            habits: habits.map(h => ({ name: h.name, completed: h.completed, difficulty: h.difficulty, streak: h.streak })),
+            date: selectedDate,
+          }
+        : mode === 'daily-review'
+        ? {
+            date: selectedDate,
+            overallScore: parseFloat(avgPillarScore),
+            deepWorkHours,
+            sleepHours,
+            wastedHours,
+            pillars: pillars.map(p => ({ label: p.label, score: p.score, note: p.note })),
+            wins: wins.filter(Boolean),
+            losses: losses.filter(Boolean),
+            gratitude,
+            tomorrowPlan: tomorrow,
+          }
+        : {
+            recentDays: 7,
+            avgPillarScore,
+            goalsCompleted,
+            totalGoals: 48,
+          }
+
+      const res = await fetch('/api/admin/discipline/coaching', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode, context }),
+      })
+      const data = await res.json()
+      setAiCoaching(data.response || 'No response generated.')
+    } catch {
+      setAiCoaching('AI coaching unavailable. Check your OpenRouter API key in environment variables.')
+    } finally {
+      setAiLoading(false)
+    }
+  }
+
   // ── Helpers ──
   const updatePillar = (id: string, field: 'score' | 'note', value: any) => {
     setPillars(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p))
@@ -524,11 +704,13 @@ export default function DisciplineOS() {
   const passiveCompleted = passiveChecked.filter(Boolean).length
 
   const NAV_TABS = [
-    { id: 'day',      label: 'Today',        icon: Sun },
-    { id: 'goals',    label: '12× Goals',    icon: Target },
-    { id: 'reviews',  label: 'Reviews',      icon: Calendar },
-    { id: 'mentors',  label: 'Wisdom',       icon: BookOpen },
-    { id: 'finance',  label: 'Finance Laws', icon: DollarSign },
+    { id: 'day',       label: 'Today',        icon: Sun },
+    { id: 'habits',    label: 'Habits',       icon: CheckCircle2 },
+    { id: 'ai-coach',  label: 'AI Coach',     icon: Brain },
+    { id: 'goals',     label: '12× Goals',    icon: Target },
+    { id: 'reviews',   label: 'Reviews',      icon: Calendar },
+    { id: 'mentors',   label: 'Wisdom',       icon: BookOpen },
+    { id: 'finance',   label: 'Finance Laws', icon: DollarSign },
   ]
 
   if (isLoading) {
@@ -780,6 +962,228 @@ export default function DisciplineOS() {
                 {isSaving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                 {isSaving ? 'SYNCING...' : 'COMMIT DAY LOG'}
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {/* SECTION: HABIT TRACKER */}
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {activeSection === 'habits' && (
+          <div className="space-y-6">
+            {/* Habit Progress Overview */}
+            <GlassPanel>
+              <SectionHeader icon={CheckCircle2} title="Daily Habits Tracker" subtitle={`${habitsCompleted}/${habits.length} habits completed today`} accent="text-emerald-400" />
+              <div className="flex items-center gap-4 mb-4">
+                <div className="flex-1">
+                  <div className="w-full h-4 bg-white/5 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        habitCompletionRate >= 80 ? 'bg-gradient-to-r from-emerald-500 to-green-500' :
+                        habitCompletionRate >= 50 ? 'bg-gradient-to-r from-amber-500 to-yellow-500' :
+                        'bg-gradient-to-r from-red-500 to-orange-500'
+                      }`}
+                      style={{ width: `${habitCompletionRate}%` }}
+                    />
+                  </div>
+                </div>
+                <span className={`text-2xl font-black ${
+                  habitCompletionRate >= 80 ? 'text-emerald-400' :
+                  habitCompletionRate >= 50 ? 'text-amber-400' :
+                  'text-red-400'
+                }`}>{habitCompletionRate}%</span>
+              </div>
+              <div className="flex flex-wrap gap-3 text-xs">
+                <span className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-400 font-bold">
+                  {habitsCompleted} Done
+                </span>
+                <span className="px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full text-red-400 font-bold">
+                  {habits.length - habitsCompleted} Remaining
+                </span>
+                <span className="px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-cyan-400 font-bold">
+                  {selectedDate}
+                </span>
+              </div>
+            </GlassPanel>
+
+            {/* Habits by Category */}
+            {habitCategories.map(cat => {
+              const catInfo = HABIT_CATEGORY_LABELS[cat] || { label: cat, color: 'text-gray-400' }
+              const catHabits = habits.map((h, i) => ({ ...h, index: i })).filter(h => h.category === cat)
+              return (
+                <GlassPanel key={cat}>
+                  <h3 className={`text-sm font-black uppercase tracking-widest mb-4 ${catInfo.color}`}>
+                    {catInfo.label}
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {catHabits.map(habit => {
+                      const Icon = habit.icon
+                      const diffColors: Record<string, string> = {
+                        simple: 'text-gray-400',
+                        medium: 'text-amber-400',
+                        hard: 'text-orange-400',
+                        extreme: 'text-red-400',
+                      }
+                      return (
+                        <button
+                          key={habit.name}
+                          onClick={() => toggleHabit(habit.index)}
+                          className={`flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${
+                            habit.completed
+                              ? 'bg-emerald-500/10 border-emerald-500/30 hover:bg-emerald-500/15'
+                              : 'bg-white/[0.02] border-white/5 hover:border-white/15'
+                          }`}
+                        >
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
+                            habit.completed ? 'bg-emerald-500/20' : habit.bg
+                          }`}>
+                            {habit.completed
+                              ? <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                              : <Icon className={`w-4 h-4 ${habit.color}`} />
+                            }
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className={`text-xs font-bold block truncate ${
+                              habit.completed ? 'text-emerald-300 line-through opacity-70' : 'text-gray-200'
+                            }`}>{habit.name}</span>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className={`text-[10px] font-bold uppercase ${diffColors[habit.difficulty] || 'text-gray-500'}`}>
+                                {habit.difficulty}
+                              </span>
+                              {habit.streak > 0 && (
+                                <span className="text-[10px] font-bold text-orange-400 flex items-center gap-0.5">
+                                  <Flame className="w-2.5 h-2.5" />{habit.streak}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </GlassPanel>
+              )
+            })}
+
+            <div className="flex justify-end">
+              <button
+                onClick={async () => {
+                  setIsSaving(true)
+                  try {
+                    const res = await fetch('/api/admin/discipline', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        type: 'habits-bulk',
+                        date: selectedDate,
+                        habits: habits.map(h => ({
+                          name: h.name,
+                          category: h.category,
+                          completed: h.completed,
+                          difficulty: h.difficulty,
+                          streak: h.streak,
+                        }))
+                      })
+                    })
+                    const result = await res.json()
+                    setSaveStatus(result.message || 'Habits synced')
+                  } catch {
+                    setSaveStatus('Saved locally')
+                  } finally {
+                    setIsSaving(false)
+                    setTimeout(() => setSaveStatus(null), 3000)
+                  }
+                }}
+                disabled={isSaving}
+                className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-emerald-600 to-green-600 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-[1.02] transition-all disabled:opacity-50"
+              >
+                {isSaving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                {isSaving ? 'SYNCING...' : 'COMMIT HABITS'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {/* SECTION: AI COACH */}
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {activeSection === 'ai-coach' && (
+          <div className="space-y-6">
+            <GlassPanel>
+              <SectionHeader icon={Brain} title="JARVIS AI Discipline Coach" subtitle="Powered by OpenRouter — AI-driven habit analysis and daily coaching" accent="text-purple-400" />
+              
+              <div className="flex flex-wrap gap-3 mb-6">
+                {[
+                  { mode: 'daily-review' as const, label: 'Daily Review', desc: 'Analyze today\'s performance', color: 'from-purple-600 to-blue-600' },
+                  { mode: 'habit-coaching' as const, label: 'Habit Analysis', desc: 'Get habit improvement tips', color: 'from-emerald-600 to-cyan-600' },
+                  { mode: 'weekly-summary' as const, label: 'Weekly Summary', desc: 'Big picture discipline review', color: 'from-amber-600 to-orange-600' },
+                ].map(opt => (
+                  <button
+                    key={opt.mode}
+                    onClick={() => { setAiMode(opt.mode); requestAiCoaching(opt.mode) }}
+                    disabled={aiLoading}
+                    className={`flex-1 min-w-[200px] p-4 rounded-xl border transition-all ${
+                      aiMode === opt.mode
+                        ? `bg-gradient-to-r ${opt.color} border-transparent text-white shadow-lg`
+                        : 'bg-white/[0.02] border-white/10 text-gray-400 hover:border-white/20'
+                    } disabled:opacity-50`}
+                  >
+                    <div className="text-sm font-bold">{opt.label}</div>
+                    <div className="text-[10px] opacity-70 mt-1">{opt.desc}</div>
+                  </button>
+                ))}
+              </div>
+
+              {aiLoading ? (
+                <div className="flex flex-col items-center py-12 gap-4">
+                  <div className="w-12 h-12 rounded-full border-2 border-purple-500/30 border-t-purple-500 animate-spin" />
+                  <p className="text-gray-500 text-sm">JARVIS is analyzing your discipline data...</p>
+                </div>
+              ) : aiCoaching ? (
+                <div className="bg-gradient-to-br from-purple-500/5 to-blue-500/5 border border-purple-500/20 rounded-xl p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Brain className="w-5 h-5 text-purple-400" />
+                    <span className="text-sm font-bold text-purple-400">JARVIS Analysis</span>
+                    <span className="text-[10px] px-2 py-0.5 bg-purple-500/20 rounded-full text-purple-300">AI-Powered</span>
+                  </div>
+                  <div className="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">{aiCoaching}</div>
+                  <div className="mt-4 pt-4 border-t border-white/5 flex justify-between items-center">
+                    <span className="text-[10px] text-gray-600">Model: Meta Llama 3.1 8B (Free) via OpenRouter</span>
+                    <button
+                      onClick={() => requestAiCoaching(aiMode)}
+                      className="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1"
+                    >
+                      <RefreshCcw className="w-3 h-3" /> Refresh
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-12 text-gray-600">
+                  <Brain className="w-12 h-12 mx-auto mb-4 opacity-30" />
+                  <p className="text-sm">Click a coaching mode above to get AI-powered discipline analysis</p>
+                  <p className="text-[10px] mt-2 text-gray-700">Uses OpenRouter API with free Meta Llama model</p>
+                </div>
+              )}
+            </GlassPanel>
+
+            {/* Quick Stats for Context */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <GlassPanel className="text-center">
+                <p className="text-2xl font-black text-cyan-400">{deepWorkHours}h</p>
+                <p className="text-[10px] text-gray-500 uppercase">Deep Work</p>
+              </GlassPanel>
+              <GlassPanel className="text-center">
+                <p className="text-2xl font-black text-purple-400">{avgPillarScore}</p>
+                <p className="text-[10px] text-gray-500 uppercase">Avg Score</p>
+              </GlassPanel>
+              <GlassPanel className="text-center">
+                <p className="text-2xl font-black text-emerald-400">{habitsCompleted}/{habits.length}</p>
+                <p className="text-[10px] text-gray-500 uppercase">Habits Done</p>
+              </GlassPanel>
+              <GlassPanel className="text-center">
+                <p className="text-2xl font-black text-amber-400">{goalsCompleted}/48</p>
+                <p className="text-[10px] text-gray-500 uppercase">Goals Done</p>
+              </GlassPanel>
             </div>
           </div>
         )}

@@ -20,20 +20,25 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const formData = await request.formData()
-    const content = formData.get('content') as string
-    const platformsStr = formData.get('platforms') as string
-    const mediaFile = formData.get('media') as File | null
+    let content: string
+    let platforms: string[] = []
+    let mediaFile: File | null = null
+
+    const contentType = request.headers.get('content-type') || ''
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await request.formData()
+      content = formData.get('content') as string
+      const platformsStr = formData.get('platforms') as string
+      mediaFile = formData.get('media') as File | null
+      try { platforms = JSON.parse(platformsStr || '[]') } catch { return NextResponse.json({ error: 'Invalid platforms.' }, { status: 400 }) }
+    } else {
+      const body = await request.json()
+      content = body.content
+      platforms = body.platforms || []
+    }
 
     if (!content?.trim()) {
       return NextResponse.json({ error: 'Content is required.' }, { status: 400 })
-    }
-
-    let platforms: string[] = []
-    try {
-      platforms = JSON.parse(platformsStr || '[]')
-    } catch {
-      return NextResponse.json({ error: 'Invalid platforms format.' }, { status: 400 })
     }
 
     if (!Array.isArray(platforms) || platforms.length === 0) {
@@ -42,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     // Save media file temporarily if provided
     let mediaPath: string | null = null
-    if (mediaFile) {
+    if (mediaFile && mediaFile.size > 0) {
       const buffer = await mediaFile.arrayBuffer()
       const tempDir = path.join(process.cwd(), 'tmp')
 
