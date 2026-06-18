@@ -24,8 +24,8 @@ export default function Analytics({ gaId }: { gaId: string }) {
     const searchParams = useSearchParams()
 
     useEffect(() => {
-        if (gaId && typeof window !== 'undefined' && window.gtag) {
-            window.gtag('config', gaId, {
+        if (gaId && typeof window !== 'undefined' && (window as any).gtag) {
+            (window as any).gtag('config', gaId, {
                 page_path: pathname + searchParams.toString(),
             })
         }
