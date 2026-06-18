@@ -49,6 +49,11 @@ ${JSON.stringify(context, null, 2)}`
       : mode === 'weekly-summary'
       ? `Provide a weekly discipline summary and next steps:
 ${JSON.stringify(context, null, 2)}`
+      : mode === 'diary-reflection'
+      ? `Read this diary entry and provide a thoughtful reflection. Be supportive but honest. Help them see patterns, celebrate wins, and identify areas for growth. Mood: ${context?.mood || 'neutral'}
+
+Entry:
+${context?.content || ''}`
       : `Provide discipline coaching based on this data:
 ${JSON.stringify(context, null, 2)}`
 

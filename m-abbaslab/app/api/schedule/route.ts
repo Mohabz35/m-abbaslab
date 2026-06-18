@@ -1,14 +1,11 @@
 // app/api/schedule/route.ts
-// Manages the scheduled post queue — CRUD + process due posts
+// Manages scheduled posts — CRUD + process due posts (Supabase-backed)
 
 import { NextRequest, NextResponse } from 'next/server'
-import { promises as fs } from 'fs'
-import path from 'path'
 import { jwtVerify } from 'jose'
 import { postTweet } from '@/lib/twitter'
 import { postLinkedIn } from '@/lib/linkedin'
-
-const QUEUE_FILE = path.join(process.cwd(), 'data', 'scheduled-posts.json')
+import { supabase, hasSupabaseKeys } from '@/lib/supabase'
 
 const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || 'm-abbaslab-jwt-secret-2026-change-in-production'
@@ -20,37 +17,21 @@ interface ScheduledPost {
   id: string
   content: string
   platforms: string[]
-  scheduledAt: string | null
-  isDraft: boolean
+  scheduled_at: string | null
+  is_draft: boolean
   status: 'draft' | 'scheduled' | 'published' | 'failed'
-  createdAt: string
-  updatedAt?: string
-  publishedAt?: string
+  created_at: string
+  updated_at: string
+  published_at?: string | null
   results?: Record<string, { success: boolean; id?: string; error?: string }> | null
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-async function readQueue(): Promise<ScheduledPost[]> {
-  try {
-    const raw = await fs.readFile(QUEUE_FILE, 'utf-8')
-    return JSON.parse(raw)
-  } catch {
-    return []
-  }
-}
-
-async function writeQueue(queue: ScheduledPost[]): Promise<void> {
-  await fs.mkdir(path.dirname(QUEUE_FILE), { recursive: true })
-  await fs.writeFile(QUEUE_FILE, JSON.stringify(queue, null, 2))
-}
+// ─── Auth ─────────────────────────────────────────────────────────────────────
 
 async function authCheck(request: NextRequest): Promise<boolean> {
-  // Check x-admin-secret header
   const header = request.headers.get('x-admin-secret')
   if (process.env.ADMIN_SECRET && header === process.env.ADMIN_SECRET) return true
 
-  // Check JWT session cookie
   const session = request.cookies.get('admin_session')
   if (session?.value) {
     try {
@@ -63,6 +44,33 @@ async function authCheck(request: NextRequest): Promise<boolean> {
   }
 
   return false
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+async function readQueue(): Promise<ScheduledPost[]> {
+  if (!hasSupabaseKeys) return []
+  const { data, error } = await supabase
+    .from('scheduled_posts')
+    .select('*')
+    .order('created_at', { ascending: false })
+  if (error) {
+    console.error('Read queue error:', error)
+    return []
+  }
+  return (data || []) as ScheduledPost[]
+}
+
+async function upsertPost(post: ScheduledPost): Promise<void> {
+  if (!hasSupabaseKeys) return
+  const { error } = await supabase.from('scheduled_posts').upsert(post, { onConflict: 'id' })
+  if (error) console.error('Upsert post error:', error)
+}
+
+async function deletePostById(id: string): Promise<boolean> {
+  if (!hasSupabaseKeys) return false
+  const { error } = await supabase.from('scheduled_posts').delete().eq('id', id)
+  return !error
 }
 
 // ─── POST — Add new scheduled/draft post ──────────────────────────────────────
@@ -83,8 +91,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Scheduled time must be in the future.' }, { status: 400 })
     }
 
-    const queue = await readQueue()
-
     // If posting now, process immediately
     if (isNow && !isDraft) {
       const results: Record<string, { success: boolean; id?: string; error?: string }> = {}
@@ -104,15 +110,15 @@ export async function POST(request: NextRequest) {
         id: `post_${Date.now()}`,
         content: content.trim(),
         platforms: platforms || [],
-        scheduledAt: null,
-        isDraft: false,
+        scheduled_at: null,
+        is_draft: false,
         status: anySuccess ? 'published' : 'failed',
-        createdAt: new Date().toISOString(),
-        publishedAt: anySuccess ? new Date().toISOString() : undefined,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        published_at: anySuccess ? new Date().toISOString() : null,
         results,
       }
-      queue.push(newPost)
-      await writeQueue(queue)
+      await upsertPost(newPost)
       return NextResponse.json({ success: true, post: newPost })
     }
 
@@ -120,18 +126,19 @@ export async function POST(request: NextRequest) {
       id: `post_${Date.now()}`,
       content: content.trim(),
       platforms: platforms || [],
-      scheduledAt: isDraft ? null : scheduledAt,
-      isDraft: !!isDraft,
+      scheduled_at: isDraft ? null : scheduledAt,
+      is_draft: !!isDraft,
       status: isDraft ? 'draft' : 'scheduled',
-      createdAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      published_at: null,
       results: null,
     }
 
-    queue.push(newPost)
-    await writeQueue(queue)
+    await upsertPost(newPost)
 
     return NextResponse.json({ success: true, post: newPost })
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Schedule POST error:', err)
     return NextResponse.json({ error: 'Internal error.' }, { status: 500 })
   }
@@ -154,9 +161,9 @@ export async function GET(request: NextRequest) {
     const duePosts = queue.filter(
       (p) =>
         p.status === 'scheduled' &&
-        !p.isDraft &&
-        p.scheduledAt &&
-        new Date(p.scheduledAt) <= now
+        !p.is_draft &&
+        p.scheduled_at &&
+        new Date(p.scheduled_at) <= now
     )
 
     for (const post of duePosts) {
@@ -175,11 +182,14 @@ export async function GET(request: NextRequest) {
       const anySuccess = Object.values(results).some((r) => r.success)
       post.status = anySuccess ? 'published' : 'failed'
       post.results = results
-      post.publishedAt = anySuccess ? now.toISOString() : undefined
+      post.published_at = anySuccess ? now.toISOString() : null
+      post.updated_at = now.toISOString()
     }
 
     if (duePosts.length > 0) {
-      await writeQueue(queue)
+      for (const post of duePosts) {
+        await upsertPost(post)
+      }
     }
 
     return NextResponse.json({ processed: duePosts.length, posts: duePosts })
@@ -191,7 +201,7 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json({
     posts: filtered.sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     ),
   })
 }
@@ -206,14 +216,11 @@ export async function DELETE(request: NextRequest) {
   const { id } = await request.json()
   if (!id) return NextResponse.json({ error: 'Post ID required.' }, { status: 400 })
 
-  const queue = await readQueue()
-  const updated = queue.filter((p) => p.id !== id)
-
-  if (updated.length === queue.length) {
-    return NextResponse.json({ error: 'Post not found.' }, { status: 404 })
+  const deleted = await deletePostById(id)
+  if (!deleted) {
+    return NextResponse.json({ error: 'Post not found or delete failed.' }, { status: 404 })
   }
 
-  await writeQueue(updated)
   return NextResponse.json({ success: true })
 }
 
@@ -237,14 +244,14 @@ export async function PATCH(request: NextRequest) {
 
   if (content) post.content = content.trim()
   if (platforms) post.platforms = platforms
-  if (scheduledAt) post.scheduledAt = scheduledAt
+  if (scheduledAt) post.scheduled_at = scheduledAt
   if (typeof isDraft !== 'undefined') {
-    post.isDraft = isDraft
+    post.is_draft = isDraft
     post.status = isDraft ? 'draft' : 'scheduled'
   }
 
-  post.updatedAt = new Date().toISOString()
-  await writeQueue(queue)
+  post.updated_at = new Date().toISOString()
+  await upsertPost(post)
 
   return NextResponse.json({ success: true, post })
 }

@@ -20,14 +20,14 @@ interface ScheduledPost {
   id: string
   content: string
   platforms: string[]
-  scheduledAt: string | null
-  isDraft: boolean
+  scheduled_at: string | null
+  is_draft: boolean
   status: PostStatus
-  createdAt: string
-  updatedAt?: string
-  publishedAt?: string
-  mediaUrl?: string
-  mediaType?: 'video' | 'image'
+  created_at: string
+  updated_at?: string
+  published_at?: string | null
+  media_url?: string
+  media_type?: 'video' | 'image'
   results?: Record<string, { success: boolean; id?: string; error?: string }> | null
 }
 
@@ -310,8 +310,8 @@ export default function ContentScheduler() {
     setContent(post.content)
     setPlatforms(post.platforms)
     setEditingId(post.id)
-    setMode(post.isDraft ? 'draft' : 'schedule')
-    setScheduledAt(post.scheduledAt || '')
+    setMode(post.is_draft ? 'draft' : 'schedule')
+    setScheduledAt(post.scheduled_at || '')
     setTab('compose')
   }
 
@@ -690,9 +690,9 @@ export default function ContentScheduler() {
                                  })}
                               </div>
                               <span className="text-xs text-slate-500">
-                                {post.status === 'scheduled' && post.scheduledAt ? `📅 ${new Date(post.scheduledAt).toLocaleString()}`
-                                  : post.status === 'published' && post.publishedAt ? `✅ ${new Date(post.publishedAt).toLocaleString()}`
-                                  : `Created ${new Date(post.createdAt).toLocaleDateString()}`}
+                                {post.status === 'scheduled' && post.scheduled_at ? `📅 ${new Date(post.scheduled_at).toLocaleString()}`
+                                  : post.status === 'published' && post.published_at ? `✅ ${new Date(post.published_at).toLocaleString()}`
+                                  : `Created ${new Date(post.created_at).toLocaleDateString()}`}
                               </span>
                             </div>
                             {post.status === 'failed' && post.results && (

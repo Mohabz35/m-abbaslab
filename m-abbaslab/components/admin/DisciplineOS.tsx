@@ -266,6 +266,9 @@ function todayStr() {
   return new Date().toISOString().split('T')[0]
 }
 
+const ADMIN_SECRET = process.env.NEXT_PUBLIC_ADMIN_SECRET || ''
+function apiHeaders() { return { 'Content-Type': 'application/json', 'x-admin-secret': ADMIN_SECRET } }
+
 // ── Sub-Components ──────────────────────────────────────────────────────────────
 
 function SectionHeader({ icon: Icon, title, subtitle, accent = 'text-cyan-400' }: { icon: any; title: string; subtitle?: string; accent?: string }) {
@@ -311,7 +314,7 @@ function ScoreSlider({ value, onChange, color = 'cyan' }: { value: number; onCha
 // ── Main Component ──────────────────────────────────────────────────────────────
 
 export default function DisciplineOS() {
-  const [activeSection, setActiveSection] = useState<'day' | 'habits' | 'ai-coach' | 'goals' | 'reviews' | 'mentors' | 'finance'>('day')
+  const [activeSection, setActiveSection] = useState<'day' | 'habits' | 'ai-coach' | 'diary' | 'goals' | 'reviews' | 'mentors' | 'finance'>('day')
   const [selectedDate, setSelectedDate] = useState(todayStr())
   const [hours, setHours] = useState<HourBlock[]>(getDefaultHours())
   const [pillars, setPillars] = useState<Pillar[]>(getDefaultPillars())
@@ -345,6 +348,16 @@ export default function DisciplineOS() {
   const [aiCoaching, setAiCoaching] = useState<string>('')
   const [aiLoading, setAiLoading] = useState(false)
   const [aiMode, setAiMode] = useState<'daily-review' | 'habit-coaching' | 'weekly-summary'>('daily-review')
+
+  // Diary State
+  const [diaryTitle, setDiaryTitle] = useState('')
+  const [diaryContent, setDiaryContent] = useState('')
+  const [diaryMood, setDiaryMood] = useState<string>('neutral')
+  const [diaryTags, setDiaryTags] = useState<string[]>([])
+  const [diaryTagInput, setDiaryTagInput] = useState('')
+  const [diarySuggestion, setDiarySuggestion] = useState('')
+  const [diaryLoading, setDiaryLoading] = useState(false)
+  const [savedDiary, setSavedDiary] = useState<any>(null)
 
   // ── Load from API ──
   useEffect(() => {
@@ -408,6 +421,33 @@ export default function DisciplineOS() {
             }
           })
           setHabits(loadedHabits)
+        }
+
+        // Load diary from Supabase
+        if (data.diary && data.diary.length > 0) {
+          const todayDiary = data.diary.find((d: any) => d.date === selectedDate)
+          if (todayDiary) {
+            setDiaryTitle(todayDiary.title || '')
+            setDiaryContent(todayDiary.content || '')
+            setDiaryMood(todayDiary.mood || 'neutral')
+            setDiaryTags(todayDiary.tags || [])
+            setDiarySuggestion(todayDiary.ai_suggestion || '')
+            setSavedDiary(todayDiary)
+          } else {
+            setDiaryTitle('')
+            setDiaryContent('')
+            setDiaryMood('neutral')
+            setDiaryTags([])
+            setDiarySuggestion('')
+            setSavedDiary(null)
+          }
+        } else {
+          setDiaryTitle('')
+          setDiaryContent('')
+          setDiaryMood('neutral')
+          setDiaryTags([])
+          setDiarySuggestion('')
+          setSavedDiary(null)
         }
       } catch (e) {
         // Fallback to localStorage
@@ -706,6 +746,7 @@ export default function DisciplineOS() {
   const NAV_TABS = [
     { id: 'day',       label: 'Today',        icon: Sun },
     { id: 'habits',    label: 'Habits',       icon: CheckCircle2 },
+    { id: 'diary',     label: 'Diary',        icon: FileText },
     { id: 'ai-coach',  label: 'AI Coach',     icon: Brain },
     { id: 'goals',     label: '12× Goals',    icon: Target },
     { id: 'reviews',   label: 'Reviews',      icon: Calendar },
@@ -1185,6 +1226,181 @@ export default function DisciplineOS() {
                 <p className="text-[10px] text-gray-500 uppercase">Goals Done</p>
               </GlassPanel>
             </div>
+          </div>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {/* SECTION: DIARY / JOURNAL */}
+        {/* ══════════════════════════════════════════════════════════════════════ */}
+        {activeSection === 'diary' && (
+          <div className="space-y-6">
+            <GlassPanel>
+              <SectionHeader icon={FileText} title="Daily Diary" subtitle="Write freely — AI helps you reflect. Download anytime." accent="text-amber-400" />
+
+              {/* Mood Selector */}
+              <div className="mb-4">
+                <label className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-2 block">How are you feeling?</label>
+                <div className="flex gap-2">
+                  {[
+                    { mood: 'great', emoji: '😄', label: 'Great' },
+                    { mood: 'good', emoji: '🙂', label: 'Good' },
+                    { mood: 'neutral', emoji: '😐', label: 'Neutral' },
+                    { mood: 'tired', emoji: '😴', label: 'Tired' },
+                    { mood: 'stressed', emoji: '😰', label: 'Stressed' },
+                    { mood: 'sad', emoji: '😢', label: 'Sad' },
+                    { mood: 'motivated', emoji: '🔥', label: 'Motivated' },
+                  ].map(m => (
+                    <button key={m.mood} onClick={() => setDiaryMood(m.mood)}
+                      className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl border text-xs transition-all ${
+                        diaryMood === m.mood
+                          ? 'bg-amber-500/20 border-amber-500/50 text-amber-400'
+                          : 'border-white/10 text-gray-500 hover:border-white/20'
+                      }`}>
+                      <span className="text-lg">{m.emoji}</span>
+                      <span>{m.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Title */}
+              <div className="mb-4">
+                <label className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-2 block">Title (optional)</label>
+                <input type="text" value={diaryTitle} onChange={e => setDiaryTitle(e.target.value)}
+                  placeholder="What's on your mind today?"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-500/50 outline-none placeholder-gray-600" />
+              </div>
+
+              {/* Content */}
+              <div className="mb-4">
+                <label className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-2 block">Journal Entry</label>
+                <textarea value={diaryContent} onChange={e => setDiaryContent(e.target.value)}
+                  placeholder="Write about your day, thoughts, goals, challenges, or anything you want to reflect on..."
+                  rows={12}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-500/50 outline-none placeholder-gray-600 resize-none leading-relaxed" />
+                <p className="text-xs text-gray-600 mt-1 text-right">{diaryContent.split(/\s+/).filter(Boolean).length} words</p>
+              </div>
+
+              {/* Tags */}
+              <div className="mb-4">
+                <label className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-2 block">Tags</label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {diaryTags.map((tag, i) => (
+                    <span key={i} className="px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full text-xs text-amber-400 flex items-center gap-1">
+                      #{tag}
+                      <button onClick={() => setDiaryTags(diaryTags.filter((_, j) => j !== i))} className="text-amber-600 hover:text-amber-400">×</button>
+                    </span>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <input type="text" value={diaryTagInput} onChange={e => setDiaryTagInput(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter' && diaryTagInput.trim()) { setDiaryTags([...diaryTags, diaryTagInput.trim()]); setDiaryTagInput('') } }}
+                    placeholder="Add a tag and press Enter"
+                    className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:border-amber-500/50 outline-none placeholder-gray-600" />
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-3">
+                <button onClick={async () => {
+                  if (!diaryContent.trim()) return
+                  setDiaryLoading(true)
+                  try {
+                    const res = await fetch('/api/admin/discipline', {
+                      method: 'POST',
+                      headers: apiHeaders(),
+                      body: JSON.stringify({
+                        type: 'diary',
+                        date: selectedDate,
+                        title: diaryTitle,
+                        content: diaryContent,
+                        mood: diaryMood,
+                        tags: diaryTags,
+                        ai_suggestion: diarySuggestion,
+                      }),
+                    })
+                    const data = await res.json()
+                    if (data.success) {
+                      setSaveStatus('Diary saved ✅')
+                      setTimeout(() => setSaveStatus(null), 2000)
+                    }
+                  } catch { /* silent */ }
+                  finally { setDiaryLoading(false) }
+                }} disabled={!diaryContent.trim() || diaryLoading}
+                  className="px-6 py-3 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white rounded-xl font-bold text-sm transition-all disabled:opacity-50 flex items-center gap-2">
+                  <Save className="w-4 h-4" />
+                  {diaryLoading ? 'Saving...' : 'Save Diary'}
+                </button>
+
+                <button onClick={async () => {
+                  if (!diaryContent.trim()) return
+                  setDiaryLoading(true)
+                  try {
+                    const res = await fetch('/api/admin/discipline/coaching', {
+                      method: 'POST',
+                      headers: apiHeaders(),
+                      body: JSON.stringify({
+                        mode: 'diary-reflection',
+                        content: diaryContent,
+                        mood: diaryMood,
+                      }),
+                    })
+                    const data = await res.json()
+                    if (data.success && data.response) {
+                      setDiarySuggestion(data.response)
+                    }
+                  } catch { /* silent */ }
+                  finally { setDiaryLoading(false) }
+                }} disabled={!diaryContent.trim() || diaryLoading}
+                  className="px-6 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 rounded-xl font-bold text-sm transition-all flex items-center gap-2">
+                  <Brain className="w-4 h-4" />
+                  AI Reflect on this
+                </button>
+
+                <button onClick={() => {
+                  const today = selectedDate
+                  const text = `# Diary — ${today}\n\nMood: ${diaryMood}\n${diaryTitle ? `Title: ${diaryTitle}\n` : ''}\n${diaryContent}\n${diaryTags.length ? `\nTags: ${diaryTags.map(t => '#' + t).join(' ')}` : ''}${diarySuggestion ? `\n\n--- AI Reflection ---\n${diarySuggestion}` : ''}`
+                  const blob = new Blob([text], { type: 'text/markdown' })
+                  const url = URL.createObjectURL(blob)
+                  const a = document.createElement('a')
+                  a.href = url
+                  a.download = `diary-${today}.md`
+                  a.click()
+                  URL.revokeObjectURL(url)
+                }} disabled={!diaryContent.trim()}
+                  className="px-6 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 rounded-xl font-bold text-sm transition-all flex items-center gap-2">
+                  <FileDown className="w-4 h-4" />
+                  Download .md
+                </button>
+              </div>
+            </GlassPanel>
+
+            {/* AI Reflection */}
+            {diarySuggestion && (
+              <GlassPanel className="border-amber-500/20">
+                <SectionHeader icon={Brain} title="AI Reflection" accent="text-amber-400" />
+                <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{diarySuggestion}</p>
+              </GlassPanel>
+            )}
+
+            {/* Past Entries */}
+            <GlassPanel>
+              <SectionHeader icon={Calendar} title="Past Entries" accent="text-gray-400" />
+              <div className="space-y-3">
+                {/* This shows entries from Supabase if loaded */}
+                {savedDiary && (
+                  <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs text-gray-500">{savedDiary.date}</span>
+                      <span className="text-xs">{savedDiary.mood}</span>
+                    </div>
+                    {savedDiary.title && <p className="text-sm font-bold text-white mb-1">{savedDiary.title}</p>}
+                    <p className="text-xs text-gray-400 line-clamp-3">{savedDiary.content}</p>
+                  </div>
+                )}
+                <p className="text-xs text-gray-600 text-center">Entries are saved to Supabase and loaded on date change.</p>
+              </div>
+            </GlassPanel>
           </div>
         )}
 
