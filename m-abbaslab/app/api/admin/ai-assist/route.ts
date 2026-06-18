@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback_secret_abbaslab_2026_change_in_production'
+  process.env.JWT_SECRET || 'm-abbaslab-jwt-secret-2026-change-in-production'
 )
 
 async function isAuthorized(request: NextRequest): Promise<boolean> {

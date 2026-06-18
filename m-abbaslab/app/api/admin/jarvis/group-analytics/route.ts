@@ -3,28 +3,21 @@ import { jwtVerify } from 'jose'
 import { supabase, hasSupabaseKeys } from '@/lib/supabase'
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback_secret_abbaslab_2026_change_in_production'
+  process.env.JWT_SECRET || 'm-abbaslab-jwt-secret-2026-change-in-production'
 )
-
-function authBySecret(request: NextRequest): boolean {
-  const header = request.headers.get('x-admin-secret')
-  return Boolean(process.env.ADMIN_SECRET && header === process.env.ADMIN_SECRET)
-}
 
 async function authBySession(request: NextRequest): Promise<boolean> {
   const session = request.cookies.get('admin_session')
   if (!session?.value) return false
-
   try {
-    await jwtVerify(session.value, JWT_SECRET)
+    await jwtVerify(session.value, JWT_SECRET, { issuer: 'm-abbaslab', audience: 'admin' })
     return true
-  } catch {
-    return false
-  }
+  } catch { return false }
 }
 
 async function isAuthorized(request: NextRequest): Promise<boolean> {
-  if (authBySecret(request)) return true
+  const header = request.headers.get('x-admin-secret')
+  if (process.env.ADMIN_SECRET && header === process.env.ADMIN_SECRET) return true
   return authBySession(request)
 }
 
@@ -38,34 +31,37 @@ export async function GET(request: NextRequest) {
       success: true,
       groups: [],
       statuses: [],
-      stats: {
-        totalGroups: 0,
-        monitoredGroups: 0,
-        totalStatuses: 0,
-        likedStatuses: 0
-      }
+      stats: { totalGroups: 0, monitoredGroups: 0, totalStatuses: 0, likedStatuses: 0 }
     })
   }
 
   try {
-    // 1. Fetch all groups
     const { data: groups, error: groupsError } = await supabase
       .from('whatsapp_groups')
       .select('*')
       .order('last_seen_at', { ascending: false })
 
+    // Handle missing table gracefully
+    if (groupsError && (groupsError.code === '42P01' || groupsError.message?.includes('does not exist'))) {
+      return NextResponse.json({
+        success: true,
+        groups: [],
+        statuses: [],
+        stats: { totalGroups: 0, monitoredGroups: 0, totalStatuses: 0, likedStatuses: 0 }
+      })
+    }
     if (groupsError) throw groupsError
 
-    // 2. Fetch recent status updates
     const { data: statuses, error: statusesError } = await supabase
       .from('whatsapp_status_updates')
       .select('*')
       .order('captured_at', { ascending: false })
       .limit(50)
 
-    if (statusesError) throw statusesError
+    if (statusesError && !(statusesError.code === '42P01' || statusesError.message?.includes('does not exist'))) {
+      throw statusesError
+    }
 
-    // 3. Compute stats
     const totalGroups = groups?.length || 0
     const monitoredGroups = groups?.filter(g => g.metadata?.monitored !== false).length || 0
     const totalStatuses = statuses?.length || 0
@@ -75,15 +71,10 @@ export async function GET(request: NextRequest) {
       success: true,
       groups: groups || [],
       statuses: statuses || [],
-      stats: {
-        totalGroups,
-        monitoredGroups,
-        totalStatuses,
-        likedStatuses
-      }
+      stats: { totalGroups, monitoredGroups, totalStatuses, likedStatuses }
     })
   } catch (error: any) {
-    console.error('[API-GROUP-ANALYTICS] Error fetching analytics:', error.message)
+    console.error('[API-GROUP-ANALYTICS] Error:', error.message)
     return NextResponse.json({ success: false, error: error.message }, { status: 500 })
   }
 }
@@ -99,38 +90,35 @@ export async function POST(request: NextRequest) {
 
   try {
     const { groupJid, monitored } = await request.json()
-
     if (!groupJid) {
       return NextResponse.json({ success: false, error: 'Group JID is required' }, { status: 400 })
     }
 
-    // Fetch existing group metadata
     const { data: group, error: fetchError } = await supabase
       .from('whatsapp_groups')
       .select('metadata')
       .eq('group_jid', groupJid)
       .single()
 
-    if (fetchError) throw fetchError
-
-    const updatedMetadata = {
-      ...(group?.metadata || {}),
-      monitored: Boolean(monitored)
+    if (fetchError) {
+      if (fetchError.code === '42P01') {
+        return NextResponse.json({ success: false, error: 'WhatsApp tables not configured' }, { status: 500 })
+      }
+      throw fetchError
     }
+
+    const updatedMetadata = { ...(group?.metadata || {}), monitored: Boolean(monitored) }
 
     const { error: updateError } = await supabase
       .from('whatsapp_groups')
-      .update({
-        metadata: updatedMetadata,
-        updated_at: new Date().toISOString()
-      })
+      .update({ metadata: updatedMetadata, updated_at: new Date().toISOString() })
       .eq('group_jid', groupJid)
 
     if (updateError) throw updateError
 
     return NextResponse.json({ success: true, groupJid, monitored: Boolean(monitored) })
   } catch (error: any) {
-    console.error('[API-GROUP-ANALYTICS] Error toggling group monitoring:', error.message)
+    console.error('[API-GROUP-ANALYTICS] Error:', error.message)
     return NextResponse.json({ success: false, error: error.message }, { status: 500 })
   }
 }

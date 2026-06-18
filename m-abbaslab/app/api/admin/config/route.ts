@@ -8,7 +8,7 @@ import { jwtVerify } from 'jose'
 const DATA_PATH = path.join(process.cwd(), 'data', 'personal.json')
 const CONFIG_PATH = path.join(process.cwd(), 'config', 'personal.ts')
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback_secret_abbaslab_2026_change_in_production'
+  process.env.JWT_SECRET || 'm-abbaslab-jwt-secret-2026-change-in-production'
 )
 
 export async function GET() {

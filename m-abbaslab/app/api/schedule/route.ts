@@ -4,10 +4,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
+import { jwtVerify } from 'jose'
 import { postTweet } from '@/lib/twitter'
 import { postLinkedIn } from '@/lib/linkedin'
 
 const QUEUE_FILE = path.join(process.cwd(), 'data', 'scheduled-posts.json')
+
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || 'm-abbaslab-jwt-secret-2026-change-in-production'
+)
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -40,9 +45,24 @@ async function writeQueue(queue: ScheduledPost[]): Promise<void> {
   await fs.writeFile(QUEUE_FILE, JSON.stringify(queue, null, 2))
 }
 
-function authCheck(request: NextRequest): boolean {
+async function authCheck(request: NextRequest): Promise<boolean> {
+  // Check x-admin-secret header
   const header = request.headers.get('x-admin-secret')
-  return !!process.env.ADMIN_SECRET && header === process.env.ADMIN_SECRET
+  if (process.env.ADMIN_SECRET && header === process.env.ADMIN_SECRET) return true
+
+  // Check JWT session cookie
+  const session = request.cookies.get('admin_session')
+  if (session?.value) {
+    try {
+      const { payload } = await jwtVerify(session.value, JWT_SECRET, {
+        issuer: 'm-abbaslab',
+        audience: 'admin',
+      })
+      return !!payload.user
+    } catch { /* invalid token */ }
+  }
+
+  return false
 }
 
 // ─── POST — Add new scheduled/draft post ──────────────────────────────────────

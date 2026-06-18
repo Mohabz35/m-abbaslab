@@ -17,8 +17,8 @@ export async function GET() {
     const supabase = getSupabase()
     if (!supabase) {
       return NextResponse.json(
-        { error: 'Supabase env vars missing (NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)' },
-        { status: 500 }
+        { pairing_code: null, status: 'disconnected', is_connected: false, error: 'Supabase env vars missing' },
+        { status: 200 }
       )
     }
 
@@ -28,11 +28,17 @@ export async function GET() {
       .eq('id', 'primary')
       .single()
 
-    if (error) throw error
+    if (error) {
+      // Table doesn't exist or other error — return safe defaults
+      if (error.code === '42P01' || error.code === 'PGRST116') {
+        return NextResponse.json({ pairing_code: null, status: 'disconnected', is_connected: false })
+      }
+      throw error
+    }
 
     return NextResponse.json(data)
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ pairing_code: null, status: 'error', is_connected: false, error: error.message }, { status: 200 })
   }
 }
 
@@ -41,7 +47,7 @@ export async function POST() {
     const supabase = getSupabase()
     if (!supabase) {
       return NextResponse.json(
-        { error: 'Supabase env vars missing (NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)' },
+        { error: 'Supabase env vars missing' },
         { status: 500 }
       )
     }
@@ -57,7 +63,12 @@ export async function POST() {
         updated_at: new Date().toISOString()
       })
 
-    if (error) throw error
+    if (error) {
+      if (error.code === '42P01') {
+        return NextResponse.json({ message: 'WhatsApp tables not configured. Run supabase-migrations.sql first.' })
+      }
+      throw error
+    }
 
     return NextResponse.json({ message: 'Reconnection triggered' })
   } catch (error: any) {

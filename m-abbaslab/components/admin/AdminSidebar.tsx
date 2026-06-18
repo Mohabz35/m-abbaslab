@@ -123,6 +123,7 @@ export default function AdminSidebar() {
         <div className="p-4 border-t border-gray-200 dark:border-gray-700">
           <button
             onClick={handleSignOut}
+            aria-label="Sign out of admin panel"
             className="flex items-center gap-3 w-full px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
           >
             <LogOut className="w-5 h-5" />

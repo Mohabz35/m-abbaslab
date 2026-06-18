@@ -46,7 +46,12 @@ import {
   CheckCircle,
   Award,
   Trash2,
-  Music2
+  Music2,
+  Mail,
+  Users,
+  FileBarChart,
+  Shield,
+  Database
 } from 'lucide-react'
 import { personalConfig } from '@/config/personal'
 import FinanceTracker from '@/components/admin/FinanceTracker'
@@ -65,6 +70,13 @@ import FashionManager from '@/components/admin/FashionManager'
 import RunwayJourneyManager from '@/components/admin/RunwayJourneyManager'
 import SettingsHub from '@/components/admin/SettingsHub'
 import AdvancedAnalytics from '@/components/admin/AdvancedAnalytics'
+import ContactSubmissionsManager from '@/app/admin/messages/page'
+import SubscribersManager from '@/app/admin/subscribers/page'
+import AnalyticsDashboard from '@/app/admin/analytics/page'
+import AdvancedReporting from '@/app/admin/reports/page'
+import TeamManagement from '@/app/admin/team/page'
+import BackupManagement from '@/app/admin/backups/page'
+import AuditLogsSecurity from '@/app/admin/audit-logs/page'
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState('overview')
@@ -255,9 +267,15 @@ export default function AdminDashboardPage() {
     { id: 'zapier', label: 'Zapier & Automation', icon: Cpu },
     { id: 'discipline', label: 'Discipline OS', icon: ShieldCheck },
     { id: 'finance', label: 'Finance Tracker', icon: BarChart },
+    { id: 'messages', label: 'Messages', icon: Mail },
+    { id: 'subscribers', label: 'Subscribers', icon: Users },
     { id: 'analytics', label: 'Analytics', icon: BarChart },
+    { id: 'reports', label: 'Reports', icon: FileBarChart },
     { id: 'fashion', label: 'Fashion', icon: Sparkles },
     { id: 'runway', label: 'Runway', icon: Award },
+    { id: 'team', label: 'Team', icon: Shield },
+    { id: 'backups', label: 'Backups', icon: Database },
+    { id: 'audit', label: 'Audit Logs', icon: AlertTriangle },
     { id: 'settings', label: 'Settings', icon: Settings },
   ]
 
@@ -295,7 +313,19 @@ export default function AdminDashboardPage() {
       case 'finance':
         return <FinanceTracker />
       case 'analytics':
-        return <AdvancedAnalytics />
+        return <AnalyticsDashboard />
+      case 'reports':
+        return <AdvancedReporting />
+      case 'messages':
+        return <ContactSubmissionsManager />
+      case 'subscribers':
+        return <SubscribersManager />
+      case 'team':
+        return <TeamManagement />
+      case 'backups':
+        return <BackupManagement />
+      case 'audit':
+        return <AuditLogsSecurity />
       case 'fashion':
         return <FashionManager />
       case 'runway':
@@ -319,13 +349,13 @@ export default function AdminDashboardPage() {
             </div>
             <div>
               <h1 className="font-bold text-white tracking-wide">Sentinel</h1>
-              <p className="text-[10px] text-slate-400 uppercase tracking-widest">Command Center</p>
+              <p className="text-[10px] text-slate-300 uppercase tracking-widest">Command Center</p>
             </div>
           </div>
         </div>
         
         <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1 scrollbar-hide">
-          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-3 px-2">Core Systems</div>
+          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 px-2">Core Systems</div>
           {tabs.map(tab => {
             const Icon = tab.icon
             const isActive = activeTab === tab.id
@@ -354,6 +384,7 @@ export default function AdminDashboardPage() {
           <button 
             onClick={handleSaveToProject}
             disabled={isSaving}
+            aria-label="Commit changes to project"
             className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50 text-sm"
           >
             {isSaving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}

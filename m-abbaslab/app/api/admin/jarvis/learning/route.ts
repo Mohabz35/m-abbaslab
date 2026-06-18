@@ -3,7 +3,7 @@ import { jwtVerify } from 'jose'
 import { supabase, hasSupabaseKeys } from '@/lib/supabase'
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback_secret_abbaslab_2026_change_in_production'
+  process.env.JWT_SECRET || 'm-abbaslab-jwt-secret-2026-change-in-production'
 )
 
 function authBySecret(request: NextRequest): boolean {
@@ -53,7 +53,12 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
       .limit(100)
 
-    if (fetchError) throw fetchError
+    if (fetchError) {
+      if (fetchError.code === '42P01' || fetchError.message?.includes('does not exist')) {
+        return NextResponse.json({ success: true, interactions: [], stats: { totalInteractions: 0, averageScore: 0, topTopics: [] } })
+      }
+      throw fetchError
+    }
 
     // 2. Compute stats
     const totalInteractions = interactions?.length || 0

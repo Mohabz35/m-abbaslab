@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback_secret_abbaslab_2026_change_in_production'
+  process.env.JWT_SECRET || 'm-abbaslab-jwt-secret-2026-change-in-production'
 )
 
 const CO_PILOT_SYSTEM_PROMPT = `You are M-Abbas AI (Jarvis) — the executive, high-clearance Admin Co-Pilot of Mohammed Abbas's control panel.
