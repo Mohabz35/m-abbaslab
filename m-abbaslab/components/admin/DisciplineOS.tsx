@@ -569,7 +569,7 @@ export default function DisciplineOS() {
 
   const habitsCompleted = habits.filter(h => h.completed).length
   const habitCompletionRate = habits.length > 0 ? Math.round((habitsCompleted / habits.length) * 100) : 0
-  const habitCategories = [...new Set(habits.map(h => h.category))]
+  const habitCategories = Array.from(new Set(habits.map(h => h.category)))
 
   // ── Advanced Automation ──
   
