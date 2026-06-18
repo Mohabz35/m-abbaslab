@@ -169,7 +169,7 @@ export default function ContentScheduler() {
     const isImage = file.type.startsWith('image/')
     if (!isVideo && !isImage) { showToast('Only images and videos are supported.', 'error'); return }
     if (isVideo && file.size > 500 * 1024 * 1024) { showToast('Video must be under 500MB.', 'error'); return }
-    if (isImage && file.size > 10 * 1024 * 1024) { showToast('Image must be under 10MB.', 'error'); return }
+    if (isImage && file.size > 1 * 1024 * 1024) { showToast('Image must be under 1MB.', 'error'); return }
     setMediaFile(file)
     setMediaType(isVideo ? 'video' : 'image')
     setMediaPreview(URL.createObjectURL(file))
@@ -449,7 +449,7 @@ export default function ContentScheduler() {
                           <FileVideo className="w-8 h-8 text-slate-600 group-hover:text-slate-400 transition-colors" />
                         </div>
                         <p className="text-sm text-slate-500 group-hover:text-slate-400 transition-colors">Click to upload image or video</p>
-                        <p className="text-xs text-slate-600 mt-1">Images up to 10MB · Videos up to 500MB</p>
+                        <p className="text-xs text-slate-600 mt-1">Images up to 1MB · Videos up to 500MB</p>
                         <input ref={fileInputRef} type="file" accept="image/*,video/*" onChange={handleMediaSelect} className="hidden" />
                       </div>
                     ) : (
