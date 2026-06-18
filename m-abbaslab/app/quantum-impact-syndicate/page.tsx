@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { supabase } from '@/lib/supabase'
 import {
   ShieldAlert, Sparkles, Send, BrainCircuit, Globe,
   Terminal, ShieldCheck, TrendingUp, Cpu, Award,
@@ -23,24 +24,27 @@ export default function QuantumImpactSyndicate() {
 
   // Portal States
   const [activeTab, setActiveTab] = useState<'signup' | 'signin'>('signup')
-  const [loginUsername, setLoginUsername] = useState('')
+  const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [loginError, setLoginError] = useState(false)
+  const [loginError, setLoginError] = useState('')
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    setLoginError(false)
-    setTimeout(() => {
-      // Mockup login - typically you'd check this against a real DB
-      if (loginUsername === 'ceo' && loginPassword === 'admin123') {
-        setIsAuthenticated(true)
-      } else {
-        setLoginError(true)
-      }
-      setLoading(false)
-    }, 1000)
+    setLoginError('')
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: loginEmail,
+      password: loginPassword,
+    })
+
+    if (error) {
+      setLoginError('Invalid email or password')
+    } else {
+      setIsAuthenticated(true)
+    }
+    setLoading(false)
   }
 
   const handleRequest = (e: React.FormEvent) => {
@@ -315,7 +319,7 @@ export default function QuantumImpactSyndicate() {
                   </div>
                   <div className="grid grid-cols-2 gap-3 max-w-xs mx-auto">
                     <a href="/admin/dashboard" className="py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold text-center transition-all">Admin Panel</a>
-                    <button onClick={() => { setIsAuthenticated(false); setLoginUsername(''); setLoginPassword('') }}
+                    <button onClick={() => { setIsAuthenticated(false); setLoginEmail(''); setLoginPassword('') }}
                       className="py-3 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:border-white/30 text-xs font-bold transition-all">
                       Sign Out
                     </button>
@@ -327,8 +331,8 @@ export default function QuantumImpactSyndicate() {
               {!isAuthenticated && activeTab === 'signin' && (
                 <motion.form key="signin" onSubmit={handleLogin} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Username</label>
-                    <input type="text" value={loginUsername} onChange={e => setLoginUsername(e.target.value)} required placeholder="Your syndicate username"
+                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Email</label>
+                    <input type="email" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} required placeholder="your@email.com"
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-blue-500/50 transition-all" />
                   </div>
                   <div>
@@ -339,7 +343,7 @@ export default function QuantumImpactSyndicate() {
                   {loginError && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-xs">
                       <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-                      Invalid credentials. Access denied. Contact the Chief Strategist if locked out.
+                      {loginError}
                     </motion.div>
                   )}
                   <button type="submit" disabled={loading}
