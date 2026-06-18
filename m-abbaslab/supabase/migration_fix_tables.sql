@@ -122,3 +122,9 @@ DO $$ BEGIN
     ALTER TABLE discipline_habits ADD CONSTRAINT discipline_habits_date_name_unique UNIQUE (date, habit_name);
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
+
+-- ─── Fix site_config unique constraint for upsert ─────────────────
+DO $$ BEGIN
+    ALTER TABLE site_config ADD CONSTRAINT site_config_key_unique UNIQUE (key);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
