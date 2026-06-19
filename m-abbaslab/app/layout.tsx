@@ -10,6 +10,7 @@ import FloatingJarvisLauncher from '@/components/ui/FloatingJarvisLauncher'
 import PageTransition from '@/components/PageTransition'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import Analytics from '@/components/Analytics'
+import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
 import { personalConfig } from '@/config/personal'
 
 const inter = Inter({
@@ -124,6 +125,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} text-white bg-[#030014] selection:bg-[#00f0ff]/30 selection:text-[#00f0ff]`}>
         <PWAStatusBar />
+        <ServiceWorkerRegistration />
         <a href="#main-content" className="skip-to-content">Skip to content</a>
         <Suspense fallback={null}>
           <Analytics gaId={personalConfig.googleAnalyticsId || ''} />

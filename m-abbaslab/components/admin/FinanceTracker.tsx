@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Plus, List, BarChart3, Target, Check, Trash2, 
-  TrendingUp, TrendingDown, DollarSign, Wallet, Cloud, CloudOff, AlertTriangle
+  TrendingUp, TrendingDown, DollarSign, Wallet, Cloud, CloudOff, AlertTriangle, FileDown
 } from 'lucide-react'
 import { supabase, hasSupabaseKeys } from '@/lib/supabase'
 
@@ -137,6 +137,28 @@ export default function FinanceTracker() {
 
     return () => clearTimeout(timer)
   }, [entries, goals, isLoaded])
+
+  // PDF Export
+  const [isExporting, setIsExporting] = useState(false)
+  const exportFinancePDF = async () => {
+    setIsExporting(true)
+    try {
+      const html2pdf = (await import('html2pdf.js')).default
+      const element = document.getElementById('finance-export-container')
+      if (!element) return
+      await html2pdf().set({
+        margin: 10,
+        filename: `FinanceTracker_${new Date().toISOString().split('T')[0]}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).from(element).save()
+    } catch (err) {
+      console.error('PDF export failed:', err)
+    } finally {
+      setIsExporting(false)
+    }
+  }
 
   // Sync to Supabase Cloud (Manual trigger / retry)
   const handleCloudSync = async () => {
@@ -353,6 +375,14 @@ export default function FinanceTracker() {
               <AlertTriangle className="w-3 h-3" /> Local Storage Only
             </div>
           )}
+          <button
+            onClick={exportFinancePDF}
+            disabled={isExporting || entries.length === 0}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider bg-purple-600/10 text-purple-500 border border-purple-500/20 hover:bg-purple-600/20 transition-all disabled:opacity-50"
+          >
+            <FileDown className="w-3 h-3" />
+            {isExporting ? 'Exporting...' : 'Export PDF'}
+          </button>
           <button 
             onClick={handleCloudSync} 
             disabled={isSyncing}
@@ -373,7 +403,7 @@ export default function FinanceTracker() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div id="finance-export-container" className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="bg-gray-50 dark:bg-gray-800/50 p-5 rounded-2xl border border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-400 mb-2">
             <TrendingUp className="w-4 h-4 text-emerald-500" />

@@ -9,7 +9,7 @@ import {
   Brain, Activity, TrendingUp, AlertTriangle, CheckCircle,
   Zap, Database, Cpu, Network, Play, Pause, BarChart3,
   Clock, X, Send, Sparkles, Terminal, RefreshCw, LineChart,
-  ChevronDown, ChevronUp, Loader
+  ChevronDown, ChevronUp, Loader, FileDown
 } from "lucide-react"
 
 interface Alpha {
@@ -340,6 +340,28 @@ export default function WorldQuantLab() {
     return () => { supabase.removeChannel(channel) }
   }, [fetchData])
 
+  // PDF Export
+  const [isExportingPDF, setIsExportingPDF] = useState(false)
+  const exportAlphaReport = async () => {
+    setIsExportingPDF(true)
+    try {
+      const html2pdf = (await import('html2pdf.js')).default
+      const element = document.getElementById('alpha-report-container')
+      if (!element) return
+      await html2pdf().set({
+        margin: 10,
+        filename: `AlphaReport_${new Date().toISOString().split('T')[0]}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#030712' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+      }).from(element).save()
+    } catch (err) {
+      console.error('PDF export failed:', err)
+    } finally {
+      setIsExportingPDF(false)
+    }
+  }
+
   const handleStartEngine = async () => {
     setIsGenerating(true)
     try {
@@ -491,6 +513,10 @@ export default function WorldQuantLab() {
               {isGenerating ? <RefreshCw className="w-4 h-4 animate-spin" /> : isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               {isGenerating ? "GENERATING..." : isRunning ? "STOP ENGINE" : "START ENGINE"}
             </button>
+            <button onClick={exportAlphaReport} disabled={isExportingPDF || alphas.length === 0} className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium bg-purple-600/20 border border-purple-500/30 text-purple-400 hover:bg-purple-600/30 transition-all disabled:opacity-50">
+              {isExportingPDF ? <RefreshCw className="w-4 h-4 animate-spin" /> : <FileDown className="w-4 h-4" />}
+              {isExportingPDF ? "Exporting..." : "Export PDF"}
+            </button>
           </div>
         </div>
 
@@ -580,7 +606,7 @@ export default function WorldQuantLab() {
           </div>
 
           {/* RIGHT: Stats + Alpha Feed */}
-          <div className="col-span-12 lg:col-span-5 space-y-6">
+          <div className="col-span-12 lg:col-span-5 space-y-6" id="alpha-report-container">
             <div className="grid grid-cols-2 gap-4">
               <div className="rounded-xl border border-slate-800 bg-slate-900 p-4">
                 <div className="flex items-center gap-2 mb-2"><Database className="w-4 h-4 text-emerald-400" /><span className="text-xs text-slate-400 font-mono">TOTAL ALPHAS</span></div>
