@@ -1,5 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { jwtVerify } from 'jose'
 import { v2 as cloudinary } from 'cloudinary'
+
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || ''
+)
+
+async function isAuthorized(request: NextRequest): Promise<boolean> {
+  const header = request.headers.get('x-admin-secret')
+  if (process.env.ADMIN_SECRET && header === process.env.ADMIN_SECRET) return true
+  const session = request.cookies.get('admin_session')
+  if (!session?.value) return false
+  try {
+    await jwtVerify(session.value, JWT_SECRET)
+    return true
+  } catch {
+    return false
+  }
+}
 
 // Configure Cloudinary
 cloudinary.config({
@@ -10,6 +28,7 @@ cloudinary.config({
 
 export async function POST(request: NextRequest) {
   try {
+    if (!(await isAuthorized(request as any))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     const formData = await request.formData()
     const file = formData.get('file') as File
 

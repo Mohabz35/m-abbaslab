@@ -8,7 +8,7 @@ import { postLinkedIn } from '@/lib/linkedin'
 import { supabase, hasSupabaseKeys } from '@/lib/supabase'
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'm-abbaslab-jwt-secret-2026-change-in-production'
+  process.env.JWT_SECRET || ''
 )
 
 // ─── Types ────────────────────────────────────────────────────────────────────

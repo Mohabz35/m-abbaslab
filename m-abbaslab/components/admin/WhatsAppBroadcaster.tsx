@@ -20,8 +20,6 @@ type Broadcast = {
   completed_at?: string | null
 }
 
-const ADMIN_SECRET = process.env.NEXT_PUBLIC_ADMIN_SECRET || ''
-
 const QUICK_TEMPLATES = [
   'Quick update: New article is live on M-AbbasLab. Reply "link" and I will send it.',
   'Community update: A new AI research summary has just been published. Check the latest post.',
@@ -31,7 +29,6 @@ const QUICK_TEMPLATES = [
 function apiHeaders() {
   return {
     'Content-Type': 'application/json',
-    'x-admin-secret': ADMIN_SECRET,
   }
 }
 
@@ -58,7 +55,6 @@ export default function WhatsAppBroadcaster() {
     try {
       setIsRefreshing(true)
       const res = await fetch('/api/admin/whatsapp-broadcast?action=subscribers', {
-        headers: { 'x-admin-secret': ADMIN_SECRET },
       })
       const data = await res.json()
       if (data.success) {
@@ -76,7 +72,6 @@ export default function WhatsAppBroadcaster() {
   const fetchHistory = async () => {
     try {
       const res = await fetch('/api/admin/whatsapp-broadcast?action=history', {
-        headers: { 'x-admin-secret': ADMIN_SECRET },
       })
       const data = await res.json()
       if (data.success) {

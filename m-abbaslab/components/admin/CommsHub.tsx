@@ -68,12 +68,8 @@ const DEFAULT_SCHEDULE: BotSchedule = {
   timezone: 'Africa/Nairobi',
 }
 
-const ADMIN_SECRET = process.env.NEXT_PUBLIC_ADMIN_SECRET || ''
-
 function authHeaders() {
-  const headers: Record<string, string> = {}
-  if (ADMIN_SECRET) headers['x-admin-secret'] = ADMIN_SECRET
-  return headers
+  return { 'Content-Type': 'application/json' } as Record<string, string>
 }
 
 const TABS = [

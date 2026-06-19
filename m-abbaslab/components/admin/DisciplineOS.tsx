@@ -275,8 +275,7 @@ function todayStr() {
   return new Date().toISOString().split('T')[0]
 }
 
-const ADMIN_SECRET = process.env.NEXT_PUBLIC_ADMIN_SECRET || ''
-function apiHeaders() { return { 'Content-Type': 'application/json', 'x-admin-secret': ADMIN_SECRET } }
+function apiHeaders() { return { 'Content-Type': 'application/json' } }
 
 // ── Sub-Components ──────────────────────────────────────────────────────────────
 

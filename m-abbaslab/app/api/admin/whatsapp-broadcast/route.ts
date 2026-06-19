@@ -7,7 +7,7 @@ import { sendWhatsAppMessage } from '@/lib/whatsapp'
 import { logAudit } from '@/lib/audit'
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'm-abbaslab-jwt-secret-2026-change-in-production'
+  process.env.JWT_SECRET || ''
 )
 
 const BROADCAST_DELAY_MS = 100

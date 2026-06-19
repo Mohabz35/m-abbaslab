@@ -4,7 +4,7 @@ import { logAudit } from '@/lib/audit'
 import { jwtVerify } from 'jose'
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'm-abbaslab-jwt-secret-2026-change-in-production'
+  process.env.JWT_SECRET || ''
 )
 
 async function isAuthorized(request: NextRequest): Promise<boolean> {

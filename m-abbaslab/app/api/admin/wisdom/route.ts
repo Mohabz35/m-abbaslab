@@ -1,7 +1,26 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { supabase, hasSupabaseKeys } from '@/lib/supabase'
+import { jwtVerify } from 'jose'
 
-export async function GET() {
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || ''
+)
+
+async function isAuthorized(request: any): Promise<boolean> {
+  const header = request.headers?.get('x-admin-secret')
+  if (process.env.ADMIN_SECRET && header === process.env.ADMIN_SECRET) return true
+  const session = request.cookies?.get('admin_session')
+  if (!session?.value) return false
+  try {
+    await jwtVerify(session.value, JWT_SECRET)
+    return true
+  } catch {
+    return false
+  }
+}
+
+export async function GET(request: NextRequest) {
+  if (!(await isAuthorized(request))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const feed: any[] = []
 
   if (hasSupabaseKeys) {

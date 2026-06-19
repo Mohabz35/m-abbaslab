@@ -32,8 +32,6 @@ type ConnectionStatus = {
   }
 }
 
-const ADMIN_SECRET = process.env.NEXT_PUBLIC_ADMIN_SECRET || ''
-
 export default function WhatsAppConnection() {
   const [status, setStatus] = useState<ConnectionStatus | null>(null)
   const [source, setSource] = useState<string>('unknown')
@@ -54,13 +52,7 @@ export default function WhatsAppConnection() {
     else setIsRefreshing(true)
 
     try {
-      const headers: Record<string, string> = {}
-      if (ADMIN_SECRET) {
-        headers['x-admin-secret'] = ADMIN_SECRET
-      }
-
       const response = await fetch('/api/admin/whatsapp-status', {
-        headers,
         cache: 'no-store'
       })
 
@@ -95,14 +87,8 @@ export default function WhatsAppConnection() {
   const handleReconnect = async () => {
     setIsReconnecting(true)
     try {
-      const headers: Record<string, string> = {}
-      if (ADMIN_SECRET) {
-        headers['x-admin-secret'] = ADMIN_SECRET
-      }
-
       const response = await fetch('/api/admin/whatsapp-status', {
         method: 'POST',
-        headers
       })
 
       const data = await response.json()

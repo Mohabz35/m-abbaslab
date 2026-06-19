@@ -57,7 +57,29 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    // Read raw body for signature verification
+    const rawBody = await request.text()
+
+    // Verify Meta webhook signature if WHATSAPP_APP_SECRET is configured
+    if (process.env.WHATSAPP_APP_SECRET) {
+      const signature = request.headers.get('x-hub-signature-256')
+      if (signature) {
+        const crypto = await import('crypto')
+        const expectedSignature =
+          'sha256=' +
+          crypto
+            .createHmac('sha256', process.env.WHATSAPP_APP_SECRET)
+            .update(rawBody)
+            .digest('hex')
+
+        if (signature !== expectedSignature) {
+          console.warn('WhatsApp webhook signature mismatch')
+          return NextResponse.json({ status: 'ok' })
+        }
+      }
+    }
+
+    const body = JSON.parse(rawBody)
 
     // WhatsApp sends nested structure
     const entry = body?.entry?.[0]

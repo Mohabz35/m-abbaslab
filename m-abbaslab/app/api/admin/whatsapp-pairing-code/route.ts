@@ -1,5 +1,23 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { jwtVerify } from 'jose'
+
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || ''
+)
+
+async function isAuthorized(request: any): Promise<boolean> {
+  const header = request.headers?.get('x-admin-secret')
+  if (process.env.ADMIN_SECRET && header === process.env.ADMIN_SECRET) return true
+  const session = request.cookies?.get('admin_session')
+  if (!session?.value) return false
+  try {
+    await jwtVerify(session.value, JWT_SECRET)
+    return true
+  } catch {
+    return false
+  }
+}
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -12,7 +30,8 @@ function getSupabase() {
   return createClient(url, key)
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  if (!(await isAuthorized(request))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   try {
     const supabase = getSupabase()
     if (!supabase) {
@@ -42,7 +61,8 @@ export async function GET() {
   }
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
+  if (!(await isAuthorized(request))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   try {
     const supabase = getSupabase()
     if (!supabase) {

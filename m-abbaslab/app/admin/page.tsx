@@ -143,10 +143,7 @@ export default function AdminPage() {
                 <LayoutDashboard className="w-5 h-5" />
                 Launch Full Dashboard
               </a>
-              <a href="/api/admin/migrate-data" onClick={(e) => { e.preventDefault(); fetch('/api/admin/migrate-data', { method: 'POST' }).then(r => r.json()).then(d => alert(JSON.stringify(d.results, null, 2))).catch(() => alert('Migration endpoint not available')) }}
-                className="block w-full text-center py-3 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 rounded-lg transition-colors border border-emerald-500/30 font-semibold">
-                Migrate personal.json ? Supabase
-              </a>
+
             </div>
           </div>
         </div>

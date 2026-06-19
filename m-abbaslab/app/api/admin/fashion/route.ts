@@ -1,8 +1,27 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { jwtVerify } from 'jose'
 import { supabase } from '@/lib/supabase'
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || ''
+)
+
+async function isAuthorized(request: NextRequest): Promise<boolean> {
+  const header = request.headers.get('x-admin-secret')
+  if (process.env.ADMIN_SECRET && header === process.env.ADMIN_SECRET) return true
+  const session = request.cookies.get('admin_session')
+  if (!session?.value) return false
+  try {
+    await jwtVerify(session.value, JWT_SECRET)
+    return true
+  } catch {
+    return false
+  }
+}
+
+export async function GET(request: NextRequest) {
+  if (!(await isAuthorized(request as any))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const { searchParams } = new URL(request.url)
   const collection = searchParams.get('collection')
   const status = searchParams.get('status')
 
@@ -17,9 +36,10 @@ export async function GET(req: Request) {
   return NextResponse.json({ success: true, items: data })
 }
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const body = await req.json()
+    if (!(await isAuthorized(request as any))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const body = await request.json()
     const { data, error } = await supabase.from('fashion_items').insert([{
       title: body.title,
       collection: body.collection,
@@ -42,9 +62,10 @@ export async function POST(req: Request) {
   }
 }
 
-export async function PUT(req: Request) {
+export async function PUT(request: NextRequest) {
   try {
-    const body = await req.json()
+    if (!(await isAuthorized(request as any))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const body = await request.json()
     const { id, ...updates } = body
     const { data, error } = await supabase.from('fashion_items').update(updates).eq('id', id).select()
     if (error) throw error
@@ -54,9 +75,10 @@ export async function PUT(req: Request) {
   }
 }
 
-export async function DELETE(req: Request) {
+export async function DELETE(request: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url)
+    if (!(await isAuthorized(request as any))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
     if (!id) return NextResponse.json({ success: false, error: 'ID required' }, { status: 400 })
     

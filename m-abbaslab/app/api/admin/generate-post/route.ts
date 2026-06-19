@@ -4,7 +4,7 @@ import { jwtVerify } from 'jose'
 import { logAudit } from '@/lib/audit'
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'm-abbaslab-jwt-secret-2026-change-in-production'
+  process.env.JWT_SECRET || ''
 )
 
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'nvidia/nemotron-3-super-120b-a12b:free'
