@@ -8,7 +8,7 @@ import {
   Clock, Sun, Moon, Coffee, Dumbbell, Laptop, Users,
   AlertCircle, Plus, Trash2, BarChart2, Activity,
   FileDown, Send, CheckCircle2, MessageSquare,
-  Droplets, Snowflake, Footprints, FileText
+  Droplets, Snowflake, Footprints, FileText, Layers, X
 } from 'lucide-react'
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -78,6 +78,11 @@ interface HabitItem {
   icon: any
   color: string
   bg: string
+  scorecard: 1 | -1 | 0
+  cue: string
+  stackAfter: string
+  twoMinuteRule: boolean
+  timeSpent: number
 }
 
 interface HabitTemplate {
@@ -87,6 +92,10 @@ interface HabitTemplate {
   icon: any
   color: string
   bg: string
+  scorecard: 1 | -1 | 0
+  cue: string
+  stackAfter: string
+  twoMinuteRule: boolean
 }
 
 // ── Constants ──────────────────────────────────────────────────────────────────
@@ -204,22 +213,22 @@ const ANCIENT_WISDOM = [
 ]
 
 const DEFAULT_HABITS: HabitTemplate[] = [
-  { name: 'Brush Teeth (Morning)', category: 'hygiene', difficulty: 'simple', icon: Sun, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
-  { name: 'Brush Teeth (Night)', category: 'hygiene', difficulty: 'simple', icon: Moon, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
-  { name: 'Shower', category: 'hygiene', difficulty: 'simple', icon: Droplets, color: 'text-blue-400', bg: 'bg-blue-500/10' },
-  { name: 'Make Bed', category: 'morning', difficulty: 'simple', icon: Coffee, color: 'text-amber-400', bg: 'bg-amber-500/10' },
-  { name: 'Exercise (30 min)', category: 'fitness', difficulty: 'medium', icon: Dumbbell, color: 'text-orange-400', bg: 'bg-orange-500/10' },
-  { name: 'Drink 2L Water', category: 'fitness', difficulty: 'simple', icon: Droplets, color: 'text-blue-400', bg: 'bg-blue-500/10' },
-  { name: 'Read (20 min)', category: 'mind', difficulty: 'medium', icon: BookOpen, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-  { name: 'Meditate (10 min)', category: 'mind', difficulty: 'medium', icon: Brain, color: 'text-purple-400', bg: 'bg-purple-500/10' },
-  { name: 'No Social Media', category: 'daily', difficulty: 'hard', icon: Shield, color: 'text-red-400', bg: 'bg-red-500/10' },
-  { name: 'Healthy Meal', category: 'fitness', difficulty: 'simple', icon: Heart, color: 'text-pink-400', bg: 'bg-pink-500/10' },
-  { name: 'Journal', category: 'evening', difficulty: 'simple', icon: FileText, color: 'text-yellow-400', bg: 'bg-yellow-500/10' },
-  { name: 'Sleep by 10pm', category: 'evening', difficulty: 'hard', icon: Moon, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
-  { name: 'Cold Shower', category: 'hygiene', difficulty: 'extreme', icon: Snowflake, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
-  { name: '10K Steps', category: 'fitness', difficulty: 'hard', icon: Footprints, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-  { name: 'No Sugar', category: 'daily', difficulty: 'medium', icon: Shield, color: 'text-amber-400', bg: 'bg-amber-500/10' },
-  { name: 'Deep Work (2h+)', category: 'daily', difficulty: 'hard', icon: Laptop, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
+  { name: 'Brush Teeth (Morning)', category: 'hygiene', difficulty: 'simple', icon: Sun, color: 'text-cyan-400', bg: 'bg-cyan-500/10', scorecard: 1, cue: 'After waking up', stackAfter: '', twoMinuteRule: true },
+  { name: 'Brush Teeth (Night)', category: 'hygiene', difficulty: 'simple', icon: Moon, color: 'text-indigo-400', bg: 'bg-indigo-500/10', scorecard: 1, cue: 'Before bed', stackAfter: '', twoMinuteRule: true },
+  { name: 'Shower', category: 'hygiene', difficulty: 'simple', icon: Droplets, color: 'text-blue-400', bg: 'bg-blue-500/10', scorecard: 1, cue: 'After morning routine', stackAfter: 'Brush Teeth (Morning)', twoMinuteRule: false },
+  { name: 'Make Bed', category: 'morning', difficulty: 'simple', icon: Coffee, color: 'text-amber-400', bg: 'bg-amber-500/10', scorecard: 1, cue: 'After getting out of bed', stackAfter: '', twoMinuteRule: true },
+  { name: 'Exercise (30 min)', category: 'fitness', difficulty: 'medium', icon: Dumbbell, color: 'text-orange-400', bg: 'bg-orange-500/10', scorecard: 1, cue: 'After making bed', stackAfter: 'Make Bed', twoMinuteRule: false },
+  { name: 'Drink 2L Water', category: 'fitness', difficulty: 'simple', icon: Droplets, color: 'text-blue-400', bg: 'bg-blue-500/10', scorecard: 1, cue: 'Throughout the day', stackAfter: '', twoMinuteRule: true },
+  { name: 'Read (20 min)', category: 'mind', difficulty: 'medium', icon: BookOpen, color: 'text-emerald-400', bg: 'bg-emerald-500/10', scorecard: 1, cue: 'After lunch', stackAfter: '', twoMinuteRule: false },
+  { name: 'Meditate (10 min)', category: 'mind', difficulty: 'medium', icon: Brain, color: 'text-purple-400', bg: 'bg-purple-500/10', scorecard: 1, cue: 'After exercise', stackAfter: 'Exercise (30 min)', twoMinuteRule: false },
+  { name: 'No Social Media', category: 'daily', difficulty: 'hard', icon: Shield, color: 'text-red-400', bg: 'bg-red-500/10', scorecard: 1, cue: 'All day', stackAfter: '', twoMinuteRule: false },
+  { name: 'Healthy Meal', category: 'fitness', difficulty: 'simple', icon: Heart, color: 'text-pink-400', bg: 'bg-pink-500/10', scorecard: 1, cue: 'At meal times', stackAfter: '', twoMinuteRule: false },
+  { name: 'Journal', category: 'evening', difficulty: 'simple', icon: FileText, color: 'text-yellow-400', bg: 'bg-yellow-500/10', scorecard: 1, cue: 'Before bed', stackAfter: 'Brush Teeth (Night)', twoMinuteRule: false },
+  { name: 'Sleep by 10pm', category: 'evening', difficulty: 'hard', icon: Moon, color: 'text-indigo-400', bg: 'bg-indigo-500/10', scorecard: 1, cue: 'At 9:45pm alarm', stackAfter: '', twoMinuteRule: false },
+  { name: 'Cold Shower', category: 'hygiene', difficulty: 'extreme', icon: Snowflake, color: 'text-cyan-400', bg: 'bg-cyan-500/10', scorecard: 1, cue: 'End of shower', stackAfter: 'Shower', twoMinuteRule: false },
+  { name: '10K Steps', category: 'fitness', difficulty: 'hard', icon: Footprints, color: 'text-emerald-400', bg: 'bg-emerald-500/10', scorecard: 1, cue: 'Throughout the day', stackAfter: '', twoMinuteRule: false },
+  { name: 'No Sugar', category: 'daily', difficulty: 'medium', icon: Shield, color: 'text-amber-400', bg: 'bg-amber-500/10', scorecard: 1, cue: 'At meal times', stackAfter: '', twoMinuteRule: false },
+  { name: 'Deep Work (2h+)', category: 'daily', difficulty: 'hard', icon: Laptop, color: 'text-cyan-400', bg: 'bg-cyan-500/10', scorecard: 1, cue: 'Morning block', stackAfter: 'Exercise (30 min)', twoMinuteRule: false },
 ]
 
 const HABIT_CATEGORY_LABELS: Record<string, { label: string; color: string }> = {
@@ -341,8 +350,18 @@ export default function DisciplineOS() {
 
   // Habit Tracker State
   const [habits, setHabits] = useState<HabitItem[]>(DEFAULT_HABITS.map(h => ({
-    ...h, completed: false, streak: 0
+    ...h, completed: false, streak: 0, timeSpent: 0
   })))
+  
+  // Atomic Habits State
+  const [showScorecard, setShowScorecard] = useState(false)
+  const [showAddHabit, setShowAddHabit] = useState(false)
+  const [newHabitName, setNewHabitName] = useState('')
+  const [newHabitCategory, setNewHabitCategory] = useState<HabitItem['category']>('daily')
+  const [newHabitDifficulty, setNewHabitDifficulty] = useState<HabitItem['difficulty']>('simple')
+  const [newHabitCue, setNewHabitCue] = useState('')
+  const [newHabitStackAfter, setNewHabitStackAfter] = useState('')
+  const [newHabitTwoMinute, setNewHabitTwoMinute] = useState(false)
 
   // AI Coaching State
   const [aiCoaching, setAiCoaching] = useState<string>('')
@@ -358,6 +377,11 @@ export default function DisciplineOS() {
   const [diarySuggestion, setDiarySuggestion] = useState('')
   const [diaryLoading, setDiaryLoading] = useState(false)
   const [savedDiary, setSavedDiary] = useState<any>(null)
+
+  // Auto-save state
+  const [lastSaved, setLastSaved] = useState<string | null>(null)
+  const [isAutoSaving, setIsAutoSaving] = useState(false)
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // ── Load from API ──
   useEffect(() => {
@@ -418,6 +442,11 @@ export default function DisciplineOS() {
               ...template,
               completed: db?.completed || false,
               streak: db?.streak || 0,
+              scorecard: db?.scorecard ?? template.scorecard,
+              cue: db?.cue ?? template.cue,
+              stackAfter: db?.stack_after ?? template.stackAfter,
+              twoMinuteRule: db?.two_minute_rule ?? template.twoMinuteRule,
+              timeSpent: db?.time_spent || 0,
             }
           })
           setHabits(loadedHabits)
@@ -602,6 +631,11 @@ export default function DisciplineOS() {
           completed: newCompleted,
           difficulty: habit.difficulty,
           streak: newCompleted ? habit.streak + 1 : 0,
+          scorecard: habit.scorecard,
+          cue: habit.cue,
+          stackAfter: habit.stackAfter,
+          twoMinuteRule: habit.twoMinuteRule,
+          timeSpent: habit.timeSpent,
         })
       })
     } catch {}
@@ -610,6 +644,99 @@ export default function DisciplineOS() {
   const habitsCompleted = habits.filter(h => h.completed).length
   const habitCompletionRate = habits.length > 0 ? Math.round((habitsCompleted / habits.length) * 100) : 0
   const habitCategories = Array.from(new Set(habits.map(h => h.category)))
+  
+  // Atomic Habits helpers
+  const scorecardPlus = habits.filter(h => h.scorecard === 1).length
+  const scorecardMinus = habits.filter(h => h.scorecard === -1).length
+  const scorecardNeutral = habits.filter(h => h.scorecard === 0).length
+  const habitScore = scorecardPlus - scorecardMinus
+
+  const toggleScorecard = (index: number) => {
+    setHabits(prev => prev.map((h, i) => {
+      if (i !== index) return h
+      const next: 1 | -1 | 0 = h.scorecard === 0 ? 1 : h.scorecard === 1 ? -1 : 0
+      return { ...h, scorecard: next }
+    }))
+  }
+
+  const addCustomHabit = () => {
+    if (!newHabitName.trim()) return
+    const iconMap: Record<string, any> = { morning: Sun, hygiene: Droplets, fitness: Dumbbell, mind: Brain, evening: Moon, daily: Shield }
+    const colorMap: Record<string, string> = { morning: 'text-amber-400', hygiene: 'text-blue-400', fitness: 'text-orange-400', mind: 'text-purple-400', evening: 'text-indigo-400', daily: 'text-emerald-400' }
+    const bgMap: Record<string, string> = { morning: 'bg-amber-500/10', hygiene: 'bg-blue-500/10', fitness: 'bg-orange-500/10', mind: 'bg-purple-500/10', evening: 'bg-indigo-500/10', daily: 'bg-emerald-500/10' }
+    const newHabit: HabitItem = {
+      name: newHabitName.trim(),
+      category: newHabitCategory,
+      difficulty: newHabitDifficulty,
+      icon: iconMap[newHabitCategory] || Shield,
+      color: colorMap[newHabitCategory] || 'text-gray-400',
+      bg: bgMap[newHabitCategory] || 'bg-gray-500/10',
+      completed: false,
+      streak: 0,
+      scorecard: 0,
+      cue: newHabitCue,
+      stackAfter: newHabitStackAfter,
+      twoMinuteRule: newHabitTwoMinute,
+      timeSpent: 0,
+    }
+    setHabits(prev => [...prev, newHabit])
+    setNewHabitName('')
+    setNewHabitCue('')
+    setNewHabitStackAfter('')
+    setNewHabitTwoMinute(false)
+    setShowAddHabit(false)
+  }
+
+  const removeHabit = (index: number) => {
+    setHabits(prev => prev.filter((_, i) => i !== index))
+  }
+
+  // ── Auto-Save (debounced 1.5s) ──
+  const autoSave = useCallback(async () => {
+    setIsAutoSaving(true)
+    try {
+      await fetch('/api/admin/discipline', {
+        method: 'POST',
+        headers: apiHeaders(),
+        body: JSON.stringify({
+          type: 'day',
+          date: selectedDate,
+          hours, pillars, wins, losses, gratitude, tomorrow,
+        })
+      })
+      // Also save habits
+      await fetch('/api/admin/discipline', {
+        method: 'POST',
+        headers: apiHeaders(),
+        body: JSON.stringify({
+          type: 'habits-bulk',
+          date: selectedDate,
+          habits: habits.map(h => ({
+            name: h.name, category: h.category, completed: h.completed,
+            difficulty: h.difficulty, streak: h.streak, scorecard: h.scorecard,
+            cue: h.cue, stackAfter: h.stackAfter, twoMinuteRule: h.twoMinuteRule, timeSpent: h.timeSpent,
+          }))
+        })
+      })
+      const now = new Date()
+      setLastSaved(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
+    } catch {
+      // silent fail for auto-save
+    } finally {
+      setIsAutoSaving(false)
+    }
+  }, [selectedDate, hours, pillars, wins, losses, gratitude, tomorrow, habits])
+
+  const triggerAutoSave = useCallback(() => {
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
+    autoSaveTimer.current = setTimeout(() => autoSave(), 1500)
+  }, [autoSave])
+
+  // Auto-save on state changes (debounced)
+  useEffect(() => {
+    if (!isLoading) triggerAutoSave()
+    return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current) }
+  }, [hours, pillars, wins, losses, gratitude, tomorrow, habits, isLoading, triggerAutoSave])
 
   // ── Advanced Automation ──
   
@@ -994,7 +1121,16 @@ export default function DisciplineOS() {
               </GlassPanel>
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex justify-end items-center gap-4">
+              {(lastSaved || isAutoSaving) && (
+                <span className="text-xs text-gray-500 flex items-center gap-1.5">
+                  {isAutoSaving ? (
+                    <><RefreshCcw className="w-3 h-3 animate-spin" /> Auto-saving...</>
+                  ) : (
+                    <><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Last saved {lastSaved}</>
+                  )}
+                </span>
+              )}
               <button
                 onClick={handleSaveDay}
                 disabled={isSaving}
@@ -1012,40 +1148,129 @@ export default function DisciplineOS() {
         {/* ══════════════════════════════════════════════════════════════════════ */}
         {activeSection === 'habits' && (
           <div className="space-y-6">
-            {/* Habit Progress Overview */}
+            {/* Atomic Habits Scorecard Summary */}
             <GlassPanel>
-              <SectionHeader icon={CheckCircle2} title="Daily Habits Tracker" subtitle={`${habitsCompleted}/${habits.length} habits completed today`} accent="text-emerald-400" />
-              <div className="flex items-center gap-4 mb-4">
-                <div className="flex-1">
-                  <div className="w-full h-4 bg-white/5 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-500 ${
-                        habitCompletionRate >= 80 ? 'bg-gradient-to-r from-emerald-500 to-green-500' :
-                        habitCompletionRate >= 50 ? 'bg-gradient-to-r from-amber-500 to-yellow-500' :
-                        'bg-gradient-to-r from-red-500 to-orange-500'
-                      }`}
-                      style={{ width: `${habitCompletionRate}%` }}
-                    />
-                  </div>
+              <SectionHeader icon={CheckCircle2} title="Atomic Habits Scorecard" subtitle="Track your habit score — good (+1), bad (-1), neutral (0)" accent="text-emerald-400" />
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 text-center">
+                  <p className="text-2xl font-black text-emerald-400">{habitsCompleted}/{habits.length}</p>
+                  <p className="text-[10px] text-emerald-300 font-bold uppercase">Completed</p>
                 </div>
-                <span className={`text-2xl font-black ${
-                  habitCompletionRate >= 80 ? 'text-emerald-400' :
-                  habitCompletionRate >= 50 ? 'text-amber-400' :
-                  'text-red-400'
-                }`}>{habitCompletionRate}%</span>
+                <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-xl p-3 text-center">
+                  <p className="text-2xl font-black text-cyan-400">{habitScore > 0 ? '+' : ''}{habitScore}</p>
+                  <p className="text-[10px] text-cyan-300 font-bold uppercase">Net Score</p>
+                </div>
+                <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3 text-center">
+                  <p className="text-2xl font-black text-green-400">{scorecardPlus}</p>
+                  <p className="text-[10px] text-green-300 font-bold uppercase">Good Habits</p>
+                </div>
+                <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-center">
+                  <p className="text-2xl font-black text-red-400">{scorecardMinus}</p>
+                  <p className="text-[10px] text-red-300 font-bold uppercase">Bad Habits</p>
+                </div>
               </div>
-              <div className="flex flex-wrap gap-3 text-xs">
-                <span className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-400 font-bold">
-                  {habitsCompleted} Done
-                </span>
-                <span className="px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full text-red-400 font-bold">
-                  {habits.length - habitsCompleted} Remaining
-                </span>
-                <span className="px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-cyan-400 font-bold">
-                  {selectedDate}
-                </span>
+              <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-500 ${
+                    habitCompletionRate >= 80 ? 'bg-gradient-to-r from-emerald-500 to-green-500' :
+                    habitCompletionRate >= 50 ? 'bg-gradient-to-r from-amber-500 to-yellow-500' :
+                    'bg-gradient-to-r from-red-500 to-orange-500'
+                  }`}
+                  style={{ width: `${habitCompletionRate}%` }}
+                />
               </div>
+              <p className="text-xs text-gray-400 mt-2 text-center">{habitCompletionRate}% completion rate</p>
             </GlassPanel>
+
+            {/* Add Habit / Toggle Scorecard */}
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowAddHabit(!showAddHabit)}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600/20 border border-blue-500/30 rounded-xl text-blue-400 text-xs font-bold hover:bg-blue-600/30 transition-all"
+              >
+                <Plus className="w-3 h-3" />
+                {showAddHabit ? 'CANCEL' : 'ADD HABIT'}
+              </button>
+              <button
+                onClick={() => setShowScorecard(!showScorecard)}
+                className={`flex items-center gap-2 px-4 py-2 border rounded-xl text-xs font-bold transition-all ${
+                  showScorecard
+                    ? 'bg-purple-600/20 border-purple-500/30 text-purple-400 hover:bg-purple-600/30'
+                    : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10'
+                }`}
+              >
+                <Target className="w-3 h-3" />
+                {showScorecard ? 'HIDE SCORECARD' : 'SHOW SCORECARD'}
+              </button>
+            </div>
+
+            {/* Add Habit Form */}
+            {showAddHabit && (
+              <GlassPanel className="border-blue-500/20">
+                <h3 className="text-sm font-bold text-blue-400 mb-3">Add Custom Habit</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    value={newHabitName}
+                    onChange={e => setNewHabitName(e.target.value)}
+                    placeholder="Habit name"
+                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500/50"
+                  />
+                  <select
+                    value={newHabitCategory}
+                    onChange={e => setNewHabitCategory(e.target.value as HabitItem['category'])}
+                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500/50"
+                  >
+                    {Object.keys(HABIT_CATEGORY_LABELS).map(c => (
+                      <option key={c} value={c}>{HABIT_CATEGORY_LABELS[c].label}</option>
+                    ))}
+                  </select>
+                  <select
+                    value={newHabitDifficulty}
+                    onChange={e => setNewHabitDifficulty(e.target.value as HabitItem['difficulty'])}
+                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500/50"
+                  >
+                    <option value="simple">Simple (2min)</option>
+                    <option value="medium">Medium (10min)</option>
+                    <option value="hard">Hard (30min)</option>
+                    <option value="extreme">Extreme (1h+)</option>
+                  </select>
+                  <input
+                    type="text"
+                    value={newHabitCue}
+                    onChange={e => setNewHabitCue(e.target.value)}
+                    placeholder="Cue (e.g., After waking up)"
+                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500/50"
+                  />
+                  <select
+                    value={newHabitStackAfter}
+                    onChange={e => setNewHabitStackAfter(e.target.value)}
+                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500/50"
+                  >
+                    <option value="">No habit stack</option>
+                    {habits.map(h => (
+                      <option key={h.name} value={h.name}>After: {h.name}</option>
+                    ))}
+                  </select>
+                  <label className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={newHabitTwoMinute}
+                      onChange={e => setNewHabitTwoMinute(e.target.checked)}
+                      className="rounded border-gray-500"
+                    />
+                    2-Minute Rule
+                  </label>
+                </div>
+                <button
+                  onClick={addCustomHabit}
+                  disabled={!newHabitName.trim()}
+                  className="mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-30 rounded-lg text-xs font-bold text-white transition-all"
+                >
+                  ADD HABIT
+                </button>
+              </GlassPanel>
+            )}
 
             {/* Habits by Category */}
             {habitCategories.map(cat => {
@@ -1065,29 +1290,36 @@ export default function DisciplineOS() {
                         hard: 'text-orange-400',
                         extreme: 'text-red-400',
                       }
+                      const scorecardColors: Record<number, string> = {
+                        1: 'border-emerald-500/40 bg-emerald-500/5',
+                        '-1': 'border-red-500/40 bg-red-500/5',
+                        0: '',
+                      }
                       return (
-                        <button
+                        <div
                           key={habit.name}
-                          onClick={() => toggleHabit(habit.index)}
-                          className={`flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${
+                          className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
                             habit.completed
                               ? 'bg-emerald-500/10 border-emerald-500/30 hover:bg-emerald-500/15'
-                              : 'bg-white/[0.02] border-white/5 hover:border-white/15'
+                              : scorecardColors[habit.scorecard] || 'bg-white/[0.02] border-white/5 hover:border-white/15'
                           }`}
                         >
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
-                            habit.completed ? 'bg-emerald-500/20' : habit.bg
-                          }`}>
+                          <button
+                            onClick={() => toggleHabit(habit.index)}
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all shrink-0 ${
+                              habit.completed ? 'bg-emerald-500/20' : habit.bg
+                            }`}
+                          >
                             {habit.completed
                               ? <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                               : <Icon className={`w-4 h-4 ${habit.color}`} />
                             }
-                          </div>
+                          </button>
                           <div className="flex-1 min-w-0">
                             <span className={`text-xs font-bold block truncate ${
                               habit.completed ? 'text-emerald-300 line-through opacity-70' : 'text-gray-200'
                             }`}>{habit.name}</span>
-                            <div className="flex items-center gap-2 mt-0.5">
+                            <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                               <span className={`text-[10px] font-bold uppercase ${diffColors[habit.difficulty] || 'text-gray-400'}`}>
                                 {habit.difficulty}
                               </span>
@@ -1096,9 +1328,42 @@ export default function DisciplineOS() {
                                   <Flame className="w-2.5 h-2.5" />{habit.streak}
                                 </span>
                               )}
+                              {habit.twoMinuteRule && (
+                                <span className="text-[10px] font-bold text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded">2m</span>
+                              )}
+                              {habit.stackAfter && (
+                                <span className="text-[10px] font-bold text-purple-400 bg-purple-500/10 px-1.5 py-0.5 rounded truncate max-w-[120px]" title={`After: ${habit.stackAfter}`}>
+                                  → {habit.stackAfter}
+                                </span>
+                              )}
                             </div>
+                            {habit.cue && (
+                              <p className="text-[10px] text-gray-500 mt-0.5 truncate">Cue: {habit.cue}</p>
+                            )}
                           </div>
-                        </button>
+                          <div className="flex items-center gap-1 shrink-0">
+                            {showScorecard && (
+                              <button
+                                onClick={() => toggleScorecard(habit.index)}
+                                className={`w-6 h-6 rounded flex items-center justify-center text-[10px] font-black transition-all ${
+                                  habit.scorecard === 1 ? 'bg-emerald-500/20 text-emerald-400' :
+                                  habit.scorecard === -1 ? 'bg-red-500/20 text-red-400' :
+                                  'bg-white/5 text-gray-500 hover:bg-white/10'
+                                }`}
+                                title={habit.scorecard === 1 ? 'Good habit (+1)' : habit.scorecard === -1 ? 'Bad habit (-1)' : 'Neutral (0)'}
+                              >
+                                {habit.scorecard === 1 ? '+1' : habit.scorecard === -1 ? '-1' : '0'}
+                              </button>
+                            )}
+                            <button
+                              onClick={() => removeHabit(habit.index)}
+                              className="w-6 h-6 rounded flex items-center justify-center text-gray-600 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                              title="Remove habit"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        </div>
                       )
                     })}
                   </div>
@@ -1106,7 +1371,40 @@ export default function DisciplineOS() {
               )
             })}
 
-            <div className="flex justify-end">
+            {/* Habit Stacking Visualization */}
+            <GlassPanel>
+              <SectionHeader icon={Layers} title="Habit Stacking Chain" subtitle="Visualize your habit sequences — Atomic Habits method" accent="text-purple-400" />
+              <div className="space-y-2">
+                {habits.filter(h => h.stackAfter).map(habit => {
+                  const parent = habits.find(h => h.name === habit.stackAfter)
+                  return (
+                    <div key={habit.name} className="flex items-center gap-2 text-xs">
+                      <span className={`px-2 py-1 rounded bg-white/5 ${parent?.completed ? 'text-emerald-400 line-through' : 'text-gray-400'}`}>
+                        {habit.stackAfter}
+                      </span>
+                      <span className="text-purple-400 font-bold">→</span>
+                      <span className={`px-2 py-1 rounded ${habit.completed ? 'bg-emerald-500/10 text-emerald-400 line-through' : 'bg-purple-500/10 text-purple-400'}`}>
+                        {habit.name}
+                      </span>
+                    </div>
+                  )
+                })}
+                {habits.filter(h => h.stackAfter).length === 0 && (
+                  <p className="text-xs text-gray-500 italic">No habit stacks configured. Add habits with "After:" triggers to build chains.</p>
+                )}
+              </div>
+            </GlassPanel>
+
+            <div className="flex justify-end items-center gap-4">
+              {(lastSaved || isAutoSaving) && (
+                <span className="text-xs text-gray-500 flex items-center gap-1.5">
+                  {isAutoSaving ? (
+                    <><RefreshCcw className="w-3 h-3 animate-spin" /> Auto-saving...</>
+                  ) : (
+                    <><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Last saved {lastSaved}</>
+                  )}
+                </span>
+              )}
               <button
                 onClick={async () => {
                   setIsSaving(true)
@@ -1123,6 +1421,11 @@ export default function DisciplineOS() {
                           completed: h.completed,
                           difficulty: h.difficulty,
                           streak: h.streak,
+                          scorecard: h.scorecard,
+                          cue: h.cue,
+                          stackAfter: h.stackAfter,
+                          twoMinuteRule: h.twoMinuteRule,
+                          timeSpent: h.timeSpent,
                         }))
                       })
                     })

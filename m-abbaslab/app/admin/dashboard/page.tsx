@@ -354,7 +354,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
         
-        <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1 scrollbar-hide">
+        <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1 scrollbar-hide" role="tablist" aria-label="Admin dashboard navigation">
           <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 px-2">Core Systems</div>
           {tabs.map(tab => {
             const Icon = tab.icon
@@ -364,6 +364,10 @@ export default function AdminDashboardPage() {
             return (
               <button
                 key={tab.id}
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={`panel-${tab.id}`}
+                id={`tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive
@@ -399,7 +403,7 @@ export default function AdminDashboardPage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none"></div>
         
         <div className="p-8 max-w-7xl mx-auto relative z-10">
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500" role="tabpanel" id={`panel-${activeTab}`} aria-labelledby={`tab-${activeTab}`}>
             {renderContent()}
           </div>
         </div>

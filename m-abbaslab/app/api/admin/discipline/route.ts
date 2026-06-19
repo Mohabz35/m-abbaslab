@@ -187,7 +187,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (type === 'habit-toggle') {
-      const { date, habitName, habitCategory, completed, difficulty, streak } = body
+      const { date, habitName, habitCategory, completed, difficulty, streak, scorecard, cue, stackAfter, twoMinuteRule, timeSpent } = body
       const { error } = await supabase.from('discipline_habits').upsert({
         date,
         habit_name: habitName,
@@ -196,6 +196,11 @@ export async function POST(request: NextRequest) {
         completed_at: completed ? new Date().toISOString() : null,
         difficulty: difficulty || 'simple',
         streak: streak || 0,
+        scorecard: scorecard ?? 0,
+        cue: cue || '',
+        stack_after: stackAfter || '',
+        two_minute_rule: twoMinuteRule ?? false,
+        time_spent: timeSpent || 0,
       }, { onConflict: 'date,habit_name', ignoreDuplicates: false })
       if (error) {
         console.error('Habit toggle error:', error)
@@ -216,6 +221,11 @@ export async function POST(request: NextRequest) {
             completed_at: h.completed ? new Date().toISOString() : null,
             difficulty: h.difficulty || 'simple',
             streak: h.streak || 0,
+            scorecard: h.scorecard ?? 0,
+            cue: h.cue || '',
+            stack_after: h.stackAfter || '',
+            two_minute_rule: h.twoMinuteRule ?? false,
+            time_spent: h.timeSpent || 0,
           }, { onConflict: 'date,habit_name', ignoreDuplicates: false })
           if (error) console.error('Habit bulk upsert error:', error)
         }
