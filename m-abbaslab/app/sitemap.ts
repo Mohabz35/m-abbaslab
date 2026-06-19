@@ -23,6 +23,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.9,
         },
         {
+            url: `${baseUrl}/articles`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.9,
+        },
+        {
             url: `${baseUrl}/fashion`,
             lastModified: new Date(),
             changeFrequency: 'weekly',
@@ -39,6 +45,36 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: new Date(),
             changeFrequency: 'yearly',
             priority: 0.5,
+        },
+        {
+            url: `${baseUrl}/cv-generator`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.6,
+        },
+        {
+            url: `${baseUrl}/quantum-impact-syndicate`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.5,
+        },
+        {
+            url: `${baseUrl}/work/academic/ilms`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.4,
+        },
+        {
+            url: `${baseUrl}/work/academic/skillsync`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.4,
+        },
+        {
+            url: `${baseUrl}/work/academic/economics`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.4,
         },
     ]
 }
