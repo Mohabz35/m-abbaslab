@@ -342,7 +342,7 @@ export default function AdminDashboardPage() {
       
       {/* Sidebar */}
       <div className="w-full md:w-64 bg-slate-900/60 backdrop-blur-xl border-r border-slate-800 flex flex-col shrink-0 shadow-2xl z-20">
-        <div className="p-6 border-b border-slate-800/50">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700 border-slate-800/50">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
               <span className="font-bold text-white text-lg">MA</span>
@@ -372,9 +372,9 @@ export default function AdminDashboardPage() {
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive
                     ? isJarvis 
-                      ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20 shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]'
-                      : 'bg-blue-500/10 text-blue-400 border border-blue-500/20 shadow-[inset_0_0_12px_rgba(59,130,246,0.1)]'
-                    : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border border-transparent'
+                      ? 'bg-purple-500/10 text-purple-400 border border-gray-200 dark:border-gray-700 border-purple-500/20 shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]'
+                      : 'bg-blue-500/10 text-blue-400 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/20 shadow-[inset_0_0_12px_rgba(59,130,246,0.1)]'
+                    : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border border-gray-200 dark:border-gray-700 border-transparent'
                 }`}
               >
                 <Icon className={`w-4 h-4 ${isActive ? (isJarvis ? 'text-purple-400' : 'text-blue-400') : 'text-slate-400'}`} />

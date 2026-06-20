@@ -23,12 +23,12 @@ export default function SettingsPage() {
               <Settings className="w-5 h-5 text-blue-500" />
               System Configuration Center
             </h1>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               Configure global system behaviors, sub-modules, and WhatsApp connection states.
             </p>
           </div>
 
-          <div className="flex bg-gray-50 dark:bg-gray-950 p-1 rounded-xl border border-gray-150 dark:border-gray-800 self-start md:self-auto overflow-x-auto">
+          <div className="flex bg-gray-50 dark:bg-gray-950 p-1 rounded-xl border border-gray-200 dark:border-gray-700 border-gray-150 dark:border-gray-800 self-start md:self-auto overflow-x-auto">
             {([
               { id: 'system', label: 'Global Preferences', Icon: Settings },
               { id: 'general', label: 'Jarvis Logic', Icon: Brain },
@@ -41,8 +41,8 @@ export default function SettingsPage() {
                 onClick={() => setActiveTab(id)}
                 className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all whitespace-nowrap ${
                   activeTab === id
-                    ? 'bg-white dark:bg-gray-900 text-blue-600 dark:text-blue-400 shadow-sm border border-gray-200/40 dark:border-gray-800'
-                    : 'text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                    ? 'bg-white dark:bg-gray-900 text-blue-600 dark:text-blue-400 shadow-sm border border-gray-200 dark:border-gray-700/40 dark:border-gray-800'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
                 }`}
               >
                 <Icon className="w-4.5 h-4.5" />

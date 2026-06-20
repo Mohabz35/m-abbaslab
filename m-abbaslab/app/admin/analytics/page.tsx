@@ -156,25 +156,25 @@ export default function AnalyticsDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Analytics Dashboard</h1>
-          <p className="text-sm text-gray-400">Site traffic and engagement metrics</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Site traffic and engagement metrics</p>
         </div>
         <div className="flex gap-2">
-          <select value={timeRange} onChange={e => setTimeRange(Number(e.target.value))} className="px-3 py-2 border rounded-lg text-sm">
+          <select value={timeRange} onChange={e => setTimeRange(Number(e.target.value))} className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm">
             {timeRanges.map(r => <option key={r.days} value={r.days}>{r.label}</option>)}
           </select>
-          <button onClick={exportReport} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium flex items-center gap-2">
+          <button onClick={exportReport} className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg text-sm font-medium flex items-center gap-2">
             <Download className="w-4 h-4" /> Export
           </button>
         </div>
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-gray-400">Loading analytics...</div>
+        <div className="text-center py-12 text-gray-500 dark:text-gray-400">Loading analytics...</div>
       ) : !data ? (
-        <div className="text-center py-12 bg-white rounded-xl border">
-          <BarChart3 className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-400">No analytics data yet</p>
-          <p className="text-xs text-gray-400 mt-1">Data will appear as visitors browse your site</p>
+        <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+          <BarChart3 className="w-12 h-12 text-gray-400 dark:text-gray-600 dark:text-gray-300 mx-auto mb-3" />
+          <p className="text-gray-500 dark:text-gray-400">No analytics data yet</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Data will appear as visitors browse your site</p>
         </div>
       ) : (
         <>
@@ -186,14 +186,14 @@ export default function AnalyticsDashboard() {
               { label: 'Avg Load Time', value: `${data.avgLoadTime}ms`, icon: Clock, color: 'amber' },
               { label: 'Avg Time on Page', value: `${data.avgTimeOnPage}s`, icon: TrendingUp, color: 'purple' },
             ].map(s => (
-              <div key={s.label} className="bg-white rounded-xl border p-5">
+              <div key={s.label} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-lg bg-${s.color}-50 flex items-center justify-center`}>
                     <s.icon className={`w-5 h-5 text-${s.color}-500`} />
                   </div>
                   <div>
                     <div className="text-2xl font-bold">{s.value}</div>
-                    <div className="text-xs text-gray-400">{s.label}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">{s.label}</div>
                   </div>
                 </div>
               </div>
@@ -201,7 +201,7 @@ export default function AnalyticsDashboard() {
           </div>
 
           {/* Daily Views Chart */}
-          <div className="bg-white rounded-xl border p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
             <h3 className="font-bold mb-4">Daily Views</h3>
             <div className="flex items-end gap-1 h-40">
               {data.dailyViews.map((d, i) => (
@@ -214,7 +214,7 @@ export default function AnalyticsDashboard() {
                 </div>
               ))}
             </div>
-            <div className="flex justify-between mt-2 text-[10px] text-gray-400">
+            <div className="flex justify-between mt-2 text-[10px] text-gray-500 dark:text-gray-400">
               {data.dailyViews.length > 0 && <span>{data.dailyViews[0]?.date}</span>}
               {data.dailyViews.length > 1 && <span>{data.dailyViews[data.dailyViews.length - 1]?.date}</span>}
             </div>
@@ -222,22 +222,22 @@ export default function AnalyticsDashboard() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Top Pages */}
-            <div className="bg-white rounded-xl border p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
               <h3 className="font-bold mb-4">Top Pages</h3>
               <div className="space-y-2">
                 {data.topPages.slice(0, 8).map((p, i) => (
                   <div key={i} className="flex items-center gap-3 text-sm">
-                    <span className="w-5 text-gray-400 text-xs">{i + 1}</span>
+                    <span className="w-5 text-gray-500 dark:text-gray-400 text-xs">{i + 1}</span>
                     <span className="flex-1 truncate font-medium">{p.path}</span>
-                    <span className="text-gray-400">{p.views} views</span>
-                    <span className="text-gray-400 text-xs">{p.avg_time}s</span>
+                    <span className="text-gray-500 dark:text-gray-400">{p.views} views</span>
+                    <span className="text-gray-500 dark:text-gray-400 text-xs">{p.avg_time}s</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Device Breakdown */}
-            <div className="bg-white rounded-xl border p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
               <h3 className="font-bold mb-4">Device Breakdown</h3>
               <div className="space-y-3">
                 {data.deviceBreakdown.map(d => {
@@ -246,10 +246,10 @@ export default function AnalyticsDashboard() {
                     <div key={d.device} className="flex items-center gap-3">
                       {deviceIcon(d.device)}
                       <span className="w-20 text-sm capitalize">{d.device}</span>
-                      <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="flex-1 h-3 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                         <div className="h-full bg-blue-500 rounded-full" style={{ width: `${pct}%` }} />
                       </div>
-                      <span className="text-sm text-gray-400 w-12 text-right">{pct}%</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400 w-12 text-right">{pct}%</span>
                     </div>
                   )
                 })}
@@ -257,7 +257,7 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Browser Breakdown */}
-            <div className="bg-white rounded-xl border p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
               <h3 className="font-bold mb-4">Browsers</h3>
               <div className="space-y-2">
                 {data.browserBreakdown.map(b => {
@@ -265,10 +265,10 @@ export default function AnalyticsDashboard() {
                   return (
                     <div key={b.browser} className="flex items-center gap-3 text-sm">
                       <span className="flex-1">{b.browser}</span>
-                      <div className="w-32 h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="w-32 h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                         <div className="h-full bg-purple-500 rounded-full" style={{ width: `${pct}%` }} />
                       </div>
-                      <span className="w-12 text-right text-gray-400">{pct}%</span>
+                      <span className="w-12 text-right text-gray-500 dark:text-gray-400">{pct}%</span>
                     </div>
                   )
                 })}
@@ -276,13 +276,13 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Referrer Sources */}
-            <div className="bg-white rounded-xl border p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
               <h3 className="font-bold mb-4">Traffic Sources</h3>
               <div className="space-y-2">
                 {data.referrerSources.slice(0, 8).map(r => (
                   <div key={r.referrer} className="flex items-center gap-3 text-sm">
                     <span className="flex-1 truncate">{r.referrer}</span>
-                    <span className="text-gray-400">{r.count}</span>
+                    <span className="text-gray-500 dark:text-gray-400">{r.count}</span>
                   </div>
                 ))}
               </div>
@@ -291,13 +291,13 @@ export default function AnalyticsDashboard() {
 
           {/* Country Breakdown */}
           {data.countryBreakdown.length > 0 && (
-            <div className="bg-white rounded-xl border p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
               <h3 className="font-bold mb-4">Geographic Distribution</h3>
               <div className="grid grid-cols-5 gap-3">
                 {data.countryBreakdown.map(c => (
-                  <div key={c.country} className="text-center p-3 bg-gray-50 rounded-lg">
+                  <div key={c.country} className="text-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
                     <div className="font-bold">{c.count}</div>
-                    <div className="text-xs text-gray-400">{c.country}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">{c.country}</div>
                   </div>
                 ))}
               </div>

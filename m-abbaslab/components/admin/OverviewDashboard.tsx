@@ -165,12 +165,12 @@ export default function OverviewDashboard() {
     <div className="space-y-6">
       
       {/* Top Banner - Streaks & Greeting */}
-      <div className="bg-gradient-to-r from-blue-900 to-indigo-900 p-6 rounded-2xl border border-blue-500/30 flex justify-between items-center shadow-lg">
+      <div className="bg-gradient-to-r from-blue-900 to-indigo-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 flex justify-between items-center shadow-lg">
         <div>
           <h2 className="text-2xl font-bold text-white mb-1">Welcome back, Commander.</h2>
           <p className="text-blue-200 text-sm">All intelligence systems are online and awaiting your orders.</p>
         </div>
-        <div className="flex items-center gap-4 bg-black/30 px-6 py-3 rounded-xl border border-white/10">
+        <div className="flex items-center gap-4 bg-black/30 px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-700 border-white/10">
           <div className="flex items-center gap-2">
             <Flame className="w-6 h-6 text-orange-500" />
             <div>
@@ -193,7 +193,7 @@ export default function OverviewDashboard() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {/* Alphas Card */}
-            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} className="bg-slate-800 p-5 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
+            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} className="bg-slate-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 hover:border-b border-gray-200 dark:border-gray-700lue-500/50 transition-colors">
               <div className="flex justify-between items-start mb-2">
                 <div className="p-2 bg-blue-500/20 rounded-lg"><Zap className="w-5 h-5 text-blue-400" /></div>
               </div>
@@ -206,7 +206,7 @@ export default function OverviewDashboard() {
             </motion.div>
 
             {/* Finance Card */}
-            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} transition={{delay: 0.1}} className="bg-slate-800 p-5 rounded-xl border border-slate-700 hover:border-amber-500/50 transition-colors">
+            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} transition={{delay: 0.1}} className="bg-slate-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 hover:border-amber-500/50 transition-colors">
               <div className="flex justify-between items-start mb-2">
                 <div className="p-2 bg-amber-500/20 rounded-lg"><TrendingUp className="w-5 h-5 text-amber-400" /></div>
               </div>
@@ -218,7 +218,7 @@ export default function OverviewDashboard() {
             </motion.div>
 
             {/* Projects Card */}
-            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} transition={{delay: 0.1}} className="bg-slate-800 p-5 rounded-xl border border-slate-700 hover:border-purple-500/50 transition-colors">
+            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} transition={{delay: 0.1}} className="bg-slate-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 hover:border-purple-500/50 transition-colors">
               <div className="flex justify-between items-start mb-2">
                 <div className="p-2 bg-purple-500/20 rounded-lg"><Briefcase className="w-5 h-5 text-purple-400" /></div>
               </div>
@@ -231,7 +231,7 @@ export default function OverviewDashboard() {
             </motion.div>
 
             {/* Articles Card */}
-            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} transition={{delay: 0.2}} className="bg-slate-800 p-5 rounded-xl border border-slate-700 hover:border-emerald-500/50 transition-colors">
+            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} transition={{delay: 0.2}} className="bg-slate-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 hover:border-emerald-500/50 transition-colors">
               <div className="flex justify-between items-start mb-2">
                 <div className="p-2 bg-emerald-500/20 rounded-lg"><FileText className="w-5 h-5 text-emerald-400" /></div>
               </div>
@@ -240,7 +240,7 @@ export default function OverviewDashboard() {
             </motion.div>
 
             {/* Fashion Card */}
-            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} transition={{delay: 0.25}} className="bg-slate-800 p-5 rounded-xl border border-slate-700 hover:border-pink-500/50 transition-colors">
+            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} transition={{delay: 0.25}} className="bg-slate-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 hover:border-pink-500/50 transition-colors">
               <div className="flex justify-between items-start mb-2">
                 <div className="p-2 bg-pink-500/20 rounded-lg"><Sparkles className="w-5 h-5 text-pink-400" /></div>
               </div>
@@ -249,7 +249,7 @@ export default function OverviewDashboard() {
             </motion.div>
 
             {/* Subscribers Card */}
-            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} transition={{delay: 0.3}} className="bg-slate-800 p-5 rounded-xl border border-slate-700 hover:border-cyan-500/50 transition-colors">
+            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} transition={{delay: 0.3}} className="bg-slate-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 hover:border-cyan-500/50 transition-colors">
               <div className="flex justify-between items-start mb-2">
                 <div className="p-2 bg-cyan-500/20 rounded-lg"><MessageSquare className="w-5 h-5 text-cyan-400" /></div>
               </div>
@@ -259,7 +259,7 @@ export default function OverviewDashboard() {
           </div>
 
           {/* Activity Timeline */}
-          <div className="bg-slate-800 rounded-xl border border-slate-700 p-6 mt-6">
+          <div className="bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 p-6 mt-6">
             <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-6"><Activity className="w-5 h-5 text-amber-400"/> Recent Activity</h3>
             {timeline.length === 0 ? (
               <p className="text-sm text-slate-400">No recent activity detected.</p>
@@ -289,16 +289,16 @@ export default function OverviewDashboard() {
         <div className="space-y-6">
           
           {/* Wisdom Feed */}
-          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl relative overflow-hidden">
+          <div className="bg-slate-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 shadow-xl relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-blue-500"></div>
             <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-6"><Sparkles className="w-5 h-5 text-purple-400"/> Wisdom Feed</h3>
             
             <div className="space-y-4">
               {loading ? <div className="text-sm text-slate-400">Consulting Jarvis...</div> : 
                 wisdomFeed.map((item: any) => (
-                  <div key={item.id} className={`p-4 rounded-lg border ${
+                  <div key={item.id} className={`p-4 rounded-lg border border-gray-200 dark:border-gray-700 ${
                     item.type === 'alert' ? 'bg-red-500/10 border-red-500/20' : 
-                    item.type === 'action' ? 'bg-blue-500/10 border-blue-500/20' : 
+                    item.type === 'action' ? 'bg-blue-500/10 border-b border-gray-200 dark:border-gray-700lue-500/20' : 
                     'bg-slate-900 border-slate-700'
                   }`}>
                     <div className="flex items-center gap-2 mb-2">
@@ -316,11 +316,11 @@ export default function OverviewDashboard() {
           </div>
 
           {/* System Health */}
-          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700">
+          <div className="bg-slate-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700">
             <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-6"><Server className="w-5 h-5 text-slate-400"/> System Health</h3>
             
             <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-slate-900 rounded-lg border border-slate-700">
+              <div className="flex justify-between items-center p-3 bg-slate-900 rounded-lg border border-gray-200 dark:border-gray-700 border-slate-700">
                 <div className="flex items-center gap-3">
                   <Database className="w-5 h-5 text-slate-400" />
                   <span className="text-sm font-medium text-white">Supabase DB</span>
@@ -328,7 +328,7 @@ export default function OverviewDashboard() {
                 {hasSupabaseKeys ? <CheckCircle className="w-5 h-5 text-emerald-500" /> : <AlertTriangle className="w-5 h-5 text-red-500" />}
               </div>
 
-              <div className="flex justify-between items-center p-3 bg-slate-900 rounded-lg border border-slate-700">
+              <div className="flex justify-between items-center p-3 bg-slate-900 rounded-lg border border-gray-200 dark:border-gray-700 border-slate-700">
                 <div className="flex items-center gap-3">
                   <Server className="w-5 h-5 text-slate-400" />
                   <span className="text-sm font-medium text-white">Vercel Edge</span>
@@ -336,7 +336,7 @@ export default function OverviewDashboard() {
                 <CheckCircle className="w-5 h-5 text-emerald-500" />
               </div>
 
-              <div className="flex justify-between items-center p-3 bg-slate-900 rounded-lg border border-slate-700">
+              <div className="flex justify-between items-center p-3 bg-slate-900 rounded-lg border border-gray-200 dark:border-gray-700 border-slate-700">
                 <div className="flex items-center gap-3">
                   <MessageSquare className="w-5 h-5 text-slate-400" />
                   <span className="text-sm font-medium text-white">WhatsApp Node</span>

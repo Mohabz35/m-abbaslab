@@ -52,7 +52,7 @@ function LoginForm() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="w-full max-w-md"
       >
-        <div className="bg-black/60 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl p-8 relative overflow-hidden">
+        <div className="bg-black/60 backdrop-blur-2xl border border-gray-200 dark:border-gray-700 border-white/10 rounded-3xl shadow-2xl p-8 relative overflow-hidden">
           {/* Top edge shimmer */}
           <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
 
@@ -61,27 +61,27 @@ function LoginForm() {
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 15 }}
-              className="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-blue-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(59,130,246,0.15)]"
+              className="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(59,130,246,0.15)]"
             >
               <ShieldCheck className="w-8 h-8 text-blue-400" />
             </motion.div>
             <h1 className="text-2xl font-bold text-white tracking-tight">Admin Portal</h1>
-            <p className="text-sm text-gray-400 mt-1 font-mono uppercase tracking-wider">Restricted Access</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 font-mono uppercase tracking-wider">Restricted Access</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-5">
             {/* Username */}
             <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">Username</label>
+              <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Username</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <User className="w-5 h-5 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
+                  <User className="w-5 h-5 text-gray-500 dark:text-gray-400 group-focus-within:text-blue-400 transition-colors" />
                 </div>
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all"
+                  className="w-full bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-gray-600 dark:text-gray-300 focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50 focus:bg-white dark:bg-gray-800/10 transition-all"
                   placeholder="Enter administrator username"
                   required
                   autoComplete="username"
@@ -91,16 +91,16 @@ function LoginForm() {
 
             {/* Password */}
             <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-400 uppercase tracking-wider ml-1">Password</label>
+              <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Password</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="w-5 h-5 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
+                  <Lock className="w-5 h-5 text-gray-500 dark:text-gray-400 group-focus-within:text-blue-400 transition-colors" />
                 </div>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all"
+                  className="w-full bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-gray-600 dark:text-gray-300 focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50 focus:bg-white dark:bg-gray-800/10 transition-all"
                   placeholder="••••••••••••"
                   required
                   autoComplete="current-password"
@@ -113,7 +113,7 @@ function LoginForm() {
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="flex items-center gap-2 text-rose-400 bg-rose-400/10 border border-rose-400/20 p-3 rounded-xl text-sm"
+                className="flex items-center gap-2 text-rose-400 bg-rose-400/10 border border-gray-200 dark:border-gray-700 border-rose-400/20 p-3 rounded-xl text-sm"
               >
                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
                 <p>{error}</p>
@@ -154,7 +154,7 @@ export default function AdminLoginPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-[#050508] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-b border-gray-200 dark:border-gray-700lue-500/30 border-t-blue-500 rounded-full animate-spin" />
       </div>
     }>
       <LoginForm />

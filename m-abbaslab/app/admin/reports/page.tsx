@@ -125,15 +125,15 @@ export default function AdvancedReporting() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Advanced Reporting</h1>
-          <p className="text-sm text-gray-400">Comprehensive content and engagement reports</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Comprehensive content and engagement reports</p>
         </div>
         <div className="flex gap-2">
-          <select value={timeRange} onChange={e => setTimeRange(Number(e.target.value))} className="px-3 py-2 border rounded-lg text-sm">
+          <select value={timeRange} onChange={e => setTimeRange(Number(e.target.value))} className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm">
             <option value={7}>Last 7 days</option>
             <option value={30}>Last 30 days</option>
             <option value={90}>Last 90 days</option>
           </select>
-          <button onClick={exportReport} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium flex items-center gap-2">
+          <button onClick={exportReport} className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg text-sm font-medium flex items-center gap-2">
             <Download className="w-4 h-4" /> Export
           </button>
         </div>
@@ -142,13 +142,13 @@ export default function AdvancedReporting() {
       {/* Report Type Selector */}
       <div className="flex gap-2">
         {reportTypes.map(r => (
-          <button key={r.id} onClick={() => setReportType(r.id)} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${reportType === r.id ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200'}`}>
+          <button key={r.id} onClick={() => setReportType(r.id)} className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${reportType === r.id ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
             <r.icon className="w-4 h-4" /> {r.label}
           </button>
         ))}
       </div>
 
-      {loading ? <div className="text-center py-12 text-gray-400">Loading report...</div> : !data ? null : (
+      {loading ? <div className="text-center py-12 text-gray-500 dark:text-gray-400">Loading report...</div> : !data ? null : (
         <>
           {/* Overview Report */}
           {reportType === 'overview' && (
@@ -161,16 +161,16 @@ export default function AdvancedReporting() {
                   { label: 'Contacts', value: data.contacts.total, sub: `${data.contacts.new_count} new`, color: 'green' },
                   { label: 'Subscribers', value: data.subscribers.total, sub: `+${data.subscribers.growth} new`, color: 'amber' },
                 ].map(s => (
-                  <div key={s.label} className="bg-white rounded-xl border p-4 text-center">
+                  <div key={s.label} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 text-center">
                     <div className="text-2xl font-bold">{s.value}</div>
-                    <div className="text-xs text-gray-400">{s.label}</div>
-                    <div className="text-[10px] text-gray-400 mt-1">{s.sub}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">{s.label}</div>
+                    <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1">{s.sub}</div>
                   </div>
                 ))}
               </div>
 
               <div className="grid grid-cols-2 gap-6">
-                <div className="bg-white rounded-xl border p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                   <h3 className="font-bold mb-4">Content by Category</h3>
                   <div className="space-y-2">
                     {data.contentByCategory.map(c => (
@@ -181,14 +181,14 @@ export default function AdvancedReporting() {
                     ))}
                   </div>
                 </div>
-                <div className="bg-white rounded-xl border p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                   <h3 className="font-bold mb-4">Top Articles</h3>
                   <div className="space-y-2">
                     {data.topArticles.slice(0, 5).map((a, i) => (
                       <div key={i} className="flex items-center gap-3 text-sm">
-                        <span className="w-5 text-gray-400 text-xs">{i + 1}</span>
+                        <span className="w-5 text-gray-500 dark:text-gray-400 text-xs">{i + 1}</span>
                         <span className="flex-1 truncate">{a.title}</span>
-                        <span className="text-gray-400">{a.views} views</span>
+                        <span className="text-gray-500 dark:text-gray-400">{a.views} views</span>
                       </div>
                     ))}
                   </div>
@@ -207,29 +207,29 @@ export default function AdvancedReporting() {
                   { label: 'Avg Views/Article', value: data.articles.avgViews.toLocaleString(), icon: BarChart3 },
                   { label: 'Project Views', value: data.projects.totalViews.toLocaleString(), icon: Briefcase },
                 ].map(s => (
-                  <div key={s.label} className="bg-white rounded-xl border p-5">
+                  <div key={s.label} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
                     <div className="flex items-center gap-3">
                       <s.icon className="w-8 h-8 text-blue-500" />
                       <div>
                         <div className="text-xl font-bold">{s.value}</div>
-                        <div className="text-xs text-gray-400">{s.label}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{s.label}</div>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="bg-white rounded-xl border p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                 <h3 className="font-bold mb-4">All Articles Performance</h3>
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b"><th className="text-left py-2 font-medium">Title</th><th className="text-left py-2 font-medium">Category</th><th className="text-right py-2 font-medium">Views</th><th className="text-right py-2 font-medium">Likes</th></tr>
+                    <tr className="border-b border-gray-200 dark:border-gray-700"><th className="text-left py-2 font-medium">Title</th><th className="text-left py-2 font-medium">Category</th><th className="text-right py-2 font-medium">Views</th><th className="text-right py-2 font-medium">Likes</th></tr>
                   </thead>
                   <tbody>
                     {data.topArticles.map((a, i) => (
-                      <tr key={i} className="border-b last:border-0">
+                      <tr key={i} className="border-b border-gray-200 dark:border-gray-700 last:border-0">
                         <td className="py-2 truncate max-w-[300px]">{a.title}</td>
-                        <td className="py-2 text-gray-400">{a.category}</td>
+                        <td className="py-2 text-gray-500 dark:text-gray-400">{a.category}</td>
                         <td className="py-2 text-right">{a.views}</td>
                         <td className="py-2 text-right">{a.likes}</td>
                       </tr>
@@ -244,32 +244,32 @@ export default function AdvancedReporting() {
           {reportType === 'growth' && (
             <div className="space-y-6">
               <div className="grid grid-cols-3 gap-4">
-                <div className="bg-white rounded-xl border p-5 text-center">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 text-center">
                   <div className="text-3xl font-bold text-green-600">+{data.subscribers.growth}</div>
-                  <div className="text-sm text-gray-400">New Subscribers ({timeRange}d)</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">New Subscribers ({timeRange}d)</div>
                 </div>
-                <div className="bg-white rounded-xl border p-5 text-center">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 text-center">
                   <div className="text-3xl font-bold text-blue-600">+{data.contacts.new_count}</div>
-                  <div className="text-sm text-gray-400">New Contact Submissions</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">New Contact Submissions</div>
                 </div>
-                <div className="bg-white rounded-xl border p-5 text-center">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 text-center">
                   <div className="text-3xl font-bold text-purple-600">{data.subscribers.active}</div>
-                  <div className="text-sm text-gray-400">Active Subscribers</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Active Subscribers</div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl border p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                 <h3 className="font-bold mb-4">Contact Form Conversion</h3>
                 <div className="flex items-center gap-4">
                   <div className="flex-1">
                     <div className="flex justify-between text-sm mb-1"><span>Total Submissions</span><span className="font-medium">{data.contacts.total}</span></div>
-                    <div className="w-full h-4 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="w-full h-4 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                       <div className="h-full bg-green-500 rounded-full" style={{ width: '100%' }} />
                     </div>
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between text-sm mb-1"><span>Replied</span><span className="font-medium">{data.contacts.replied}</span></div>
-                    <div className="w-full h-4 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="w-full h-4 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                       <div className="h-full bg-blue-500 rounded-full" style={{ width: `${data.contacts.total > 0 ? (data.contacts.replied / data.contacts.total * 100) : 0}%` }} />
                     </div>
                   </div>
@@ -282,26 +282,26 @@ export default function AdvancedReporting() {
           {reportType === 'performance' && (
             <div className="space-y-6">
               <div className="grid grid-cols-3 gap-4">
-                <div className="bg-white rounded-xl border p-5 text-center">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 text-center">
                   <div className="text-3xl font-bold">{data.articles.published}</div>
-                  <div className="text-sm text-gray-400">Published Articles</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Published Articles</div>
                 </div>
-                <div className="bg-white rounded-xl border p-5 text-center">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 text-center">
                   <div className="text-3xl font-bold">{data.articles.drafts}</div>
-                  <div className="text-sm text-gray-400">Draft Articles</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Draft Articles</div>
                 </div>
-                <div className="bg-white rounded-xl border p-5 text-center">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 text-center">
                   <div className="text-3xl font-bold">{data.articles.total > 0 ? Math.round(data.articles.published / data.articles.total * 100) : 0}%</div>
-                  <div className="text-sm text-gray-400">Publication Rate</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Publication Rate</div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl border p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                 <h3 className="font-bold mb-4">Content Pipeline</h3>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <span className="w-24 text-sm">Published</span>
-                    <div className="flex-1 h-6 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="flex-1 h-6 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                       <div className="h-full bg-green-500 rounded-full flex items-center justify-end pr-2" style={{ width: `${data.articles.total > 0 ? (data.articles.published / data.articles.total * 100) : 0}%` }}>
                         <span className="text-[10px] text-white font-medium">{data.articles.published}</span>
                       </div>
@@ -309,7 +309,7 @@ export default function AdvancedReporting() {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="w-24 text-sm">Drafts</span>
-                    <div className="flex-1 h-6 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="flex-1 h-6 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                       <div className="h-full bg-amber-500 rounded-full flex items-center justify-end pr-2" style={{ width: `${data.articles.total > 0 ? (data.articles.drafts / data.articles.total * 100) : 0}%` }}>
                         <span className="text-[10px] text-white font-medium">{data.articles.drafts}</span>
                       </div>

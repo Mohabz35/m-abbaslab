@@ -219,7 +219,7 @@ export default function ZapierPanel() {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-3">
             <div className="p-2 bg-orange-500/20 rounded-xl">
@@ -229,15 +229,15 @@ export default function ZapierPanel() {
           </h2>
           <p className="text-sm text-slate-400 mt-1">Fire webhooks, manage pre-built zaps, catch incoming triggers, and monitor all automation activity.</p>
         </div>
-        <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-bold ${isConfigured ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-amber-500/10 border-amber-500/30 text-amber-400'}`}>
+        <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-bold ${isConfigured ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-amber-500/10 border-amber-500/30 text-amber-400'}`}>
           <LinkIcon className="w-4 h-4" />
           {isConfigured ? 'Webhook Connected ✓' : 'Webhook Not Configured'}
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="bg-slate-900/60 border border-slate-700 rounded-2xl overflow-hidden">
-        <div className="flex border-b border-slate-700 bg-slate-800/40 px-2 overflow-x-auto">
+      <div className="bg-slate-900/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-2xl overflow-hidden">
+        <div className="flex border-b border-gray-200 dark:border-gray-700 border-slate-700 bg-slate-800/40 px-2 overflow-x-auto">
           {TABS.map(({ id, label, icon: Icon }) => (
             <button key={id} onClick={() => setActiveTab(id as any)}
               className={`flex items-center gap-2 px-5 py-3.5 text-xs font-bold uppercase tracking-widest border-b-2 transition-all whitespace-nowrap shrink-0 ${activeTab === id ? 'border-orange-500 text-orange-400 bg-orange-500/5' : 'border-transparent text-slate-400 hover:text-slate-300 hover:bg-slate-700/30'}`}>
@@ -263,7 +263,7 @@ export default function ZapierPanel() {
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => selectTemplate(template)}
-                          className="text-left bg-slate-800/60 border border-slate-700 hover:border-slate-500 rounded-xl p-5 space-y-3 transition-all group"
+                          className="text-left bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 hover:border-slate-500 rounded-xl p-5 space-y-3 transition-all group"
                         >
                           <div className="flex items-start justify-between">
                             <div className="p-2.5 rounded-xl" style={{ background: template.color + '20' }}>
@@ -294,7 +294,7 @@ export default function ZapierPanel() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div className="space-y-5">
                     {selectedTemplate && (
-                      <div className="flex items-center gap-3 px-4 py-3 bg-orange-500/10 border border-orange-500/30 rounded-xl">
+                      <div className="flex items-center gap-3 px-4 py-3 bg-orange-500/10 border border-gray-200 dark:border-gray-700 border-orange-500/30 rounded-xl">
                         <selectedTemplate.icon className="w-4 h-4 shrink-0" style={{ color: selectedTemplate.color }} />
                         <div>
                           <p className="text-xs font-bold text-orange-400">Using Template: {selectedTemplate.name}</p>
@@ -307,7 +307,7 @@ export default function ZapierPanel() {
                     <div>
                       <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Event Name</label>
                       <select value={eventName} onChange={e => setEventName(e.target.value)}
-                        className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-orange-500">
+                        className="w-full bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-orange-500">
                         {ZAP_TEMPLATES.map(t => (
                           <option key={t.id} value={t.eventName}>{t.eventName} — {t.name}</option>
                         ))}
@@ -323,17 +323,17 @@ export default function ZapierPanel() {
                       </div>
                       <textarea value={payloadText} onChange={e => setPayloadText(e.target.value)}
                         rows={10}
-                        className="w-full font-mono text-xs bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-emerald-300 focus:outline-none focus:border-orange-500 resize-none" />
+                        className="w-full font-mono text-xs bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl px-4 py-3 text-emerald-300 focus:outline-none focus:border-orange-500 resize-none" />
                     </div>
 
                     {status === 'error' && (
-                      <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-400 text-xs flex items-center gap-2">
+                      <div className="p-3 bg-rose-500/10 border border-gray-200 dark:border-gray-700 border-rose-500/30 rounded-xl text-rose-400 text-xs flex items-center gap-2">
                         <AlertTriangle className="w-4 h-4 shrink-0" /> {errorMsg}
                       </div>
                     )}
 
                     {status === 'success' && (
-                      <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400 text-xs flex items-center gap-2">
+                      <div className="p-3 bg-emerald-500/10 border border-gray-200 dark:border-gray-700 border-emerald-500/30 rounded-xl text-emerald-400 text-xs flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 shrink-0" /> Webhook fired successfully! Check your Zapier task history.
                       </div>
                     )}
@@ -347,7 +347,7 @@ export default function ZapierPanel() {
                   </div>
 
                   {/* JSON Preview */}
-                  <div className="bg-slate-900 border border-slate-700 rounded-xl p-5 space-y-3">
+                  <div className="bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-5 space-y-3">
                     <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Payload Preview</h3>
                     <pre className="text-xs text-emerald-300 whitespace-pre-wrap overflow-auto max-h-96 font-mono leading-relaxed">
                       {(() => { try { return JSON.stringify(JSON.parse(payloadText), null, 2) } catch { return payloadText } })()}
@@ -363,7 +363,7 @@ export default function ZapierPanel() {
               {/* ── INCOMING WEBHOOK ── */}
               {activeTab === 'webhook' && (
                 <div className="space-y-5">
-                  <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 flex gap-3">
+                  <div className="bg-blue-500/10 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 rounded-xl p-4 flex gap-3">
                     <Globe className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-sm font-bold text-blue-400">Your Incoming Webhook URL</p>
@@ -373,7 +373,7 @@ export default function ZapierPanel() {
 
                   <div>
                     <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Your Webhook Endpoint</label>
-                    <div className="flex items-center gap-2 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3">
+                    <div className="flex items-center gap-2 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl px-4 py-3">
                       <code className="flex-1 text-sm text-orange-300 font-mono break-all">{WEBHOOK_URL}</code>
                       <CopyButton text={WEBHOOK_URL} />
                     </div>
@@ -384,7 +384,7 @@ export default function ZapierPanel() {
                       { title: 'From Zapier → Your App', steps: ['In Zapier, add an "Action" step', 'Choose "Webhooks by Zapier"', 'Select "POST" as the event', 'Paste your webhook URL above', 'Map fields from your trigger to the body', 'Test the step — data appears in your logs!'] },
                       { title: 'From Make.com / IFTTT', steps: ['Create a new Scenario in Make.com', 'Add an HTTP module → Make a request', 'Set Method: POST, URL: your webhook URL', 'Set Body Type: JSON', 'Map your data fields', 'Run the scenario and watch your logs'] },
                     ].map(section => (
-                      <div key={section.title} className="bg-slate-800/60 border border-slate-700 rounded-xl p-5 space-y-3">
+                      <div key={section.title} className="bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-5 space-y-3">
                         <h3 className="font-bold text-white text-sm flex items-center gap-2">
                           <ChevronRight className="w-4 h-4 text-orange-400" /> {section.title}
                         </h3>
@@ -400,7 +400,7 @@ export default function ZapierPanel() {
                     ))}
                   </div>
 
-                  <div className="bg-slate-800/60 border border-slate-700 rounded-xl p-5">
+                  <div className="bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-5">
                     <h3 className="font-bold text-white text-sm mb-3">Expected Request Format</h3>
                     <pre className="text-xs text-emerald-300 font-mono bg-slate-900 p-4 rounded-xl overflow-auto">{`POST ${WEBHOOK_URL}
 Content-Type: application/json
@@ -436,7 +436,7 @@ Content-Type: application/json
                   ) : (
                     <div className="space-y-3">
                       {logs.map(log => (
-                        <div key={log.id} className="bg-slate-800/60 border border-slate-700 rounded-xl p-4 space-y-2">
+                        <div key={log.id} className="bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-4 space-y-2">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <StatusDot status={log.status} />
@@ -460,7 +460,7 @@ Content-Type: application/json
               {/* ── SETUP GUIDE ── */}
               {activeTab === 'guide' && (
                 <div className="space-y-6">
-                  <div className="bg-orange-500/10 border border-orange-500/30 rounded-xl p-4 flex gap-3">
+                  <div className="bg-orange-500/10 border border-gray-200 dark:border-gray-700 border-orange-500/30 rounded-xl p-4 flex gap-3">
                     <Info className="w-5 h-5 text-orange-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-sm font-bold text-orange-400">Does Zapier actually work?</p>
@@ -500,14 +500,14 @@ Content-Type: application/json
                         { trigger: 'alpha_result', action: 'Log to Airtable Alpha Database', color: '#a855f7' },
                         { trigger: 'discipline_report', action: 'Email yourself a weekly recap', color: '#f59e0b' },
                       ].map(item => (
-                        <div key={item.trigger} className="flex items-center gap-3 bg-slate-800/60 border border-slate-700 rounded-xl p-3">
+                        <div key={item.trigger} className="flex items-center gap-3 bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-3">
                           <span className="font-mono text-xs text-orange-300 bg-orange-500/10 px-2 py-1 rounded shrink-0">{item.trigger}</span>
                           <ArrowRight className="w-4 h-4 text-slate-600 shrink-0" />
                           <span className="text-xs text-slate-300">{item.action}</span>
                         </div>
                       ))}
 
-                      <div className="bg-slate-800/60 border border-slate-700 rounded-xl p-4">
+                      <div className="bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-4">
                         <p className="text-xs text-slate-400">
                           <span className="text-white font-bold">Pro Tip:</span> You can have multiple Zaps all listening to the same webhook URL. Use the <code className="text-orange-400">event_name</code> field in Zapier's filter step to route different events to different actions.
                         </p>

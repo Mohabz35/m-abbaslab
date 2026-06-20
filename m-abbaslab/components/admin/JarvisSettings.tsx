@@ -234,7 +234,7 @@ export default function JarvisSettings() {
     return (
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-8 flex justify-center items-center">
         <Clock className="w-6 h-6 text-blue-500 animate-spin mr-3" />
-        <span className="text-gray-400 text-sm">Loading unified settings...</span>
+        <span className="text-gray-500 dark:text-gray-400 text-sm">Loading unified settings...</span>
       </div>
     )
   }
@@ -244,7 +244,7 @@ export default function JarvisSettings() {
       {/* Toast Notification */}
       {toast && (
         <div
-          className={`fixed top-4 right-4 z-50 rounded-xl px-4 py-3 text-sm font-medium border shadow-lg transition-all ${
+          className={`fixed top-4 right-4 z-50 rounded-xl px-4 py-3 text-sm font-medium border border-gray-200 dark:border-gray-700 shadow-lg transition-all ${
             toast.type === 'error'
               ? 'bg-rose-50 border-rose-200 text-rose-600 dark:bg-rose-950/80 dark:border-rose-900 dark:text-rose-200'
               : 'bg-emerald-50 border-emerald-200 text-emerald-600 dark:bg-emerald-950/80 dark:border-emerald-900 dark:text-emerald-200'
@@ -255,13 +255,13 @@ export default function JarvisSettings() {
       )}
 
       {/* Header */}
-      <div className="px-6 py-5 border-b border-gray-150 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-700 border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50/50 dark:bg-gray-800/20 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <Settings className="w-5 h-5 text-blue-600" />
             Jarvis Control Panel
           </h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Configure system states, communications styles, responders, working schedules, and database backups.
           </p>
         </div>
@@ -279,7 +279,7 @@ export default function JarvisSettings() {
 
       <div className="flex flex-col md:flex-row">
         {/* Tabs sidebar */}
-        <div className="w-full md:w-56 border-r border-gray-150 dark:border-gray-800 bg-gray-50/20 dark:bg-gray-950/20">
+        <div className="w-full md:w-56 border-r border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50/20 dark:bg-gray-950/20">
           <div className="p-3 space-y-1">
             {([
               { id: 'general', label: 'General', Icon: Bot },
@@ -294,7 +294,7 @@ export default function JarvisSettings() {
                 className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors ${
                   activeTab === id
                     ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                    : 'text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-200'
+                    : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-200'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -313,10 +313,10 @@ export default function JarvisSettings() {
                 <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-4">Core Settings</h3>
                 <div className="space-y-4">
                   {/* Master Toggle */}
-                  <div className="flex items-center justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-850 bg-gray-50 dark:bg-gray-950">
+                  <div className="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-700 border-gray-100 dark:border-gray-850 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1 pr-4">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Master Enable</div>
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
                         Global toggle for Jarvis AI services. Disabling this turns off all WhatsApp reply logic.
                       </div>
                     </div>
@@ -327,15 +327,15 @@ export default function JarvisSettings() {
                         onChange={e => setJarvisConfig(prev => ({ ...prev, enabled: e.target.checked }))}
                         className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white dark:bg-gray-800 after:border-gray-300 after:border border-gray-200 dark:border-gray-700 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
                   </div>
 
                   {/* Group Monitoring */}
-                  <div className="flex items-center justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-850 bg-gray-50 dark:bg-gray-950">
+                  <div className="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-700 border-gray-100 dark:border-gray-850 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1 pr-4">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Group Monitoring</div>
-                      <div className="text-xs text-gray-400 font-medium">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
                         Jarvis scans and responds to group messages when mentioned.
                       </div>
                     </div>
@@ -346,15 +346,15 @@ export default function JarvisSettings() {
                         onChange={e => setJarvisConfig(prev => ({ ...prev, respondToGroups: e.target.checked }))}
                         className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white dark:bg-gray-800 after:border-gray-300 after:border border-gray-200 dark:border-gray-700 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
                   </div>
 
                   {/* Status Updates */}
-                  <div className="flex items-center justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-850 bg-gray-50 dark:bg-gray-950">
+                  <div className="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-700 border-gray-100 dark:border-gray-850 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1 pr-4">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Status Monitoring</div>
-                      <div className="text-xs text-gray-400 font-medium">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
                         Jarvis watches status updates from contacts and runs AI content classifications.
                       </div>
                     </div>
@@ -365,15 +365,15 @@ export default function JarvisSettings() {
                         onChange={e => setJarvisConfig(prev => ({ ...prev, monitorStatuses: e.target.checked }))}
                         className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white dark:bg-gray-800 after:border-gray-300 after:border border-gray-200 dark:border-gray-700 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
                   </div>
 
                   {/* Auto Likes */}
-                  <div className="flex items-center justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-850 bg-gray-50 dark:bg-gray-950">
+                  <div className="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-700 border-gray-100 dark:border-gray-850 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1 pr-4">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Auto-Like Statuses</div>
-                      <div className="text-xs text-gray-400 font-medium">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
                         Auto-like (react ❤️) statuses matching categories of interest.
                       </div>
                     </div>
@@ -385,7 +385,7 @@ export default function JarvisSettings() {
                         onChange={e => setJarvisConfig(prev => ({ ...prev, autoLikeStatuses: e.target.checked }))}
                         className="sr-only peer disabled:opacity-50"
                       />
-                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white dark:bg-gray-800 after:border-gray-300 after:border border-gray-200 dark:border-gray-700 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
                   </div>
                 </div>
@@ -398,7 +398,7 @@ export default function JarvisSettings() {
             <div className="space-y-6">
               <div>
                 <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-2">AI Response Preferences</h3>
-                <p className="text-xs text-gray-400 mb-6">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">
                   Fine-tune Jarvis's writing tone sliders to adjust the OpenRouter prompt guidelines.
                 </p>
                 
@@ -406,8 +406,8 @@ export default function JarvisSettings() {
                   {/* Formality Slider */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-sm">
-                      <label className="font-bold text-gray-700 dark:text-gray-300">Formality Level</label>
-                      <span className="text-xs text-gray-400">{jarvisConfig.communicationPreferences.formality * 100}% (Casual ↔ Formal)</span>
+                      <label className="font-bold text-gray-700 dark:text-gray-400 dark:text-gray-600 dark:text-gray-300">Formality Level</label>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{jarvisConfig.communicationPreferences.formality * 100}% (Casual ↔ Formal)</span>
                     </div>
                     <input
                       type="range"
@@ -426,8 +426,8 @@ export default function JarvisSettings() {
                   {/* Verbosity Slider */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-sm">
-                      <label className="font-bold text-gray-700 dark:text-gray-300">Verbosity / Detail</label>
-                      <span className="text-xs text-gray-400">{jarvisConfig.communicationPreferences.verbosity * 100}% (Brief ↔ Detailed)</span>
+                      <label className="font-bold text-gray-700 dark:text-gray-400 dark:text-gray-600 dark:text-gray-300">Verbosity / Detail</label>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{jarvisConfig.communicationPreferences.verbosity * 100}% (Brief ↔ Detailed)</span>
                     </div>
                     <input
                       type="range"
@@ -446,8 +446,8 @@ export default function JarvisSettings() {
                   {/* Humor Slider */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-sm">
-                      <label className="font-bold text-gray-700 dark:text-gray-300">Humor / Playfulness</label>
-                      <span className="text-xs text-gray-400">{jarvisConfig.communicationPreferences.humor * 100}% (Serious ↔ Witty)</span>
+                      <label className="font-bold text-gray-700 dark:text-gray-400 dark:text-gray-600 dark:text-gray-300">Humor / Playfulness</label>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{jarvisConfig.communicationPreferences.humor * 100}% (Serious ↔ Witty)</span>
                     </div>
                     <input
                       type="range"
@@ -466,8 +466,8 @@ export default function JarvisSettings() {
                   {/* Emoji Usage Slider */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-sm">
-                      <label className="font-bold text-gray-700 dark:text-gray-300">Emoji Density</label>
-                      <span className="text-xs text-gray-400">{jarvisConfig.communicationPreferences.emoji * 100}% (None ↔ Rich)</span>
+                      <label className="font-bold text-gray-700 dark:text-gray-400 dark:text-gray-600 dark:text-gray-300">Emoji Density</label>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{jarvisConfig.communicationPreferences.emoji * 100}% (None ↔ Rich)</span>
                     </div>
                     <input
                       type="range"
@@ -494,10 +494,10 @@ export default function JarvisSettings() {
                 <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-4">WhatsApp Endpoint Behavior</h3>
                 <div className="space-y-4">
                   {/* Respond DMs */}
-                  <div className="flex items-center justify-between p-4 rounded-xl border border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
+                  <div className="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-700 border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1 pr-4">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Auto-respond to Direct Messages</div>
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
                         When disabled, direct message auto-replies are paused.
                       </div>
                     </div>
@@ -511,15 +511,15 @@ export default function JarvisSettings() {
                         }))}
                         className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white dark:bg-gray-800 after:border-gray-300 after:border border-gray-200 dark:border-gray-700 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
                   </div>
 
                   {/* Respond Groups */}
-                  <div className="flex items-center justify-between p-4 rounded-xl border border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
+                  <div className="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-700 border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1 pr-4">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Auto-respond in Groups</div>
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
                         Respond in groups when mentioned or asked questions.
                       </div>
                     </div>
@@ -533,15 +533,15 @@ export default function JarvisSettings() {
                         }))}
                         className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white dark:bg-gray-800 after:border-gray-300 after:border border-gray-200 dark:border-gray-700 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
                   </div>
 
                   {/* Log Messages */}
-                  <div className="flex items-center justify-between p-4 rounded-xl border border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
+                  <div className="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-700 border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
                     <div className="space-y-1 pr-4">
                       <div className="text-sm font-bold text-gray-900 dark:text-white">Log All Incoming Messages</div>
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
                         Logs all WhatsApp conversations to Supabase (even if Jarvis skips answering).
                       </div>
                     </div>
@@ -555,14 +555,14 @@ export default function JarvisSettings() {
                         }))}
                         className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-gray-200 dark:bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white dark:bg-gray-800 after:border-gray-300 after:border border-gray-200 dark:border-gray-700 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
                   </div>
 
                   {/* Max Length */}
-                  <div className="space-y-1.5 p-4 rounded-xl border border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
+                  <div className="space-y-1.5 p-4 rounded-xl border border-gray-200 dark:border-gray-700 border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
                     <label className="block text-sm font-bold text-gray-900 dark:text-white">Max Response Character Count</label>
-                    <p className="text-xs text-gray-400 mb-2">Max token cutoff for generating replies (defaults to 512).</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Max token cutoff for generating replies (defaults to 512).</p>
                     <input
                       type="number"
                       value={jarvisConfig.whatsappSettings.maxResponseLength}
@@ -570,7 +570,7 @@ export default function JarvisSettings() {
                         ...prev,
                         whatsappSettings: { ...prev.whatsappSettings, maxResponseLength: parseInt(e.target.value) || 512 }
                       }))}
-                      className="w-full md:w-48 px-3 py-2 border border-gray-250 dark:border-gray-850 rounded-xl bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="w-full md:w-48 px-3 py-2 border border-gray-200 dark:border-gray-700 border-gray-250 dark:border-gray-850 rounded-xl bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                   </div>
                 </div>
@@ -587,14 +587,14 @@ export default function JarvisSettings() {
                 <div className="space-y-4">
                   {/* Schedule Type */}
                   <div className="space-y-1.5">
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300">Active Window Type</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-400 dark:text-gray-600 dark:text-gray-300">Active Window Type</label>
                     <select
                       value={jarvisConfig.schedule.type}
                       onChange={e => setJarvisConfig(prev => ({
                         ...prev,
                         schedule: { ...prev.schedule, type: e.target.value as any }
                       }))}
-                      className="w-full md:w-64 px-3 py-2.5 border border-gray-250 dark:border-gray-850 rounded-xl bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="w-full md:w-64 px-3 py-2.5 border border-gray-200 dark:border-gray-700 border-gray-250 dark:border-gray-850 rounded-xl bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                     >
                       <option value="always">Always Active (24/7)</option>
                       <option value="working">Active during Working Hours only</option>
@@ -605,9 +605,9 @@ export default function JarvisSettings() {
 
                   {/* Hours inputs */}
                   {jarvisConfig.schedule.type !== 'always' && jarvisConfig.schedule.type !== 'disabled' && (
-                    <div className="grid grid-cols-2 gap-4 max-w-md p-4 rounded-xl border border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
+                    <div className="grid grid-cols-2 gap-4 max-w-md p-4 rounded-xl border border-gray-200 dark:border-gray-700 border-gray-150 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
                       <div className="space-y-1.5">
-                        <label className="block text-xs font-bold text-gray-400 uppercase">Working Hours Start</label>
+                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Working Hours Start</label>
                         <input
                           type="time"
                           value={jarvisConfig.schedule.workingHoursStart}
@@ -615,11 +615,11 @@ export default function JarvisSettings() {
                             ...prev,
                             schedule: { ...prev.schedule, workingHoursStart: e.target.value }
                           }))}
-                          className="w-full px-3 py-2 border border-gray-250 dark:border-gray-805 rounded-xl bg-white dark:bg-gray-900 text-sm"
+                          className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 border-gray-250 dark:border-gray-805 rounded-xl bg-white dark:bg-gray-900 text-sm"
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="block text-xs font-bold text-gray-400 uppercase">Working Hours End</label>
+                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Working Hours End</label>
                         <input
                           type="time"
                           value={jarvisConfig.schedule.workingHoursEnd}
@@ -627,7 +627,7 @@ export default function JarvisSettings() {
                             ...prev,
                             schedule: { ...prev.schedule, workingHoursEnd: e.target.value }
                           }))}
-                          className="w-full px-3 py-2 border border-gray-250 dark:border-gray-805 rounded-xl bg-white dark:bg-gray-900 text-sm"
+                          className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 border-gray-250 dark:border-gray-805 rounded-xl bg-white dark:bg-gray-900 text-sm"
                         />
                       </div>
                     </div>
@@ -635,14 +635,14 @@ export default function JarvisSettings() {
 
                   {/* Timezone */}
                   <div className="space-y-1.5">
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300">Timezone Selector</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-400 dark:text-gray-600 dark:text-gray-300">Timezone Selector</label>
                     <select
                       value={jarvisConfig.schedule.timezone}
                       onChange={e => setJarvisConfig(prev => ({
                         ...prev,
                         schedule: { ...prev.schedule, timezone: e.target.value }
                       }))}
-                      className="w-full md:w-64 px-3 py-2.5 border border-gray-250 dark:border-gray-850 rounded-xl bg-white dark:bg-gray-900 text-sm focus:outline-none"
+                      className="w-full md:w-64 px-3 py-2.5 border border-gray-200 dark:border-gray-700 border-gray-250 dark:border-gray-850 rounded-xl bg-white dark:bg-gray-900 text-sm focus:outline-none"
                     >
                       <option value="Africa/Nairobi">Africa/Nairobi (EAT, UTC+3)</option>
                       <option value="Africa/Cairo">Africa/Cairo (EET, UTC+2)</option>
@@ -661,19 +661,19 @@ export default function JarvisSettings() {
             <div className="space-y-6">
               <div>
                 <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-2">Configuration Backup</h3>
-                <p className="text-xs text-gray-400 mb-6">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">
                   Export settings to local file backups or restore configuration states.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Export */}
-                  <div className="p-5 border border-gray-150 dark:border-gray-800 rounded-2xl bg-gray-50 dark:bg-gray-950 flex flex-col justify-between space-y-4">
+                  <div className="p-5 border border-gray-200 dark:border-gray-700 border-gray-150 dark:border-gray-800 rounded-2xl bg-gray-50 dark:bg-gray-950 flex flex-col justify-between space-y-4">
                     <div className="space-y-1">
                       <div className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-1.5">
                         <Download className="w-4 h-4 text-blue-500" />
                         Export Settings
                       </div>
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
                         Downloads a JSON copy of all communication settings.
                       </div>
                     </div>
@@ -686,13 +686,13 @@ export default function JarvisSettings() {
                   </div>
 
                   {/* Import */}
-                  <div className="p-5 border border-gray-150 dark:border-gray-800 rounded-2xl bg-gray-50 dark:bg-gray-950 flex flex-col justify-between space-y-4">
+                  <div className="p-5 border border-gray-200 dark:border-gray-700 border-gray-150 dark:border-gray-800 rounded-2xl bg-gray-50 dark:bg-gray-950 flex flex-col justify-between space-y-4">
                     <div className="space-y-1">
                       <div className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-1.5">
                         <Upload className="w-4 h-4 text-emerald-500" />
                         Import Settings
                       </div>
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
                         Uploads and overwrites settings from an exported config JSON file.
                       </div>
                     </div>
@@ -717,13 +717,13 @@ export default function JarvisSettings() {
                 <hr className="border-gray-150 dark:border-gray-800 my-6" />
 
                 {/* Reset to Defaults */}
-                <div className="p-5 border border-rose-100 dark:border-rose-950/40 rounded-2xl bg-rose-50/20 dark:bg-rose-950/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="p-5 border border-gray-200 dark:border-gray-700 border-rose-100 dark:border-rose-950/40 rounded-2xl bg-rose-50/20 dark:bg-rose-950/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="space-y-1">
                     <div className="text-sm font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
                       <RotateCcw className="w-4 h-4" />
                       Reset to Factory Defaults
                     </div>
-                    <div className="text-xs text-gray-400">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
                       Restores all Jarvis preferences to initial settings. This action is irreversible.
                     </div>
                   </div>

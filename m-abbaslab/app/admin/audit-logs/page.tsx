@@ -113,15 +113,15 @@ export default function AuditLogsSecurity() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Audit Logs & Security</h1>
-          <p className="text-sm text-gray-400">Monitor security events and admin activity</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Monitor security events and admin activity</p>
         </div>
         <div className="flex gap-2">
-          <select value={timeRange} onChange={e => setTimeRange(Number(e.target.value))} className="px-3 py-2 border rounded-lg text-sm">
+          <select value={timeRange} onChange={e => setTimeRange(Number(e.target.value))} className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm">
             <option value={7}>Last 7 days</option>
             <option value={30}>Last 30 days</option>
             <option value={90}>Last 90 days</option>
           </select>
-          <button onClick={exportLogs} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium flex items-center gap-2">
+          <button onClick={exportLogs} className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg text-sm font-medium flex items-center gap-2">
             <Download className="w-4 h-4" /> Export
           </button>
         </div>
@@ -135,19 +135,19 @@ export default function AuditLogsSecurity() {
           { label: 'Warnings', value: stats.warnings, color: 'amber' },
           { label: 'Failed Logins', value: stats.failedLogins, color: 'gray' },
         ].map(s => (
-          <div key={s.label} className="bg-white rounded-xl border p-4 text-center">
+          <div key={s.label} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 text-center">
             <div className="text-xl font-bold">{s.value}</div>
-            <div className="text-xs text-gray-400">{s.label}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* View Toggle */}
       <div className="flex gap-2">
-        <button onClick={() => setView('security')} className={`px-4 py-2 rounded-lg text-sm font-medium ${view === 'security' ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200'}`}>
+        <button onClick={() => setView('security')} className={`px-4 py-2 rounded-lg text-sm font-medium ${view === 'security' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
           <Shield className="w-4 h-4 inline mr-2" /> Security Events ({securityEvents.length})
         </button>
-        <button onClick={() => setView('audit')} className={`px-4 py-2 rounded-lg text-sm font-medium ${view === 'audit' ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200'}`}>
+        <button onClick={() => setView('audit')} className={`px-4 py-2 rounded-lg text-sm font-medium ${view === 'audit' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
           <Activity className="w-4 h-4 inline mr-2" /> Audit Logs ({auditLogs.length})
         </button>
       </div>
@@ -155,11 +155,11 @@ export default function AuditLogsSecurity() {
       {/* Filters */}
       <div className="flex gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input type="text" placeholder="Search..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="w-full pl-10 pr-4 py-3 border rounded-xl text-sm" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400" />
+          <input type="text" placeholder="Search..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl text-sm" />
         </div>
         {view === 'security' && (
-          <select value={filterSeverity} onChange={e => setFilterSeverity(e.target.value)} className="px-4 py-3 border rounded-xl text-sm">
+          <select value={filterSeverity} onChange={e => setFilterSeverity(e.target.value)} className="px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl text-sm">
             <option value="all">All Severity</option>
             <option value="info">Info</option>
             <option value="warning">Warning</option>
@@ -169,31 +169,31 @@ export default function AuditLogsSecurity() {
       </div>
 
       {/* Content */}
-      {loading ? <div className="text-center py-12 text-gray-400">Loading...</div> : (
-        <div className="bg-white rounded-xl border overflow-hidden">
+      {loading ? <div className="text-center py-12 text-gray-500 dark:text-gray-400">Loading...</div> : (
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
           {view === 'security' ? (
             filteredSecurity.length === 0 ? (
               <div className="text-center py-12">
-                <Shield className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-400">No security events</p>
+                <Shield className="w-12 h-12 text-gray-400 dark:text-gray-600 dark:text-gray-300 mx-auto mb-3" />
+                <p className="text-gray-500 dark:text-gray-400">No security events</p>
               </div>
             ) : (
               <div className="divide-y">
                 {filteredSecurity.map(e => {
                   const Icon = eventTypeIcons[e.event_type] || Shield
                   return (
-                    <div key={e.id} className="px-4 py-3 flex items-center gap-3 hover:bg-gray-50">
-                      <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                        <Icon className="w-4 h-4 text-gray-600" />
+                    <div key={e.id} className="px-4 py-3 flex items-center gap-3 hover:bg-gray-50 dark:bg-gray-800/50">
+                      <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                        <Icon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-sm">{e.event_type.replace(/_/g, ' ')}</span>
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${severityColors[e.severity]}`}>{e.severity}</span>
                         </div>
-                        {e.username && <div className="text-xs text-gray-400">User: {e.username}</div>}
+                        {e.username && <div className="text-xs text-gray-500 dark:text-gray-400">User: {e.username}</div>}
                       </div>
-                      <div className="text-right text-xs text-gray-400">
+                      <div className="text-right text-xs text-gray-500 dark:text-gray-400">
                         {e.ip_address && <div>{e.ip_address}</div>}
                         <div>{new Date(e.created_at).toLocaleString()}</div>
                       </div>
@@ -205,23 +205,23 @@ export default function AuditLogsSecurity() {
           ) : (
             filteredAudit.length === 0 ? (
               <div className="text-center py-12">
-                <Activity className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-400">No audit logs</p>
+                <Activity className="w-12 h-12 text-gray-400 dark:text-gray-600 dark:text-gray-300 mx-auto mb-3" />
+                <p className="text-gray-500 dark:text-gray-400">No audit logs</p>
               </div>
             ) : (
               <div className="divide-y">
                 {filteredAudit.map(l => (
-                  <div key={l.id} className="px-4 py-3 flex items-center gap-3 hover:bg-gray-50">
+                  <div key={l.id} className="px-4 py-3 flex items-center gap-3 hover:bg-gray-50 dark:bg-gray-800/50">
                     <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-xs font-medium text-blue-600">{l.username.charAt(0).toUpperCase()}</div>
                     <div className="flex-1">
                       <div className="text-sm">
                         <span className="font-medium">{l.username}</span>
-                        <span className="text-gray-400 mx-1">{l.action}</span>
+                        <span className="text-gray-500 dark:text-gray-400 mx-1">{l.action}</span>
                         {l.resource_type && <span className="text-blue-600">{l.resource_type}</span>}
-                        {l.resource_id && <span className="text-gray-400 ml-1">({l.resource_id.slice(0, 8)})</span>}
+                        {l.resource_id && <span className="text-gray-500 dark:text-gray-400 ml-1">({l.resource_id.slice(0, 8)})</span>}
                       </div>
                     </div>
-                    <div className="text-right text-xs text-gray-400">
+                    <div className="text-right text-xs text-gray-500 dark:text-gray-400">
                       {l.ip_address && <div>{l.ip_address}</div>}
                       <div>{new Date(l.created_at).toLocaleString()}</div>
                     </div>

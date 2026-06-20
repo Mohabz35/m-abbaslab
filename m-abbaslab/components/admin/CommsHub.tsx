@@ -88,7 +88,7 @@ type TabId = typeof TABS[number]['id']
 // ─── Small Stat Card ────────────────────────────────────────────────────────
 function StatCard({ label, value, icon: Icon, color }: { label: string; value: string | number; icon: any; color: string }) {
   return (
-    <div className={`bg-slate-800/60 border border-slate-700 rounded-xl p-4 flex items-center gap-4`}>
+    <div className={`bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-4 flex items-center gap-4`}>
       <div className={`p-3 rounded-xl ${color}`}>
         <Icon className="w-5 h-5" />
       </div>
@@ -103,7 +103,7 @@ function StatCard({ label, value, icon: Icon, color }: { label: string; value: s
 // ─── Connection Status Badge ────────────────────────────────────────────────
 function ConnectionBadge({ connected, state }: { connected: boolean; state: string }) {
   return (
-    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border ${
+    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border border-gray-200 dark:border-gray-700 ${
       connected
         ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
         : 'bg-rose-500/10 text-rose-400 border-rose-500/30'
@@ -123,26 +123,26 @@ function WhatsAppConnectGuide() {
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-5 space-y-2">
+        <div className="bg-emerald-500/10 border border-gray-200 dark:border-gray-700 border-emerald-500/30 rounded-xl p-5 space-y-2">
           <div className="font-bold text-emerald-400 flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> Option 1 — Baileys + VPS</div>
           <p className="text-sm text-slate-300">Run Baileys (your existing WhatsApp engine) on a cheap $5/mo VPS (DigitalOcean, Railway, or a spare machine at home). Connect it to Supabase — done.</p>
           <div className="text-xs text-emerald-300 font-bold">✅ Free / very cheap. Already configured in your codebase.</div>
         </div>
 
-        <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-5 space-y-2">
+        <div className="bg-amber-500/10 border border-gray-200 dark:border-gray-700 border-amber-500/30 rounded-xl p-5 space-y-2">
           <div className="font-bold text-amber-400 flex items-center gap-2"><AlertTriangle className="w-4 h-4" /> Option 2 — Meta Cloud API</div>
           <p className="text-sm text-slate-300">Official WhatsApp Business Cloud API — works 100% on Vercel. No persistent server needed. Requires a Meta Business Account + phone number approval.</p>
           <div className="text-xs text-amber-300 font-bold">⚠️ $0.01-0.08 per conversation. Business verification required.</div>
         </div>
 
-        <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-5 space-y-2">
+        <div className="bg-blue-500/10 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 rounded-xl p-5 space-y-2">
           <div className="font-bold text-blue-400 flex items-center gap-2"><Globe className="w-4 h-4" /> Option 3 — Render.com (Current)</div>
           <p className="text-sm text-slate-300">Your existing Render-hosted Baileys engine. Just ensure it stays running. The dashboard connects to it via the engine URL in settings.</p>
           <div className="text-xs text-blue-300 font-bold">✅ Already working. Engine URL needs to be healthy.</div>
         </div>
       </div>
 
-      <div className="bg-slate-800 border border-slate-700 rounded-xl p-4">
+      <div className="bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-4">
         <p className="text-sm text-slate-400">
           <span className="text-white font-bold">Recommendation: </span>
           Keep using Render.com for now since it's already connected. Once you are ready to scale, switch to the official Meta Cloud API for a serverless, scalable setup.
@@ -304,7 +304,7 @@ export default function CommsHub() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className={`rounded-xl px-4 py-3 text-sm border flex items-center gap-2 ${
+            className={`rounded-xl px-4 py-3 text-sm border border-gray-200 dark:border-gray-700 flex items-center gap-2 ${
               notice.type === 'error'
                 ? 'bg-rose-500/10 border-rose-500/30 text-rose-400'
                 : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
@@ -317,7 +317,7 @@ export default function CommsHub() {
       </AnimatePresence>
 
       {/* Header */}
-      <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-3">
             <div className="p-2 bg-blue-500/20 rounded-xl">
@@ -340,9 +340,9 @@ export default function CommsHub() {
       </div>
 
       {/* Main Panel */}
-      <div className="bg-slate-900/60 border border-slate-700 rounded-2xl overflow-hidden">
+      <div className="bg-slate-900/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-2xl overflow-hidden">
         {/* Tab Bar */}
-        <div className="flex gap-0 overflow-x-auto border-b border-slate-700 bg-slate-800/40 px-2">
+        <div className="flex gap-0 overflow-x-auto border-b border-gray-200 dark:border-gray-700 border-slate-700 bg-slate-800/40 px-2">
           {TABS.map(({ id, label, Icon }) => {
             const badge = tabBadge(id)
             return (
@@ -351,7 +351,7 @@ export default function CommsHub() {
                 onClick={() => setActiveTab(id)}
                 className={`flex items-center gap-2 px-4 py-3.5 text-xs font-bold uppercase tracking-widest border-b-2 transition-all whitespace-nowrap shrink-0 ${
                   activeTab === id
-                    ? 'border-blue-500 text-blue-400 bg-blue-500/5'
+                    ? 'border-b border-gray-200 dark:border-gray-700lue-500 text-blue-400 bg-blue-500/5'
                     : 'border-transparent text-slate-400 hover:text-slate-300 hover:bg-slate-700/30'
                 }`}
               >
@@ -390,7 +390,7 @@ export default function CommsHub() {
 
                   {/* Connection Details Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-slate-800/60 border border-slate-700 rounded-xl p-5 space-y-3">
+                    <div className="bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-5 space-y-3">
                       <h3 className="font-bold text-white flex items-center gap-2"><Radio className="w-4 h-4 text-emerald-400" /> Engine Status</h3>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between"><span className="text-slate-400">State</span><span className="text-white font-bold">{connectionState}</span></div>
@@ -404,11 +404,11 @@ export default function CommsHub() {
                       </button>
                     </div>
 
-                    <div className="bg-slate-800/60 border border-slate-700 rounded-xl p-5 space-y-3">
+                    <div className="bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-5 space-y-3">
                       <h3 className="font-bold text-white flex items-center gap-2"><TrendingUp className="w-4 h-4 text-blue-400" /> Quick Navigation</h3>
                       <div className="grid grid-cols-2 gap-2">
                         {TABS.filter(t => t.id !== 'overview').map(({ id, label, Icon }) => (
-                          <button key={id} onClick={() => setActiveTab(id)} className="flex items-center gap-2 px-3 py-2.5 bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-sm transition-colors border border-slate-600 hover:border-slate-500">
+                          <button key={id} onClick={() => setActiveTab(id)} className="flex items-center gap-2 px-3 py-2.5 bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-sm transition-colors border border-gray-200 dark:border-gray-700 border-slate-600 hover:border-slate-500">
                             <Icon className="w-4 h-4 shrink-0" /> {label}
                           </button>
                         ))}
@@ -418,7 +418,7 @@ export default function CommsHub() {
 
                   {/* Error banner */}
                   {connectionStatus?.last_error && (
-                    <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 flex gap-3">
+                    <div className="bg-rose-500/10 border border-gray-200 dark:border-gray-700 border-rose-500/30 rounded-xl p-4 flex gap-3">
                       <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
                       <div>
                         <p className="text-sm font-bold text-rose-400">Engine Error Detected</p>
@@ -435,7 +435,7 @@ export default function CommsHub() {
               {/* BROADCAST TAB */}
               {activeTab === 'broadcast' && (
                 <div className="space-y-4">
-                  <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex gap-3">
+                  <div className="bg-amber-500/10 border border-gray-200 dark:border-gray-700 border-amber-500/30 rounded-xl p-4 flex gap-3">
                     <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
                     <p className="text-sm text-amber-300">
                       <strong>Requires a live WhatsApp engine.</strong> Broadcasts are sent via your Render/Baileys engine. If the status is "Disconnected", messages will fail silently. Check the Connection tab first.
@@ -448,7 +448,7 @@ export default function CommsHub() {
               {/* SANDBOX TAB */}
               {activeTab === 'sandbox' && (
                 <div className="space-y-4">
-                  <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 flex gap-3">
+                  <div className="bg-blue-500/10 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 rounded-xl p-4 flex gap-3">
                     <Smartphone className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                     <p className="text-sm text-blue-300">
                       <strong>Bot Sandbox:</strong> Simulate sending and receiving WhatsApp messages to test your bot responses before going live. The sandbox echoes messages locally — no real WhatsApp messages are sent here.
@@ -493,7 +493,7 @@ export default function CommsHub() {
                         { label: 'Reconnect Attempts', value: connectionStatus?.reconnect_attempts || 0 },
                         { label: 'Last Updated', value: connectionStatus?.updated_at ? new Date(connectionStatus.updated_at).toLocaleString() : 'Unknown' },
                       ].map(item => (
-                        <div key={item.label} className="bg-slate-800 border border-slate-700 rounded-xl p-4">
+                        <div key={item.label} className="bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-4">
                           <p className="text-xs text-slate-400 uppercase tracking-widest font-bold mb-1">{item.label}</p>
                           <p className="text-sm font-bold text-white">{item.value}</p>
                         </div>
@@ -501,14 +501,14 @@ export default function CommsHub() {
                     </div>
 
                     {engineUrl && (
-                      <div className="bg-slate-800 border border-slate-700 rounded-xl p-4">
+                      <div className="bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-4">
                         <p className="text-xs text-slate-400 uppercase tracking-widest font-bold mb-1">Engine URL</p>
                         <a href={engineUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline text-sm break-all">{engineUrl}</a>
                       </div>
                     )}
 
                     {connectionStatus?.last_error && (
-                      <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-4">
+                      <div className="bg-rose-500/10 border border-gray-200 dark:border-gray-700 border-rose-500/30 rounded-xl p-4">
                         <p className="text-xs text-rose-400 uppercase tracking-widest font-bold mb-1">Last Error</p>
                         <p className="text-sm text-rose-300">{connectionStatus.last_error}</p>
                       </div>

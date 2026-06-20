@@ -28,18 +28,18 @@ export default function AdminAuth({ children }: { children: React.ReactNode }) {
               </div>
               <div>
                 <h1 className="font-bold text-sm text-gray-900 dark:text-white">M-AbbasLab Admin</h1>
-                <p className="text-[10px] text-gray-400 uppercase tracking-wider">Mission Control</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider">Mission Control</p>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 rounded-full text-xs text-emerald-600 dark:text-emerald-400 font-medium border border-emerald-200 dark:border-emerald-800">
+              <span className="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 rounded-full text-xs text-emerald-600 dark:text-emerald-400 font-medium border border-gray-200 dark:border-gray-700 border-emerald-200 dark:border-emerald-800">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 Authenticated
               </span>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-all"
+                className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-all"
               >
                 <LogOut className="w-4 h-4" />
                 <span className="hidden sm:inline">Sign Out</span>

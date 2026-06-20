@@ -139,7 +139,7 @@ export default function RunwayJourneyManager() {
 
       {/* Form */}
       {(showForm || editing) && (
-        <form onSubmit={handleSave} className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
+        <form onSubmit={handleSave} className="bg-slate-800/50 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-bold text-white">{editing ? 'Edit Milestone' : 'New Milestone'}</h3>
             <button type="button" onClick={() => { setShowForm(false); setEditing(null) }} className="p-1 hover:bg-slate-700 rounded"><X className="w-5 h-5 text-slate-400" /></button>
@@ -147,24 +147,24 @@ export default function RunwayJourneyManager() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-slate-400 mb-1">Year</label>
-              <input name="year" type="number" defaultValue={editing?.year || new Date().getFullYear()} required className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none" />
+              <input name="year" type="number" defaultValue={editing?.year || new Date().getFullYear()} required className="w-full bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none" />
             </div>
             <div>
               <label className="block text-xs font-medium text-slate-400 mb-1">Category</label>
-              <input name="category" defaultValue={editing?.category || 'Collection'} className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none" />
+              <input name="category" defaultValue={editing?.category || 'Collection'} className="w-full bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none" />
             </div>
             <div className="col-span-2">
               <label className="block text-xs font-medium text-slate-400 mb-1">Title</label>
-              <input name="title" defaultValue={editing?.title || ''} required className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none" />
+              <input name="title" defaultValue={editing?.title || ''} required className="w-full bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none" />
             </div>
             <div className="col-span-2">
               <label className="block text-xs font-medium text-slate-400 mb-1">Description</label>
-              <textarea name="description" rows={3} defaultValue={editing?.description || ''} className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none resize-none" />
+              <textarea name="description" rows={3} defaultValue={editing?.description || ''} className="w-full bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none resize-none" />
             </div>
             <div className="col-span-2">
               <label className="block text-xs font-medium text-slate-400 mb-1">Image URL</label>
               <div className="flex gap-2">
-                <input name="image_url" defaultValue={editing?.image_url || ''} className="flex-1 bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none" />
+                <input name="image_url" defaultValue={editing?.image_url || ''} className="flex-1 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none" />
                 <label className="flex items-center gap-1 px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg cursor-pointer transition-colors shrink-0">
                   {isUploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-pink-400" /> : <Upload className="w-4 h-4 text-slate-300" />}
                   <input ref={imageFileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
@@ -174,18 +174,18 @@ export default function RunwayJourneyManager() {
             </div>
             <div>
               <label className="block text-xs font-medium text-slate-400 mb-1">Display Order</label>
-              <input name="display_order" type="number" defaultValue={editing?.display_order || 0} className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none" />
+              <input name="display_order" type="number" defaultValue={editing?.display_order || 0} className="w-full bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none" />
             </div>
             <div>
               <label className="block text-xs font-medium text-slate-400 mb-1">Featured</label>
-              <select name="featured" defaultValue={editing?.featured ? 'true' : 'false'} className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none">
+              <select name="featured" defaultValue={editing?.featured ? 'true' : 'false'} className="w-full bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none">
                 <option value="false">No</option>
                 <option value="true">Yes</option>
               </select>
             </div>
             <div className="col-span-2">
               <label className="block text-xs font-medium text-slate-400 mb-1">Highlights (one per line)</label>
-              <textarea name="highlights" rows={4} defaultValue={(editing?.highlights || []).join('\n')} className="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none resize-none" />
+              <textarea name="highlights" rows={4} defaultValue={(editing?.highlights || []).join('\n')} className="w-full bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-pink-500 outline-none resize-none" />
             </div>
           </div>
           <div className="flex gap-3 mt-6">
@@ -210,7 +210,7 @@ export default function RunwayJourneyManager() {
           {sorted.filter(e => e.featured).length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {sorted.filter(e => e.featured).map(item => (
-                <div key={item.id} className="relative bg-gradient-to-br from-pink-900/20 to-purple-900/20 border border-pink-500/30 rounded-xl overflow-hidden group cursor-pointer" onClick={() => setSelected(item)}>
+                <div key={item.id} className="relative bg-gradient-to-br from-pink-900/20 to-purple-900/20 border border-gray-200 dark:border-gray-700 border-pink-500/30 rounded-xl overflow-hidden group cursor-pointer" onClick={() => setSelected(item)}>
                   <div className="absolute top-3 right-3 z-10">
                     <span className="px-2 py-1 bg-pink-600 text-white text-[10px] font-bold rounded flex items-center gap-1"><Star className="w-3 h-3" /> FEATURED</span>
                   </div>
@@ -244,7 +244,7 @@ export default function RunwayJourneyManager() {
                   <div className="w-2 h-2 rounded-full bg-pink-500" />
                 </div>
 
-                <div className="bg-slate-800/50 hover:bg-slate-800 border border-slate-700 rounded-xl overflow-hidden transition-all cursor-pointer" onClick={() => setSelected(item)}>
+                <div className="bg-slate-800/50 hover:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl overflow-hidden transition-all cursor-pointer" onClick={() => setSelected(item)}>
                   <div className="flex flex-col md:flex-row">
                     {item.image_url && (
                       <div className="md:w-48 h-32 shrink-0 bg-slate-900 overflow-hidden">
@@ -289,7 +289,7 @@ export default function RunwayJourneyManager() {
       {/* Detail Modal */}
       {selected && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelected(null)}>
-          <div className="bg-slate-900 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-slate-700 shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="bg-slate-900 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700 border-slate-700 shadow-2xl" onClick={e => e.stopPropagation()}>
             {selected.image_url && (
               <div className="h-56 bg-slate-800">
                 <img src={selected.image_url} alt={selected.title} className="w-full h-full object-cover" />

@@ -9,7 +9,7 @@ export default function FashionPage() {
       <div className="max-w-7xl mx-auto space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Fashion Lab</h1>
-          <p className="text-gray-400 mt-2">Design tracking, inventory management, and collections control.</p>
+          <p className="text-gray-500 dark:text-gray-400 mt-2">Design tracking, inventory management, and collections control.</p>
         </div>
         <FashionManager />
       </div>

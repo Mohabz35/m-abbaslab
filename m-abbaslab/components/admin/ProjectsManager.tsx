@@ -92,7 +92,7 @@ export default function ProjectsManager() {
   }
 
   const columns = [
-    { id: 'planning', label: 'Planning', color: 'border-blue-500' },
+    { id: 'planning', label: 'Planning', color: 'border-b border-gray-200 dark:border-gray-700lue-500' },
     { id: 'in-progress', label: 'In Progress', color: 'border-amber-500' },
     { id: 'shipped', label: 'Shipped', color: 'border-emerald-500' }
   ]
@@ -146,13 +146,13 @@ export default function ProjectsManager() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center bg-slate-800 p-6 rounded-xl border border-slate-700">
+      <div className="flex justify-between items-center bg-slate-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700">
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-2"><Briefcase className="w-6 h-6 text-blue-500"/> Project Kanban</h2>
           <p className="text-sm text-slate-400">Manage projects, milestones, and contributors.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={handleGenerateInsights} disabled={isAiLoading} className="flex items-center gap-2 px-4 py-2 bg-purple-600/20 text-purple-400 hover:bg-purple-600/30 border border-purple-500/30 rounded-lg transition-colors disabled:opacity-50 text-sm font-bold">
+          <button onClick={handleGenerateInsights} disabled={isAiLoading} className="flex items-center gap-2 px-4 py-2 bg-purple-600/20 text-purple-400 hover:bg-purple-600/30 border border-gray-200 dark:border-gray-700 border-purple-500/30 rounded-lg transition-colors disabled:opacity-50 text-sm font-bold">
             <Sparkles className="w-4 h-4" /> {isAiLoading ? 'Analyzing...' : 'AI Insights'}
           </button>
           <button onClick={() => { setEditingProject(null); setFormData({ title: '', description: '', category: '', status: 'planning', contributors: '', milestones: '', file_uploads: '' }); setIsFormOpen(true) }} className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
@@ -163,7 +163,7 @@ export default function ProjectsManager() {
 
       <AnimatePresence>
         {aiInsights && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="bg-purple-900/20 border border-purple-500/30 rounded-xl p-6">
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="bg-purple-900/20 border border-gray-200 dark:border-gray-700 border-purple-500/30 rounded-xl p-6">
             <div className="flex justify-between items-start mb-2">
               <h3 className="text-sm font-bold text-purple-400 uppercase tracking-widest flex items-center gap-2"><Sparkles className="w-4 h-4"/> Bottlenecks & Risks Analysis</h3>
               <button onClick={() => setAiInsights('')} className="text-slate-400 hover:text-white"><Trash2 className="w-4 h-4"/></button>
@@ -177,7 +177,7 @@ export default function ProjectsManager() {
         {columns.map(col => (
           <div 
             key={col.id} 
-            className={`bg-slate-800/50 rounded-xl border-t-4 ${col.color} border-l border-r border-b border-slate-700 p-4 min-h-[500px]`}
+            className={`bg-slate-800/50 rounded-xl border-t-4 ${col.color} border-l border-r border-b border-gray-200 dark:border-gray-700 border-slate-700 p-4 min-h-[500px]`}
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => handleDrop(e, col.id)}
           >
@@ -193,7 +193,7 @@ export default function ProjectsManager() {
                     key={project.id} 
                     draggable 
                     onDragStart={(e: any) => handleDragStart(e, project.id)}
-                    className="bg-slate-700/50 p-4 rounded-lg border border-slate-600 cursor-grab active:cursor-grabbing hover:bg-slate-700 transition-colors shadow-lg group"
+                    className="bg-slate-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-700 border-slate-600 cursor-grab active:cursor-grabbing hover:bg-slate-700 transition-colors shadow-lg group"
                   >
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-bold text-white leading-tight">{project.title}</h4>
@@ -207,12 +207,12 @@ export default function ProjectsManager() {
                     {/* Advanced Metrics Preview */}
                     <div className="flex flex-wrap gap-2 mb-3">
                       {(project.contributors ? (typeof project.contributors === 'string' ? project.contributors : JSON.stringify(project.contributors)) : '').split(',').filter(Boolean).map((c: string, i: number) => (
-                        <div key={i} className="w-6 h-6 rounded-full bg-slate-600 flex items-center justify-center text-[10px] text-white font-bold border border-slate-500 shrink-0" title={c.trim()}>
+                        <div key={i} className="w-6 h-6 rounded-full bg-slate-600 flex items-center justify-center text-[10px] text-white font-bold border border-gray-200 dark:border-gray-700 border-slate-500 shrink-0" title={c.trim()}>
                           {c.trim().substring(0, 2).toUpperCase()}
                         </div>
                       ))}
                       {(project.milestones ? (typeof project.milestones === 'string' ? project.milestones : JSON.stringify(project.milestones)) : '').split(',').filter(Boolean).length > 0 && (
-                        <div className="px-2 py-0.5 rounded text-[10px] bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center gap-1">
+                        <div className="px-2 py-0.5 rounded text-[10px] bg-indigo-500/20 text-indigo-400 border border-gray-200 dark:border-gray-700 border-indigo-500/30 flex items-center gap-1">
                           <CheckCircle2 className="w-3 h-3"/> {(project.milestones ? (typeof project.milestones === 'string' ? project.milestones : JSON.stringify(project.milestones)) : '').split(',').filter(Boolean).length} tasks
                         </div>
                       )}
@@ -235,25 +235,25 @@ export default function ProjectsManager() {
       {/* Project Form Modal */}
       {isFormOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-xl max-w-md w-full p-6">
+          <div className="bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl max-w-md w-full p-6">
             <h2 className="text-xl font-bold text-white mb-4">{editingProject ? 'Edit Project' : 'New Project'}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm text-slate-400 mb-1">Title</label>
-                <input required type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white" />
+                <input required type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-lg p-2.5 text-white" />
               </div>
               <div>
                 <label className="block text-sm text-slate-400 mb-1">Description</label>
-                <textarea rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white" />
+                <textarea rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-lg p-2.5 text-white" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-slate-400 mb-1">Category</label>
-                  <input type="text" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white" />
+                  <input type="text" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-lg p-2.5 text-white" />
                 </div>
                 <div>
                   <label className="block text-sm text-slate-400 mb-1">Status</label>
-                  <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white">
+                  <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-lg p-2.5 text-white">
                     <option value="planning">Planning</option>
                     <option value="in-progress">In Progress</option>
                     <option value="shipped">Shipped</option>
@@ -264,18 +264,18 @@ export default function ProjectsManager() {
               {/* Advanced fields */}
               <div>
                 <label className="block text-sm text-slate-400 mb-1">Contributors (comma separated)</label>
-                <input type="text" placeholder="e.g. Alice, Bob" value={formData.contributors || (editingProject?.contributors ? (typeof editingProject.contributors === 'string' ? editingProject.contributors : JSON.stringify(editingProject.contributors)) : '')} onChange={e => setFormData({...formData, contributors: e.target.value})} className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white" />
+                <input type="text" placeholder="e.g. Alice, Bob" value={formData.contributors || (editingProject?.contributors ? (typeof editingProject.contributors === 'string' ? editingProject.contributors : JSON.stringify(editingProject.contributors)) : '')} onChange={e => setFormData({...formData, contributors: e.target.value})} className="w-full bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-lg p-2.5 text-white" />
               </div>
               
               <div>
                 <label className="block text-sm text-slate-400 mb-1">Milestones/Tasks (comma separated)</label>
-                <input type="text" placeholder="e.g. Design UI, Setup DB, Write Tests" value={formData.milestones || (editingProject?.milestones ? (typeof editingProject.milestones === 'string' ? editingProject.milestones : JSON.stringify(editingProject.milestones)) : '')} onChange={e => setFormData({...formData, milestones: e.target.value})} className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white" />
+                <input type="text" placeholder="e.g. Design UI, Setup DB, Write Tests" value={formData.milestones || (editingProject?.milestones ? (typeof editingProject.milestones === 'string' ? editingProject.milestones : JSON.stringify(editingProject.milestones)) : '')} onChange={e => setFormData({...formData, milestones: e.target.value})} className="w-full bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-lg p-2.5 text-white" />
               </div>
 
               <div>
                 <label className="block text-sm text-slate-400 mb-1">File Uploads</label>
                 <div className="flex gap-2">
-                  <input type="text" placeholder="https://..." value={formData.file_uploads || (editingProject?.file_uploads ? (typeof editingProject.file_uploads === 'string' ? editingProject.file_uploads : JSON.stringify(editingProject.file_uploads)) : '')} onChange={e => setFormData({...formData, file_uploads: e.target.value})} className="flex-1 bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white" />
+                  <input type="text" placeholder="https://..." value={formData.file_uploads || (editingProject?.file_uploads ? (typeof editingProject.file_uploads === 'string' ? editingProject.file_uploads : JSON.stringify(editingProject.file_uploads)) : '')} onChange={e => setFormData({...formData, file_uploads: e.target.value})} className="flex-1 bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-lg p-2.5 text-white" />
                   <label className="flex items-center gap-1 px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg cursor-pointer transition-colors shrink-0">
                     {isUploadingFile ? <Loader2 className="w-4 h-4 animate-spin text-blue-400" /> : <Upload className="w-4 h-4 text-slate-300" />}
                     <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />

@@ -172,7 +172,7 @@ const WorkingQuants: React.FC<{ batch: Batch | null }> = ({ batch }) => {
   }, [])
 
   return (
-    <div className="relative w-full h-64 bg-slate-950 rounded-xl overflow-hidden border border-slate-800">
+    <div className="relative w-full h-64 bg-slate-950 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 border-slate-800">
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0" style={{ backgroundImage: `radial-gradient(circle at 50% 50%, rgba(0,255,136,0.1) 0%, transparent 70%)` }} />
       </div>
@@ -455,10 +455,10 @@ export default function WorldQuantLab() {
 
   const healthColor = getHealthColor()
   const hc = {
-    emerald: { bg: "bg-slate-950", border: "border-emerald-500/30", text: "text-emerald-400" },
-    amber: { bg: "bg-slate-950", border: "border-amber-500/30", text: "text-amber-400" },
-    red: { bg: "bg-slate-950", border: "border-red-500/30", text: "text-red-400" },
-    slate: { bg: "bg-slate-950", border: "border-slate-500/30", text: "text-slate-400" },
+    emerald: { bg: "bg-slate-950", border border-gray-200 dark:border-gray-700: "border-emerald-500/30", text: "text-emerald-400" },
+    amber: { bg: "bg-slate-950", border border-gray-200 dark:border-gray-700: "border-amber-500/30", text: "text-amber-400" },
+    red: { bg: "bg-slate-950", border border-gray-200 dark:border-gray-700: "border-red-500/30", text: "text-red-400" },
+    slate: { bg: "bg-slate-950", border border-gray-200 dark:border-gray-700: "border-slate-500/30", text: "text-slate-400" },
   }[healthColor]
 
   return (
@@ -466,7 +466,7 @@ export default function WorldQuantLab() {
       <div className="max-w-7xl mx-auto">
         {/* LIVE PROGRESS BANNER */}
         {isRunning && activeBatch && (
-          <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="mb-6 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border border-emerald-500/50 rounded-lg p-4 shadow-lg">
+          <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="mb-6 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border border-gray-200 dark:border-gray-700 border-emerald-500/50 rounded-lg p-4 shadow-lg">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-3">
                 <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1, repeat: Infinity }}>
@@ -476,7 +476,7 @@ export default function WorldQuantLab() {
               </div>
               <span className="text-xl font-bold text-emerald-400">{activeBatch.total_tested} / {activeBatch.total_generated || 10}</span>
             </div>
-            <div className="w-full bg-slate-900 rounded-full h-2 border border-slate-800 overflow-hidden">
+            <div className="w-full bg-slate-900 rounded-full h-2 border border-gray-200 dark:border-gray-700 border-slate-800 overflow-hidden">
               <motion.div 
                 className="h-full bg-gradient-to-r from-emerald-400 to-blue-400"
                 initial={{ width: 0 }}
@@ -505,7 +505,7 @@ export default function WorldQuantLab() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <div className={`flex items-center gap-2 px-4 py-2 rounded-full border ${hc.border} bg-slate-900 shadow-lg`}>
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 ${hc.border border-gray-200 dark:border-gray-700} bg-slate-900 shadow-lg`}>
               <div className={`w-3 h-3 rounded-full ${healthColor === "emerald" ? "bg-emerald-400 animate-pulse" : healthColor === "amber" ? "bg-amber-400 animate-pulse" : healthColor === "red" ? "bg-red-400 animate-pulse" : "bg-slate-400"}`} />
               <span className={`text-sm font-mono ${hc.text} uppercase`}>{activeBatch?.health_status || "STANDBY"}</span>
             </div>
@@ -513,7 +513,7 @@ export default function WorldQuantLab() {
               {isGenerating ? <RefreshCw className="w-4 h-4 animate-spin" /> : isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               {isGenerating ? "GENERATING..." : isRunning ? "STOP ENGINE" : "START ENGINE"}
             </button>
-            <button onClick={exportAlphaReport} disabled={isExportingPDF || alphas.length === 0} className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium bg-purple-600/20 border border-purple-500/30 text-purple-400 hover:bg-purple-600/30 transition-all disabled:opacity-50">
+            <button onClick={exportAlphaReport} disabled={isExportingPDF || alphas.length === 0} className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium bg-purple-600/20 border border-gray-200 dark:border-gray-700 border-purple-500/30 text-purple-400 hover:bg-purple-600/30 transition-all disabled:opacity-50">
               {isExportingPDF ? <RefreshCw className="w-4 h-4 animate-spin" /> : <FileDown className="w-4 h-4" />}
               {isExportingPDF ? "Exporting..." : "Export PDF"}
             </button>
@@ -522,7 +522,7 @@ export default function WorldQuantLab() {
 
         {/* PROGRESS BAR */}
         {isRunning && activeBatch && activeBatch.total_generated > 0 && (
-          <div className="mb-6 bg-slate-900 rounded-xl border border-slate-800 p-4">
+          <div className="mb-6 bg-slate-900 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-800 p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.7)]" />
@@ -553,8 +553,8 @@ export default function WorldQuantLab() {
         <div className="grid grid-cols-12 gap-6">
           {/* LEFT: Neural Network + Working Quants */}
           <div className="col-span-12 lg:col-span-7 space-y-6">
-            <div className={`rounded-2xl border ${hc.border} bg-slate-900 p-1 shadow-2xl`}>
-              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800/50">
+            <div className={`rounded-2xl border border-gray-200 dark:border-gray-700 ${hc.border border-gray-200 dark:border-gray-700} bg-slate-900 p-1 shadow-2xl`}>
+              <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 border-slate-800/50">
                 <div className="flex items-center gap-2">
                   <Network className="w-5 h-5 text-emerald-400" />
                   <span className="font-mono text-sm text-emerald-300">NEURAL ALPHA NETWORK</span>
@@ -569,7 +569,7 @@ export default function WorldQuantLab() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+            <div className="rounded-2xl border border-gray-200 dark:border-gray-700 border-slate-800 bg-slate-900 p-4">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Cpu className="w-5 h-5 text-emerald-400" />
@@ -586,7 +586,7 @@ export default function WorldQuantLab() {
               <WorkingQuants batch={activeBatch} />
             </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+            <div className="rounded-2xl border border-gray-200 dark:border-gray-700 border-slate-800 bg-slate-900 p-4">
               <div className="flex items-center gap-2 mb-4">
                 <Activity className="w-5 h-5 text-emerald-400" />
                 <span className="font-mono text-sm text-emerald-300">SYSTEM HEALTH LOG</span>
@@ -608,27 +608,27 @@ export default function WorldQuantLab() {
           {/* RIGHT: Stats + Alpha Feed */}
           <div className="col-span-12 lg:col-span-5 space-y-6" id="alpha-report-container">
             <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-xl border border-slate-800 bg-slate-900 p-4">
+              <div className="rounded-xl border border-gray-200 dark:border-gray-700 border-slate-800 bg-slate-900 p-4">
                 <div className="flex items-center gap-2 mb-2"><Database className="w-4 h-4 text-emerald-400" /><span className="text-xs text-slate-400 font-mono">TOTAL ALPHAS</span></div>
                 <motion.div key={stats.totalAlphas} initial={{ scale: 1.2, color: "#00ff88" }} animate={{ scale: 1, color: "#fff" }} className="text-3xl font-bold">{stats.totalAlphas.toLocaleString()}</motion.div>
               </div>
-              <div className="rounded-xl border border-slate-800 bg-slate-900 p-4">
+              <div className="rounded-xl border border-gray-200 dark:border-gray-700 border-slate-800 bg-slate-900 p-4">
                 <div className="flex items-center gap-2 mb-2"><CheckCircle className="w-4 h-4 text-emerald-400" /><span className="text-xs text-slate-400 font-mono">PASSED</span></div>
                 <div className="text-3xl font-bold text-emerald-400">{stats.passedAlphas}</div>
                 <div className="text-xs text-slate-400 mt-1">{stats.successRate.toFixed(1)}% success rate</div>
               </div>
-              <div className="rounded-xl border border-slate-800 bg-slate-900 p-4">
+              <div className="rounded-xl border border-gray-200 dark:border-gray-700 border-slate-800 bg-slate-900 p-4">
                 <div className="flex items-center gap-2 mb-2"><TrendingUp className="w-4 h-4 text-emerald-400" /><span className="text-xs text-slate-400 font-mono">AVG SHARPE</span></div>
                 <div className="text-3xl font-bold">{stats.avgSharpe.toFixed(2)}</div>
               </div>
-              <div className="rounded-xl border border-slate-800 bg-slate-900 p-4">
+              <div className="rounded-xl border border-gray-200 dark:border-gray-700 border-slate-800 bg-slate-900 p-4">
                 <div className="flex items-center gap-2 mb-2"><Zap className="w-4 h-4 text-amber-400" /><span className="text-xs text-slate-400 font-mono">BEST SHARPE</span></div>
                 <div className="text-3xl font-bold text-amber-400">{stats.bestSharpe.toFixed(2)}</div>
               </div>
             </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-slate-900 overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800">
+            <div className="rounded-2xl border border-gray-200 dark:border-gray-700 border-slate-800 bg-slate-900 overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 border-slate-800">
                 <div className="flex items-center gap-4">
                   <button onClick={() => setActiveTab('discovered')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'discovered' ? 'text-emerald-300 border-b-2 border-emerald-300' : 'text-slate-400'}`}>
                     <Sparkles className="w-4 h-4" /> DISCOVERED
@@ -636,7 +636,7 @@ export default function WorldQuantLab() {
                   <button onClick={() => setActiveTab('brain')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'brain' ? 'text-purple-400 border-b-2 border-purple-400' : 'text-slate-400'}`}>
                     <Brain className="w-4 h-4" /> ALPHA BRAIN (FAILED)
                   </button>
-                  <button onClick={() => setActiveTab('console')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'console' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-slate-400'}`}>
+                  <button onClick={() => setActiveTab('console')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'console' ? 'text-blue-400 border-b-2 border-b border-gray-200 dark:border-gray-700lue-400' : 'text-slate-400'}`}>
                     <Terminal className="w-4 h-4" /> LIVE CONSOLE
                   </button>
                 </div>
@@ -653,7 +653,7 @@ export default function WorldQuantLab() {
                         </div>
                         <button onClick={() => setConsoleLogs([])} className="text-xs text-slate-600 hover:text-slate-400 font-mono">CLEAR</button>
                       </div>
-                      <div className="bg-black rounded-xl p-4 h-[420px] overflow-y-auto font-mono text-xs border border-slate-800 shadow-inner">
+                      <div className="bg-black rounded-xl p-4 h-[420px] overflow-y-auto font-mono text-xs border border-gray-200 dark:border-gray-700 border-slate-800 shadow-inner">
                         <div className="space-y-1">
                           {consoleLogs.length === 0 && <div className="text-slate-600 italic">Awaiting engine output...</div>}
                           {consoleLogs.map(log => (
@@ -667,7 +667,7 @@ export default function WorldQuantLab() {
                   ) : activeTab === 'discovered' ? (
                     <motion.div key="discovered" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                       {alphas.map((alpha) => (
-                        <motion.div key={alpha.id} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className={`p-4 border-b border-slate-800/50 cursor-pointer transition-colors hover:bg-slate-800/30`} onClick={() => setSelectedAlpha(alpha)}>
+                        <motion.div key={alpha.id} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className={`p-4 border-b border-gray-200 dark:border-gray-700 border-slate-800/50 cursor-pointer transition-colors hover:bg-slate-800/30`} onClick={() => setSelectedAlpha(alpha)}>
                           <div className="flex items-start justify-between mb-2">
                             <div>
                               <div className="font-mono text-sm text-emerald-300">{alpha.alpha_code}</div>
@@ -697,7 +697,7 @@ export default function WorldQuantLab() {
                   ) : (
                     <motion.div key="brain" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                       {failedAlphas.map((fAlpha) => (
-                        <motion.div key={fAlpha.id} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="p-4 border-b border-slate-800/50 hover:bg-slate-800/50 border-l-2 border-l-purple-500">
+                        <motion.div key={fAlpha.id} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="p-4 border-b border-gray-200 dark:border-gray-700 border-slate-800/50 hover:bg-slate-800/50 border-l-2 border-l-purple-500">
                           <div className="flex items-start justify-between mb-2">
                             <div>
                               <div className="font-mono text-sm text-purple-300">{fAlpha.alpha_code}</div>
@@ -729,12 +729,12 @@ export default function WorldQuantLab() {
         </div>
 
         {/* BATCH HISTORY WITH EXPANDABLE ALPHAS */}
-        <div className="mt-6 rounded-2xl border border-slate-800 bg-slate-900 p-4">
+        <div className="mt-6 rounded-2xl border border-gray-200 dark:border-gray-700 border-slate-800 bg-slate-900 p-4">
           <div className="flex items-center gap-2 mb-4"><Clock className="w-5 h-5 text-emerald-400" /><span className="font-mono text-sm text-emerald-300">BATCH HISTORY & DETAILS</span></div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-slate-400 text-xs font-mono border-b border-slate-800">
+                <tr className="text-slate-400 text-xs font-mono border-b border-gray-200 dark:border-gray-700 border-slate-800">
                   <th className="text-left py-2 px-3">BATCH</th>
                   <th className="text-left py-2 px-3">STATUS</th>
                   <th className="text-right py-2 px-3">GENERATED</th>
@@ -750,7 +750,7 @@ export default function WorldQuantLab() {
               <tbody>
                 {batches.map((batch) => (
                   <React.Fragment key={batch.id}>
-                    <tr className="border-b border-slate-800/30 hover:bg-slate-800/30 cursor-pointer group" onClick={() => handleBatchClick(batch)}>
+                    <tr className="border-b border-gray-200 dark:border-gray-700 border-slate-800/30 hover:bg-slate-800/30 cursor-pointer group" onClick={() => handleBatchClick(batch)}>
                       <td className="py-3 px-3 font-mono text-emerald-300">{batch.batch_name}</td>
                       <td className="py-3 px-3">
                         <span className={`px-2 py-1 rounded text-xs font-mono ${batch.status === "running" ? "bg-emerald-500/20 text-emerald-400" : batch.status === "completed" ? "bg-blue-500/20 text-blue-400" : "bg-slate-500/20 text-slate-300"}`}>{batch.status}</span>
@@ -785,7 +785,7 @@ export default function WorldQuantLab() {
                               initial={{ opacity: 0, height: 0 }}
                               animate={{ opacity: 1, height: "auto" }}
                               exit={{ opacity: 0, height: 0 }}
-                              className="bg-slate-950/50 border-b border-slate-800"
+                              className="bg-slate-950/50 border-b border-gray-200 dark:border-gray-700 border-slate-800"
                             >
                               <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
                                 {batchAlphasMap[batch.id]?.length === 0 ? (
@@ -796,7 +796,7 @@ export default function WorldQuantLab() {
                                       key={alpha.id}
                                       initial={{ opacity: 0, x: -10 }}
                                       animate={{ opacity: 1, x: 0 }}
-                                      className={`flex items-center justify-between p-3 rounded-lg border ${alpha.is_passed ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-red-500/30 bg-red-500/5'}`}
+                                      className={`flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 ${alpha.is_passed ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-red-500/30 bg-red-500/5'}`}
                                     >
                                       <div className="flex-1">
                                         <div className="font-mono text-sm text-emerald-300">{alpha.alpha_code}</div>
@@ -842,7 +842,7 @@ export default function WorldQuantLab() {
       <AnimatePresence>
         {selectedBatch && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6" onClick={() => { setSelectedBatch(null); setSelectedBatchAlphas([]) }}>
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div>
@@ -869,7 +869,7 @@ export default function WorldQuantLab() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="text-slate-400 text-xs font-mono border-b border-slate-800">
+                        <tr className="text-slate-400 text-xs font-mono border-b border-gray-200 dark:border-gray-700 border-slate-800">
                           <th className="text-left py-2 px-3">CODE</th>
                           <th className="text-right py-2 px-3">SHARPE</th>
                           <th className="text-right py-2 px-3">RETURN</th>
@@ -881,7 +881,7 @@ export default function WorldQuantLab() {
                       </thead>
                       <tbody>
                         {selectedBatchAlphas.map((a) => (
-                          <tr key={a.id} className="border-b border-slate-800/30 hover:bg-slate-800/30 cursor-pointer" onClick={() => { setSelectedAlpha(a); setSelectedBatch(null) }}>
+                          <tr key={a.id} className="border-b border-gray-200 dark:border-gray-700 border-slate-800/30 hover:bg-slate-800/30 cursor-pointer" onClick={() => { setSelectedAlpha(a); setSelectedBatch(null) }}>
                             <td className="py-3 px-3 font-mono text-emerald-300">{a.alpha_code}</td>
                             <td className={`py-3 px-3 text-right font-mono ${(a.sharpe_ratio || 0) >= 1.5 ? 'text-emerald-400' : 'text-slate-300'}`}>{a.sharpe_ratio?.toFixed(2) || 'N/A'}</td>
                             <td className="py-3 px-3 text-right font-mono text-slate-300">{a.annual_return ? `${(a.annual_return * 100).toFixed(1)}%` : 'N/A'}</td>
@@ -907,7 +907,7 @@ export default function WorldQuantLab() {
       <AnimatePresence>
         {selectedAlpha && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6" onClick={() => setSelectedAlpha(null)}>
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div>
@@ -925,7 +925,7 @@ export default function WorldQuantLab() {
                     { label: "Turnover", value: selectedAlpha.turnover?.toFixed(3), good: (selectedAlpha.turnover || 1) < 0.5 },
                     { label: "Fitness Score", value: selectedAlpha.fitness_score?.toFixed(3), good: (selectedAlpha.fitness_score || 0) > 1.0 },
                   ].map((metric) => (
-                    <div key={metric.label} className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                    <div key={metric.label} className="bg-slate-800/50 rounded-lg p-3 border border-gray-200 dark:border-gray-700 border-slate-700">
                       <div className="text-xs text-slate-400 mb-1">{metric.label}</div>
                       <div className={`text-lg font-mono font-bold ${metric.good ? "text-emerald-400" : "text-red-400"}`}>{metric.value}</div>
                     </div>
@@ -934,7 +934,7 @@ export default function WorldQuantLab() {
                 {selectedAlpha.pnl_curve && selectedAlpha.pnl_curve.length > 0 && (
                   <div className="mb-6">
                     <h3 className="text-sm font-mono text-slate-400 mb-3">CUMULATIVE PnL CURVE</h3>
-                    <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                    <div className="bg-slate-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700 border-slate-700">
                       <svg viewBox="0 0 100 50" className="w-full h-48" preserveAspectRatio="none">
                         <defs>
                           <linearGradient id="mpnl" x1="0" y1="0" x2="0" y2="1">
@@ -954,7 +954,7 @@ export default function WorldQuantLab() {
                 {selectedAlpha.drawdown_curve && selectedAlpha.drawdown_curve.length > 0 && (
                   <div className="mb-6">
                     <h3 className="text-sm font-mono text-slate-400 mb-3">DRAWDOWN CURVE</h3>
-                    <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                    <div className="bg-slate-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700 border-slate-700">
                       <svg viewBox="0 0 100 50" className="w-full h-32" preserveAspectRatio="none">
                         {(() => {
                           const data = selectedAlpha.drawdown_curve; const mn = Math.min(...data); const mx = Math.max(...data); const r = mx - mn || 1
@@ -967,7 +967,7 @@ export default function WorldQuantLab() {
                 )}
                 <div className="flex gap-3">
                   {selectedAlpha.is_passed && (
-                    <button onClick={() => handleSubmitToWQ(selectedAlpha)} className="flex-1 flex items-center justify-center gap-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg py-3 font-medium hover:bg-emerald-500/30 transition-colors">
+                    <button onClick={() => handleSubmitToWQ(selectedAlpha)} className="flex-1 flex items-center justify-center gap-2 bg-emerald-500/20 text-emerald-400 border border-gray-200 dark:border-gray-700 border-emerald-500/30 rounded-lg py-3 font-medium hover:bg-emerald-500/30 transition-colors">
                       <Send className="w-4 h-4" /> SUBMIT TO WORLD QUANT
                     </button>
                   )}

@@ -167,11 +167,11 @@ export default function AdvancedAnalytics() {
         </div>
         <div className="flex items-center gap-2">
           {(['7d', '30d', '90d', 'all'] as const).map(opt => (
-            <button key={opt} onClick={() => setDateRange(opt)} className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${dateRange === opt ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' : 'bg-slate-800 text-slate-400 border border-slate-700 hover:border-slate-600'}`}>
+            <button key={opt} onClick={() => setDateRange(opt)} className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${dateRange === opt ? 'bg-blue-500/20 text-blue-400 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30' : 'bg-slate-800 text-slate-400 border border-gray-200 dark:border-gray-700 border-slate-700 hover:border-slate-600'}`}>
               {opt === 'all' ? 'ALL' : opt.toUpperCase()}
             </button>
           ))}
-          <button onClick={fetchAnalytics} className="p-1.5 bg-slate-800 border border-slate-700 rounded-lg hover:border-slate-600">
+          <button onClick={fetchAnalytics} className="p-1.5 bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-lg hover:border-slate-600">
             <RefreshCw className={`w-4 h-4 text-slate-400 ${loading ? 'animate-spin' : ''}`} />
           </button>
         </div>
@@ -180,7 +180,7 @@ export default function AdvancedAnalytics() {
       {loading && <div className="text-slate-400 text-center py-12">Loading analytics...</div>}
 
       {!loading && !hasSupabaseKeys && (
-        <div className="text-center py-12 text-slate-400 bg-slate-800/50 rounded-xl border border-slate-700">
+        <div className="text-center py-12 text-slate-400 bg-slate-800/50 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700">
           <Database className="w-12 h-12 mx-auto mb-3 opacity-30" />
           <p>Supabase not configured. Analytics require database connection.</p>
         </div>
@@ -191,7 +191,7 @@ export default function AdvancedAnalytics() {
           {/* KPI Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             {kpiCards.map((kpi, idx) => (
-              <motion.div key={kpi.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }} className="bg-slate-800/80 border border-slate-700 rounded-xl p-5 hover:border-slate-600 transition-colors">
+              <motion.div key={kpi.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }} className="bg-slate-800/80 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-5 hover:border-slate-600 transition-colors">
                 <div className="flex items-start justify-between mb-3">
                   <div className={`p-2 rounded-lg ${kpi.bg}`}>
                     <kpi.icon className={`w-5 h-5 ${kpi.color}`} />
@@ -213,7 +213,7 @@ export default function AdvancedAnalytics() {
               { title: 'WhatsApp Messages', data: data.messages.trend, icon: MessageSquare, color: '#34d399' },
               { title: 'Finance Activity', data: data.finance.trend, icon: DollarSign, color: '#f59e0b' },
             ].map(chart => (
-              <motion.div key={chart.title} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-slate-800/80 border border-slate-700 rounded-xl p-5">
+              <motion.div key={chart.title} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-slate-800/80 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-4">
                   <chart.icon className="w-4 h-4 text-slate-400" />
                   <h3 className="text-sm font-bold text-white">{chart.title}</h3>
@@ -228,7 +228,7 @@ export default function AdvancedAnalytics() {
           </div>
 
           {/* Progress Section */}
-          <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-6">
+          <div className="bg-slate-800/80 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-6">
             <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-6">
               <Target className="w-5 h-5 text-amber-400" /> Platform Progress
             </h3>
@@ -258,17 +258,17 @@ export default function AdvancedAnalytics() {
 
           {/* Summary Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gradient-to-br from-blue-900/30 to-slate-900 border border-blue-500/20 rounded-xl p-5">
+            <div className="bg-gradient-to-br from-blue-900/30 to-slate-900 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/20 rounded-xl p-5">
               <div className="text-xs text-blue-300 uppercase tracking-wider font-bold mb-2">Alpha Efficiency</div>
               <div className="text-3xl font-bold text-white">{data.alphas.total > 0 ? `${Math.round((data.alphas.passed / data.alphas.total) * 100)}%` : 'N/A'}</div>
               <div className="text-xs text-slate-400 mt-1">Pass rate across all batches</div>
             </div>
-            <div className="bg-gradient-to-br from-purple-900/30 to-slate-900 border border-purple-500/20 rounded-xl p-5">
+            <div className="bg-gradient-to-br from-purple-900/30 to-slate-900 border border-gray-200 dark:border-gray-700 border-purple-500/20 rounded-xl p-5">
               <div className="text-xs text-purple-300 uppercase tracking-wider font-bold mb-2">Project Completion</div>
               <div className="text-3xl font-bold text-white">{data.projects.total > 0 ? `${Math.round((data.projects.shipped / data.projects.total) * 100)}%` : 'N/A'}</div>
               <div className="text-xs text-slate-400 mt-1">Shipped vs total projects</div>
             </div>
-            <div className="bg-gradient-to-br from-amber-900/30 to-slate-900 border border-amber-500/20 rounded-xl p-5">
+            <div className="bg-gradient-to-br from-amber-900/30 to-slate-900 border border-gray-200 dark:border-gray-700 border-amber-500/20 rounded-xl p-5">
               <div className="text-xs text-amber-300 uppercase tracking-wider font-bold mb-2">Financial Health</div>
               <div className="text-3xl font-bold text-white">{finance.totalIncome > 0 ? `${Math.round((finance.netFlow / finance.totalIncome) * 100)}%` : 'N/A'}</div>
               <div className="text-xs text-slate-400 mt-1">Net profit margin</div>

@@ -107,7 +107,7 @@ export default function ArticlesManager() {
   if (isEditing) {
     return (
       <div className="space-y-6">
-        <div className="flex justify-between items-center bg-slate-800 p-4 rounded-xl border border-slate-700">
+        <div className="flex justify-between items-center bg-slate-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700">
           <h2 className="text-xl font-bold text-white flex items-center gap-2"><Edit className="w-5 h-5 text-emerald-400"/> {editingArticle ? 'Edit Article' : 'Write Article'}</h2>
           <button onClick={() => setIsEditing(false)} className="text-slate-400 hover:text-white"><X className="w-5 h-5"/></button>
         </div>
@@ -122,7 +122,7 @@ export default function ArticlesManager() {
           </div>
           
           {/* AI Assistant Sidebar */}
-          <div className="bg-slate-800 rounded-xl border border-slate-700 p-6 h-fit sticky top-6">
+          <div className="bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 p-6 h-fit sticky top-6">
             <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-4"><Sparkles className="w-5 h-5 text-purple-400"/> AI Assistant</h3>
             <p className="text-xs text-slate-400 mb-4">Need help writing? Ask Jarvis for ideas, summaries, or co-authoring.</p>
             
@@ -130,20 +130,20 @@ export default function ArticlesManager() {
               value={aiPrompt}
               onChange={e => setAiPrompt(e.target.value)}
               placeholder="e.g., Generate a title about Quantum Computing..."
-              className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white mb-3"
+              className="w-full bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-lg p-3 text-sm text-white mb-3"
               rows={3}
             />
             
             <div className="flex flex-wrap gap-2 mb-4">
-              <button onClick={() => handleAiAction('suggest_ideas')} disabled={isAiLoading || !aiPrompt} className="px-3 py-1.5 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded text-xs hover:bg-purple-500/30 transition-colors disabled:opacity-50">Suggest Ideas</button>
-              <button onClick={() => { setAiPrompt('What are the top trending topics in tech/AI right now?'); handleAiAction('trending_topics') }} disabled={isAiLoading} className="px-3 py-1.5 bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded text-xs hover:bg-rose-500/30 transition-colors disabled:opacity-50">🔥 Trending Topics</button>
-              <button onClick={() => handleAiAction('co_author')} disabled={isAiLoading || !aiPrompt} className="px-3 py-1.5 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded text-xs hover:bg-blue-500/30 transition-colors disabled:opacity-50">Co-Author</button>
-              <button onClick={() => handleAiAction('summarize')} disabled={isAiLoading || !aiPrompt} className="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded text-xs hover:bg-emerald-500/30 transition-colors disabled:opacity-50">Summarize Content</button>
+              <button onClick={() => handleAiAction('suggest_ideas')} disabled={isAiLoading || !aiPrompt} className="px-3 py-1.5 bg-purple-500/20 text-purple-400 border border-gray-200 dark:border-gray-700 border-purple-500/30 rounded text-xs hover:bg-purple-500/30 transition-colors disabled:opacity-50">Suggest Ideas</button>
+              <button onClick={() => { setAiPrompt('What are the top trending topics in tech/AI right now?'); handleAiAction('trending_topics') }} disabled={isAiLoading} className="px-3 py-1.5 bg-rose-500/20 text-rose-400 border border-gray-200 dark:border-gray-700 border-rose-500/30 rounded text-xs hover:bg-rose-500/30 transition-colors disabled:opacity-50">🔥 Trending Topics</button>
+              <button onClick={() => handleAiAction('co_author')} disabled={isAiLoading || !aiPrompt} className="px-3 py-1.5 bg-blue-500/20 text-blue-400 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 rounded text-xs hover:bg-blue-500/30 transition-colors disabled:opacity-50">Co-Author</button>
+              <button onClick={() => handleAiAction('summarize')} disabled={isAiLoading || !aiPrompt} className="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 border border-gray-200 dark:border-gray-700 border-emerald-500/30 rounded text-xs hover:bg-emerald-500/30 transition-colors disabled:opacity-50">Summarize Content</button>
             </div>
             
             <AnimatePresence>
               {aiResponse && (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-slate-900/80 p-4 rounded-lg border border-slate-700">
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-slate-900/80 p-4 rounded-lg border border-gray-200 dark:border-gray-700 border-slate-700">
                   <div className="flex justify-between items-start mb-2">
                     <span className="text-xs font-mono text-purple-400 uppercase">Jarvis Response</span>
                     <button onClick={() => setAiResponse('')} className="text-slate-400 hover:text-white"><X className="w-3 h-3"/></button>
@@ -160,7 +160,7 @@ export default function ArticlesManager() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 bg-slate-800 p-6 rounded-xl border border-slate-700">
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 bg-slate-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700">
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-2"><FileText className="w-6 h-6 text-emerald-500"/> Article Manager</h2>
           <p className="text-sm text-slate-400">Manage publications, research, and technical writing.</p>
@@ -168,7 +168,7 @@ export default function ArticlesManager() {
         <div className="flex items-center gap-3">
           <div className="relative">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input type="text" placeholder="Search articles..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 pr-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-1 focus:ring-emerald-500 outline-none" />
+            <input type="text" placeholder="Search articles..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 pr-4 py-2 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-lg text-sm text-white focus:ring-1 focus:ring-emerald-500 outline-none" />
           </div>
           <button onClick={() => { setEditingArticle(null); setIsEditing(true) }} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors whitespace-nowrap">
             <Plus className="w-4 h-4" /> Write Article
@@ -195,7 +195,7 @@ export default function ArticlesManager() {
         ))}
       </div>
 
-      <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+      <div className="bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 overflow-hidden">
         {loading ? (
           <div className="p-8 text-center text-slate-400">Loading articles...</div>
         ) : filteredArticles.length === 0 ? (
@@ -257,7 +257,7 @@ export default function ArticlesManager() {
       
       {/* Active Projects Sidebar */}
       <div className="lg:col-span-1 space-y-4">
-        <div className="bg-slate-800 rounded-xl border border-slate-700 p-5">
+        <div className="bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 p-5">
           <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-4">
             <Briefcase className="w-4 h-4 text-purple-400" /> Active Projects
           </h3>
@@ -266,7 +266,7 @@ export default function ArticlesManager() {
               <p className="text-xs text-slate-400 italic">No active projects found.</p>
             ) : (
               projects.map(project => (
-                <div key={project.id} className="p-3 bg-slate-900 rounded-lg border border-slate-700">
+                <div key={project.id} className="p-3 bg-slate-900 rounded-lg border border-gray-200 dark:border-gray-700 border-slate-700">
                   <div className="font-medium text-sm text-white">{project.title}</div>
                   <div className="flex justify-between items-center mt-2">
                     <span className="text-xs text-slate-400">{project.category}</span>

@@ -86,7 +86,7 @@ export default function JarvisInbox() {
             <MessageSquare className="w-5 h-5 text-green-500" />
             JARVIS WhatsApp Inbox
           </h2>
-          <p className="text-xs text-gray-400 mt-0.5">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
             {unreadCount > 0
               ? <span className="text-green-500 font-bold">{unreadCount} unread messages</span>
               : 'All messages read'}
@@ -94,13 +94,13 @@ export default function JarvisInbox() {
         </div>
         <div className="flex items-center gap-3">
           {!hasSupabaseKeys && (
-            <div className="px-3 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-bold rounded-md flex items-center gap-1">
+            <div className="px-3 py-1 bg-amber-500/10 border border-gray-200 dark:border-gray-700 border-amber-500/20 text-amber-500 text-xs font-bold rounded-md flex items-center gap-1">
               <WifiOff className="w-3 h-3" /> Supabase Not Connected
             </div>
           )}
           <button
             onClick={() => { setIsLoading(true); fetchMessages() }}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-400 transition-colors"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-500 dark:text-gray-400 transition-colors"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
           </button>
@@ -108,9 +108,9 @@ export default function JarvisInbox() {
       </div>
 
       {/* Filter Bar */}
-      <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex gap-3">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700 border-gray-100 dark:border-gray-800 flex gap-3">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400" />
           <input
             type="text"
             placeholder="Search by name or message..."
@@ -121,7 +121,7 @@ export default function JarvisInbox() {
         </div>
         <button
           onClick={() => setFilterUnread(v => !v)}
-          className={`px-3 py-2 rounded-xl text-xs font-bold transition-all ${filterUnread ? 'bg-green-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-400'}`}
+          className={`px-3 py-2 rounded-xl text-xs font-bold transition-all ${filterUnread ? 'bg-green-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'}`}
         >
           Unread Only
         </button>
@@ -130,7 +130,7 @@ export default function JarvisInbox() {
       {/* Messages List */}
       <div className="divide-y divide-gray-100 dark:divide-gray-800 max-h-[600px] overflow-y-auto">
         {!hasSupabaseKeys ? (
-          <div className="p-12 text-center text-gray-400">
+          <div className="p-12 text-center text-gray-500 dark:text-gray-400">
             <WifiOff className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p className="font-semibold text-sm">Supabase Not Connected</p>
             <p className="text-xs mt-1 max-w-xs mx-auto">Add your Supabase keys to .env.local to see messages from the JARVIS WhatsApp bot here in real-time.</p>
@@ -140,7 +140,7 @@ export default function JarvisInbox() {
             <RefreshCw className="w-6 h-6 animate-spin text-green-500" />
           </div>
         ) : filtered.length === 0 ? (
-          <div className="p-12 text-center text-gray-400">
+          <div className="p-12 text-center text-gray-500 dark:text-gray-400">
             <Inbox className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p className="font-semibold text-sm">No messages yet</p>
             <p className="text-xs mt-1">Start the JARVIS engine and messages will appear here in real-time.</p>
@@ -162,9 +162,9 @@ export default function JarvisInbox() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-bold text-sm">{msg.sender_name || 'Unknown'}</span>
-                        <span className="text-[10px] text-gray-400 font-mono">{msg.sender_number?.split('@')[0]}</span>
+                        <span className="text-[10px] text-gray-500 dark:text-gray-400 font-mono">{msg.sender_number?.split('@')[0]}</span>
                       </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 mt-0.5 truncate">{msg.message_text}</p>
+                      <p className="text-sm text-gray-700 dark:text-gray-400 dark:text-gray-600 dark:text-gray-300 mt-0.5 truncate">{msg.message_text}</p>
                       {msg.jarvis_reply && (
                         <div className="flex items-start gap-1.5 mt-1.5">
                           <Bot className="w-3 h-3 text-blue-400 mt-0.5 flex-shrink-0" />
@@ -174,7 +174,7 @@ export default function JarvisInbox() {
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    <span className="text-[10px] text-gray-400">{new Date(msg.timestamp).toLocaleString()}</span>
+                    <span className="text-[10px] text-gray-500 dark:text-gray-400">{new Date(msg.timestamp).toLocaleString()}</span>
                     {!msg.is_read && (
                       <button
                         onClick={() => markAsRead(msg.id)}

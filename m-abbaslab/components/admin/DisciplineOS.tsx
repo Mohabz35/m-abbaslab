@@ -110,7 +110,7 @@ const HOUR_CATEGORIES: Record<HourCategory, { label: string; color: string; bg: 
   'social':       { label: 'Social',      color: 'text-pink-400',    bg: 'bg-pink-500/30',    icon: Users },
   'admin':        { label: 'Admin',       color: 'text-yellow-400',  bg: 'bg-yellow-500/30',  icon: Calendar },
   'wasted':       { label: 'Wasted',      color: 'text-red-400',     bg: 'bg-red-500/30',     icon: AlertCircle },
-  'unset':        { label: 'Unset',       color: 'text-gray-600',    bg: 'bg-gray-800',       icon: Clock },
+  'unset':        { label: 'Unset',       color: 'text-gray-600 dark:text-gray-300',    bg: 'bg-gray-800',       icon: Clock },
 }
 
 const CATEGORY_ORDER: HourCategory[] = ['sleep', 'deep-work', 'shallow-work', 'learning', 'exercise', 'recovery', 'social', 'admin', 'wasted', 'unset']
@@ -133,10 +133,10 @@ const GOAL_CATEGORIES: Omit<GoalCategory, 'goals'>[] = [
 ]
 
 const STATUS_COLORS: Record<string, string> = {
-  'planning': 'bg-gray-700 text-gray-300',
-  'active':   'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40',
-  'done':     'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40',
-  'paused':   'bg-yellow-500/20 text-yellow-300 border border-yellow-500/40',
+  'planning': 'bg-gray-700 text-gray-400 dark:text-gray-600 dark:text-gray-300',
+  'active':   'bg-cyan-500/20 text-cyan-300 border border-gray-200 dark:border-gray-700 border-cyan-500/40',
+  'done':     'bg-emerald-500/20 text-emerald-300 border border-gray-200 dark:border-gray-700 border-emerald-500/40',
+  'paused':   'bg-yellow-500/20 text-yellow-300 border border-gray-200 dark:border-gray-700 border-yellow-500/40',
 }
 
 const DEBT_RULES = [
@@ -282,12 +282,12 @@ function apiHeaders() { return { 'Content-Type': 'application/json' } }
 function SectionHeader({ icon: Icon, title, subtitle, accent = 'text-cyan-400' }: { icon: any; title: string; subtitle?: string; accent?: string }) {
   return (
     <div className="flex items-start gap-3 mb-6">
-      <div className={`mt-0.5 p-2 rounded-lg bg-white/5 border border-white/10`}>
+      <div className={`mt-0.5 p-2 rounded-lg bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10`}>
         <Icon className={`w-5 h-5 ${accent}`} />
       </div>
       <div>
         <h3 className={`text-lg font-bold tracking-tight ${accent}`}>{title}</h3>
-        {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
+        {subtitle && <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{subtitle}</p>}
       </div>
     </div>
   )
@@ -295,7 +295,7 @@ function SectionHeader({ icon: Icon, title, subtitle, accent = 'text-cyan-400' }
 
 function GlassPanel({ children, className = '', id }: { children: React.ReactNode; className?: string, id?: string }) {
   return (
-    <div id={id} className={`bg-white/[0.03] border border-white/10 rounded-2xl p-6 backdrop-blur-sm ${className}`}>
+    <div id={id} className={`bg-white dark:bg-gray-800/[0.03] border border-gray-200 dark:border-gray-700 border-white/10 rounded-2xl p-6 backdrop-blur-sm ${className}`}>
       {children}
     </div>
   )
@@ -312,7 +312,7 @@ function ScoreSlider({ value, onChange, color = 'cyan' }: { value: number; onCha
       <input
         type="range" min={1} max={10} value={value}
         onChange={e => onChange(Number(e.target.value))}
-        className={`flex-1 h-2 rounded-full bg-white/10 ${colorMap[color] || 'accent-cyan-400'}`}
+        className={`flex-1 h-2 rounded-full bg-white dark:bg-gray-800/10 ${colorMap[color] || 'accent-cyan-400'}`}
       />
       <span className={`text-xl font-black w-8 text-center ${scoreColor}`}>{value}</span>
     </div>
@@ -416,7 +416,7 @@ export default function DisciplineOS() {
               categories[catId] = {
                 id: catId,
                 label: g.category_label || g.categoryLabel || catId,
-                color: g.category_color || g.categoryColor || 'text-gray-400',
+                color: g.category_color || g.categoryColor || 'text-gray-500 dark:text-gray-400',
                 goals: []
               }
             }
@@ -668,8 +668,8 @@ export default function DisciplineOS() {
       category: newHabitCategory,
       difficulty: newHabitDifficulty,
       icon: iconMap[newHabitCategory] || Shield,
-      color: colorMap[newHabitCategory] || 'text-gray-400',
-      bg: bgMap[newHabitCategory] || 'bg-gray-500/10',
+      color: colorMap[newHabitCategory] || 'text-gray-500 dark:text-gray-400',
+      bg: bgMap[newHabitCategory] || 'bg-gray-50 dark:bg-gray-800/500/10',
       completed: false,
       streak: 0,
       scorecard: 0,
@@ -885,7 +885,7 @@ export default function DisciplineOS() {
       <div className="flex items-center justify-center py-32">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 rounded-full border-2 border-cyan-500/30 border-t-cyan-500 animate-spin" />
-          <p className="text-gray-400 text-sm tracking-widest uppercase">Loading System 12×</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm tracking-widest uppercase">Loading System 12×</p>
         </div>
       </div>
     )
@@ -894,7 +894,7 @@ export default function DisciplineOS() {
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       {/* ── Header Bar ── */}
-      <div className="border-b border-white/10 bg-black/40 backdrop-blur-sm sticky top-0 z-40">
+      <div className="border-b border-gray-200 dark:border-gray-700 border-white/10 bg-black/40 backdrop-blur-sm sticky top-0 z-40">
         <div className="px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
@@ -903,7 +903,7 @@ export default function DisciplineOS() {
               </div>
               <div>
                 <h2 className="text-base font-black tracking-tight">DISCIPLINE OS</h2>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest">System 12×</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest">System 12×</p>
               </div>
             </div>
 
@@ -912,17 +912,17 @@ export default function DisciplineOS() {
               <div className="flex items-center gap-1.5">
                 <Laptop className="w-3.5 h-3.5 text-cyan-400" />
                 <span className="text-xs font-bold text-cyan-400">{deepWorkHours}h</span>
-                <span className="text-[10px] text-gray-600">deep work</span>
+                <span className="text-[10px] text-gray-600 dark:text-gray-300">deep work</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <Activity className="w-3.5 h-3.5 text-purple-400" />
                 <span className="text-xs font-bold text-purple-400">{avgPillarScore}</span>
-                <span className="text-[10px] text-gray-600">avg score</span>
+                <span className="text-[10px] text-gray-600 dark:text-gray-300">avg score</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <Target className="w-3.5 h-3.5 text-emerald-400" />
                 <span className="text-xs font-bold text-emerald-400">{goalsCompleted}/48</span>
-                <span className="text-[10px] text-gray-600">goals done</span>
+                <span className="text-[10px] text-gray-600 dark:text-gray-300">goals done</span>
               </div>
             </div>
           </div>
@@ -932,10 +932,10 @@ export default function DisciplineOS() {
               type="date"
               value={selectedDate}
               onChange={e => setSelectedDate(e.target.value)}
-              className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs text-gray-300 focus:border-cyan-500/50 outline-none"
+              className="px-3 py-1.5 bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 focus:border-cyan-500/50 outline-none"
             />
             {saveStatus && (
-              <span className="text-xs text-emerald-400 font-medium animate-pulse px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20">
+              <span className="text-xs text-emerald-400 font-medium animate-pulse px-3 py-1 bg-emerald-500/10 rounded-full border border-gray-200 dark:border-gray-700 border-emerald-500/20">
                 {saveStatus}
               </span>
             )}
@@ -954,7 +954,7 @@ export default function DisciplineOS() {
                 className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold tracking-wide border-b-2 transition-all whitespace-nowrap ${
                   isActive
                     ? 'border-cyan-500 text-cyan-400'
-                    : 'border-transparent text-gray-400 hover:text-gray-300'
+                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-400 dark:text-gray-600 dark:text-gray-300'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -986,8 +986,8 @@ export default function DisciplineOS() {
                     <button
                       key={cat}
                       onClick={() => setSelectedHourCat(cat)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-                        isSelected ? `${info.bg} ${info.color} border-current scale-105` : 'bg-white/5 text-gray-400 border-white/10 hover:border-white/20'
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-200 dark:border-gray-700 transition-all ${
+                        isSelected ? `${info.bg} ${info.color} border-current scale-105` : 'bg-white dark:bg-gray-800/5 text-gray-500 dark:text-gray-400 border-white/10 hover:border-white/20'
                       }`}
                     >
                       <Icon className="w-3 h-3" />
@@ -1009,10 +1009,10 @@ export default function DisciplineOS() {
                       key={block.hour}
                       onClick={() => handleHourClick(block.hour)}
                       title={`${displayHour}${isAM ? 'am' : 'pm'} — ${info.label}`}
-                      className={`group relative aspect-square rounded-xl flex flex-col items-center justify-center gap-0.5 border transition-all hover:scale-105 ${info.bg} ${block.category !== 'unset' ? 'border-current/30' : 'border-white/5 hover:border-white/20'}`}
+                      className={`group relative aspect-square rounded-xl flex flex-col items-center justify-center gap-0.5 border border-gray-200 dark:border-gray-700 transition-all hover:scale-105 ${info.bg} ${block.category !== 'unset' ? 'border-current/30' : 'border-white/5 hover:border-white/20'}`}
                     >
                       <Icon className={`w-3 h-3 ${info.color}`} />
-                      <span className="text-[9px] font-bold text-gray-400">{displayHour}{isAM ? 'a' : 'p'}</span>
+                      <span className="text-[9px] font-bold text-gray-500 dark:text-gray-400">{displayHour}{isAM ? 'a' : 'p'}</span>
                     </button>
                   )
                 })}
@@ -1022,15 +1022,15 @@ export default function DisciplineOS() {
               <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-3 gap-4">
                 <div className="text-center">
                   <p className="text-2xl font-black text-cyan-400">{deepWorkHours}h</p>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-widest">Deep Work</p>
+                  <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest">Deep Work</p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-black text-indigo-400">{sleepHours}h</p>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-widest">Sleep</p>
+                  <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest">Sleep</p>
                 </div>
                 <div className="text-center">
-                  <p className={`text-2xl font-black ${wastedHours > 2 ? 'text-red-400' : 'text-gray-400'}`}>{wastedHours}h</p>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-widest">Wasted</p>
+                  <p className={`text-2xl font-black ${wastedHours > 2 ? 'text-red-400' : 'text-gray-500 dark:text-gray-400'}`}>{wastedHours}h</p>
+                  <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest">Wasted</p>
                 </div>
               </div>
             </GlassPanel>
@@ -1043,7 +1043,7 @@ export default function DisciplineOS() {
                   const Icon = pillar.icon
                   const colorKey = pillar.color.replace('text-', '').replace('-400', '')
                   return (
-                    <div key={pillar.id} className="bg-white/[0.02] rounded-xl p-4 border border-white/5">
+                    <div key={pillar.id} className="bg-white dark:bg-gray-800/[0.02] rounded-xl p-4 border border-gray-200 dark:border-gray-700 border-white/5">
                       <div className="flex items-center gap-2 mb-3">
                         <Icon className={`w-4 h-4 ${pillar.color}`} />
                         <span className="text-sm font-bold">{pillar.label}</span>
@@ -1054,7 +1054,7 @@ export default function DisciplineOS() {
                         placeholder="One-line note..."
                         value={pillar.note}
                         onChange={e => updatePillar(pillar.id, 'note', e.target.value)}
-                        className="mt-2 w-full text-xs bg-transparent border-b border-white/10 pb-1 outline-none text-gray-400 placeholder-gray-700 focus:border-white/20"
+                        className="mt-2 w-full text-xs bg-transparent border-b border-gray-200 dark:border-gray-700 border-white/10 pb-1 outline-none text-gray-500 dark:text-gray-400 placeholder-gray-700 focus:border-white/20"
                       />
                     </div>
                   )
@@ -1068,13 +1068,13 @@ export default function DisciplineOS() {
                 <SectionHeader icon={Star} title="3 Wins Today" accent="text-emerald-400" />
                 {wins.map((win, i) => (
                   <div key={i} className="flex items-start gap-2 mb-3">
-                    <span className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                    <span className="w-5 h-5 rounded-full bg-emerald-500/20 border border-gray-200 dark:border-gray-700 border-emerald-500/40 text-emerald-400 text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
                     <input
                       type="text"
                       placeholder={`Win #${i + 1}...`}
                       value={win}
                       onChange={e => setWins(prev => prev.map((w, j) => j === i ? e.target.value : w))}
-                      className="w-full text-sm bg-transparent border-b border-white/10 pb-1.5 outline-none text-gray-200 placeholder-gray-700 focus:border-emerald-500/30"
+                      className="w-full text-sm bg-transparent border-b border-gray-200 dark:border-gray-700 border-white/10 pb-1.5 outline-none text-gray-200 placeholder-gray-700 focus:border-emerald-500/30"
                     />
                   </div>
                 ))}
@@ -1084,13 +1084,13 @@ export default function DisciplineOS() {
                 <SectionHeader icon={AlertCircle} title="Losses & Lessons" accent="text-red-400" />
                 {losses.map((loss, i) => (
                   <div key={i} className="flex items-start gap-2 mb-3">
-                    <span className="w-5 h-5 rounded-full bg-red-500/20 border border-red-500/40 text-red-400 text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                    <span className="w-5 h-5 rounded-full bg-red-500/20 border border-gray-200 dark:border-gray-700 border-red-500/40 text-red-400 text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
                     <input
                       type="text"
                       placeholder={`Lesson #${i + 1}...`}
                       value={loss}
                       onChange={e => setLosses(prev => prev.map((l, j) => j === i ? e.target.value : l))}
-                      className="w-full text-sm bg-transparent border-b border-white/10 pb-1.5 outline-none text-gray-200 placeholder-gray-700 focus:border-red-500/30"
+                      className="w-full text-sm bg-transparent border-b border-gray-200 dark:border-gray-700 border-white/10 pb-1.5 outline-none text-gray-200 placeholder-gray-700 focus:border-red-500/30"
                     />
                   </div>
                 ))}
@@ -1122,7 +1122,7 @@ export default function DisciplineOS() {
 
             <div className="flex justify-end items-center gap-4">
               {(lastSaved || isAutoSaving) && (
-                <span className="text-xs text-gray-500 flex items-center gap-1.5">
+                <span className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1.5">
                   {isAutoSaving ? (
                     <><RefreshCcw className="w-3 h-3 animate-spin" /> Auto-saving...</>
                   ) : (
@@ -1151,24 +1151,24 @@ export default function DisciplineOS() {
             <GlassPanel>
               <SectionHeader icon={CheckCircle2} title="Atomic Habits Scorecard" subtitle="Track your habit score — good (+1), bad (-1), neutral (0)" accent="text-emerald-400" />
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 text-center">
+                <div className="bg-emerald-500/10 border border-gray-200 dark:border-gray-700 border-emerald-500/20 rounded-xl p-3 text-center">
                   <p className="text-2xl font-black text-emerald-400">{habitsCompleted}/{habits.length}</p>
                   <p className="text-[10px] text-emerald-300 font-bold uppercase">Completed</p>
                 </div>
-                <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-xl p-3 text-center">
+                <div className="bg-cyan-500/10 border border-gray-200 dark:border-gray-700 border-cyan-500/20 rounded-xl p-3 text-center">
                   <p className="text-2xl font-black text-cyan-400">{habitScore > 0 ? '+' : ''}{habitScore}</p>
                   <p className="text-[10px] text-cyan-300 font-bold uppercase">Net Score</p>
                 </div>
-                <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-3 text-center">
+                <div className="bg-green-500/10 border border-gray-200 dark:border-gray-700 border-green-500/20 rounded-xl p-3 text-center">
                   <p className="text-2xl font-black text-green-400">{scorecardPlus}</p>
                   <p className="text-[10px] text-green-300 font-bold uppercase">Good Habits</p>
                 </div>
-                <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-center">
+                <div className="bg-red-500/10 border border-gray-200 dark:border-gray-700 border-red-500/20 rounded-xl p-3 text-center">
                   <p className="text-2xl font-black text-red-400">{scorecardMinus}</p>
                   <p className="text-[10px] text-red-300 font-bold uppercase">Bad Habits</p>
                 </div>
               </div>
-              <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden">
+              <div className="w-full h-3 bg-white dark:bg-gray-800/5 rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-500 ${
                     habitCompletionRate >= 80 ? 'bg-gradient-to-r from-emerald-500 to-green-500' :
@@ -1178,24 +1178,24 @@ export default function DisciplineOS() {
                   style={{ width: `${habitCompletionRate}%` }}
                 />
               </div>
-              <p className="text-xs text-gray-400 mt-2 text-center">{habitCompletionRate}% completion rate</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">{habitCompletionRate}% completion rate</p>
             </GlassPanel>
 
             {/* Add Habit / Toggle Scorecard */}
             <div className="flex gap-3">
               <button
                 onClick={() => setShowAddHabit(!showAddHabit)}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600/20 border border-blue-500/30 rounded-xl text-blue-400 text-xs font-bold hover:bg-blue-600/30 transition-all"
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600/20 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 rounded-xl text-blue-400 text-xs font-bold hover:bg-blue-600/30 transition-all"
               >
                 <Plus className="w-3 h-3" />
                 {showAddHabit ? 'CANCEL' : 'ADD HABIT'}
               </button>
               <button
                 onClick={() => setShowScorecard(!showScorecard)}
-                className={`flex items-center gap-2 px-4 py-2 border rounded-xl text-xs font-bold transition-all ${
+                className={`flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-xs font-bold transition-all ${
                   showScorecard
                     ? 'bg-purple-600/20 border-purple-500/30 text-purple-400 hover:bg-purple-600/30'
-                    : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10'
+                    : 'bg-white dark:bg-gray-800/5 border-white/10 text-gray-500 dark:text-gray-400 hover:bg-white dark:bg-gray-800/10'
                 }`}
               >
                 <Target className="w-3 h-3" />
@@ -1205,7 +1205,7 @@ export default function DisciplineOS() {
 
             {/* Add Habit Form */}
             {showAddHabit && (
-              <GlassPanel className="border-blue-500/20">
+              <GlassPanel className="border-b border-gray-200 dark:border-gray-700lue-500/20">
                 <h3 className="text-sm font-bold text-blue-400 mb-3">Add Custom Habit</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input
@@ -1213,12 +1213,12 @@ export default function DisciplineOS() {
                     value={newHabitName}
                     onChange={e => setNewHabitName(e.target.value)}
                     placeholder="Habit name"
-                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500/50"
+                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-600 dark:text-gray-400 focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50"
                   />
                   <select
                     value={newHabitCategory}
                     onChange={e => setNewHabitCategory(e.target.value as HabitItem['category'])}
-                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500/50"
+                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50"
                   >
                     {Object.keys(HABIT_CATEGORY_LABELS).map(c => (
                       <option key={c} value={c}>{HABIT_CATEGORY_LABELS[c].label}</option>
@@ -1227,7 +1227,7 @@ export default function DisciplineOS() {
                   <select
                     value={newHabitDifficulty}
                     onChange={e => setNewHabitDifficulty(e.target.value as HabitItem['difficulty'])}
-                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500/50"
+                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50"
                   >
                     <option value="simple">Simple (2min)</option>
                     <option value="medium">Medium (10min)</option>
@@ -1239,19 +1239,19 @@ export default function DisciplineOS() {
                     value={newHabitCue}
                     onChange={e => setNewHabitCue(e.target.value)}
                     placeholder="Cue (e.g., After waking up)"
-                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-blue-500/50"
+                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-600 dark:text-gray-400 focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50"
                   />
                   <select
                     value={newHabitStackAfter}
                     onChange={e => setNewHabitStackAfter(e.target.value)}
-                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500/50"
+                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50"
                   >
                     <option value="">No habit stack</option>
                     {habits.map(h => (
                       <option key={h.name} value={h.name}>After: {h.name}</option>
                     ))}
                   </select>
-                  <label className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-300 cursor-pointer">
+                  <label className="flex items-center gap-2 bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-gray-400 dark:text-gray-600 dark:text-gray-300 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={newHabitTwoMinute}
@@ -1273,7 +1273,7 @@ export default function DisciplineOS() {
 
             {/* Habits by Category */}
             {habitCategories.map(cat => {
-              const catInfo = HABIT_CATEGORY_LABELS[cat] || { label: cat, color: 'text-gray-400' }
+              const catInfo = HABIT_CATEGORY_LABELS[cat] || { label: cat, color: 'text-gray-500 dark:text-gray-400' }
               const catHabits = habits.map((h, i) => ({ ...h, index: i })).filter(h => h.category === cat)
               return (
                 <GlassPanel key={cat}>
@@ -1284,7 +1284,7 @@ export default function DisciplineOS() {
                     {catHabits.map(habit => {
                       const Icon = habit.icon
                       const diffColors: Record<string, string> = {
-                        simple: 'text-gray-400',
+                        simple: 'text-gray-500 dark:text-gray-400',
                         medium: 'text-amber-400',
                         hard: 'text-orange-400',
                         extreme: 'text-red-400',
@@ -1297,10 +1297,10 @@ export default function DisciplineOS() {
                       return (
                         <div
                           key={habit.name}
-                          className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
+                          className={`flex items-center gap-3 p-3 rounded-xl border border-gray-200 dark:border-gray-700 transition-all ${
                             habit.completed
                               ? 'bg-emerald-500/10 border-emerald-500/30 hover:bg-emerald-500/15'
-                              : scorecardColors[habit.scorecard] || 'bg-white/[0.02] border-white/5 hover:border-white/15'
+                              : scorecardColors[habit.scorecard] || 'bg-white dark:bg-gray-800/[0.02] border-white/5 hover:border-white/15'
                           }`}
                         >
                           <button
@@ -1319,7 +1319,7 @@ export default function DisciplineOS() {
                               habit.completed ? 'text-emerald-300 line-through opacity-70' : 'text-gray-200'
                             }`}>{habit.name}</span>
                             <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                              <span className={`text-[10px] font-bold uppercase ${diffColors[habit.difficulty] || 'text-gray-400'}`}>
+                              <span className={`text-[10px] font-bold uppercase ${diffColors[habit.difficulty] || 'text-gray-500 dark:text-gray-400'}`}>
                                 {habit.difficulty}
                               </span>
                               {habit.streak > 0 && (
@@ -1337,7 +1337,7 @@ export default function DisciplineOS() {
                               )}
                             </div>
                             {habit.cue && (
-                              <p className="text-[10px] text-gray-500 mt-0.5 truncate">Cue: {habit.cue}</p>
+                              <p className="text-[10px] text-gray-600 dark:text-gray-400 mt-0.5 truncate">Cue: {habit.cue}</p>
                             )}
                           </div>
                           <div className="flex items-center gap-1 shrink-0">
@@ -1347,7 +1347,7 @@ export default function DisciplineOS() {
                                 className={`w-6 h-6 rounded flex items-center justify-center text-[10px] font-black transition-all ${
                                   habit.scorecard === 1 ? 'bg-emerald-500/20 text-emerald-400' :
                                   habit.scorecard === -1 ? 'bg-red-500/20 text-red-400' :
-                                  'bg-white/5 text-gray-500 hover:bg-white/10'
+                                  'bg-white dark:bg-gray-800/5 text-gray-600 dark:text-gray-400 hover:bg-white dark:bg-gray-800/10'
                                 }`}
                                 title={habit.scorecard === 1 ? 'Good habit (+1)' : habit.scorecard === -1 ? 'Bad habit (-1)' : 'Neutral (0)'}
                               >
@@ -1356,7 +1356,7 @@ export default function DisciplineOS() {
                             )}
                             <button
                               onClick={() => removeHabit(habit.index)}
-                              className="w-6 h-6 rounded flex items-center justify-center text-gray-600 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                              className="w-6 h-6 rounded flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-red-400 hover:bg-red-500/10 transition-all"
                               title="Remove habit"
                             >
                               <X className="w-3 h-3" />
@@ -1378,7 +1378,7 @@ export default function DisciplineOS() {
                   const parent = habits.find(h => h.name === habit.stackAfter)
                   return (
                     <div key={habit.name} className="flex items-center gap-2 text-xs">
-                      <span className={`px-2 py-1 rounded bg-white/5 ${parent?.completed ? 'text-emerald-400 line-through' : 'text-gray-400'}`}>
+                      <span className={`px-2 py-1 rounded bg-white dark:bg-gray-800/5 ${parent?.completed ? 'text-emerald-400 line-through' : 'text-gray-500 dark:text-gray-400'}`}>
                         {habit.stackAfter}
                       </span>
                       <span className="text-purple-400 font-bold">→</span>
@@ -1389,14 +1389,14 @@ export default function DisciplineOS() {
                   )
                 })}
                 {habits.filter(h => h.stackAfter).length === 0 && (
-                  <p className="text-xs text-gray-500 italic">No habit stacks configured. Add habits with "After:" triggers to build chains.</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 italic">No habit stacks configured. Add habits with "After:" triggers to build chains.</p>
                 )}
               </div>
             </GlassPanel>
 
             <div className="flex justify-end items-center gap-4">
               {(lastSaved || isAutoSaving) && (
-                <span className="text-xs text-gray-500 flex items-center gap-1.5">
+                <span className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1.5">
                   {isAutoSaving ? (
                     <><RefreshCcw className="w-3 h-3 animate-spin" /> Auto-saving...</>
                   ) : (
@@ -1465,10 +1465,10 @@ export default function DisciplineOS() {
                     key={opt.mode}
                     onClick={() => { setAiMode(opt.mode); requestAiCoaching(opt.mode) }}
                     disabled={aiLoading}
-                    className={`flex-1 min-w-[200px] p-4 rounded-xl border transition-all ${
+                    className={`flex-1 min-w-[200px] p-4 rounded-xl border border-gray-200 dark:border-gray-700 transition-all ${
                       aiMode === opt.mode
                         ? `bg-gradient-to-r ${opt.color} border-transparent text-white shadow-lg`
-                        : 'bg-white/[0.02] border-white/10 text-gray-400 hover:border-white/20'
+                        : 'bg-white dark:bg-gray-800/[0.02] border-white/10 text-gray-500 dark:text-gray-400 hover:border-white/20'
                     } disabled:opacity-50`}
                   >
                     <div className="text-sm font-bold">{opt.label}</div>
@@ -1480,10 +1480,10 @@ export default function DisciplineOS() {
               {aiLoading ? (
                 <div className="flex flex-col items-center py-12 gap-4">
                   <div className="w-12 h-12 rounded-full border-2 border-purple-500/30 border-t-purple-500 animate-spin" />
-                  <p className="text-gray-400 text-sm">JARVIS is analyzing your discipline data...</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">JARVIS is analyzing your discipline data...</p>
                 </div>
               ) : aiCoaching ? (
-                <div className="bg-gradient-to-br from-purple-500/5 to-blue-500/5 border border-purple-500/20 rounded-xl p-6">
+                <div className="bg-gradient-to-br from-purple-500/5 to-blue-500/5 border border-gray-200 dark:border-gray-700 border-purple-500/20 rounded-xl p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <Brain className="w-5 h-5 text-purple-400" />
                     <span className="text-sm font-bold text-purple-400">JARVIS Analysis</span>
@@ -1491,7 +1491,7 @@ export default function DisciplineOS() {
                   </div>
                   <div className="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">{aiCoaching}</div>
                   <div className="mt-4 pt-4 border-t border-white/5 flex justify-between items-center">
-                    <span className="text-[10px] text-gray-600">Model: Meta Llama 3.1 8B (Free) via OpenRouter</span>
+                    <span className="text-[10px] text-gray-600 dark:text-gray-300">Model: Meta Llama 3.1 8B (Free) via OpenRouter</span>
                     <button
                       onClick={() => requestAiCoaching(aiMode)}
                       className="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1"
@@ -1501,10 +1501,10 @@ export default function DisciplineOS() {
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-12 text-gray-600">
+                <div className="text-center py-12 text-gray-600 dark:text-gray-300">
                   <Brain className="w-12 h-12 mx-auto mb-4 opacity-30" />
                   <p className="text-sm">Click a coaching mode above to get AI-powered discipline analysis</p>
-                  <p className="text-[10px] mt-2 text-gray-700">Uses OpenRouter API with free Meta Llama model</p>
+                  <p className="text-[10px] mt-2 text-gray-700 dark:text-gray-200">Uses OpenRouter API with free Meta Llama model</p>
                 </div>
               )}
             </GlassPanel>
@@ -1513,19 +1513,19 @@ export default function DisciplineOS() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <GlassPanel className="text-center">
                 <p className="text-2xl font-black text-cyan-400">{deepWorkHours}h</p>
-                <p className="text-[10px] text-gray-400 uppercase">Deep Work</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase">Deep Work</p>
               </GlassPanel>
               <GlassPanel className="text-center">
                 <p className="text-2xl font-black text-purple-400">{avgPillarScore}</p>
-                <p className="text-[10px] text-gray-400 uppercase">Avg Score</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase">Avg Score</p>
               </GlassPanel>
               <GlassPanel className="text-center">
                 <p className="text-2xl font-black text-emerald-400">{habitsCompleted}/{habits.length}</p>
-                <p className="text-[10px] text-gray-400 uppercase">Habits Done</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase">Habits Done</p>
               </GlassPanel>
               <GlassPanel className="text-center">
                 <p className="text-2xl font-black text-amber-400">{goalsCompleted}/48</p>
-                <p className="text-[10px] text-gray-400 uppercase">Goals Done</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase">Goals Done</p>
               </GlassPanel>
             </div>
           </div>
@@ -1541,7 +1541,7 @@ export default function DisciplineOS() {
 
               {/* Mood Selector */}
               <div className="mb-4">
-                <label className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-2 block">How are you feeling?</label>
+                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold mb-2 block">How are you feeling?</label>
                 <div className="flex gap-2">
                   {[
                     { mood: 'great', emoji: '😄', label: 'Great' },
@@ -1553,10 +1553,10 @@ export default function DisciplineOS() {
                     { mood: 'motivated', emoji: '🔥', label: 'Motivated' },
                   ].map(m => (
                     <button key={m.mood} onClick={() => setDiaryMood(m.mood)}
-                      className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl border text-xs transition-all ${
+                      className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-xs transition-all ${
                         diaryMood === m.mood
                           ? 'bg-amber-500/20 border-amber-500/50 text-amber-400'
-                          : 'border-white/10 text-gray-400 hover:border-white/20'
+                          : 'border-white/10 text-gray-500 dark:text-gray-400 hover:border-white/20'
                       }`}>
                       <span className="text-lg">{m.emoji}</span>
                       <span>{m.label}</span>
@@ -1567,28 +1567,28 @@ export default function DisciplineOS() {
 
               {/* Title */}
               <div className="mb-4">
-                <label className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-2 block">Title (optional)</label>
+                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold mb-2 block">Title (optional)</label>
                 <input type="text" value={diaryTitle} onChange={e => setDiaryTitle(e.target.value)}
                   placeholder="What's on your mind today?"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-500/50 outline-none placeholder-gray-600" />
+                  className="w-full bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-500/50 outline-none placeholder-gray-600" />
               </div>
 
               {/* Content */}
               <div className="mb-4">
-                <label className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-2 block">Journal Entry</label>
+                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold mb-2 block">Journal Entry</label>
                 <textarea value={diaryContent} onChange={e => setDiaryContent(e.target.value)}
                   placeholder="Write about your day, thoughts, goals, challenges, or anything you want to reflect on..."
                   rows={12}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-500/50 outline-none placeholder-gray-600 resize-none leading-relaxed" />
-                <p className="text-xs text-gray-600 mt-1 text-right">{diaryContent.split(/\s+/).filter(Boolean).length} words</p>
+                  className="w-full bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-amber-500/50 outline-none placeholder-gray-600 resize-none leading-relaxed" />
+                <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 text-right">{diaryContent.split(/\s+/).filter(Boolean).length} words</p>
               </div>
 
               {/* Tags */}
               <div className="mb-4">
-                <label className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-2 block">Tags</label>
+                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold mb-2 block">Tags</label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {diaryTags.map((tag, i) => (
-                    <span key={i} className="px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full text-xs text-amber-400 flex items-center gap-1">
+                    <span key={i} className="px-3 py-1 bg-amber-500/10 border border-gray-200 dark:border-gray-700 border-amber-500/30 rounded-full text-xs text-amber-400 flex items-center gap-1">
                       #{tag}
                       <button onClick={() => setDiaryTags(diaryTags.filter((_, j) => j !== i))} className="text-amber-600 hover:text-amber-400">×</button>
                     </span>
@@ -1598,7 +1598,7 @@ export default function DisciplineOS() {
                   <input type="text" value={diaryTagInput} onChange={e => setDiaryTagInput(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter' && diaryTagInput.trim()) { setDiaryTags([...diaryTags, diaryTagInput.trim()]); setDiaryTagInput('') } }}
                     placeholder="Add a tag and press Enter"
-                    className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:border-amber-500/50 outline-none placeholder-gray-600" />
+                    className="flex-1 bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-white text-xs focus:border-amber-500/50 outline-none placeholder-gray-600" />
                 </div>
               </div>
 
@@ -1654,7 +1654,7 @@ export default function DisciplineOS() {
                   } catch { /* silent */ }
                   finally { setDiaryLoading(false) }
                 }} disabled={!diaryContent.trim() || diaryLoading}
-                  className="px-6 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 rounded-xl font-bold text-sm transition-all flex items-center gap-2">
+                  className="px-6 py-3 bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 hover:bg-white dark:bg-gray-800/10 text-gray-400 dark:text-gray-600 dark:text-gray-300 rounded-xl font-bold text-sm transition-all flex items-center gap-2">
                   <Brain className="w-4 h-4" />
                   AI Reflect on this
                 </button>
@@ -1670,7 +1670,7 @@ export default function DisciplineOS() {
                   a.click()
                   URL.revokeObjectURL(url)
                 }} disabled={!diaryContent.trim()}
-                  className="px-6 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 rounded-xl font-bold text-sm transition-all flex items-center gap-2">
+                  className="px-6 py-3 bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 hover:bg-white dark:bg-gray-800/10 text-gray-400 dark:text-gray-600 dark:text-gray-300 rounded-xl font-bold text-sm transition-all flex items-center gap-2">
                   <FileDown className="w-4 h-4" />
                   Download .md
                 </button>
@@ -1681,26 +1681,26 @@ export default function DisciplineOS() {
             {diarySuggestion && (
               <GlassPanel className="border-amber-500/20">
                 <SectionHeader icon={Brain} title="AI Reflection" accent="text-amber-400" />
-                <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{diarySuggestion}</p>
+                <p className="text-sm text-gray-400 dark:text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">{diarySuggestion}</p>
               </GlassPanel>
             )}
 
             {/* Past Entries */}
             <GlassPanel>
-              <SectionHeader icon={Calendar} title="Past Entries" accent="text-gray-400" />
+              <SectionHeader icon={Calendar} title="Past Entries" accent="text-gray-500 dark:text-gray-400" />
               <div className="space-y-3">
                 {/* This shows entries from Supabase if loaded */}
                 {savedDiary && (
-                  <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                  <div className="p-4 bg-white dark:bg-gray-800/5 rounded-xl border border-gray-200 dark:border-gray-700 border-white/10">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs text-gray-400">{savedDiary.date}</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{savedDiary.date}</span>
                       <span className="text-xs">{savedDiary.mood}</span>
                     </div>
                     {savedDiary.title && <p className="text-sm font-bold text-white mb-1">{savedDiary.title}</p>}
-                    <p className="text-xs text-gray-400 line-clamp-3">{savedDiary.content}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-3">{savedDiary.content}</p>
                   </div>
                 )}
-                <p className="text-xs text-gray-600 text-center">Entries are saved to Supabase and loaded on date change.</p>
+                <p className="text-xs text-gray-600 dark:text-gray-300 text-center">Entries are saved to Supabase and loaded on date change.</p>
               </div>
             </GlassPanel>
           </div>
@@ -1717,16 +1717,16 @@ export default function DisciplineOS() {
                 <SectionHeader icon={Target} title="12× Parallel Goals Tracker" subtitle="Track all 48 targets across your 4 goal categories" accent="text-cyan-400" />
                 <div className="text-right">
                   <p className="text-3xl font-black text-cyan-400">{goalsCompleted}/48</p>
-                  <p className="text-[10px] text-gray-400 uppercase">goals done</p>
+                  <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase">goals done</p>
                 </div>
               </div>
-              <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden">
+              <div className="w-full h-3 bg-white dark:bg-gray-800/5 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full transition-all duration-500"
                   style={{ width: `${(goalsCompleted / 48) * 100}%` }}
                 />
               </div>
-              <div className="mt-2 text-right text-xs text-gray-400">{((goalsCompleted / 48) * 100).toFixed(1)}% complete</div>
+              <div className="mt-2 text-right text-xs text-gray-500 dark:text-gray-400">{((goalsCompleted / 48) * 100).toFixed(1)}% complete</div>
             </GlassPanel>
 
             {/* Goal Category Grids */}
@@ -1736,11 +1736,11 @@ export default function DisciplineOS() {
                 <GlassPanel key={category.id}>
                   <div className="flex items-center justify-between mb-5">
                     <h3 className={`text-lg font-black tracking-tight ${category.color}`}>{category.label}</h3>
-                    <span className="text-xs text-gray-400">{catDone}/12 done</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">{catDone}/12 done</span>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                     {category.goals.map((goal, idx) => (
-                      <div key={goal.id} className="bg-white/[0.02] border border-white/5 rounded-xl p-3 hover:border-white/10 transition-all">
+                      <div key={goal.id} className="bg-white dark:bg-gray-800/[0.02] border border-gray-200 dark:border-gray-700 border-white/5 rounded-xl p-3 hover:border-white/10 transition-all">
                         <div className="flex items-center gap-2 mb-2">
                           <span className={`text-xs font-black ${category.color} w-5`}>#{idx + 1}</span>
                           <input
@@ -1767,7 +1767,7 @@ export default function DisciplineOS() {
                             placeholder="Metric (KSh / %)..."
                             value={goal.metric}
                             onChange={e => updateGoal(category.id, goal.id, 'metric', e.target.value)}
-                            className="flex-1 text-[10px] bg-transparent outline-none text-gray-400 placeholder-gray-700"
+                            className="flex-1 text-[10px] bg-transparent outline-none text-gray-500 dark:text-gray-400 placeholder-gray-700"
                           />
                         </div>
                         <input
@@ -1775,7 +1775,7 @@ export default function DisciplineOS() {
                           placeholder="Quick note..."
                           value={goal.note}
                           onChange={e => updateGoal(category.id, goal.id, 'note', e.target.value)}
-                          className="w-full text-[10px] bg-transparent border-b border-white/5 pb-0.5 outline-none text-gray-600 placeholder-gray-800 focus:border-white/10"
+                          className="w-full text-[10px] bg-transparent border-b border-gray-200 dark:border-gray-700 border-white/5 pb-0.5 outline-none text-gray-600 dark:text-gray-300 placeholder-gray-800 focus:border-white/10"
                         />
                       </div>
                     ))}
@@ -1787,7 +1787,7 @@ export default function DisciplineOS() {
             {/* Passive Income Matrix */}
             <GlassPanel>
               <SectionHeader icon={TrendingUp} title="Passive Income Matrix" subtitle={`${passiveCompleted}/${PASSIVE_INCOME_STREAMS.length} income streams activated`} accent="text-emerald-400" />
-              <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden mb-5">
+              <div className="w-full h-2 bg-white dark:bg-gray-800/5 rounded-full overflow-hidden mb-5">
                 <div
                   className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full transition-all"
                   style={{ width: `${(passiveCompleted / PASSIVE_INCOME_STREAMS.length) * 100}%` }}
@@ -1797,10 +1797,10 @@ export default function DisciplineOS() {
                 {PASSIVE_INCOME_STREAMS.map((stream, i) => (
                   <label
                     key={i}
-                    className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                    className={`flex items-center gap-3 p-3 rounded-xl border border-gray-200 dark:border-gray-700 cursor-pointer transition-all ${
                       passiveChecked[i]
                         ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-                        : 'bg-white/[0.02] border-white/5 text-gray-400 hover:border-white/10'
+                        : 'bg-white dark:bg-gray-800/[0.02] border-white/5 text-gray-500 dark:text-gray-400 hover:border-white/10'
                     }`}
                   >
                     {passiveChecked[i]
@@ -1840,13 +1840,13 @@ export default function DisciplineOS() {
             {/* Action Bar for Automations */}
             <div className="flex flex-wrap gap-3 mb-4">
               <button onClick={generatePDFReport} disabled={isExportingPDF}
-                className="flex items-center gap-2 px-4 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded-xl text-sm font-bold transition-all disabled:opacity-50">
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-gray-200 dark:border-gray-700 border-indigo-500/30 rounded-xl text-sm font-bold transition-all disabled:opacity-50">
                 {isExportingPDF ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <FileDown className="w-4 h-4" />}
                 Export PDF
               </button>
               
               <button onClick={sendToZapier} disabled={isZapping}
-                className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-xl text-sm font-bold transition-all disabled:opacity-50">
+                className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-gray-200 dark:border-gray-700 border-amber-500/30 rounded-xl text-sm font-bold transition-all disabled:opacity-50">
                 {isZapping ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 Dispatch via Zapier (Email / WhatsApp)
               </button>
@@ -1859,10 +1859,10 @@ export default function DisciplineOS() {
                   <button
                     key={type}
                     onClick={() => setReviewType(type as any)}
-                    className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide border transition-all ${
+                    className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide border border-gray-200 dark:border-gray-700 transition-all ${
                       reviewType === type
                         ? 'bg-amber-500/20 text-amber-400 border-amber-500/40'
-                        : 'bg-white/5 text-gray-400 border-white/10 hover:border-white/20'
+                        : 'bg-white dark:bg-gray-800/5 text-gray-500 dark:text-gray-400 border-white/10 hover:border-white/20'
                     }`}
                   >
                     {type}
@@ -1870,14 +1870,14 @@ export default function DisciplineOS() {
                 ))}
               </div>
 
-              <div className="mb-8 border-b border-white/10 pb-4">
+              <div className="mb-8 border-b border-gray-200 dark:border-gray-700 border-white/10 pb-4">
                 <h3 className="text-xl font-black text-amber-400 uppercase tracking-widest">{REVIEW_TEMPLATES[reviewType].title}</h3>
-                <p className="text-gray-400 text-sm mt-1 font-mono">Date: {selectedDate}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 font-mono">Date: {selectedDate}</p>
               </div>
 
               <div className="space-y-6">
                 {REVIEW_TEMPLATES[reviewType].prompts.map((prompt, i) => (
-                  <div key={i} className="bg-white/[0.02] border border-white/5 rounded-xl p-5">
+                  <div key={i} className="bg-white dark:bg-gray-800/[0.02] border border-gray-200 dark:border-gray-700 border-white/5 rounded-xl p-5">
                     <p className="text-sm text-amber-100 font-bold mb-3">
                       <span className="text-amber-500 font-black mr-2">Q{i + 1}.</span>{prompt}
                     </p>
@@ -1920,20 +1920,20 @@ export default function DisciplineOS() {
               ) : wisdomFeed.length > 0 ? (
                 <div className="space-y-3">
                   {wisdomFeed.map(item => (
-                    <div key={item.id} className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-4 flex gap-3">
+                    <div key={item.id} className="bg-blue-500/5 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/20 rounded-xl p-4 flex gap-3">
                       {item.type === 'alert' && <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />}
                       {item.type === 'insight' && <Brain className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />}
                       {item.type === 'action' && <Zap className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />}
                       {item.type === 'news' && <MessageSquare className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />}
                       <div>
                         <p className="text-sm text-gray-200">{item.message}</p>
-                        <p className="text-xs text-gray-400 mt-1">{new Date(item.timestamp).toLocaleString()}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{new Date(item.timestamp).toLocaleString()}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 text-gray-400">No new intelligence available today.</div>
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">No new intelligence available today.</div>
               )}
             </GlassPanel>
 
@@ -1947,18 +1947,18 @@ export default function DisciplineOS() {
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className={`font-black text-base ${mentor.accent}`}>{mentor.name}</h4>
-                        <p className="text-xs text-gray-400 italic">{mentor.title}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 italic">{mentor.title}</p>
                       </div>
                       {expandedMentor === mentor.name
-                        ? <ChevronUp className="w-4 h-4 text-gray-400" />
-                        : <ChevronDown className="w-4 h-4 text-gray-400" />
+                        ? <ChevronUp className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        : <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                       }
                     </div>
                   </button>
                   {expandedMentor === mentor.name && (
                     <ul className="mt-4 space-y-2">
                       {mentor.rules.map((rule, i) => (
-                        <li key={i} className="flex items-start gap-2 text-xs text-gray-300">
+                        <li key={i} className="flex items-start gap-2 text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300">
                           <span className={`font-black ${mentor.accent} mt-0.5`}>→</span>
                           {rule}
                         </li>
@@ -1979,18 +1979,18 @@ export default function DisciplineOS() {
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className={`font-black text-base ${wisdom.accent}`}>{wisdom.name}</h4>
-                        <p className="text-xs text-gray-400 italic">"{wisdom.book}"</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 italic">"{wisdom.book}"</p>
                       </div>
                       {expandedWisdom === wisdom.name
-                        ? <ChevronUp className="w-4 h-4 text-gray-400" />
-                        : <ChevronDown className="w-4 h-4 text-gray-400" />
+                        ? <ChevronUp className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        : <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                       }
                     </div>
                   </button>
                   {expandedWisdom === wisdom.name && (
                     <ul className="mt-4 space-y-2">
                       {wisdom.keys.map((key, i) => (
-                        <li key={i} className="flex items-start gap-2 text-xs text-gray-300 italic">
+                        <li key={i} className="flex items-start gap-2 text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 italic">
                           <span className={`font-black not-italic ${wisdom.accent} mt-0.5`}>"</span>
                           {key}
                         </li>
@@ -2012,11 +2012,11 @@ export default function DisciplineOS() {
               <SectionHeader icon={DollarSign} title="Debt Trap Formulas" subtitle="Never violate these rules. Ever." accent="text-red-400" />
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {DEBT_RULES.map(rule => (
-                  <div key={rule.rule} className={`rounded-xl p-4 border ${rule.color}`}>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">{rule.rule}</p>
+                  <div key={rule.rule} className={`rounded-xl p-4 border border-gray-200 dark:border-gray-700 ${rule.color}`}>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-1">{rule.rule}</p>
                     <h4 className="text-sm font-black text-white mb-1">{rule.title}</h4>
                     <p className="text-xs text-cyan-400 font-mono font-bold mb-2">{rule.formula}</p>
-                    <p className="text-xs text-gray-400 leading-relaxed">{rule.desc}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{rule.desc}</p>
                   </div>
                 ))}
               </div>
@@ -2033,9 +2033,9 @@ export default function DisciplineOS() {
                   { title: 'The Latte Factor', desc: 'KSh 500/day in small purchases = KSh 180,000/year = >1M KSh invested over 5 years at 10% returns. Small habits compound ruthlessly.', color: 'text-amber-400' },
                   { title: 'Never Accept a Single Income Stream', desc: 'The wealthy have 7+ income streams. Your goal is 12. Start with one, build the second while the first runs, repeat.', color: 'text-rose-400' },
                 ].map(item => (
-                  <div key={item.title} className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                  <div key={item.title} className="bg-white dark:bg-gray-800/[0.02] border border-gray-200 dark:border-gray-700 border-white/5 rounded-xl p-4">
                     <h4 className={`text-sm font-black mb-2 ${item.color}`}>{item.title}</h4>
-                    <p className="text-xs text-gray-400 leading-relaxed">{item.desc}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{item.desc}</p>
                   </div>
                 ))}
               </div>

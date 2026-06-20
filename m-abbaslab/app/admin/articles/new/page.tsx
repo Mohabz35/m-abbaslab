@@ -43,7 +43,7 @@ export default function NewArticlePage() {
     <div className="max-w-4xl mx-auto space-y-6">
       <Link
         href="/admin/articles"
-        className="inline-flex items-center text-sm text-gray-400 hover:text-gray-900 dark:hover:text-white"
+        className="inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
         Back to articles
@@ -51,7 +51,7 @@ export default function NewArticlePage() {
 
       <header>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">New article</h1>
-        <p className="text-sm text-gray-400 mt-1">Saves to your live site config.</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Saves to your live site config.</p>
       </header>
 
       <ArticleForm

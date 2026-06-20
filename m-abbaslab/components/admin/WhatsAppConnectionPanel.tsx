@@ -85,7 +85,7 @@ export default function WhatsAppConnectionPanel() {
   const pairingCode = pairingData?.pairing_code
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg border border-slate-700 shadow-lg">
+    <div className="w-full max-w-md mx-auto p-6 bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg border border-gray-200 dark:border-gray-700 border-slate-700 shadow-lg">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold text-white flex items-center gap-2">
@@ -114,7 +114,7 @@ export default function WhatsAppConnectionPanel() {
 
       {/* Pairing Code Display */}
       {pairingCode && !isConnected && (
-        <div className="mb-6 p-4 bg-blue-900 border border-blue-700 rounded-lg">
+        <div className="mb-6 p-4 bg-blue-900 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-700 rounded-lg">
           <p className="text-xs text-blue-200 mb-3 font-semibold">🔑 PAIRING CODE</p>
           <div className="flex items-center gap-2 mb-3">
             <code className="flex-1 text-lg font-mono font-bold text-blue-100 bg-blue-950 p-3 rounded text-center tracking-widest">
@@ -140,14 +140,14 @@ export default function WhatsAppConnectionPanel() {
 
       {/* Error Message */}
       {error && (
-        <div className="mb-6 p-4 bg-red-900 border border-red-700 rounded-lg">
+        <div className="mb-6 p-4 bg-red-900 border border-gray-200 dark:border-gray-700 border-red-700 rounded-lg">
           <p className="text-sm text-red-200">⚠️ {error}</p>
         </div>
       )}
 
       {/* Waiting Message */}
       {!pairingCode && !isConnected && !error && (
-        <div className="mb-6 p-4 bg-amber-900 border border-amber-700 rounded-lg">
+        <div className="mb-6 p-4 bg-amber-900 border border-gray-200 dark:border-gray-700 border-amber-700 rounded-lg">
           <p className="text-sm text-amber-200">
             ⏱️ Waiting for pairing code from Render engine...
           </p>

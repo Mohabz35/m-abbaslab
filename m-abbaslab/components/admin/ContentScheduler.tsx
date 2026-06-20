@@ -56,7 +56,7 @@ const PLATFORMS = [
 
 const STATUS_CONFIG: Record<PostStatus, { color: string; label: string; Icon: any; bg: string }> = {
   draft:     { color: '#94a3b8', label: 'Draft',     Icon: FileText,    bg: 'bg-slate-500/20 border-slate-500/30' },
-  scheduled: { color: '#38bdf8', label: 'Scheduled',  Icon: Clock,       bg: 'bg-blue-500/20 border-blue-500/30'  },
+  scheduled: { color: '#38bdf8', label: 'Scheduled',  Icon: Clock,       bg: 'bg-blue-500/20 border-b border-gray-200 dark:border-gray-700lue-500/30'  },
   published: { color: '#4ade80', label: 'Published',  Icon: CheckCircle2, bg: 'bg-emerald-500/20 border-emerald-500/30' },
   failed:    { color: '#f87171', label: 'Failed',     Icon: AlertCircle, bg: 'bg-rose-500/20 border-rose-500/30'  },
 }
@@ -75,7 +75,7 @@ function apiHeaders() { return { 'Content-Type': 'application/json' } }
 
 function StatCard({ label, value, Icon, color }: { label: string; value: number; Icon: any; color: string }) {
   return (
-    <div className="bg-slate-800/60 border border-slate-700 rounded-xl p-4 flex items-center gap-3">
+    <div className="bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-4 flex items-center gap-3">
       <div className={`p-2.5 rounded-xl ${color}`}><Icon className="w-5 h-5" /></div>
       <div>
         <p className="text-xs text-slate-400 uppercase tracking-widest font-bold">{label}</p>
@@ -310,14 +310,14 @@ export default function ContentScheduler() {
       <AnimatePresence>
         {toast && (
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-            className={`fixed top-5 right-5 z-[9999] px-5 py-3 rounded-xl text-white text-sm font-bold shadow-2xl border ${toast.type === 'error' ? 'bg-rose-600 border-rose-500' : 'bg-emerald-600 border-emerald-500'}`}>
+            className={`fixed top-5 right-5 z-[9999] px-5 py-3 rounded-xl text-white text-sm font-bold shadow-2xl border border-gray-200 dark:border-gray-700 ${toast.type === 'error' ? 'bg-rose-600 border-rose-500' : 'bg-emerald-600 border-emerald-500'}`}>
             {toast.msg}
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Header */}
-      <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-3">
             <div className="p-2 bg-indigo-500/20 rounded-xl"><Send className="w-6 h-6 text-indigo-400" /></div>
@@ -331,9 +331,9 @@ export default function ContentScheduler() {
       </div>
 
       {/* Main Panel */}
-      <div className="bg-slate-900/60 border border-slate-700 rounded-2xl overflow-hidden">
+      <div className="bg-slate-900/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-2xl overflow-hidden">
         {/* Tab Bar */}
-        <div className="flex border-b border-slate-700 bg-slate-800/40 px-2 overflow-x-auto">
+        <div className="flex border-b border-gray-200 dark:border-gray-700 border-slate-700 bg-slate-800/40 px-2 overflow-x-auto">
           {TABS.map(({ id, label, Icon }) => (
             <button key={id} onClick={() => setTab(id)}
               className={`flex items-center gap-2 px-5 py-3.5 text-xs font-bold uppercase tracking-widest border-b-2 transition-all whitespace-nowrap shrink-0 ${
@@ -353,7 +353,7 @@ export default function ContentScheduler() {
               {tab === 'compose' && (
                 <div className="space-y-6">
                   {editingId && (
-                    <div className="px-4 py-3 bg-blue-500/10 border border-blue-500/30 rounded-xl text-sm text-blue-400 flex items-center justify-between">
+                    <div className="px-4 py-3 bg-blue-500/10 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 rounded-xl text-sm text-blue-400 flex items-center justify-between">
                       <span className="flex items-center gap-2"><Edit2 className="w-4 h-4" /> Editing existing post</span>
                       <button onClick={resetCompose} className="text-rose-400 hover:text-rose-300 text-xs font-bold">✕ Cancel</button>
                     </div>
@@ -368,7 +368,7 @@ export default function ContentScheduler() {
                         return (
                           <button key={id} onClick={() => togglePlatform(id, setPlatforms, platforms)}
                             style={active ? { borderColor: color, color } : {}}
-                            className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-bold transition-all ${active ? 'bg-white/5' : 'border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-300'}`}>
+                            className={`flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-xs font-bold transition-all ${active ? 'bg-white dark:bg-gray-800/5' : 'border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-300'}`}>
                             <Icon className="w-4 h-4" /> {label}
                           </button>
                         )
@@ -377,7 +377,7 @@ export default function ContentScheduler() {
                   </div>
 
                   {/* AI Generation */}
-                  <div className="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4 space-y-3">
+                  <div className="bg-indigo-500/10 border border-gray-200 dark:border-gray-700 border-indigo-500/30 rounded-xl p-4 space-y-3">
                     <label className="block text-xs font-bold text-indigo-400 uppercase tracking-widest flex items-center gap-2">
                       <Sparkles className="w-4 h-4" /> AI Generate from Topic
                     </label>
@@ -385,7 +385,7 @@ export default function ContentScheduler() {
                       <input type="text" value={generationTopic} onChange={e => setGenerationTopic(e.target.value)}
                         onKeyDown={e => e.key === 'Enter' && handleGenerateContent()}
                         placeholder="e.g., AI impact on financial markets..."
-                        className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 placeholder-slate-600" />
+                        className="flex-1 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 placeholder-slate-600" />
                       <button onClick={handleGenerateContent} disabled={isGenerating || !generationTopic.trim() || platforms.length === 0}
                         className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold text-xs uppercase disabled:opacity-50 flex items-center gap-2 transition-colors">
                         <Bot className="w-4 h-4" /> {isGenerating ? 'Generating...' : 'Generate'}
@@ -399,7 +399,7 @@ export default function ContentScheduler() {
                     <textarea value={content} onChange={e => setContent(e.target.value)}
                       placeholder="What do you want to share today?"
                       rows={5}
-                      className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm resize-none outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder-slate-600" />
+                      className="w-full bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl px-4 py-3 text-white text-sm resize-none outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder-slate-600" />
                     <div className={`text-right text-xs mt-1 ${twitterOver ? 'text-rose-400 font-bold' : charCount > 240 ? 'text-amber-400' : 'text-slate-400'}`}>
                       {charCount} chars {twitterOver && '— exceeds X limit of 280'}
                     </div>
@@ -415,7 +415,7 @@ export default function ContentScheduler() {
                         { id: 'draft', label: '💾 Save Draft' },
                       ] as const).map(({ id, label }) => (
                         <button key={id} onClick={() => setMode(id)}
-                          className={`px-4 py-2.5 rounded-xl border text-sm font-bold transition-all ${mode === id ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400' : 'border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-300'}`}>
+                          className={`px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-bold transition-all ${mode === id ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400' : 'border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-300'}`}>
                           {label}
                         </button>
                       ))}
@@ -425,7 +425,7 @@ export default function ContentScheduler() {
                       <div>
                         <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Date & Time</label>
                         <input type="datetime-local" value={scheduledAt} min={minDateTime} onChange={e => setScheduledAt(e.target.value)}
-                          className="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500 [color-scheme:dark]" />
+                          className="bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500 [color-scheme:dark]" />
                       </div>
                     )}
                   </div>
@@ -442,7 +442,7 @@ export default function ContentScheduler() {
 
                   {/* Preview */}
                   {content.trim() && (
-                    <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
+                    <div className="bg-slate-800/50 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-4">
                       <div className="flex items-center gap-2 mb-3">
                         <Eye className="w-4 h-4 text-slate-400" />
                         <span className="text-xs text-slate-400 uppercase tracking-widest font-bold">Preview</span>
@@ -453,7 +453,7 @@ export default function ContentScheduler() {
                           const pl = PLATFORMS.find(p => p.id === pid)
                           if (!pl) return null
                           return (
-                            <span key={pid} style={{ color: pl.color, borderColor: pl.color + '44' }} className="text-xs px-3 py-1 border rounded-full">
+                            <span key={pid} style={{ color: pl.color, borderColor: pl.color + '44' }} className="text-xs px-3 py-1 border border-gray-200 dark:border-gray-700 rounded-full">
                               {pl.label}
                             </span>
                           )
@@ -467,7 +467,7 @@ export default function ContentScheduler() {
               {/* ── FROM ARTICLES TAB ── */}
               {tab === 'articles' && (
                 <div className="space-y-5">
-                  <div className="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-4 flex gap-3">
+                  <div className="bg-indigo-500/10 border border-gray-200 dark:border-gray-700 border-indigo-500/30 rounded-xl p-4 flex gap-3">
                     <Newspaper className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-sm font-bold text-indigo-400">AI Auto-Post from Articles</p>
@@ -487,7 +487,7 @@ export default function ContentScheduler() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
                       {articles.map(article => (
                         <button key={article.id} onClick={() => handleGenerateFromArticle(article)}
-                          className={`text-left p-4 rounded-xl border transition-all ${selectedArticle?.id === article.id ? 'bg-indigo-500/20 border-indigo-500/50' : 'bg-slate-800/60 border-slate-700 hover:border-slate-600 hover:bg-slate-800'}`}>
+                          className={`text-left p-4 rounded-xl border border-gray-200 dark:border-gray-700 transition-all ${selectedArticle?.id === article.id ? 'bg-indigo-500/20 border-indigo-500/50' : 'bg-slate-800/60 border-slate-700 hover:border-slate-600 hover:bg-slate-800'}`}>
                           <p className="font-bold text-white text-sm leading-snug line-clamp-2">{article.title}</p>
                           {article.category && <p className="text-xs text-indigo-400 mt-1 capitalize">{article.category}</p>}
                           <p className="text-xs text-slate-400 mt-1">{new Date(article.created_at).toLocaleDateString()}</p>
@@ -503,7 +503,7 @@ export default function ContentScheduler() {
 
                   {/* Generated post from article */}
                   {(generatingFromArticle || articleGeneratedContent) && (
-                    <div className="bg-slate-800/60 border border-slate-700 rounded-xl p-5 space-y-4">
+                    <div className="bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl p-5 space-y-4">
                       <div className="flex items-center gap-2 text-sm font-bold text-indigo-400">
                         <Bot className="w-4 h-4 animate-pulse" />
                         {generatingFromArticle ? 'Reading article and crafting post...' : `Generated post for: "${selectedArticle?.title}"`}
@@ -513,7 +513,7 @@ export default function ContentScheduler() {
                         <>
                           <textarea value={articleGeneratedContent} onChange={e => setArticleGeneratedContent(e.target.value)}
                             rows={5}
-                            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm resize-none outline-none focus:border-indigo-500 transition-all" />
+                            className="w-full bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl px-4 py-3 text-white text-sm resize-none outline-none focus:border-indigo-500 transition-all" />
 
                           {/* Platform selector for article post */}
                           <div>
@@ -524,7 +524,7 @@ export default function ContentScheduler() {
                                 return (
                                   <button key={id} onClick={() => togglePlatform(id, setArticlePostPlatforms, articlePostPlatforms)}
                                     style={active ? { borderColor: color, color } : {}}
-                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${active ? 'bg-white/5' : 'border-slate-700 text-slate-400 hover:border-slate-600'}`}>
+                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-700 text-xs font-bold transition-all ${active ? 'bg-white dark:bg-gray-800/5' : 'border-slate-700 text-slate-400 hover:border-slate-600'}`}>
                                     <Icon className="w-3.5 h-3.5" /> {label}
                                   </button>
                                 )
@@ -540,7 +540,7 @@ export default function ContentScheduler() {
                               { id: 'draft', label: '💾 Save Draft' },
                             ] as const).map(({ id, label }) => (
                               <button key={id} onClick={() => setArticleScheduleMode(id)}
-                                className={`px-4 py-2 rounded-xl border text-xs font-bold transition-all ${articleScheduleMode === id ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400' : 'border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-300'}`}>
+                                className={`px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-xs font-bold transition-all ${articleScheduleMode === id ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400' : 'border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-300'}`}>
                                 {label}
                               </button>
                             ))}
@@ -548,7 +548,7 @@ export default function ContentScheduler() {
 
                           {articleScheduleMode === 'schedule' && (
                             <input type="datetime-local" value={articleScheduledAt} min={minDateTime} onChange={e => setArticleScheduledAt(e.target.value)}
-                              className="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500 [color-scheme:dark]" />
+                              className="bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500 [color-scheme:dark]" />
                           )}
 
                           <button onClick={handleScheduleArticlePost} disabled={loading || !articleGeneratedContent.trim()}
@@ -573,7 +573,7 @@ export default function ContentScheduler() {
                       return (
                         <button key={f} onClick={() => setQueueFilter(f)}
                           style={queueFilter === f ? { borderColor: cfg?.color || '#6366f1', color: cfg?.color || '#6366f1' } : {}}
-                          className={`px-3 py-1.5 rounded-full text-xs font-bold border uppercase tracking-wide transition-all ${queueFilter === f ? 'bg-white/5' : 'border-slate-700 text-slate-400 hover:border-slate-600'}`}>
+                          className={`px-3 py-1.5 rounded-full text-xs font-bold border border-gray-200 dark:border-gray-700 uppercase tracking-wide transition-all ${queueFilter === f ? 'bg-white dark:bg-gray-800/5' : 'border-slate-700 text-slate-400 hover:border-slate-600'}`}>
                           {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)} ({count})
                         </button>
                       )
@@ -591,9 +591,9 @@ export default function ContentScheduler() {
                         const cfg = STATUS_CONFIG[post.status]
                         const StatusIcon = cfg.Icon
                         return (
-                          <div key={post.id} className="p-4 bg-slate-800/60 border border-slate-700 rounded-xl hover:border-slate-600 transition-colors">
+                          <div key={post.id} className="p-4 bg-slate-800/60 border border-gray-200 dark:border-gray-700 border-slate-700 rounded-xl hover:border-slate-600 transition-colors">
                             <div className="flex items-center justify-between mb-3">
-                              <span className={`flex items-center gap-1.5 text-xs font-bold border px-2.5 py-1 rounded-full ${cfg.bg}`} style={{ color: cfg.color }}>
+                              <span className={`flex items-center gap-1.5 text-xs font-bold border border-gray-200 dark:border-gray-700 px-2.5 py-1 rounded-full ${cfg.bg}`} style={{ color: cfg.color }}>
                                 <StatusIcon className="w-3 h-3" /> {cfg.label}
                               </span>
                               <div className="flex gap-3">
@@ -671,7 +671,7 @@ export default function ContentScheduler() {
                     </div>
                   </div>
 
-                  <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 flex gap-3">
+                  <div className="bg-emerald-500/10 border border-gray-200 dark:border-gray-700 border-emerald-500/30 rounded-xl p-4 flex gap-3">
                     <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-sm font-bold text-emerald-400">Auto-publish Active</p>

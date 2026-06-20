@@ -143,7 +143,7 @@ export default function JarvisLearning() {
       {/* Toast Notification */}
       {toast && (
         <div
-          className={`fixed top-4 right-4 z-50 rounded-xl px-4 py-3 text-sm font-medium border shadow-lg transition-all ${
+          className={`fixed top-4 right-4 z-50 rounded-xl px-4 py-3 text-sm font-medium border border-gray-200 dark:border-gray-700 shadow-lg transition-all ${
             toast.type === 'error'
               ? 'bg-rose-50 border-rose-200 text-rose-600 dark:bg-rose-950/80 dark:border-rose-900 dark:text-rose-200'
               : 'bg-emerald-50 border-emerald-200 text-emerald-600 dark:bg-emerald-950/80 dark:border-emerald-900 dark:text-emerald-200'
@@ -160,7 +160,7 @@ export default function JarvisLearning() {
             <Brain className="w-5 h-5 text-indigo-500" />
             Learning Dashboard
           </h3>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             Monitor Jarvis learning stats, rate recent model responses, and review conversation topics.
           </p>
         </div>
@@ -169,7 +169,7 @@ export default function JarvisLearning() {
           <button
             onClick={() => fetchLearningData(true)}
             disabled={isRefreshing}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-400 dark:text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
             {isRefreshing ? 'Refreshing...' : 'Refresh Data'}
@@ -178,7 +178,7 @@ export default function JarvisLearning() {
           <button
             onClick={handleResetProfile}
             disabled={isActionInProgress}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-rose-200 dark:border-rose-900 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 border-rose-200 dark:border-rose-900 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors"
           >
             <Trash2 className="w-3.5 h-3.5" />
             Reset Profile
@@ -189,32 +189,32 @@ export default function JarvisLearning() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col justify-between">
-          <div className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Total Interactions</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mb-2">Total Interactions</div>
           <div className="text-3xl font-extrabold text-gray-900 dark:text-white mt-1">
             {stats.totalInteractions}
           </div>
-          <p className="text-xs text-gray-400 mt-2">Combined user messages & auto-replies logged</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Combined user messages & auto-replies logged</p>
         </div>
 
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col justify-between">
-          <div className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Average Rating</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mb-2">Average Rating</div>
           <div className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mt-1 flex items-center gap-1.5">
             <Star className="w-6 h-6 fill-amber-400 text-amber-400" />
             {stats.averageScore > 0 ? `${stats.averageScore}/5` : 'N/A'}
           </div>
-          <p className="text-xs text-gray-400 mt-2">Based on rated responses in learning archive</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Based on rated responses in learning archive</p>
         </div>
 
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col justify-between">
-          <div className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Top Context Topics</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mb-2">Top Context Topics</div>
           {stats.topTopics.length === 0 ? (
-            <div className="text-sm text-gray-400 mt-2">No key terms detected yet</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">No key terms detected yet</div>
           ) : (
             <div className="flex flex-wrap gap-1.5 mt-2">
               {stats.topTopics.map(({ topic, count }) => (
                 <span
                   key={topic}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/40"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-100 dark:border-b border-gray-200 dark:border-gray-700lue-900/40"
                 >
                   <TrendingUp className="w-3 h-3" />
                   <span className="capitalize">{topic}</span>
@@ -223,7 +223,7 @@ export default function JarvisLearning() {
               ))}
             </div>
           )}
-          <p className="text-xs text-gray-400 mt-2">Extracted from recent user queries</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Extracted from recent user queries</p>
         </div>
       </div>
 
@@ -233,16 +233,16 @@ export default function JarvisLearning() {
         <div className="lg:col-span-2 space-y-4">
           <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
             <div className="p-4 bg-gray-50 dark:bg-gray-800/40 border-b border-gray-200 dark:border-gray-800">
-              <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300">Recent Interactions Log</h4>
+              <h4 className="text-sm font-bold text-gray-700 dark:text-gray-400 dark:text-gray-600 dark:text-gray-300">Recent Interactions Log</h4>
             </div>
 
             {isLoading ? (
-              <div className="py-12 text-center text-gray-400 flex justify-center items-center">
+              <div className="py-12 text-center text-gray-500 dark:text-gray-400 flex justify-center items-center">
                 <RefreshCw className="w-5 h-5 animate-spin mr-2 text-indigo-500" />
                 <span>Loading interactions...</span>
               </div>
             ) : interactions.length === 0 ? (
-              <div className="p-8 text-center text-sm text-gray-400">
+              <div className="p-8 text-center text-sm text-gray-500 dark:text-gray-400">
                 No recent conversations found. Wait for Jarvis to respond to messages.
               </div>
             ) : (
@@ -254,12 +254,12 @@ export default function JarvisLearning() {
                   const date = new Date(item.created_at)
 
                   return (
-                    <div key={item.id} className="p-5 space-y-3 hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-colors">
+                    <div key={item.id} className="p-5 space-y-3 hover:bg-gray-50 dark:bg-gray-800/50/50 dark:hover:bg-gray-800/20 transition-colors">
                       {/* Interaction Metadata Header */}
                       <div className="flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-2 text-gray-400">
-                          <User className="w-3.5 h-3.5 text-gray-400" />
-                          <span className="font-semibold text-gray-700 dark:text-gray-300">
+                        <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                          <User className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" />
+                          <span className="font-semibold text-gray-700 dark:text-gray-400 dark:text-gray-600 dark:text-gray-300">
                             {item.sender_number.split('@')[0]}
                           </span>
                           {item.metadata?.is_group && (
@@ -276,7 +276,7 @@ export default function JarvisLearning() {
 
                         {/* Existing Rating Display */}
                         {rating && !isEditing && (
-                          <div className="flex items-center gap-1 text-amber-500 bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/60 px-2 py-0.5 rounded-full">
+                          <div className="flex items-center gap-1 text-amber-500 bg-amber-50 dark:bg-amber-950/20 border border-gray-200 dark:border-gray-700 border-amber-100 dark:border-amber-900/60 px-2 py-0.5 rounded-full">
                             <Star className="w-3 h-3 fill-amber-500" />
                             <span className="font-bold text-[11px]">{rating}/5</span>
                           </div>
@@ -308,9 +308,9 @@ export default function JarvisLearning() {
 
                       {/* Feedback Rating Block */}
                       {isEditing ? (
-                        <div className="bg-gray-50 dark:bg-gray-950 border border-gray-250/60 dark:border-gray-800 p-4 rounded-xl space-y-3">
+                        <div className="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-700 border-gray-250/60 dark:border-gray-800 p-4 rounded-xl space-y-3">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-gray-700 dark:text-gray-300">Rate Jarvis Response:</span>
+                            <span className="text-xs font-bold text-gray-700 dark:text-gray-400 dark:text-gray-600 dark:text-gray-300">Rate Jarvis Response:</span>
                             <div className="flex gap-1">
                               {[1, 2, 3, 4, 5].map(star => (
                                 <button
@@ -320,7 +320,7 @@ export default function JarvisLearning() {
                                 >
                                   <Star
                                     className={`w-5 h-5 ${
-                                      star <= ratingVal ? 'fill-amber-400 text-amber-400' : 'text-gray-300 dark:text-gray-700'
+                                      star <= ratingVal ? 'fill-amber-400 text-amber-400' : 'text-gray-300 dark:text-gray-700 dark:text-gray-200'
                                     }`}
                                   />
                                 </button>
@@ -329,13 +329,13 @@ export default function JarvisLearning() {
                           </div>
 
                           <div className="space-y-1">
-                            <label className="block text-[11px] text-gray-400 font-bold uppercase">Feedback Comment (Optional)</label>
+                            <label className="block text-[11px] text-gray-500 dark:text-gray-400 font-bold uppercase">Feedback Comment (Optional)</label>
                             <input
                               type="text"
                               value={feedbackVal}
                               onChange={e => setFeedbackVal(e.target.value)}
                               placeholder="e.g. Too formal, great response, slightly off-topic..."
-                              className="w-full px-3 py-2 border border-gray-250 dark:border-gray-805 rounded-lg bg-white dark:bg-gray-900 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500"
+                              className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 border-gray-250 dark:border-gray-805 rounded-lg bg-white dark:bg-gray-900 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500"
                             />
                           </div>
 
@@ -345,7 +345,7 @@ export default function JarvisLearning() {
                                 setEditingId(null)
                                 setFeedbackVal('')
                               }}
-                              className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-850 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 font-semibold"
+                              className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-850 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-500 dark:text-gray-400 font-semibold"
                             >
                               Cancel
                             </button>
@@ -361,8 +361,8 @@ export default function JarvisLearning() {
                       ) : (
                         <div className="flex items-center justify-between pt-1">
                           {feedback ? (
-                            <p className="text-xs italic text-gray-400 truncate max-w-[70%]">
-                              <span className="font-bold font-sans not-italic text-gray-600 dark:text-gray-400">Feedback: </span>
+                            <p className="text-xs italic text-gray-500 dark:text-gray-400 truncate max-w-[70%]">
+                              <span className="font-bold font-sans not-italic text-gray-600 dark:text-gray-500 dark:text-gray-400">Feedback: </span>
                               "{feedback}"
                             </p>
                           ) : (
@@ -397,11 +397,11 @@ export default function JarvisLearning() {
               <Brain className="w-4 h-4 text-indigo-500" />
               How Jarvis Learns
             </h4>
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
               Jarvis stores every message transaction to analyze communication success. By rating answers here, you help establish a dataset of optimal responses.
             </p>
             <div className="space-y-3 pt-2">
-              <div className="flex gap-2.5 items-start text-xs text-gray-600 dark:text-gray-400">
+              <div className="flex gap-2.5 items-start text-xs text-gray-600 dark:text-gray-500 dark:text-gray-400">
                 <div className="p-1 rounded bg-blue-500/10 text-blue-500 flex-shrink-0">
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                 </div>
@@ -409,7 +409,7 @@ export default function JarvisLearning() {
                   <span className="font-bold text-gray-800 dark:text-white">Star Ratings:</span> Rate answers 1-5 to signal quality benchmarks.
                 </div>
               </div>
-              <div className="flex gap-2.5 items-start text-xs text-gray-600 dark:text-gray-400">
+              <div className="flex gap-2.5 items-start text-xs text-gray-600 dark:text-gray-500 dark:text-gray-400">
                 <div className="p-1 rounded bg-indigo-500/10 text-indigo-500 flex-shrink-0">
                   <MessageSquare className="w-3.5 h-3.5 text-indigo-500" />
                 </div>
@@ -417,7 +417,7 @@ export default function JarvisLearning() {
                   <span className="font-bold text-gray-800 dark:text-white">Feedback Comments:</span> Detail specifically what was good or bad to allow fine-tuning prompts.
                 </div>
               </div>
-              <div className="flex gap-2.5 items-start text-xs text-gray-600 dark:text-gray-400">
+              <div className="flex gap-2.5 items-start text-xs text-gray-600 dark:text-gray-500 dark:text-gray-400">
                 <div className="p-1 rounded bg-rose-500/10 text-rose-500 flex-shrink-0">
                   <Trash2 className="w-3.5 h-3.5 text-rose-500" />
                 </div>
@@ -428,12 +428,12 @@ export default function JarvisLearning() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-indigo-900/10 to-blue-900/10 rounded-2xl border border-indigo-100 dark:border-indigo-950 p-5 space-y-3">
+          <div className="bg-gradient-to-br from-indigo-900/10 to-blue-900/10 rounded-2xl border border-gray-200 dark:border-gray-700 border-indigo-100 dark:border-indigo-950 p-5 space-y-3">
             <div className="flex items-center gap-2">
               <CheckCircle className="w-4 h-4 text-indigo-500" />
               <h5 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Reinforcement Guidelines</h5>
             </div>
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
               For optimal performance, check in once a day to review recent interactions and flag responses that felt overly verbose or out-of-character.
             </p>
           </div>

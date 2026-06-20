@@ -164,7 +164,7 @@ export default function FashionManager() {
       case 'shipped': return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
       case 'production': return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
       case 'archived': return 'bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
-      default: return 'bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+      default: return 'bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-500 dark:text-gray-400'
     }
   }
 
@@ -183,12 +183,12 @@ export default function FashionManager() {
       <div className="grid grid-cols-5 gap-3">
         {[
           { label: 'Total', value: stats.total, color: 'text-pink-500', bg: 'bg-pink-500/10' },
-          { label: 'Design', value: stats.design, color: 'text-gray-400', bg: 'bg-gray-500/10' },
+          { label: 'Design', value: stats.design, color: 'text-gray-500 dark:text-gray-400', bg: 'bg-gray-50 dark:bg-gray-800/500/10' },
           { label: 'Production', value: stats.production, color: 'text-amber-400', bg: 'bg-amber-500/10' },
           { label: 'Shipped', value: stats.shipped, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
           { label: 'Archived', value: stats.archived, color: 'text-slate-400', bg: 'bg-slate-500/10' },
         ].map(s => (
-          <div key={s.label} className={`${s.bg} rounded-xl p-4 text-center border border-transparent`}>
+          <div key={s.label} className={`${s.bg} rounded-xl p-4 text-center border border-gray-200 dark:border-gray-700 border-transparent`}>
             <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
             <div className="text-xs text-slate-400 uppercase tracking-wider mt-1">{s.label}</div>
           </div>
@@ -196,20 +196,20 @@ export default function FashionManager() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap items-center gap-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4">
+      <div className="flex flex-wrap items-center gap-3 bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-200 dark:border-slate-800 p-4">
         <div className="flex items-center gap-2 text-slate-400">
           <Filter className="w-4 h-4" />
           <span className="text-sm font-medium">Filters</span>
         </div>
-        <select value={filterCollection} onChange={e => setFilterCollection(e.target.value)} className="bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none">
+        <select value={filterCollection} onChange={e => setFilterCollection(e.target.value)} className="bg-slate-100 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none">
           <option value="all">All Collections</option>
           {collections.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
-        <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none">
+        <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="bg-slate-100 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none">
           <option value="all">All Statuses</option>
           {statuses.map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
         </select>
-        <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search..." className="flex-1 min-w-[200px] bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none" />
+        <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search..." className="flex-1 min-w-[200px] bg-slate-100 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm outline-none" />
         <div className="flex gap-1 ml-auto">
           <button onClick={() => setViewMode('grid')} className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-pink-100 dark:bg-pink-900/30 text-pink-600' : 'text-slate-400 hover:text-slate-600'}`}><Grid3X3 className="w-4 h-4" /></button>
           <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg ${viewMode === 'list' ? 'bg-pink-100 dark:bg-pink-900/30 text-pink-600' : 'text-slate-400 hover:text-slate-600'}`}><List className="w-4 h-4" /></button>
@@ -248,7 +248,7 @@ export default function FashionManager() {
           {loading ? (
             <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-pink-500" /></div>
           ) : showForm || editingItem ? (
-            <form onSubmit={handleSave} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 max-w-2xl">
+            <form onSubmit={handleSave} className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-200 dark:border-slate-800 p-6 max-w-2xl">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-bold text-slate-800 dark:text-white">{editingItem ? 'Edit Item' : 'New Fashion Item'}</h3>
                 <button type="button" onClick={() => { setShowForm(false); setEditingItem(null) }} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded"><X className="w-5 h-5 text-slate-400" /></button>
@@ -256,19 +256,19 @@ export default function FashionManager() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
                   <label className="block text-xs font-medium text-slate-400 mb-1">Title</label>
-                  <input name="title" defaultValue={editingItem?.title || ''} required className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
+                  <input name="title" defaultValue={editingItem?.title || ''} required className="w-full bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-slate-400 mb-1">Collection</label>
-                  <input name="collection" defaultValue={editingItem?.collection || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
+                  <input name="collection" defaultValue={editingItem?.collection || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-slate-400 mb-1">Category</label>
-                  <input name="category" defaultValue={editingItem?.category || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
+                  <input name="category" defaultValue={editingItem?.category || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-slate-400 mb-1">Status</label>
-                  <select name="status" defaultValue={editingItem?.status || 'design'} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none">
+                  <select name="status" defaultValue={editingItem?.status || 'design'} className="w-full bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none">
                     <option value="design">Design Phase</option>
                     <option value="production">In Production</option>
                     <option value="shipped">Shipped/Available</option>
@@ -277,28 +277,28 @@ export default function FashionManager() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-slate-400 mb-1">Size</label>
-                  <input name="size" defaultValue={editingItem?.size || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
+                  <input name="size" defaultValue={editingItem?.size || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-slate-400 mb-1">Stock</label>
-                  <input name="stock" type="number" defaultValue={editingItem?.stock || 0} min="0" className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
+                  <input name="stock" type="number" defaultValue={editingItem?.stock || 0} min="0" className="w-full bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-slate-400 mb-1">Price</label>
-                  <input name="price" type="number" step="0.01" defaultValue={editingItem?.price || 0} min="0" className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
+                  <input name="price" type="number" step="0.01" defaultValue={editingItem?.price || 0} min="0" className="w-full bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-slate-400 mb-1">Event Date</label>
-                  <input name="event_date" type="date" defaultValue={editingItem?.event_date || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
+                  <input name="event_date" type="date" defaultValue={editingItem?.event_date || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-slate-400 mb-1">Location</label>
-                  <input name="location" defaultValue={editingItem?.location || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
+                  <input name="location" defaultValue={editingItem?.location || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div className="col-span-2">
                   <label className="block text-xs font-medium text-slate-400 mb-1">Image URL</label>
                   <div className="flex gap-2">
-                    <input name="image_url" defaultValue={editingItem?.image_url || ''} className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
+                    <input name="image_url" defaultValue={editingItem?.image_url || ''} className="flex-1 bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                     <label className="flex items-center gap-1 px-3 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded-lg cursor-pointer transition-colors shrink-0">
                       {isUploadingImage ? <Loader2 className="w-4 h-4 animate-spin text-pink-500" /> : <Upload className="w-4 h-4 text-slate-400" />}
                       <input ref={imageFileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
@@ -308,15 +308,15 @@ export default function FashionManager() {
                 </div>
                 <div className="col-span-2">
                   <label className="block text-xs font-medium text-slate-400 mb-1">Gallery Images (comma-separated URLs)</label>
-                  <input name="gallery_images" defaultValue={(editingItem?.gallery_images || []).join(', ')} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
+                  <input name="gallery_images" defaultValue={(editingItem?.gallery_images || []).join(', ')} className="w-full bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
                 <div className="col-span-2">
                   <label className="block text-xs font-medium text-slate-400 mb-1">Description</label>
-                  <textarea name="description" rows={3} defaultValue={editingItem?.description || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none resize-none" />
+                  <textarea name="description" rows={3} defaultValue={editingItem?.description || ''} className="w-full bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none resize-none" />
                 </div>
                 <div className="col-span-2">
                   <label className="block text-xs font-medium text-slate-400 mb-1">Tags (comma-separated)</label>
-                  <input name="tags" defaultValue={(editingItem?.tags || []).join(', ')} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
+                  <input name="tags" defaultValue={(editingItem?.tags || []).join(', ')} className="w-full bg-slate-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 outline-none" />
                 </div>
               </div>
               <div className="flex gap-3 mt-6">
@@ -333,7 +333,7 @@ export default function FashionManager() {
           ) : viewMode === 'grid' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filtered.map(item => (
-                <div key={item.id} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-lg hover:border-pink-500/30 transition-all group">
+                <div key={item.id} className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-lg hover:border-pink-500/30 transition-all group">
                   <div className="relative h-40 bg-slate-100 dark:bg-slate-800 overflow-hidden cursor-pointer" onClick={() => setSelectedItem(item)}>
                     {item.image_url ? (
                       <img src={item.image_url} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
@@ -341,8 +341,8 @@ export default function FashionManager() {
                       <div className="flex items-center justify-center h-full text-slate-400"><Image className="w-8 h-8" /></div>
                     )}
                     <div className="absolute top-2 right-2 flex gap-1">
-                      <button onClick={(e) => { e.stopPropagation(); setEditingItem(item); setShowForm(true) }} className="p-1.5 bg-white/90 dark:bg-slate-900/90 rounded-lg hover:bg-white dark:hover:bg-slate-800 shadow-sm"><Edit className="w-3.5 h-3.5 text-slate-600" /></button>
-                      <button onClick={(e) => { e.stopPropagation(); handleDelete(item.id) }} className="p-1.5 bg-white/90 dark:bg-slate-900/90 rounded-lg hover:bg-white dark:hover:bg-slate-800 shadow-sm"><Trash2 className="w-3.5 h-3.5 text-red-500" /></button>
+                      <button onClick={(e) => { e.stopPropagation(); setEditingItem(item); setShowForm(true) }} className="p-1.5 bg-white dark:bg-gray-800/90 dark:bg-slate-900/90 rounded-lg hover:bg-white dark:hover:bg-slate-800 shadow-sm"><Edit className="w-3.5 h-3.5 text-slate-600" /></button>
+                      <button onClick={(e) => { e.stopPropagation(); handleDelete(item.id) }} className="p-1.5 bg-white dark:bg-gray-800/90 dark:bg-slate-900/90 rounded-lg hover:bg-white dark:hover:bg-slate-800 shadow-sm"><Trash2 className="w-3.5 h-3.5 text-red-500" /></button>
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
                       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold ${statusColor(item.status)}`}>
@@ -370,10 +370,10 @@ export default function FashionManager() {
               ))}
             </div>
           ) : (
-            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-200 dark:border-slate-800 overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-200 dark:border-slate-800 text-xs text-slate-400 uppercase tracking-wider">
+                  <tr className="border-b border-gray-200 dark:border-gray-700 border-slate-200 dark:border-slate-800 text-xs text-slate-400 uppercase tracking-wider">
                     <th className="text-left p-3 w-8"><input type="checkbox" onChange={e => { if (e.target.checked) setSelectedIds(new Set(filtered.map(i => i.id))); else setSelectedIds(new Set()) }} className="accent-pink-600" /></th>
                     <th className="text-left p-3">Title</th>
                     <th className="text-left p-3">Collection</th>
@@ -431,7 +431,7 @@ export default function FashionManager() {
             {selectedItem.gallery_images && selectedItem.gallery_images.length > 1 && (
               <div className="flex gap-2 px-6 pt-4 overflow-x-auto">
                 {selectedItem.gallery_images.map((url, i) => (
-                  <img key={i} src={url} alt={`${selectedItem.title} - ${i+1}`} className="w-20 h-20 object-cover rounded-lg border border-slate-200 dark:border-slate-700 shrink-0" />
+                  <img key={i} src={url} alt={`${selectedItem.title} - ${i+1}`} className="w-20 h-20 object-cover rounded-lg border border-gray-200 dark:border-gray-700 border-slate-200 dark:border-slate-700 shrink-0" />
                 ))}
               </div>
             )}

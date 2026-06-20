@@ -56,7 +56,7 @@ export default function EditArticlePage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20 text-gray-500">
+      <div className="flex items-center justify-center py-20 text-gray-600 dark:text-gray-400">
         <Loader2 className="w-6 h-6 animate-spin mr-2" />
         Loading article…
       </div>
@@ -78,7 +78,7 @@ export default function EditArticlePage() {
     <div className="max-w-4xl mx-auto space-y-6">
       <Link
         href="/admin/articles"
-        className="inline-flex items-center text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white"
+        className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
         Back to articles
@@ -86,7 +86,7 @@ export default function EditArticlePage() {
 
       <header>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Edit article</h1>
-        <p className="text-sm text-gray-500 mt-1 font-mono">{article.id}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 font-mono">{article.id}</p>
       </header>
 
       <ArticleForm

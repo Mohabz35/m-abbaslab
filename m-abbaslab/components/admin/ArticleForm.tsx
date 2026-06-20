@@ -135,42 +135,42 @@ export default function ArticleForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-lg text-sm">
+        <div className="bg-red-500/10 border border-gray-200 dark:border-gray-700 border-red-500/20 text-red-400 p-4 rounded-lg text-sm">
           {error}
         </div>
       )}
 
-      <div className="bg-white/5 border border-white/10 rounded-xl p-6 md:p-8 space-y-6">
+      <div className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-xl p-6 md:p-8 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">Title</label>
+            <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Title</label>
             <input
               type="text"
               required
               value={formData.title}
               onChange={handleTitleChange}
-              className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none"
+              className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:outline-none"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">Slug</label>
+            <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Slug</label>
             <input
               type="text"
               required
               value={formData.slug}
               onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-              className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none font-mono text-sm"
+              className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:outline-none font-mono text-sm"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">Category</label>
+            <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Category</label>
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none"
+              className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:outline-none"
             >
               <option value="research">Research Papers</option>
               <option value="technology">Technical Guides</option>
@@ -185,7 +185,7 @@ export default function ArticleForm({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">Read time (min)</label>
+            <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Read time (min)</label>
             <input
               type="number"
               required
@@ -194,20 +194,20 @@ export default function ArticleForm({
               onChange={(e) =>
                 setFormData({ ...formData, read_time: parseInt(e.target.value, 10) || 5 })
               }
-              className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none"
+              className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:outline-none"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-400 mb-2">Cover Image</label>
+          <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Cover Image</label>
           <div className="space-y-3">
             {formData.cover_image && (
               <div className="relative inline-block">
                 <img
                   src={formData.cover_image}
                   alt="Cover preview"
-                  className="max-h-48 rounded-lg border border-white/10"
+                  className="max-h-48 rounded-lg border border-gray-200 dark:border-gray-700 border-white/10"
                 />
                 <button
                   type="button"
@@ -219,9 +219,9 @@ export default function ArticleForm({
               </div>
             )}
             <div className="flex items-center gap-3">
-              <label className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-lg cursor-pointer hover:bg-white/10 transition-colors">
-                <ImageIcon className="w-4 h-4 text-gray-400" />
-                <span className="text-sm text-gray-300">
+              <label className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg cursor-pointer hover:bg-white dark:bg-gray-800/10 transition-colors">
+                <ImageIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                <span className="text-sm text-gray-400 dark:text-gray-600 dark:text-gray-300">
                   {uploading ? 'Uploading...' : 'Upload Image'}
                 </span>
                 <input
@@ -237,12 +237,12 @@ export default function ArticleForm({
             {uploadError && (
               <p className="text-sm text-red-400">{uploadError}</p>
             )}
-            <p className="text-xs text-gray-400">Uploads are stored via Cloudinary. Recommended size: 1200x630px.</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Uploads are stored via Cloudinary. Recommended size: 1200x630px.</p>
           </div>
         </div>
 
         <div className="flex flex-wrap gap-6">
-          <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+          <label className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-600 dark:text-gray-300 cursor-pointer">
             <input
               type="checkbox"
               checked={formData.published}
@@ -251,7 +251,7 @@ export default function ArticleForm({
             />
             Published
           </label>
-          <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+          <label className="flex items-center gap-2 text-sm text-gray-400 dark:text-gray-600 dark:text-gray-300 cursor-pointer">
             <input
               type="checkbox"
               checked={formData.featured}
@@ -263,34 +263,34 @@ export default function ArticleForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-400 mb-2">Excerpt</label>
+          <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Excerpt</label>
           <textarea
             required
             rows={3}
             value={formData.excerpt}
             onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-            className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none"
+            className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-400 mb-2">Content (Markdown)</label>
+          <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Content (Markdown)</label>
           <textarea
             required
             rows={15}
             value={formData.content}
             onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-            className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none font-mono text-sm"
+            className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:outline-none font-mono text-sm"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-400 mb-2">Tags (comma separated)</label>
+          <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Tags (comma separated)</label>
           <input
             type="text"
             value={formData.tags}
             onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-            className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none"
+            className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:outline-none"
           />
         </div>
       </div>
@@ -298,7 +298,7 @@ export default function ArticleForm({
       <div className="flex justify-end gap-4">
         <Link
           href="/admin/articles"
-          className="px-6 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+          className="px-6 py-3 rounded-lg text-gray-500 dark:text-gray-400 hover:text-white hover:bg-white dark:bg-gray-800/5 transition-colors"
         >
           Cancel
         </Link>

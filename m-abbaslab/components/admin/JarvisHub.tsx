@@ -20,7 +20,7 @@ export default function JarvisHub() {
   return (
     <div className="space-y-6">
       {/* Top Header */}
-      <div className="bg-gradient-to-r from-purple-900 to-indigo-900 p-8 rounded-2xl border border-purple-500/30 flex justify-between items-center shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-purple-900 to-indigo-900 p-8 rounded-2xl border border-gray-200 dark:border-gray-700 border-purple-500/30 flex justify-between items-center shadow-lg relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl translate-x-1/3 -translate-y-1/2"></div>
         <div className="relative z-10">
           <h2 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
@@ -31,7 +31,7 @@ export default function JarvisHub() {
             Centralized artificial intelligence control hub. Manage knowledge parameters, monitor group activities, review training logs, and process inbox items.
           </p>
         </div>
-        <div className="hidden md:flex items-center gap-4 bg-black/30 px-6 py-4 rounded-xl border border-white/10 relative z-10">
+        <div className="hidden md:flex items-center gap-4 bg-black/30 px-6 py-4 rounded-xl border border-gray-200 dark:border-gray-700 border-white/10 relative z-10">
           <div className="flex items-center gap-3">
             <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
             <div>
@@ -43,7 +43,7 @@ export default function JarvisHub() {
       </div>
 
       {/* Tabs Menu */}
-      <div className="flex flex-wrap gap-2 mb-6 border-b border-slate-700/50 pb-4">
+      <div className="flex flex-wrap gap-2 mb-6 border-b border-gray-200 dark:border-gray-700 border-slate-700/50 pb-4">
         {tabs.map(tab => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
@@ -53,8 +53,8 @@ export default function JarvisHub() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all ${
                 isActive 
-                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/20 border border-purple-500' 
-                  : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700'
+                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/20 border border-gray-200 dark:border-gray-700 border-purple-500' 
+                  : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white border border-gray-200 dark:border-gray-700 border-slate-700'
               }`}
             >
               <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />

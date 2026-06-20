@@ -78,26 +78,26 @@ export default function SecuritySettings() {
   }
 
   return (
-    <div className="bg-gray-950 border border-gray-800 rounded-2xl p-6 shadow-sm text-gray-200">
+    <div className="bg-gray-950 border border-gray-200 dark:border-gray-700 border-gray-800 rounded-2xl p-6 shadow-sm text-gray-200">
       {toast && (
-        <div className={`fixed top-4 right-4 z-50 rounded-xl px-4 py-3 text-sm font-medium border shadow-lg transition-all ${
+        <div className={`fixed top-4 right-4 z-50 rounded-xl px-4 py-3 text-sm font-medium border border-gray-200 dark:border-gray-700 shadow-lg transition-all ${
           toast.type === 'error' ? 'bg-red-500/10 border-red-500/20 text-red-500' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
         }`}>
           {toast.message}
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-gray-800 pb-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-gray-200 dark:border-gray-700 border-gray-800 pb-6">
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2 text-white">
             <Shield className="text-cyan-500 w-7 h-7" />
             System Security & Identity
           </h2>
-          <p className="text-xs text-gray-400 mt-1 uppercase tracking-widest font-bold">Admin Privileges & Audit Logs</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-widest font-bold">Admin Privileges & Audit Logs</p>
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-8 border-b border-gray-800 pb-4">
+      <div className="flex flex-wrap gap-2 mb-8 border-b border-gray-200 dark:border-gray-700 border-gray-800 pb-4">
         {[
           { id: 'profile', label: 'Identity Profile', icon: User },
           { id: 'security', label: 'Access Control', icon: Key },
@@ -111,8 +111,8 @@ export default function SecuritySettings() {
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 isActive 
-                  ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30' 
-                  : 'bg-transparent text-gray-400 hover:text-gray-300 border border-transparent'
+                  ? 'bg-cyan-500/10 text-cyan-400 border border-gray-200 dark:border-gray-700 border-cyan-500/30' 
+                  : 'bg-transparent text-gray-500 dark:text-gray-400 hover:text-gray-400 dark:text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 border-transparent'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -125,16 +125,16 @@ export default function SecuritySettings() {
       <div className="min-h-[300px]">
         {activeTab === 'profile' && (
           <div className="max-w-xl space-y-6">
-            <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-800">
+            <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-200 dark:border-gray-700 border-gray-800">
               <h3 className="text-lg font-bold text-white mb-4">Core Identity</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Display Name</label>
-                  <input type="text" value={displayName} onChange={e => setDisplayName(e.target.value)} className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none" />
+                  <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Display Name</label>
+                  <input type="text" value={displayName} onChange={e => setDisplayName(e.target.value)} className="w-full bg-gray-950 border border-gray-200 dark:border-gray-700 border-gray-800 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 uppercase mb-2">System Biography</label>
-                  <textarea value={bio} onChange={e => setBio(e.target.value)} rows={4} className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none resize-none" />
+                  <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">System Biography</label>
+                  <textarea value={bio} onChange={e => setBio(e.target.value)} rows={4} className="w-full bg-gray-950 border border-gray-200 dark:border-gray-700 border-gray-800 rounded-lg px-4 py-2 text-white focus:border-cyan-500 outline-none resize-none" />
                 </div>
                 <button onClick={handleUpdateProfile} disabled={isSaving} className="px-6 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50">
                   {isSaving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Save Identity
@@ -146,19 +146,19 @@ export default function SecuritySettings() {
 
         {activeTab === 'security' && (
           <div className="max-w-xl space-y-6">
-            <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-800">
+            <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-200 dark:border-gray-700 border-gray-800">
               <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                 <Key className="w-5 h-5 text-amber-500" /> Change Master Password
               </h3>
-              <p className="text-xs text-gray-400 mb-6">Updating this will revoke all existing admin sessions.</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">Updating this will revoke all existing admin sessions.</p>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 uppercase mb-2">New Password</label>
-                  <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-amber-500 outline-none" />
+                  <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">New Password</label>
+                  <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="w-full bg-gray-950 border border-gray-200 dark:border-gray-700 border-gray-800 rounded-lg px-4 py-2 text-white focus:border-amber-500 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Confirm New Password</label>
-                  <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2 text-white focus:border-amber-500 outline-none" />
+                  <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Confirm New Password</label>
+                  <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="w-full bg-gray-950 border border-gray-200 dark:border-gray-700 border-gray-800 rounded-lg px-4 py-2 text-white focus:border-amber-500 outline-none" />
                 </div>
                 <button onClick={handleChangePassword} disabled={isSaving || !newPassword} className="px-6 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50">
                   {isSaving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Shield className="w-4 h-4" />} Update Security Credentials
@@ -181,7 +181,7 @@ export default function SecuritySettings() {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
-                  <tr className="border-b border-gray-800 text-gray-400 text-xs uppercase tracking-wider">
+                  <tr className="border-b border-gray-200 dark:border-gray-700 border-gray-800 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
                     <th className="pb-3 font-bold">Timestamp</th>
                     <th className="pb-3 font-bold">Action Event</th>
                     <th className="pb-3 font-bold">Entity</th>
@@ -189,14 +189,14 @@ export default function SecuritySettings() {
                 </thead>
                 <tbody className="divide-y divide-gray-800/50">
                   {auditLogs.length === 0 && !auditLoading && (
-                    <tr><td colSpan={3} className="py-8 text-center text-gray-400">No audit events yet. Actions will be logged here automatically.</td></tr>
+                    <tr><td colSpan={3} className="py-8 text-center text-gray-500 dark:text-gray-400">No audit events yet. Actions will be logged here automatically.</td></tr>
                   )}
-                  {auditLoading && <tr><td colSpan={3} className="py-8 text-center text-gray-400">Loading...</td></tr>}
+                  {auditLoading && <tr><td colSpan={3} className="py-8 text-center text-gray-500 dark:text-gray-400">Loading...</td></tr>}
                   {auditLogs.map(log => (
                     <tr key={log.id} className="hover:bg-gray-900/30">
-                      <td className="py-3 text-gray-400 font-mono text-xs">{new Date(log.created_at).toLocaleString()}</td>
+                      <td className="py-3 text-gray-500 dark:text-gray-400 font-mono text-xs">{new Date(log.created_at).toLocaleString()}</td>
                       <td className="py-3 text-cyan-400 font-bold tracking-wide">{log.action}</td>
-                      <td className="py-3 text-gray-400 font-mono text-xs">{log.entity_type || '-'}</td>
+                      <td className="py-3 text-gray-500 dark:text-gray-400 font-mono text-xs">{log.entity_type || '-'}</td>
                     </tr>
                   ))}
                 </tbody>
