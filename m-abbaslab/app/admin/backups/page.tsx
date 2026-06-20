@@ -184,7 +184,7 @@ export default function BackupManagement() {
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Include tables:</p>
               <div className="flex flex-wrap gap-2">
                 {tables.map(t => (
-                  <button key={t} onClick={() => setSelectedTables(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])} className={`px-3 py-1 rounded-full text-xs font-medium border border-gray-200 dark:border-gray-700 ${selectedTables.includes(t) ? 'bg-blue-100 text-blue-700 border-b border-gray-200 dark:border-gray-700lue-200' : 'bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700'}`}>
+                  <button key={t} onClick={() => setSelectedTables(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])} className={`px-3 py-1 rounded-full text-xs font-medium border border-gray-200 dark:border-gray-700 ${selectedTables.includes(t) ? 'bg-blue-100 text-blue-700 border-blue-200' : 'bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700'}`}>
                     {t}
                   </button>
                 ))}

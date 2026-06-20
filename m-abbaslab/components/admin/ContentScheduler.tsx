@@ -56,7 +56,7 @@ const PLATFORMS = [
 
 const STATUS_CONFIG: Record<PostStatus, { color: string; label: string; Icon: any; bg: string }> = {
   draft:     { color: '#94a3b8', label: 'Draft',     Icon: FileText,    bg: 'bg-slate-500/20 border-slate-500/30' },
-  scheduled: { color: '#38bdf8', label: 'Scheduled',  Icon: Clock,       bg: 'bg-blue-500/20 border-b border-gray-200 dark:border-gray-700lue-500/30'  },
+  scheduled: { color: '#38bdf8', label: 'Scheduled',  Icon: Clock,       bg: 'bg-blue-500/20 border-blue-500/30'  },
   published: { color: '#4ade80', label: 'Published',  Icon: CheckCircle2, bg: 'bg-emerald-500/20 border-emerald-500/30' },
   failed:    { color: '#f87171', label: 'Failed',     Icon: AlertCircle, bg: 'bg-rose-500/20 border-rose-500/30'  },
 }
@@ -353,7 +353,7 @@ export default function ContentScheduler() {
               {tab === 'compose' && (
                 <div className="space-y-6">
                   {editingId && (
-                    <div className="px-4 py-3 bg-blue-500/10 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 rounded-xl text-sm text-blue-400 flex items-center justify-between">
+                    <div className="px-4 py-3 bg-blue-500/10 border border-gray-200 dark:border-gray-700 border-blue-500/30 rounded-xl text-sm text-blue-400 flex items-center justify-between">
                       <span className="flex items-center gap-2"><Edit2 className="w-4 h-4" /> Editing existing post</span>
                       <button onClick={resetCompose} className="text-rose-400 hover:text-rose-300 text-xs font-bold">✕ Cancel</button>
                     </div>

@@ -361,7 +361,7 @@ export default function SubscribersManager() {
                         ? prev.segments.filter(s => s !== seg)
                         : [...prev.segments, seg]
                     }))}
-                    className={`px-3 py-1 rounded-full text-xs font-medium border border-gray-200 dark:border-gray-700 ${campaignForm.segments.includes(seg) ? 'bg-blue-100 text-blue-700 border-b border-gray-200 dark:border-gray-700lue-200' : 'bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700'}`}
+                    className={`px-3 py-1 rounded-full text-xs font-medium border border-gray-200 dark:border-gray-700 ${campaignForm.segments.includes(seg) ? 'bg-blue-100 text-blue-700 border-blue-200' : 'bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700'}`}
                   >
                     {seg}
                   </button>

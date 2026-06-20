@@ -149,7 +149,7 @@ export default function ArticleForm({
               required
               value={formData.title}
               onChange={handleTitleChange}
-              className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:outline-none"
+              className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none"
             />
           </div>
           <div>
@@ -159,7 +159,7 @@ export default function ArticleForm({
               required
               value={formData.slug}
               onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-              className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:outline-none font-mono text-sm"
+              className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none font-mono text-sm"
             />
           </div>
         </div>
@@ -170,7 +170,7 @@ export default function ArticleForm({
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:outline-none"
+              className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none"
             >
               <option value="research">Research Papers</option>
               <option value="technology">Technical Guides</option>
@@ -194,7 +194,7 @@ export default function ArticleForm({
               onChange={(e) =>
                 setFormData({ ...formData, read_time: parseInt(e.target.value, 10) || 5 })
               }
-              className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:outline-none"
+              className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none"
             />
           </div>
         </div>
@@ -269,7 +269,7 @@ export default function ArticleForm({
             rows={3}
             value={formData.excerpt}
             onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-            className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:outline-none"
+            className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none"
           />
         </div>
 
@@ -280,7 +280,7 @@ export default function ArticleForm({
             rows={15}
             value={formData.content}
             onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-            className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:outline-none font-mono text-sm"
+            className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none font-mono text-sm"
           />
         </div>
 
@@ -290,7 +290,7 @@ export default function ArticleForm({
             type="text"
             value={formData.tags}
             onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-            className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:outline-none"
+            className="w-full bg-black/50 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none"
           />
         </div>
       </div>

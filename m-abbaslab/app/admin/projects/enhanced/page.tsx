@@ -136,7 +136,7 @@ export default function ProjectsEnhancedManager() {
       ) : (
         <div className="space-y-3">
           {filtered.map(project => (
-            <div key={project.id} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 flex items-center gap-4 hover:border-b border-gray-200 dark:border-gray-700lue-200 transition-all">
+            <div key={project.id} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 flex items-center gap-4 hover:border-blue-200 transition-all">
               {project.image_url && <img src={project.image_url} alt={project.title} className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">

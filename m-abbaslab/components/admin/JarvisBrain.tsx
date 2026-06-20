@@ -113,7 +113,7 @@ export default function JarvisBrain({
                         <input
                           value={editKeyword}
                           onChange={(e) => setEditKeyword(e.target.value)}
-                          className="w-full mt-1 bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500"
+                          className="w-full mt-1 bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500"
                         />
                       </div>
                       <div>
@@ -122,7 +122,7 @@ export default function JarvisBrain({
                           value={editResponse}
                           onChange={(e) => setEditResponse(e.target.value)}
                           rows={3}
-                          className="w-full mt-1 bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500"
+                          className="w-full mt-1 bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500"
                         />
                       </div>
                       <div className="flex gap-2 justify-end">
@@ -143,7 +143,7 @@ export default function JarvisBrain({
                   ) : (
                     <>
                       <div className="flex justify-between items-start">
-                        <span className="px-2.5 py-1 bg-blue-500/10 text-blue-500 text-xs font-mono font-bold rounded-lg border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/20">
+                        <span className="px-2.5 py-1 bg-blue-500/10 text-blue-500 text-xs font-mono font-bold rounded-lg border border-gray-200 dark:border-gray-700 border-blue-500/20">
                           keyword: "{rule.keyword}"
                         </span>
                         <div className="flex gap-1">
@@ -184,7 +184,7 @@ export default function JarvisBrain({
                 placeholder="e.g. royal icon events"
                 value={newKeyword}
                 onChange={(e) => setNewKeyword(e.target.value)}
-                className="w-full bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50"
+                className="w-full bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50"
               />
               <span className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 block">When a user mentions this exact phrase or word, Jarvis responds instantly with the trained text.</span>
             </div>
@@ -196,7 +196,7 @@ export default function JarvisBrain({
                 value={newResponse}
                 onChange={(e) => setNewResponse(e.target.value)}
                 rows={4}
-                className="w-full bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50 resize-none"
+                className="w-full bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 resize-none"
               />
             </div>
 
@@ -232,7 +232,7 @@ export default function JarvisBrain({
                       onClick={() => onScheduleChange && onScheduleChange({ ...schedule, type: mode.id })}
                       className={`p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-xs font-medium text-left transition-all ${
                         schedule.type === mode.id
-                          ? 'bg-blue-500/15 border-b border-gray-200 dark:border-gray-700lue-500/50 text-blue-600 dark:text-blue-400 shadow-sm'
+                          ? 'bg-blue-500/15 border-blue-500/50 text-blue-600 dark:text-blue-400 shadow-sm'
                           : 'bg-white dark:bg-black/20 border-gray-200 dark:border-white/5 text-gray-600 dark:text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-white/10'
                       }`}
                     >
@@ -251,7 +251,7 @@ export default function JarvisBrain({
                       type="time"
                       value={schedule.workingHoursStart || '08:00'}
                       onChange={(e) => onScheduleChange && onScheduleChange({ ...schedule, workingHoursStart: e.target.value })}
-                      className="w-full bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50 text-gray-800 dark:text-gray-200 font-mono"
+                      className="w-full bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-blue-500/50 text-gray-800 dark:text-gray-200 font-mono"
                     />
                   </div>
                   <div>
@@ -260,7 +260,7 @@ export default function JarvisBrain({
                       type="time"
                       value={schedule.workingHoursEnd || '17:00'}
                       onChange={(e) => onScheduleChange && onScheduleChange({ ...schedule, workingHoursEnd: e.target.value })}
-                      className="w-full bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50 text-gray-800 dark:text-gray-200 font-mono"
+                      className="w-full bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-blue-500/50 text-gray-800 dark:text-gray-200 font-mono"
                     />
                   </div>
                 </div>
@@ -271,7 +271,7 @@ export default function JarvisBrain({
                 <select
                   value={schedule.timezone || 'Africa/Nairobi'}
                   onChange={(e) => onScheduleChange && onScheduleChange({ ...schedule, timezone: e.target.value })}
-                  className="w-full bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50 text-gray-700 dark:text-gray-400 dark:text-gray-600 dark:text-gray-300"
+                  className="w-full bg-white dark:bg-black border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-500/50 text-gray-700 dark:text-gray-400 dark:text-gray-600 dark:text-gray-300"
                 >
                   <option value="Africa/Nairobi">Africa/Nairobi (EAT, UTC+3)</option>
                   <option value="UTC">Coordinated Universal Time (UTC)</option>
@@ -288,7 +288,7 @@ export default function JarvisBrain({
           </div>
 
           {/* Quick Guide */}
-          <div className="p-4 bg-blue-500/5 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/10 rounded-xl space-y-2">
+          <div className="p-4 bg-blue-500/5 border border-gray-200 dark:border-gray-700 border-blue-500/10 rounded-xl space-y-2">
             <h4 className="text-xs font-bold text-blue-500 flex items-center gap-1.5">
               <HelpCircle className="w-4 h-4" />
               How it works

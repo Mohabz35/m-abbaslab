@@ -214,7 +214,7 @@ export default function JarvisLearning() {
               {stats.topTopics.map(({ topic, count }) => (
                 <span
                   key={topic}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-100 dark:border-b border-gray-200 dark:border-gray-700lue-900/40"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-gray-200 dark:border-gray-700 border-blue-100 dark:border-blue-900/40"
                 >
                   <TrendingUp className="w-3 h-3" />
                   <span className="capitalize">{topic}</span>

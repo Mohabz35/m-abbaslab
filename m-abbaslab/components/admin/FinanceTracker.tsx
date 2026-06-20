@@ -424,7 +424,7 @@ export default function FinanceTracker() {
           </div>
         </div>
 
-        <div className="bg-blue-50 dark:bg-blue-900/10 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-100 dark:border-b border-gray-200 dark:border-gray-700lue-900/30">
+        <div className="bg-blue-50 dark:bg-blue-900/10 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 border-blue-100 dark:border-blue-900/30">
           <div className="flex items-center gap-2 text-sm text-blue-600/80 dark:text-blue-400/80 mb-2">
             <DollarSign className="w-4 h-4" />
             Net Balance
@@ -568,7 +568,7 @@ export default function FinanceTracker() {
                       value={amount}
                       onChange={e => setAmount(e.target.value)}
                       placeholder="0.00" 
-                      className="w-full bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                      className="w-full bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                     />
                   </div>
                   <div>
@@ -576,7 +576,7 @@ export default function FinanceTracker() {
                     <select 
                       value={category}
                       onChange={e => setCategory(e.target.value)}
-                      className="w-full bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:ring-1 focus:ring-blue-500 transition-all appearance-none"
+                      className="w-full bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all appearance-none"
                     >
                       <option value="">Select category...</option>
                       {entryType === 'expense' ? (
@@ -607,7 +607,7 @@ export default function FinanceTracker() {
                       type="date" 
                       value={date}
                       onChange={e => setDate(e.target.value)}
-                      className="w-full bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                      className="w-full bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                     />
                   </div>
                   <div>
@@ -617,7 +617,7 @@ export default function FinanceTracker() {
                       value={desc}
                       onChange={e => setDesc(e.target.value)}
                       placeholder="What was this for?" 
-                      className="w-full bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                      className="w-full bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                     />
                   </div>
                 </div>
@@ -730,7 +730,7 @@ export default function FinanceTracker() {
                       value={goalName}
                       onChange={e => setGoalName(e.target.value)}
                       placeholder="e.g. New Laptop" 
-                      className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500"
+                      className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:border-blue-500"
                     />
                   </div>
                   <div className="flex-1 w-full">
@@ -740,7 +740,7 @@ export default function FinanceTracker() {
                       value={goalTarget}
                       onChange={e => setGoalTarget(e.target.value)}
                       placeholder="KSh" 
-                      className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500"
+                      className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:border-blue-500"
                     />
                   </div>
                   <button 
@@ -792,7 +792,7 @@ export default function FinanceTracker() {
                             <input 
                               type="number" 
                               placeholder="KSh"
-                              className="w-full bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl pl-[90px] pr-4 py-2 text-sm text-gray-900 dark:text-white outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500"
+                              className="w-full bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl pl-[90px] pr-4 py-2 text-sm text-gray-900 dark:text-white outline-none focus:border-blue-500"
                               onBlur={(e) => {
                                 if (e.target.value) {
                                   handleUpdateGoalSaved(g.id, e.target.value)

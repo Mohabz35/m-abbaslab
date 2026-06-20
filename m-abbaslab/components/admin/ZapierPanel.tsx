@@ -363,7 +363,7 @@ export default function ZapierPanel() {
               {/* ── INCOMING WEBHOOK ── */}
               {activeTab === 'webhook' && (
                 <div className="space-y-5">
-                  <div className="bg-blue-500/10 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 rounded-xl p-4 flex gap-3">
+                  <div className="bg-blue-500/10 border border-gray-200 dark:border-gray-700 border-blue-500/30 rounded-xl p-4 flex gap-3">
                     <Globe className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-sm font-bold text-blue-400">Your Incoming Webhook URL</p>

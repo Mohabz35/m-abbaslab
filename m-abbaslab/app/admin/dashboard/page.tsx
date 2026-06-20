@@ -373,7 +373,7 @@ export default function AdminDashboardPage() {
                   isActive
                     ? isJarvis 
                       ? 'bg-purple-500/10 text-purple-400 border border-gray-200 dark:border-gray-700 border-purple-500/20 shadow-[inset_0_0_12px_rgba(168,85,247,0.1)]'
-                      : 'bg-blue-500/10 text-blue-400 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/20 shadow-[inset_0_0_12px_rgba(59,130,246,0.1)]'
+                      : 'bg-blue-500/10 text-blue-400 border border-gray-200 dark:border-gray-700 border-blue-500/20 shadow-[inset_0_0_12px_rgba(59,130,246,0.1)]'
                     : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border border-gray-200 dark:border-gray-700 border-transparent'
                 }`}
               >

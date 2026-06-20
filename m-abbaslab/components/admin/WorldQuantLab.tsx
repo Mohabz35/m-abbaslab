@@ -455,10 +455,10 @@ export default function WorldQuantLab() {
 
   const healthColor = getHealthColor()
   const hc = {
-    emerald: { bg: "bg-slate-950", border border-gray-200 dark:border-gray-700: "border-emerald-500/30", text: "text-emerald-400" },
-    amber: { bg: "bg-slate-950", border border-gray-200 dark:border-gray-700: "border-amber-500/30", text: "text-amber-400" },
-    red: { bg: "bg-slate-950", border border-gray-200 dark:border-gray-700: "border-red-500/30", text: "text-red-400" },
-    slate: { bg: "bg-slate-950", border border-gray-200 dark:border-gray-700: "border-slate-500/30", text: "text-slate-400" },
+    emerald: { bg: "bg-slate-950", border: "border-emerald-500/30", text: "text-emerald-400" },
+    amber: { bg: "bg-slate-950", border: "border-amber-500/30", text: "text-amber-400" },
+    red: { bg: "bg-slate-950", border: "border-red-500/30", text: "text-red-400" },
+    slate: { bg: "bg-slate-950", border: "border-slate-500/30", text: "text-slate-400" },
   }[healthColor]
 
   return (
@@ -505,7 +505,7 @@ export default function WorldQuantLab() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <div className={`flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 ${hc.border border-gray-200 dark:border-gray-700} bg-slate-900 shadow-lg`}>
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 ${hc.border} bg-slate-900 shadow-lg`}>
               <div className={`w-3 h-3 rounded-full ${healthColor === "emerald" ? "bg-emerald-400 animate-pulse" : healthColor === "amber" ? "bg-amber-400 animate-pulse" : healthColor === "red" ? "bg-red-400 animate-pulse" : "bg-slate-400"}`} />
               <span className={`text-sm font-mono ${hc.text} uppercase`}>{activeBatch?.health_status || "STANDBY"}</span>
             </div>
@@ -553,7 +553,7 @@ export default function WorldQuantLab() {
         <div className="grid grid-cols-12 gap-6">
           {/* LEFT: Neural Network + Working Quants */}
           <div className="col-span-12 lg:col-span-7 space-y-6">
-            <div className={`rounded-2xl border border-gray-200 dark:border-gray-700 ${hc.border border-gray-200 dark:border-gray-700} bg-slate-900 p-1 shadow-2xl`}>
+            <div className={`rounded-2xl border border-gray-200 dark:border-gray-700 ${hc.border} bg-slate-900 p-1 shadow-2xl`}>
               <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 border-slate-800/50">
                 <div className="flex items-center gap-2">
                   <Network className="w-5 h-5 text-emerald-400" />
@@ -636,7 +636,7 @@ export default function WorldQuantLab() {
                   <button onClick={() => setActiveTab('brain')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'brain' ? 'text-purple-400 border-b-2 border-purple-400' : 'text-slate-400'}`}>
                     <Brain className="w-4 h-4" /> ALPHA BRAIN (FAILED)
                   </button>
-                  <button onClick={() => setActiveTab('console')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'console' ? 'text-blue-400 border-b-2 border-b border-gray-200 dark:border-gray-700lue-400' : 'text-slate-400'}`}>
+                  <button onClick={() => setActiveTab('console')} className={`flex items-center gap-2 font-mono text-sm transition-colors ${activeTab === 'console' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-slate-400'}`}>
                     <Terminal className="w-4 h-4" /> LIVE CONSOLE
                   </button>
                 </div>

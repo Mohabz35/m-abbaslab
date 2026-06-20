@@ -298,7 +298,7 @@ export default function WhatsAppConnection() {
                 <div className="space-y-4 max-w-md">
                   {pairingCode ? (
                     <div className="space-y-4">
-                      <div className="bg-blue-50 dark:bg-blue-950/20 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-100 dark:border-b border-gray-200 dark:border-gray-700lue-900 rounded-2xl px-6 py-4 inline-block font-mono text-xl font-bold tracking-widest text-blue-600 dark:text-blue-400 select-all shadow-sm">
+                      <div className="bg-blue-50 dark:bg-blue-950/20 border border-gray-200 dark:border-gray-700 border-blue-100 dark:border-blue-900 rounded-2xl px-6 py-4 inline-block font-mono text-xl font-bold tracking-widest text-blue-600 dark:text-blue-400 select-all shadow-sm">
                         {pairingCode}
                       </div>
                       <div>

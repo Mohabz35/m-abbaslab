@@ -58,7 +58,7 @@ export default function AdminPage() {
       <div className="max-w-7xl mx-auto relative z-10">
         <header className="flex justify-between items-center mb-12 border-b border-gray-200 dark:border-gray-700 border-white/10 pb-6">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/50">
+            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center border border-gray-200 dark:border-gray-700 border-blue-500/50">
               <Shield className="w-6 h-6 text-blue-400 animate-pulse" />
             </div>
             <div>
@@ -79,7 +79,7 @@ export default function AdminPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.08 }}
-              className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 p-6 rounded-xl backdrop-blur-sm hover:border-b border-gray-200 dark:border-gray-700lue-500/30 transition-colors"
+              className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 p-6 rounded-xl backdrop-blur-sm hover:border-blue-500/30 transition-colors"
             >
               <div className="flex justify-between items-start mb-4">
                 <stat.icon className={`w-8 h-8 ${stat.color}`} />

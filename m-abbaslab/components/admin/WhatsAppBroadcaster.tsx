@@ -239,7 +239,7 @@ export default function WhatsAppBroadcaster() {
         {isSending ? 'Sending...' : `Send Broadcast (${selectedCount})`}
       </button>
 
-      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-200 dark:border-b border-gray-200 dark:border-gray-700lue-800 rounded-lg flex gap-2">
+      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-gray-200 dark:border-gray-700 border-blue-200 dark:border-blue-800 rounded-lg flex gap-2">
         <AlertCircle className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
         <p className="text-xs text-blue-600 dark:text-blue-400">
           Broadcasts are sent with a 100ms delay between messages to reduce rate-limit risks.

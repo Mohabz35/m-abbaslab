@@ -1185,7 +1185,7 @@ export default function DisciplineOS() {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowAddHabit(!showAddHabit)}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600/20 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 rounded-xl text-blue-400 text-xs font-bold hover:bg-blue-600/30 transition-all"
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600/20 border border-gray-200 dark:border-gray-700 border-blue-500/30 rounded-xl text-blue-400 text-xs font-bold hover:bg-blue-600/30 transition-all"
               >
                 <Plus className="w-3 h-3" />
                 {showAddHabit ? 'CANCEL' : 'ADD HABIT'}
@@ -1205,7 +1205,7 @@ export default function DisciplineOS() {
 
             {/* Add Habit Form */}
             {showAddHabit && (
-              <GlassPanel className="border-b border-gray-200 dark:border-gray-700lue-500/20">
+              <GlassPanel className="border-blue-500/20">
                 <h3 className="text-sm font-bold text-blue-400 mb-3">Add Custom Habit</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input
@@ -1213,12 +1213,12 @@ export default function DisciplineOS() {
                     value={newHabitName}
                     onChange={e => setNewHabitName(e.target.value)}
                     placeholder="Habit name"
-                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-600 dark:text-gray-400 focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50"
+                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-600 dark:text-gray-400 focus:outline-none focus:border-blue-500/50"
                   />
                   <select
                     value={newHabitCategory}
                     onChange={e => setNewHabitCategory(e.target.value as HabitItem['category'])}
-                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50"
+                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500/50"
                   >
                     {Object.keys(HABIT_CATEGORY_LABELS).map(c => (
                       <option key={c} value={c}>{HABIT_CATEGORY_LABELS[c].label}</option>
@@ -1227,7 +1227,7 @@ export default function DisciplineOS() {
                   <select
                     value={newHabitDifficulty}
                     onChange={e => setNewHabitDifficulty(e.target.value as HabitItem['difficulty'])}
-                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50"
+                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500/50"
                   >
                     <option value="simple">Simple (2min)</option>
                     <option value="medium">Medium (10min)</option>
@@ -1239,12 +1239,12 @@ export default function DisciplineOS() {
                     value={newHabitCue}
                     onChange={e => setNewHabitCue(e.target.value)}
                     placeholder="Cue (e.g., After waking up)"
-                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-600 dark:text-gray-400 focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50"
+                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-gray-600 dark:text-gray-400 focus:outline-none focus:border-blue-500/50"
                   />
                   <select
                     value={newHabitStackAfter}
                     onChange={e => setNewHabitStackAfter(e.target.value)}
-                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50"
+                    className="bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500/50"
                   >
                     <option value="">No habit stack</option>
                     {habits.map(h => (
@@ -1920,7 +1920,7 @@ export default function DisciplineOS() {
               ) : wisdomFeed.length > 0 ? (
                 <div className="space-y-3">
                   {wisdomFeed.map(item => (
-                    <div key={item.id} className="bg-blue-500/5 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/20 rounded-xl p-4 flex gap-3">
+                    <div key={item.id} className="bg-blue-500/5 border border-gray-200 dark:border-gray-700 border-blue-500/20 rounded-xl p-4 flex gap-3">
                       {item.type === 'alert' && <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />}
                       {item.type === 'insight' && <Brain className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />}
                       {item.type === 'action' && <Zap className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />}

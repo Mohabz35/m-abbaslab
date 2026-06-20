@@ -109,11 +109,11 @@ export default function SystemSettings() {
             </label>
             <label className="flex items-center justify-between text-sm text-gray-400 dark:text-gray-600 dark:text-gray-300">
               <span>Max Drawdown Tolerance (%)</span>
-              <input type="number" step="0.01" value={config.worldQuant.riskTolerance} onChange={e => setConfig({ ...config, worldQuant: { ...config.worldQuant, riskTolerance: parseFloat(e.target.value) } })} className="w-20 bg-gray-900 border border-gray-200 dark:border-gray-700 border-gray-700 rounded px-2 py-1 outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500" />
+              <input type="number" step="0.01" value={config.worldQuant.riskTolerance} onChange={e => setConfig({ ...config, worldQuant: { ...config.worldQuant, riskTolerance: parseFloat(e.target.value) } })} className="w-20 bg-gray-900 border border-gray-200 dark:border-gray-700 border-gray-700 rounded px-2 py-1 outline-none focus:border-blue-500" />
             </label>
             <label className="flex items-center justify-between text-sm text-gray-400 dark:text-gray-600 dark:text-gray-300">
               <span>Backtest Duration (Years)</span>
-              <input type="number" value={config.worldQuant.backtestYears} onChange={e => setConfig({ ...config, worldQuant: { ...config.worldQuant, backtestYears: parseInt(e.target.value) } })} className="w-20 bg-gray-900 border border-gray-200 dark:border-gray-700 border-gray-700 rounded px-2 py-1 outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500" />
+              <input type="number" value={config.worldQuant.backtestYears} onChange={e => setConfig({ ...config, worldQuant: { ...config.worldQuant, backtestYears: parseInt(e.target.value) } })} className="w-20 bg-gray-900 border border-gray-200 dark:border-gray-700 border-gray-700 rounded px-2 py-1 outline-none focus:border-blue-500" />
             </label>
           </div>
         </div>
@@ -125,15 +125,15 @@ export default function SystemSettings() {
           <div className="space-y-4">
             <label className="flex items-center justify-between text-sm text-gray-400 dark:text-gray-600 dark:text-gray-300">
               <span>Default Currency</span>
-              <input type="text" value={config.finance.defaultCurrency} onChange={e => setConfig({ ...config, finance: { ...config.finance, defaultCurrency: e.target.value } })} className="w-20 bg-gray-900 border border-gray-200 dark:border-gray-700 border-gray-700 rounded px-2 py-1 outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500" />
+              <input type="text" value={config.finance.defaultCurrency} onChange={e => setConfig({ ...config, finance: { ...config.finance, defaultCurrency: e.target.value } })} className="w-20 bg-gray-900 border border-gray-200 dark:border-gray-700 border-gray-700 rounded px-2 py-1 outline-none focus:border-blue-500" />
             </label>
             <label className="flex items-center justify-between text-sm text-gray-400 dark:text-gray-600 dark:text-gray-300">
               <span>Tax Rate (%)</span>
-              <input type="number" step="0.1" value={config.finance.taxRate} onChange={e => setConfig({ ...config, finance: { ...config.finance, taxRate: parseFloat(e.target.value) } })} className="w-20 bg-gray-900 border border-gray-200 dark:border-gray-700 border-gray-700 rounded px-2 py-1 outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500" />
+              <input type="number" step="0.1" value={config.finance.taxRate} onChange={e => setConfig({ ...config, finance: { ...config.finance, taxRate: parseFloat(e.target.value) } })} className="w-20 bg-gray-900 border border-gray-200 dark:border-gray-700 border-gray-700 rounded px-2 py-1 outline-none focus:border-blue-500" />
             </label>
             <label className="flex items-center justify-between text-sm text-gray-400 dark:text-gray-600 dark:text-gray-300">
               <span>Savings Target (%)</span>
-              <input type="number" value={config.finance.savingsTargetPercent} onChange={e => setConfig({ ...config, finance: { ...config.finance, savingsTargetPercent: parseInt(e.target.value) } })} className="w-20 bg-gray-900 border border-gray-200 dark:border-gray-700 border-gray-700 rounded px-2 py-1 outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500" />
+              <input type="number" value={config.finance.savingsTargetPercent} onChange={e => setConfig({ ...config, finance: { ...config.finance, savingsTargetPercent: parseInt(e.target.value) } })} className="w-20 bg-gray-900 border border-gray-200 dark:border-gray-700 border-gray-700 rounded px-2 py-1 outline-none focus:border-blue-500" />
             </label>
           </div>
         </div>
@@ -161,7 +161,7 @@ export default function SystemSettings() {
           <div className="space-y-4">
             <label className="flex items-center justify-between text-sm text-gray-400 dark:text-gray-600 dark:text-gray-300">
               <span>Default Sizing Standard</span>
-              <select value={config.fashion.defaultSizing} onChange={e => setConfig({ ...config, fashion: { ...config.fashion, defaultSizing: e.target.value } })} className="bg-gray-900 border border-gray-200 dark:border-gray-700 border-gray-700 rounded px-2 py-1 outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500">
+              <select value={config.fashion.defaultSizing} onChange={e => setConfig({ ...config, fashion: { ...config.fashion, defaultSizing: e.target.value } })} className="bg-gray-900 border border-gray-200 dark:border-gray-700 border-gray-700 rounded px-2 py-1 outline-none focus:border-blue-500">
                 <option value="EU">EU</option>
                 <option value="US">US</option>
                 <option value="UK">UK</option>
@@ -169,7 +169,7 @@ export default function SystemSettings() {
             </label>
             <label className="flex items-center justify-between text-sm text-gray-400 dark:text-gray-600 dark:text-gray-300">
               <span>Low Stock Warning Threshold</span>
-              <input type="number" value={config.fashion.lowStockThreshold} onChange={e => setConfig({ ...config, fashion: { ...config.fashion, lowStockThreshold: parseInt(e.target.value) } })} className="w-20 bg-gray-900 border border-gray-200 dark:border-gray-700 border-gray-700 rounded px-2 py-1 outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500" />
+              <input type="number" value={config.fashion.lowStockThreshold} onChange={e => setConfig({ ...config, fashion: { ...config.fashion, lowStockThreshold: parseInt(e.target.value) } })} className="w-20 bg-gray-900 border border-gray-200 dark:border-gray-700 border-gray-700 rounded px-2 py-1 outline-none focus:border-blue-500" />
             </label>
           </div>
         </div>

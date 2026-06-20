@@ -255,15 +255,15 @@ export default function SettingsHub() {
   ]
 
   const getColorClasses = (color: string) => {
-    const colors: Record<string, { bg: string; text: string; border border-gray-200 dark:border-gray-700: string; icon: string }> = {
-      emerald: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border border-gray-200 dark:border-gray-700: 'border-emerald-500/20', icon: 'bg-emerald-500/20' },
-      blue: { bg: 'bg-blue-500/10', text: 'text-blue-400', border border-gray-200 dark:border-gray-700: 'border-b border-gray-200 dark:border-gray-700lue-500/20', icon: 'bg-blue-500/20' },
-      amber: { bg: 'bg-amber-500/10', text: 'text-amber-400', border border-gray-200 dark:border-gray-700: 'border-amber-500/20', icon: 'bg-amber-500/20' },
-      purple: { bg: 'bg-purple-500/10', text: 'text-purple-400', border border-gray-200 dark:border-gray-700: 'border-purple-500/20', icon: 'bg-purple-500/20' },
-      cyan: { bg: 'bg-cyan-500/10', text: 'text-cyan-400', border border-gray-200 dark:border-gray-700: 'border-cyan-500/20', icon: 'bg-cyan-500/20' },
-      green: { bg: 'bg-green-500/10', text: 'text-green-400', border border-gray-200 dark:border-gray-700: 'border-green-500/20', icon: 'bg-green-500/20' },
-      red: { bg: 'bg-red-500/10', text: 'text-red-400', border border-gray-200 dark:border-gray-700: 'border-red-500/20', icon: 'bg-red-500/20' },
-      pink: { bg: 'bg-pink-500/10', text: 'text-pink-400', border border-gray-200 dark:border-gray-700: 'border-pink-500/20', icon: 'bg-pink-500/20' },
+    const colors: Record<string, { bg: string; text: string; border: string; icon: string }> = {
+      emerald: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20', icon: 'bg-emerald-500/20' },
+      blue: { bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/20', icon: 'bg-blue-500/20' },
+      amber: { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/20', icon: 'bg-amber-500/20' },
+      purple: { bg: 'bg-purple-500/10', text: 'text-purple-400', border: 'border-purple-500/20', icon: 'bg-purple-500/20' },
+      cyan: { bg: 'bg-cyan-500/10', text: 'text-cyan-400', border: 'border-cyan-500/20', icon: 'bg-cyan-500/20' },
+      green: { bg: 'bg-green-500/10', text: 'text-green-400', border: 'border-green-500/20', icon: 'bg-green-500/20' },
+      red: { bg: 'bg-red-500/10', text: 'text-red-400', border: 'border-red-500/20', icon: 'bg-red-500/20' },
+      pink: { bg: 'bg-pink-500/10', text: 'text-pink-400', border: 'border-pink-500/20', icon: 'bg-pink-500/20' },
     }
     return colors[color] || colors.blue
   }
@@ -302,7 +302,7 @@ export default function SettingsHub() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 isActive
-                  ? 'bg-blue-500/10 text-blue-400 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30'
+                  ? 'bg-blue-500/10 text-blue-400 border border-gray-200 dark:border-gray-700 border-blue-500/30'
                   : 'text-slate-400 hover:text-slate-300 border border-gray-200 dark:border-gray-700 border-transparent'
               }`}
             >
@@ -350,11 +350,11 @@ export default function SettingsHub() {
                   </label>
                   <label className="flex items-center justify-between text-sm text-slate-300">
                     <span>Max Drawdown Tolerance (%)</span>
-                    <input type="number" step="0.01" value={systemConfig.worldQuant.riskTolerance} onChange={e => setSystemConfig({ ...systemConfig, worldQuant: { ...systemConfig.worldQuant, riskTolerance: parseFloat(e.target.value) } })} className="w-20 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded px-2 py-1 outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500 text-white" />
+                    <input type="number" step="0.01" value={systemConfig.worldQuant.riskTolerance} onChange={e => setSystemConfig({ ...systemConfig, worldQuant: { ...systemConfig.worldQuant, riskTolerance: parseFloat(e.target.value) } })} className="w-20 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded px-2 py-1 outline-none focus:border-blue-500 text-white" />
                   </label>
                   <label className="flex items-center justify-between text-sm text-slate-300">
                     <span>Backtest Duration (Years)</span>
-                    <input type="number" value={systemConfig.worldQuant.backtestYears} onChange={e => setSystemConfig({ ...systemConfig, worldQuant: { ...systemConfig.worldQuant, backtestYears: parseInt(e.target.value) } })} className="w-20 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded px-2 py-1 outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500 text-white" />
+                    <input type="number" value={systemConfig.worldQuant.backtestYears} onChange={e => setSystemConfig({ ...systemConfig, worldQuant: { ...systemConfig.worldQuant, backtestYears: parseInt(e.target.value) } })} className="w-20 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded px-2 py-1 outline-none focus:border-blue-500 text-white" />
                   </label>
                 </div>
               </div>
@@ -366,15 +366,15 @@ export default function SettingsHub() {
                 <div className="space-y-4">
                   <label className="flex items-center justify-between text-sm text-slate-300">
                     <span>Default Currency</span>
-                    <input type="text" value={systemConfig.finance.defaultCurrency} onChange={e => setSystemConfig({ ...systemConfig, finance: { ...systemConfig.finance, defaultCurrency: e.target.value } })} className="w-20 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded px-2 py-1 outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500 text-white" />
+                    <input type="text" value={systemConfig.finance.defaultCurrency} onChange={e => setSystemConfig({ ...systemConfig, finance: { ...systemConfig.finance, defaultCurrency: e.target.value } })} className="w-20 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded px-2 py-1 outline-none focus:border-blue-500 text-white" />
                   </label>
                   <label className="flex items-center justify-between text-sm text-slate-300">
                     <span>Tax Rate (%)</span>
-                    <input type="number" step="0.1" value={systemConfig.finance.taxRate} onChange={e => setSystemConfig({ ...systemConfig, finance: { ...systemConfig.finance, taxRate: parseFloat(e.target.value) } })} className="w-20 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded px-2 py-1 outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500 text-white" />
+                    <input type="number" step="0.1" value={systemConfig.finance.taxRate} onChange={e => setSystemConfig({ ...systemConfig, finance: { ...systemConfig.finance, taxRate: parseFloat(e.target.value) } })} className="w-20 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded px-2 py-1 outline-none focus:border-blue-500 text-white" />
                   </label>
                   <label className="flex items-center justify-between text-sm text-slate-300">
                     <span>Savings Target (%)</span>
-                    <input type="number" value={systemConfig.finance.savingsTargetPercent} onChange={e => setSystemConfig({ ...systemConfig, finance: { ...systemConfig.finance, savingsTargetPercent: parseInt(e.target.value) } })} className="w-20 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded px-2 py-1 outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500 text-white" />
+                    <input type="number" value={systemConfig.finance.savingsTargetPercent} onChange={e => setSystemConfig({ ...systemConfig, finance: { ...systemConfig.finance, savingsTargetPercent: parseInt(e.target.value) } })} className="w-20 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded px-2 py-1 outline-none focus:border-blue-500 text-white" />
                   </label>
                 </div>
               </div>
@@ -402,7 +402,7 @@ export default function SettingsHub() {
                 <div className="space-y-4">
                   <label className="flex items-center justify-between text-sm text-slate-300">
                     <span>Default Sizing Standard</span>
-                    <select value={systemConfig.fashion.defaultSizing} onChange={e => setSystemConfig({ ...systemConfig, fashion: { ...systemConfig.fashion, defaultSizing: e.target.value } })} className="bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded px-2 py-1 outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500 text-white">
+                    <select value={systemConfig.fashion.defaultSizing} onChange={e => setSystemConfig({ ...systemConfig, fashion: { ...systemConfig.fashion, defaultSizing: e.target.value } })} className="bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded px-2 py-1 outline-none focus:border-blue-500 text-white">
                       <option value="EU">EU</option>
                       <option value="US">US</option>
                       <option value="UK">UK</option>
@@ -410,7 +410,7 @@ export default function SettingsHub() {
                   </label>
                   <label className="flex items-center justify-between text-sm text-slate-300">
                     <span>Low Stock Warning Threshold</span>
-                    <input type="number" value={systemConfig.fashion.lowStockThreshold} onChange={e => setSystemConfig({ ...systemConfig, fashion: { ...systemConfig.fashion, lowStockThreshold: parseInt(e.target.value) } })} className="w-20 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded px-2 py-1 outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500 text-white" />
+                    <input type="number" value={systemConfig.fashion.lowStockThreshold} onChange={e => setSystemConfig({ ...systemConfig, fashion: { ...systemConfig.fashion, lowStockThreshold: parseInt(e.target.value) } })} className="w-20 bg-slate-900 border border-gray-200 dark:border-gray-700 border-slate-700 rounded px-2 py-1 outline-none focus:border-blue-500 text-white" />
                   </label>
                 </div>
               </div>
@@ -448,7 +448,7 @@ export default function SettingsHub() {
             const cc = getColorClasses(mod.color)
             const isExpanded = expandedModule === mod.id
             return (
-              <div key={mod.id} className={`rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 bg-slate-800 overflow-hidden transition-all ${isExpanded ? `shadow-lg ${cc.border border-gray-200 dark:border-gray-700}` : ''}`}>
+              <div key={mod.id} className={`rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 bg-slate-800 overflow-hidden transition-all ${isExpanded ? `shadow-lg ${cc.border}` : ''}`}>
                 <button
                   onClick={() => setExpandedModule(isExpanded ? null : mod.id)}
                   className={`w-full flex items-center justify-between px-5 py-4 transition-colors ${isExpanded ? cc.bg : 'hover:bg-slate-700/50'}`}

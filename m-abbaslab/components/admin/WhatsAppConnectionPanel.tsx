@@ -114,7 +114,7 @@ export default function WhatsAppConnectionPanel() {
 
       {/* Pairing Code Display */}
       {pairingCode && !isConnected && (
-        <div className="mb-6 p-4 bg-blue-900 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-700 rounded-lg">
+        <div className="mb-6 p-4 bg-blue-900 border border-gray-200 dark:border-gray-700 border-blue-700 rounded-lg">
           <p className="text-xs text-blue-200 mb-3 font-semibold">🔑 PAIRING CODE</p>
           <div className="flex items-center gap-2 mb-3">
             <code className="flex-1 text-lg font-mono font-bold text-blue-100 bg-blue-950 p-3 rounded text-center tracking-widest">

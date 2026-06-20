@@ -165,7 +165,7 @@ export default function OverviewDashboard() {
     <div className="space-y-6">
       
       {/* Top Banner - Streaks & Greeting */}
-      <div className="bg-gradient-to-r from-blue-900 to-indigo-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 flex justify-between items-center shadow-lg">
+      <div className="bg-gradient-to-r from-blue-900 to-indigo-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 border-blue-500/30 flex justify-between items-center shadow-lg">
         <div>
           <h2 className="text-2xl font-bold text-white mb-1">Welcome back, Commander.</h2>
           <p className="text-blue-200 text-sm">All intelligence systems are online and awaiting your orders.</p>
@@ -193,7 +193,7 @@ export default function OverviewDashboard() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {/* Alphas Card */}
-            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} className="bg-slate-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 hover:border-b border-gray-200 dark:border-gray-700lue-500/50 transition-colors">
+            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} className="bg-slate-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 border-slate-700 hover:border-blue-500/50 transition-colors">
               <div className="flex justify-between items-start mb-2">
                 <div className="p-2 bg-blue-500/20 rounded-lg"><Zap className="w-5 h-5 text-blue-400" /></div>
               </div>
@@ -298,7 +298,7 @@ export default function OverviewDashboard() {
                 wisdomFeed.map((item: any) => (
                   <div key={item.id} className={`p-4 rounded-lg border border-gray-200 dark:border-gray-700 ${
                     item.type === 'alert' ? 'bg-red-500/10 border-red-500/20' : 
-                    item.type === 'action' ? 'bg-blue-500/10 border-b border-gray-200 dark:border-gray-700lue-500/20' : 
+                    item.type === 'action' ? 'bg-blue-500/10 border-blue-500/20' : 
                     'bg-slate-900 border-slate-700'
                   }`}>
                     <div className="flex items-center gap-2 mb-2">

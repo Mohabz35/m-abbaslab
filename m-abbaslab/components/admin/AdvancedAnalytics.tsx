@@ -167,7 +167,7 @@ export default function AdvancedAnalytics() {
         </div>
         <div className="flex items-center gap-2">
           {(['7d', '30d', '90d', 'all'] as const).map(opt => (
-            <button key={opt} onClick={() => setDateRange(opt)} className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${dateRange === opt ? 'bg-blue-500/20 text-blue-400 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30' : 'bg-slate-800 text-slate-400 border border-gray-200 dark:border-gray-700 border-slate-700 hover:border-slate-600'}`}>
+            <button key={opt} onClick={() => setDateRange(opt)} className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${dateRange === opt ? 'bg-blue-500/20 text-blue-400 border border-gray-200 dark:border-gray-700 border-blue-500/30' : 'bg-slate-800 text-slate-400 border border-gray-200 dark:border-gray-700 border-slate-700 hover:border-slate-600'}`}>
               {opt === 'all' ? 'ALL' : opt.toUpperCase()}
             </button>
           ))}
@@ -258,7 +258,7 @@ export default function AdvancedAnalytics() {
 
           {/* Summary Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gradient-to-br from-blue-900/30 to-slate-900 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/20 rounded-xl p-5">
+            <div className="bg-gradient-to-br from-blue-900/30 to-slate-900 border border-gray-200 dark:border-gray-700 border-blue-500/20 rounded-xl p-5">
               <div className="text-xs text-blue-300 uppercase tracking-wider font-bold mb-2">Alpha Efficiency</div>
               <div className="text-3xl font-bold text-white">{data.alphas.total > 0 ? `${Math.round((data.alphas.passed / data.alphas.total) * 100)}%` : 'N/A'}</div>
               <div className="text-xs text-slate-400 mt-1">Pass rate across all batches</div>

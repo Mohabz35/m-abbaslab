@@ -24,7 +24,7 @@ type Submission = {
 }
 
 const statusColors: Record<string, string> = {
-  new: 'bg-blue-100 text-blue-700 border-b border-gray-200 dark:border-gray-700lue-200',
+  new: 'bg-blue-100 text-blue-700 border-blue-200',
   read: 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-700',
   in_progress: 'bg-amber-100 text-amber-700 border-amber-200',
   replied: 'bg-green-100 text-green-700 border-green-200',
@@ -230,7 +230,7 @@ export default function ContactSubmissionsManager() {
           <button
             key={s.key}
             onClick={() => setFilter(s.key)}
-            className={`p-3 rounded-xl border border-gray-200 dark:border-gray-700 text-center transition-all ${filter === s.key ? 'bg-blue-50 border-b border-gray-200 dark:border-gray-700lue-200 text-blue-700' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-gray-300'}`}
+            className={`p-3 rounded-xl border border-gray-200 dark:border-gray-700 text-center transition-all ${filter === s.key ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-gray-300'}`}
           >
             <div className="text-xl font-bold">{s.value}</div>
             <div className="text-xs text-gray-500 dark:text-gray-400">{s.label}</div>
@@ -264,7 +264,7 @@ export default function ContactSubmissionsManager() {
             <div
               key={s.id}
               onClick={() => { setSelectedSubmission(s); setNotes(s.internal_notes || '') }}
-              className={`bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 cursor-pointer hover:border-b border-gray-200 dark:border-gray-700lue-200 transition-all flex items-center gap-4 ${s.status === 'new' ? 'border-l-4 border-l-blue-500' : ''}`}
+              className={`bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 cursor-pointer hover:border-blue-200 transition-all flex items-center gap-4 ${s.status === 'new' ? 'border-l-4 border-l-blue-500' : ''}`}
             >
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                 {s.name.charAt(0)}

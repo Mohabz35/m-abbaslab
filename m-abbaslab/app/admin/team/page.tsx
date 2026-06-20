@@ -34,7 +34,7 @@ type ActivityLog = {
 
 const roleColors: Record<string, string> = {
   admin: 'bg-red-100 text-red-700 border-red-200',
-  editor: 'bg-blue-100 text-blue-700 border-b border-gray-200 dark:border-gray-700lue-200',
+  editor: 'bg-blue-100 text-blue-700 border-blue-200',
   viewer: 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700',
 }
 

@@ -135,7 +135,7 @@ function WhatsAppConnectGuide() {
           <div className="text-xs text-amber-300 font-bold">⚠️ $0.01-0.08 per conversation. Business verification required.</div>
         </div>
 
-        <div className="bg-blue-500/10 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 rounded-xl p-5 space-y-2">
+        <div className="bg-blue-500/10 border border-gray-200 dark:border-gray-700 border-blue-500/30 rounded-xl p-5 space-y-2">
           <div className="font-bold text-blue-400 flex items-center gap-2"><Globe className="w-4 h-4" /> Option 3 — Render.com (Current)</div>
           <p className="text-sm text-slate-300">Your existing Render-hosted Baileys engine. Just ensure it stays running. The dashboard connects to it via the engine URL in settings.</p>
           <div className="text-xs text-blue-300 font-bold">✅ Already working. Engine URL needs to be healthy.</div>
@@ -351,7 +351,7 @@ export default function CommsHub() {
                 onClick={() => setActiveTab(id)}
                 className={`flex items-center gap-2 px-4 py-3.5 text-xs font-bold uppercase tracking-widest border-b-2 transition-all whitespace-nowrap shrink-0 ${
                   activeTab === id
-                    ? 'border-b border-gray-200 dark:border-gray-700lue-500 text-blue-400 bg-blue-500/5'
+                    ? 'border-blue-500 text-blue-400 bg-blue-500/5'
                     : 'border-transparent text-slate-400 hover:text-slate-300 hover:bg-slate-700/30'
                 }`}
               >
@@ -448,7 +448,7 @@ export default function CommsHub() {
               {/* SANDBOX TAB */}
               {activeTab === 'sandbox' && (
                 <div className="space-y-4">
-                  <div className="bg-blue-500/10 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 rounded-xl p-4 flex gap-3">
+                  <div className="bg-blue-500/10 border border-gray-200 dark:border-gray-700 border-blue-500/30 rounded-xl p-4 flex gap-3">
                     <Smartphone className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                     <p className="text-sm text-blue-300">
                       <strong>Bot Sandbox:</strong> Simulate sending and receiving WhatsApp messages to test your bot responses before going live. The sandbox echoes messages locally — no real WhatsApp messages are sent here.

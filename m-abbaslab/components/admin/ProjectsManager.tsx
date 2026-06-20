@@ -92,7 +92,7 @@ export default function ProjectsManager() {
   }
 
   const columns = [
-    { id: 'planning', label: 'Planning', color: 'border-b border-gray-200 dark:border-gray-700lue-500' },
+    { id: 'planning', label: 'Planning', color: 'border-blue-500' },
     { id: 'in-progress', label: 'In Progress', color: 'border-amber-500' },
     { id: 'shipped', label: 'Shipped', color: 'border-emerald-500' }
   ]

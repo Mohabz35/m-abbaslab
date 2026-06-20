@@ -61,7 +61,7 @@ function LoginForm() {
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 15 }}
-              className="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-gray-200 dark:border-gray-700 border-b border-gray-200 dark:border-gray-700lue-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(59,130,246,0.15)]"
+              className="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-gray-200 dark:border-gray-700 border-blue-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(59,130,246,0.15)]"
             >
               <ShieldCheck className="w-8 h-8 text-blue-400" />
             </motion.div>
@@ -81,7 +81,7 @@ function LoginForm() {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-gray-600 dark:text-gray-300 focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50 focus:bg-white dark:bg-gray-800/10 transition-all"
+                  className="w-full bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-gray-600 dark:text-gray-300 focus:outline-none focus:border-blue-500/50 focus:bg-white dark:bg-gray-800/10 transition-all"
                   placeholder="Enter administrator username"
                   required
                   autoComplete="username"
@@ -100,7 +100,7 @@ function LoginForm() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-gray-600 dark:text-gray-300 focus:outline-none focus:border-b border-gray-200 dark:border-gray-700lue-500/50 focus:bg-white dark:bg-gray-800/10 transition-all"
+                  className="w-full bg-white dark:bg-gray-800/5 border border-gray-200 dark:border-gray-700 border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-gray-600 dark:text-gray-300 focus:outline-none focus:border-blue-500/50 focus:bg-white dark:bg-gray-800/10 transition-all"
                   placeholder="••••••••••••"
                   required
                   autoComplete="current-password"
@@ -154,7 +154,7 @@ export default function AdminLoginPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-[#050508] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-b border-gray-200 dark:border-gray-700lue-500/30 border-t-blue-500 rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
       </div>
     }>
       <LoginForm />
