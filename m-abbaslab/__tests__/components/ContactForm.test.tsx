@@ -82,7 +82,7 @@ describe('ContactForm', () => {
     fireEvent.click(submitButton)
 
     await waitFor(() => {
-      expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument()
+      expect(screen.getByText(/Network error/i)).toBeInTheDocument()
     })
   })
 })

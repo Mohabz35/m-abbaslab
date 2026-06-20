@@ -1,5 +1,3 @@
-/// <reference lib="webworker" />
-
 const CACHE_NAME = 'm-abbaslab-v1';
 const PRECACHE_URLS = [
   '/',
@@ -7,29 +5,28 @@ const PRECACHE_URLS = [
 ];
 
 self.addEventListener('install', (event) => {
-  (event as ExtendableEvent).waitUntil(
+  event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS))
   );
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  (event as ExtendableEvent).waitUntil(
+  event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
     )
   );
-  (self as unknown as { clients: Client[] }).clients.claim();
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
-  const fetchEvent = event as FetchEvent;
-  const { request } = fetchEvent;
+  const { request } = event;
 
   if (request.method !== 'GET') return;
 
   if (request.url.includes('/api/')) {
-    fetchEvent.respondWith(
+    event.respondWith(
       fetch(request)
         .then((response) => {
           if (response.ok) {
@@ -38,13 +35,13 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(() => caches.match(request) as Promise<Response | undefined>)
+        .catch(() => caches.match(request))
     );
     return;
   }
 
   if (request.url.includes('supabase.co/storage') || request.url.includes('res.cloudinary.com')) {
-    fetchEvent.respondWith(
+    event.respondWith(
       caches.match(request).then((cached) => {
         if (cached) return cached;
         return fetch(request).then((response) => {
@@ -54,12 +51,12 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         });
-      }) as Promise<Response>
+      })
     );
     return;
   }
 
-  fetchEvent.respondWith(
+  event.respondWith(
     fetch(request)
       .then((response) => {
         if (response.ok && request.url.startsWith(self.location.origin)) {
@@ -68,6 +65,6 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       })
-      .catch(() => caches.match(request) as Promise<Response | undefined>)
+      .catch(() => caches.match(request))
   );
 });

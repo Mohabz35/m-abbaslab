@@ -125,7 +125,7 @@ export default function ArticleDetailPage() {
         if (articleRes.ok) {
           setArticle(await articleRes.json())
         } else {
-          const fallback = (personalConfig.articles as any[]).find((a) => a.id === id && (a.status === 'published' || a.published !== false))
+          const fallback = ((personalConfig.articles as unknown as any[]) || []).find((a) => a.id === id && (a.status === 'published' || a.published !== false))
           if (fallback?.published !== false) {
             setArticle(fallback)
           } else {
@@ -136,7 +136,7 @@ export default function ArticleDetailPage() {
           setAllArticles(await allRes.json())
         }
       } catch {
-        const fallback = (personalConfig.articles as any[]).find((a) => a.id === id && (a.status === 'published' || a.published !== false))
+        const fallback = ((personalConfig.articles as unknown as any[]) || []).find((a) => a.id === id && (a.status === 'published' || a.published !== false))
         if (fallback?.published !== false) {
           setArticle(fallback)
         } else {
