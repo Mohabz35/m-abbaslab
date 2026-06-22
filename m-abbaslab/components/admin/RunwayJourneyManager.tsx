@@ -48,10 +48,6 @@ export default function RunwayJourneyManager() {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    if (file.size < 1 * 1024 * 1024) {
-      alert('Image must be at least 1MB')
-      return
-    }
     setIsUploadingImage(true)
     try {
       const fd = new FormData()
