@@ -36,9 +36,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 })
     }
 
-    const MAX_SIZE = 1 * 1024 * 1024
-    if (file.size > MAX_SIZE) {
-      return NextResponse.json({ error: 'Image must be under 1MB. Current size: ' + (file.size / 1024 / 1024).toFixed(1) + 'MB' }, { status: 400 })
+    const MIN_SIZE = 1 * 1024 * 1024
+    if (file.size < MIN_SIZE) {
+      return NextResponse.json({ error: 'Image must be at least 1MB. Current size: ' + (file.size / 1024 / 1024).toFixed(1) + 'MB' }, { status: 400 })
     }
 
     const bytes = await file.arrayBuffer()

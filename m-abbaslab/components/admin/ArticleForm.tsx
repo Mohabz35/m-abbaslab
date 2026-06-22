@@ -76,8 +76,8 @@ export default function ArticleForm({
     const file = e.target.files?.[0]
     if (!file) return
 
-    if (file.size > 1 * 1024 * 1024) {
-      setUploadError('Image must be under 1MB. Current size: ' + (file.size / 1024 / 1024).toFixed(1) + 'MB')
+    if (file.size < 1 * 1024 * 1024) {
+      setUploadError('Image must be at least 1MB. Current size: ' + (file.size / 1024 / 1024).toFixed(1) + 'MB')
       return
     }
 
