@@ -24,12 +24,13 @@ async function isAuthorized(request: NextRequest): Promise<boolean> {
 }
 
 const DEFAULT_CONFIG: AlphaConfig = {
-  dataFields: ["close", "open", "high", "low", "volume"],
-  operators: ["rank", "ts_zscore", "ts_mean", "ts_std", "ts_returns", "ts_rank"],
-  lookbacks: [5, 10, 20, 30, 60],
-  minSharpe: 1.5,
-  maxDrawdown: 0.15,
-  minWinRate: 0.52,
+  dataFields: ["close", "open", "high", "low", "volume", "returns", "vwap", "amount", "turn", "adv20", "adv60", "high_low_spread", "close_open_return", "volume_ma_ratio", "price_momentum_5", "price_momentum_20"],
+  operators: ["ts_rank", "ts_zscore", "ts_mean", "ts_std_dev", "ts_delta", "ts_arg_max", "ts_arg_min", "ts_corr", "ts_cov", "ts_sum", "ts_min", "ts_max", "ts_backfill"],
+  groupOperators: ["group_neutralize", "group_rank", "group_zscore"],
+  lookbacks: [5, 10, 22, 66, 120, 240],
+  minSharpe: 1.2,
+  maxDrawdown: 0.25,
+  minWinRate: 0.50,
   maxTurnover: 0.5,
   universe: [
     "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA", "JPM",
@@ -38,7 +39,16 @@ const DEFAULT_CONFIG: AlphaConfig = {
     "AVGO", "COST", "DIS", "ABT", "VZ", "DHR", "CMCSA", "XOM", "TXN",
     "QCOM", "NEE", "BMY", "PM", "RTX", "HON", "UPS", "LIN", "AMGN",
     "LOW", "SPGI", "UNP", "IBM", "GS", "MS"
-  ]
+  ],
+  sectors: {
+    Technology: ["AAPL", "MSFT", "GOOGL", "AMZN", "META", "NVDA", "ADBE", "NFLX", "CRM", "ACN", "AVGO", "CSCO", "QCOM", "TXN", "IBM"],
+    Finance: ["JPM", "V", "MA", "BAC", "GS", "MS", "SPGI", "ABBV"],
+    Healthcare: ["JNJ", "UNH", "PFE", "MRK", "ABT", "DHR", "TMO", "AMGN", "BMY"],
+    Consumer: ["PG", "KO", "PEP", "WMT", "COST", "HD", "LOW", "DIS"],
+    Energy: ["XOM", "CVX", "COP", "SLB", "EOG"],
+    Industrial: ["HON", "UPS", "RTX", "BA", "CAT", "DE", "UNP", "LMT"],
+    Telecom: ["VZ", "T", "CMCSA", "DIS"],
+  }
 }
 
 /**
