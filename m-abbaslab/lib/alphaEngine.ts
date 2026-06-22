@@ -16,6 +16,7 @@ export interface AlphaExpression {
   lookback: number
   transform: string | null
   hash: string
+  complexity: 'simple' | 'compound' | 'nested'
 }
 
 export interface AlphaMetrics {
@@ -32,9 +33,9 @@ export interface AlphaMetrics {
 }
 
 const DEFAULT_CONFIG: AlphaConfig = {
-  dataFields: ["close", "open", "high", "low", "volume"],
-  operators: ["rank", "ts_zscore", "ts_mean", "ts_std", "ts_returns", "ts_rank"],
-  lookbacks: [5, 10, 20, 30, 60],
+  dataFields: ["close", "open", "high", "low", "volume", "returns", "vwap", "spread"],
+  operators: ["rank", "ts_zscore", "ts_mean", "ts_std", "ts_returns", "ts_rank", "delta", "ts_corr", "ts_cov", "ts_min", "ts_max", "ts_argmin", "ts_argmax", "decay_linear", "ts_sum"],
+  lookbacks: [5, 10, 15, 20, 30, 40, 60],
   minSharpe: 1.5,
   maxDrawdown: 0.15,
   minWinRate: 0.52,
@@ -59,32 +60,114 @@ function hashCode(text: string): string {
   return Math.abs(hash).toString(16).padStart(8, "0").slice(0, 8)
 }
 
-export function generateAlpha(config: AlphaConfig = DEFAULT_CONFIG): AlphaExpression {
-  const field = config.dataFields[Math.floor(Math.random() * config.dataFields.length)]
-  const operator = config.operators[Math.floor(Math.random() * config.operators.length)]
-  const lookback = config.lookbacks[Math.floor(Math.random() * config.lookbacks.length)]
-  const transforms = [null, "abs", "sign", "neg"]
-  const transform = transforms[Math.floor(Math.random() * transforms.length)] as string | null
+function pick<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)]
+}
 
-  let code = `${operator}(${field}, ${lookback})`
+// ── Expression Generators ─────────────────────────────────────────────────────
+
+function genSimple(config: AlphaConfig): { code: string; field: string; operator: string; lookback: number } {
+  const field = pick(config.dataFields)
+  const operator = pick(config.operators)
+  const lookback = pick(config.lookbacks)
+  return { code: `${operator}(${field}, ${lookback})`, field, operator, lookback }
+}
+
+function genCompound(config: AlphaConfig): { code: string; field: string; operator: string; lookback: number } {
+  const field1 = pick(config.dataFields)
+  const field2 = pick(config.dataFields)
+  const op1 = pick(config.operators)
+  const op2 = pick(config.operators)
+  const lb1 = pick(config.lookbacks)
+  const lb2 = pick(config.lookbacks)
+
+  const templates = [
+    `${op1}(${field1}, ${lb1}) - ${op2}(${field2}, ${lb2})`,
+    `${op1}(${field1}, ${lb1}) * ${op2}(${field2}, ${lb2})`,
+    `${op1}(${field1}, ${lb1}) / (${op2}(${field2}, ${lb2}) + 0.001)`,
+    `rank(${op1}(${field1}, ${lb1})) - rank(${op2}(${field2}, ${lb2}))`,
+    `delta(${op1}(${field1}, ${lb1}), ${lb2})`,
+    `ts_corr(${field1}, ${field2}, ${lb1})`,
+    `ts_cov(${field1}, ${field2}, ${lb1})`,
+  ]
+  return { code: pick(templates), field: field1, operator: op1, lookback: lb1 }
+}
+
+function genNested(config: AlphaConfig): { code: string; field: string; operator: string; lookback: number } {
+  const field = pick(config.dataFields)
+  const field2 = pick(config.dataFields)
+  const op1 = pick(config.operators)
+  const op2 = pick(config.operators)
+  const op3 = pick(config.operators)
+  const lb1 = pick(config.lookbacks)
+  const lb2 = pick(config.lookbacks)
+  const lb3 = pick(config.lookbacks)
+
+  const templates = [
+    `${op1}(${op2}(${field}, ${lb1}) - ${op3}(${field2}, ${lb2}), ${lb3})`,
+    `rank(${op1}(${field}, ${lb1})) * rank(${op2}(${field2}, ${lb2}))`,
+    `${op1}(${op2}(${field}, ${lb1}), ${lb2}) - ${op3}(${field}, ${lb3})`,
+    `decay_linear(${op1}(${field}, ${lb1}), ${lb2})`,
+    `ts_rank(${op1}(${field}, ${lb1}), ${lb2})`,
+  ]
+  return { code: pick(templates), field, operator: op1, lookback: lb1 }
+}
+
+// ── Public API ────────────────────────────────────────────────────────────────
+
+export function generateAlpha(config: AlphaConfig = DEFAULT_CONFIG): AlphaExpression {
+  const complexityRoll = Math.random()
+  let result: { code: string; field: string; operator: string; lookback: number }
+  let complexity: 'simple' | 'compound' | 'nested'
+
+  if (complexityRoll < 0.3) {
+    result = genSimple(config)
+    complexity = 'simple'
+  } else if (complexityRoll < 0.75) {
+    result = genCompound(config)
+    complexity = 'compound'
+  } else {
+    result = genNested(config)
+    complexity = 'nested'
+  }
+
+  const transforms = [null, "abs", "sign", "neg", "log"]
+  const transform = pick(transforms) as string | null
+  let code = result.code
   if (transform) code = `${transform}(${code})`
 
-  return { code, field, operator, lookback, transform, hash: hashCode(code) }
+  return { code, field: result.field, operator: result.operator, lookback: result.lookback, transform, hash: hashCode(code), complexity }
 }
 
 export function simulateBacktest(alpha: AlphaExpression, config: AlphaConfig = DEFAULT_CONFIG): AlphaMetrics {
-  const sharpe = Math.random() * 3 - 0.5
-  const annualReturn = (Math.random() - 0.3) * 0.4
+  // Simulate metrics with bias based on expression complexity
+  const complexityBonus = alpha.complexity === 'nested' ? 0.15 : alpha.complexity === 'compound' ? 0.08 : 0
+  const transformBonus = alpha.transform ? 0.05 : 0
+
+  const sharpe = Math.random() * 2.5 + 0.1 + complexityBonus + transformBonus
+  const annualReturn = (Math.random() - 0.25) * 0.5 + complexityBonus * 0.1
   const maxDrawdown = -(Math.random() * 0.25 + 0.02)
-  const winRate = Math.random() * 0.3 + 0.4
+  const winRate = Math.random() * 0.35 + 0.4 + complexityBonus * 0.05
   const turnover = Math.random() * 0.6 + 0.1
 
+  // Generate realistic PnL curve with momentum and mean-reversion regimes
   const pnlCurve: number[] = [1.0]
+  const regimeLength = 20 + Math.floor(Math.random() * 40)
+  let regime = 1 // 1 = up, -1 = down
+  let regimeCounter = 0
   for (let i = 0; i < 252; i++) {
-    const dailyReturn = (Math.random() - 0.5) * 0.02
+    regimeCounter++
+    if (regimeCounter > regimeLength) {
+      regime *= -1
+      regimeCounter = 0
+    }
+    const drift = regime * 0.0003 * sharpe
+    const vol = 0.012 + Math.random() * 0.008
+    const dailyReturn = drift + (Math.random() - 0.5) * vol
     pnlCurve.push(pnlCurve[pnlCurve.length - 1] * (1 + dailyReturn))
   }
 
+  // Drawdown curve
   const ddCurve: number[] = [0]
   let peak = 1.0
   for (let i = 1; i < pnlCurve.length; i++) {
