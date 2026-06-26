@@ -5,6 +5,7 @@ import StatsSection from '@/components/sections/StatsSection'
 import AboutSection from '@/components/sections/AboutSection'
 import ServicesSection from '@/components/sections/ServicesSection'
 import FeaturedWork from '@/components/sections/FeaturedWork'
+import AdvocacySection from '@/components/sections/AdvocacySection'
 import SkillsSection from '@/components/sections/SkillsSection'
 import LatestArticles from '@/components/sections/LatestArticles'
 import CTASection from '@/components/sections/CTASection'
@@ -19,6 +20,7 @@ export default function Home() {
       <AboutSection />
       <ServicesSection />
       <FeaturedWork />
+      <AdvocacySection />
       <SkillsSection />
       <LatestArticles />
       <CTASection />

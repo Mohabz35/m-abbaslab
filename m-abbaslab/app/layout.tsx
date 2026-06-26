@@ -110,7 +110,7 @@ export default function RootLayout({
       'https://github.com/Mohabz35',
       'https://linkedin.com/in/mohammed-abbas-490385369',
       'https://x.com/MohabzMabz',
-      'https://www.instagram.com/mohabmabz/',
+      'https://www.instagram.com/mohammedabbas_ke/',
     ],
   }
 

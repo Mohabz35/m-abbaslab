@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Camera, Calendar, MapPin, Users, Trophy, Star, TrendingUp, Layers, ArrowRight, Sparkles, ExternalLink, Heart, Search, Eye } from 'lucide-react'
+import { Camera, Calendar, MapPin, Users, Trophy, Star, TrendingUp, Layers, ArrowRight, Sparkles, ExternalLink, Heart, Search, Eye, Images } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Lightbox from '@/components/ui/Lightbox'
@@ -168,6 +168,11 @@ export default function FashionPage() {
           <Link href="#gallery" className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full font-bold hover:shadow-[0_0_30px_rgba(236,72,153,0.3)] transition-all duration-300 group">
             <Camera className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" />
             View Gallery
+          </Link>
+          <Link href="/fashion/gallery" className="inline-flex items-center px-8 py-4 bg-white/5 text-white border border-white/10 rounded-full font-bold hover:bg-white/10 hover:border-pink-500/50 transition-all duration-300 group">
+            <Images className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" />
+            Full Photo Gallery
+            <ArrowRight className="w-5 h-5 ml-3 text-gray-400 group-hover:text-white group-hover:translate-x-1 transition-all" />
           </Link>
           <a href="#booking" className="inline-flex items-center px-8 py-4 bg-white/5 text-white border border-white/10 rounded-full font-bold hover:bg-white/10 hover:border-pink-500/50 transition-all duration-300">
             Book a Shoot

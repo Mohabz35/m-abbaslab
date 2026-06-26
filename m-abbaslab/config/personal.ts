@@ -9,9 +9,9 @@ export const personalConfig: any = {
     github: "https://github.com",
     linkedin: "https://linkedin.com",
     twitter: "https://twitter.com",
-    instagram: "",
-    tiktok: "",
-    facebook: "",
+    instagram: "https://instagram.com/mohammedabbas_ke",
+    tiktok: "https://tiktok.com/@mohammedabbas_ke",
+    facebook: "https://facebook.com/mohammedabbasKE",
     whatsapp: ""
   },
   googleAnalyticsId: "",
