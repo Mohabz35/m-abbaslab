@@ -5,7 +5,7 @@ import { useParams, notFound, usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import {
   Calendar, Clock, Tag, ArrowLeft, Share2, Bookmark, Loader2,
-  Twitter, Linkedin, LinkIcon, ChevronRight, BookOpen, Mail
+  Twitter, Linkedin, LinkIcon, ChevronRight, BookOpen, Mail, Eye, Heart
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -114,6 +114,10 @@ export default function ArticleDetailPage() {
   const [copied, setCopied] = useState(false)
   const [newsletterEmail, setNewsletterEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
+  const [viewCount, setViewCount] = useState(0)
+  const [likeCount, setLikeCount] = useState(0)
+  const [liked, setLiked] = useState(false)
+  const [favorited, setFavorited] = useState(false)
 
   useEffect(() => {
     const load = async () => {
@@ -148,6 +152,30 @@ export default function ArticleDetailPage() {
     load()
   }, [id])
 
+  // Track view, load counts, check favorites
+  useEffect(() => {
+    if (!article?.id) return
+
+    // Increment view count
+    fetch(`/api/public/articles/${article.id}/reactions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'view' }),
+    }).then(r => r.json()).then(d => { if (d.view_count !== undefined) setViewCount(d.view_count) }).catch(() => {})
+
+    // Load current counts
+    fetch(`/api/public/articles/${article.id}/reactions`).then(r => r.json()).then(d => {
+      if (d.view_count !== undefined) setViewCount(d.view_count)
+      if (d.like_count !== undefined) setLikeCount(d.like_count)
+    }).catch(() => {})
+
+    // Check if favorited in localStorage
+    const favs = JSON.parse(localStorage.getItem('favorited_articles') || '[]')
+    setFavorited(favs.includes(article.id))
+    const likedArticles = JSON.parse(localStorage.getItem('liked_articles') || '[]')
+    setLiked(likedArticles.includes(article.id))
+  }, [article?.id])
+
   const headings = useMemo(() => {
     if (!article?.content) return []
     return extractHeadings(String(article.content))
@@ -176,6 +204,40 @@ export default function ArticleDetailPage() {
     if (newsletterEmail) {
       setSubscribed(true)
       setNewsletterEmail('')
+    }
+  }
+
+  const handleLike = async () => {
+    if (!article?.id) return
+    const action = liked ? 'unlike' : 'like'
+    setLiked(!liked)
+    setLikeCount(prev => liked ? prev - 1 : prev + 1)
+
+    // Persist to localStorage
+    const likedArticles = JSON.parse(localStorage.getItem('liked_articles') || '[]')
+    if (liked) {
+      localStorage.setItem('liked_articles', JSON.stringify(likedArticles.filter((id: string) => id !== article.id)))
+    } else {
+      localStorage.setItem('liked_articles', JSON.stringify([...likedArticles, article.id]))
+    }
+
+    try {
+      await fetch(`/api/public/articles/${article.id}/reactions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action }),
+      })
+    } catch {}
+  }
+
+  const handleFavorite = () => {
+    if (!article?.id) return
+    setFavorited(!favorited)
+    const favs = JSON.parse(localStorage.getItem('favorited_articles') || '[]')
+    if (favorited) {
+      localStorage.setItem('favorited_articles', JSON.stringify(favs.filter((id: string) => id !== article.id)))
+    } else {
+      localStorage.setItem('favorited_articles', JSON.stringify([...favs, article.id]))
     }
   }
 
@@ -292,6 +354,14 @@ export default function ArticleDetailPage() {
                   {String(article.content).split(/\s+/).length.toLocaleString()} words
                 </div>
               )}
+              <div className="flex items-center text-sm text-gray-500">
+                <Eye className="w-4 h-4 mr-1.5" />
+                {viewCount.toLocaleString()} views
+              </div>
+              <div className="flex items-center text-sm text-gray-500">
+                <Heart className={`w-4 h-4 mr-1.5 ${liked ? 'fill-pink-500 text-pink-500' : ''}`} />
+                {likeCount.toLocaleString()} likes
+              </div>
             </div>
 
             <h1 className="text-4xl md:text-5xl font-bold mb-8 text-white leading-tight">
@@ -350,8 +420,19 @@ export default function ArticleDetailPage() {
                 >
                   {copied ? <ChevronRight className="w-5 h-5" /> : <LinkIcon className="w-5 h-5" />}
                 </button>
-                <button className="p-2.5 rounded-full hover:bg-white/5 text-gray-400 hover:text-white transition-colors">
-                  <Bookmark className="w-5 h-5" />
+                <button
+                  onClick={handleLike}
+                  className={`p-2.5 rounded-full hover:bg-white/5 transition-colors ${liked ? 'text-pink-500 bg-pink-500/10' : 'text-gray-400 hover:text-pink-500'}`}
+                  title={liked ? 'Unlike' : 'Like this article'}
+                >
+                  <Heart className={`w-5 h-5 ${liked ? 'fill-pink-500' : ''}`} />
+                </button>
+                <button
+                  onClick={handleFavorite}
+                  className={`p-2.5 rounded-full hover:bg-white/5 transition-colors ${favorited ? 'text-amber-500 bg-amber-500/10' : 'text-gray-400 hover:text-amber-500'}`}
+                  title={favorited ? 'Remove from favorites' : 'Add to favorites'}
+                >
+                  <Bookmark className={`w-5 h-5 ${favorited ? 'fill-amber-500' : ''}`} />
                 </button>
               </div>
             </div>
