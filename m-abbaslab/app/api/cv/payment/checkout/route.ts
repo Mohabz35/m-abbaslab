@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase, hasSupabaseKeys } from '@/lib/supabase'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY || ''
 const AMOUNT_IN_KOBO = 1000 * 100 // 1000 NGN
 
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
+  const { allowed } = checkRateLimit(`cv-pay:${ip}`, 5, 300000)
+  if (!allowed) {
+    return NextResponse.json({ error: 'Too many requests.' }, { status: 429 })
+  }
+
   if (!hasSupabaseKeys) {
     return NextResponse.json({ error: 'Supabase keys not configured' }, { status: 500 })
   }

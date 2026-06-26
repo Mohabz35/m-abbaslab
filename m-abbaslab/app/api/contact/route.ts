@@ -1,7 +1,14 @@
 // app/api/contact/route.ts
 import { NextResponse } from 'next/server'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 export async function POST(request: Request) {
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+    const { allowed } = checkRateLimit(`contact:${ip}`, 5, 60000)
+    if (!allowed) {
+        return NextResponse.json({ error: 'Too many requests. Please try again in a minute.' }, { status: 429 })
+    }
+
     try {
         const body = await request.json()
         const { name, email, subject, message } = body

@@ -4,6 +4,7 @@ import { supabase, hasSupabaseKeys } from '@/lib/supabase'
 import { calculateATSScore, humanizeCV } from './ats'
 import { getKnowledgeContext } from './job-knowledge'
 import { researchCompanyAndRole } from './research'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
@@ -13,6 +14,12 @@ const anthropic = new Anthropic({
 // Removed old platformGuidelines as we now use job-knowledge.ts
 
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
+  const { allowed } = checkRateLimit(`cv-gen:${ip}`, 3, 300000)
+  if (!allowed) {
+    return NextResponse.json({ error: 'Too many requests. Please wait 5 minutes.' }, { status: 429 })
+  }
+
   if (!hasSupabaseKeys) {
     return NextResponse.json({ error: 'Supabase keys not configured' }, { status: 500 })
   }
