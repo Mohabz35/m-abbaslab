@@ -92,7 +92,7 @@ export default function ArticlesManager({ initialArticles = [] }: ArticlesManage
       const res = await fetch('/api/admin/articles');
       if (res.ok) {
         const data = await res.json();
-        setArticles(data);
+        setArticles(data.articles || data || []);
       }
     } catch (error) {
       console.error('Failed to fetch articles:', error);

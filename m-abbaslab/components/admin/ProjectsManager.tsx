@@ -91,7 +91,7 @@ export default function ProjectsManager({ initialProjects = [] }: ProjectsManage
       const res = await fetch('/api/admin/projects');
       if (res.ok) {
         const data = await res.json();
-        setProjects(data);
+        setProjects(data.projects || data || []);
       }
     } catch (error) {
       console.error('Failed to fetch projects:', error);

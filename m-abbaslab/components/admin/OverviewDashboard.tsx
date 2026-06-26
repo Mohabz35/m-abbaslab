@@ -80,7 +80,7 @@ export default function OverviewDashboard() {
             supabase.from('fashion_items').select('*', { count: 'exact', head: true }),
             supabase.from('email_subscribers').select('*', { count: 'exact', head: true }),
             supabase.from('whatsapp_messages').select('*', { count: 'exact', head: true }),
-            supabase.from('discipline_days').select('date, overall_score').order('date', { ascending: false }).limit(30),
+            supabase.from('discipline_days').select('date').order('date', { ascending: false }).limit(30),
           ])
 
           // Calculate Finance Total
@@ -100,7 +100,7 @@ export default function OverviewDashboard() {
             for (const day of disciplineDays) {
               const dayDate = new Date(day.date)
               const diffDays = Math.floor((checkDate.getTime() - dayDate.getTime()) / 86400000)
-              if (diffDays <= 1 && day.overall_score > 0) {
+              if (diffDays <= 1) {
                 streak++
                 checkDate = dayDate
               } else if (diffDays > 1) {
