@@ -114,15 +114,21 @@ export default function AboutClient({ config }: { config: any }) {
               The Story
             </h2>
             <div className="space-y-6 text-gray-400 leading-relaxed text-lg">
-              <p>
-                With a background in statistics and hands-on experience across technology, healthcare, and economics, I&apos;ve developed a unique perspective on problem-solving. I don&apos;t just build software — I architect systems that create real value.
-              </p>
-              <p>
-                My journey started with a passion for understanding the world through data. I learned to code to turn insights into action. I founded ventures to understand how businesses work. I led teams to learn how to execute at scale. Each experience shaped how I approach challenges today.
-              </p>
-              <p className="text-white font-medium border-l-4 border-[#00f0ff] pl-6 py-2">
-                &ldquo;I believe the best solutions emerge from combining rigorous analysis with creative thinking. I approach every challenge systematically — understanding deeply, designing elegantly, executing precisely.&rdquo;
-              </p>
+              {config?.personalStory ? (
+                config.personalStory.split('\n\n').map((paragraph: string, idx: number) => {
+                  const isQuote = paragraph.startsWith('"') || paragraph.startsWith('“') || paragraph.includes('We cannot let our past define our future');
+                  if (isQuote) {
+                    return (
+                      <p key={idx} className="text-white font-medium border-l-4 border-[#00f0ff] pl-6 py-2">
+                        {paragraph}
+                      </p>
+                    )
+                  }
+                  return <p key={idx}>{paragraph}</p>
+                })
+              ) : (
+                <p>Story not found.</p>
+              )}
             </div>
           </div>
         </motion.div>

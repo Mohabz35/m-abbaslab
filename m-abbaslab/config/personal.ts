@@ -322,18 +322,17 @@ export const personalConfig: any = {
     }
   ],
 
-  // ============================================
-  // PERSONAL STORY (UNIFIED)
-  // ============================================
-  personalStory: `I'm Mohammed Abbas — economist, statistician, and full-stack engineer building the first Kenyan AI-powered ecosystem. My mission: digitally empower all through intelligent systems that solve real problems.
+  personalStory: `I'm Mohammed Abbas — a visionary leader, economist, statistician, and full-stack engineer building the first Kenyan AI-powered ecosystem. My mission and advocacy is Human Empowerment — bridging the gap of equality and creating sustainable opportunities for youth across Africa.
 
-My journey: Started at Chuka University, won 3 major hackathons (Gen AI Academy APAC, dreamflow Buildathon 2025, Google Cloud AI Labs), participated in 17+ contests, and built systems that matter: AFYACONNECT (healthcare, 100+ users), Chuka ILMS (AI-powered education), QIS (elite research collective), and 16+ client portfolios.
+I am actively building an NGO to ensure that I have empowered all youths and fight for their rights. The biggest challenge for youths in Kenya and Africa is that they are often ignored by the very systems they are meant to build. On my end, I am fighting for good governance by leading by example. My leadership journey began in primary school as a class prefect, evolved into becoming School President at Mutomo Preparatory School, and later, the School President at St. Augustine Kauma Boys Secondary School. My legacy there remains alive through the student leaders I mentored and trained—the name Mohammed Abbas still echoes in their halls.
 
-Leadership defined me from primary school (class prefect) through St. Augustine Kauma Boys Secondary School (school president—a legacy name that echoes), to Chuka University (class leader, re-elected, positioned for presidential candidacy).
+Now in my university years at Chuka University, I have continued to sharpen my leadership. I have been re-elected as class leader since my first year and called to lead multiple student organizations. I successfully led a massive campaign for my brother Glen Washington to become the leading Faculty Rep, and we are currently preparing a prominent run for the Presidential seat under the leading coalition. My modeling journey is entirely defined by this leadership—serving as Chuka University Model Leader and 1st Prince, which secured my position among the top models in Kenya as a Man of Africa Finalist.
 
-My advocacy: Human empowerment. Bridging the gap of equality by fighting for youth ignored by systems. Through Royal Icon, I'm discovering and nurturing talents across all 47 Kenyan counties. Through digital systems, I'm reducing unemployment and creating opportunities. Through mentorship, I'm building the next generation of leaders.
+Through Royal Icon, I am building a national platform for talent. My goal by the end of our first year is to visit all 47 counties in Kenya and support 100 talents across modeling, football, dancing, and singing. We have already made strides in Makueni, Kitui, Meru, Mombasa, Nairobi, and Tharaka-Nithi. 
 
-I build to last. Think ecosystem-first. Believe technology is a tool for nation-building.`,
+Digital empowerment is my other frontier. I am building systems like QIS (Quantum Impact Syndicate), AFYACONNECT, and the Chuka University ILMS to reduce unemployment and better our future. Winning three major hackathons (Gen AI Academy APAC, dreamflow Buildathon 2025, Google Cloud AI Labs) and participating in 17+ contests has shaped my ability to build these ecosystems.
+
+Beyond tech, I am defining masculinity beyond community norms through the Man of Africa initiative—understanding what the system wants and saving the boychild. I support women empowerment alongside my partner Idah Apule, and champion community health through charity walks and mentorship programs in prisons and children's homes. We cannot let our past define our future.`,
 
   // ============================================
   // BRAND PARTNERSHIPS
@@ -431,15 +430,12 @@ I build to last. Think ecosystem-first. Believe technology is a tool for nation-
     }
   ],
 
-  // ============================================
-  // SEO METADATA
-  // ============================================
   seoMetadata: {
-    pageTitle: "Mohammed Abbas - Model, Leader, Advocate | Top Modeling Titles Kenya",
-    pageDescription: "Mr Face of Kitui 1st, Mr Fashion Kenya Finalist, Man of Africa Kenya, Chuka University Model Leader, Youth Empowerment Advocate. Building systems for digital empowerment across Kenya and Africa.",
-    keywords: "Mohammed Abbas model Kenya, Mr Face of Kitui, Man of Africa Kenya, modeling Kenya, youth leader Africa, digital empowerment, Mr Chuka University, modeling titles, Kenya fashion, leadership Kenya",
-    ogTitle: "Mohammed Abbas — Model • Leader • System Builder | Empowering Youth Across Africa",
-    ogDescription: "13 modeling titles, university president candidate, digital empowerment visionary. Building Royal Icon (talent discovery), AFYACONNECT (healthcare), QIS (research), and the next generation of African leaders."
+    pageTitle: "Mohammed Abbas - Model, Leader, Advocate & Tech Visionary | Top Modeling Titles Kenya",
+    pageDescription: "Discover Mohammed Abbas: Mr Face of Kitui 1st, Man of Africa Kenya Finalist, Chuka University President Candidate, NGO Founder, and Youth Empowerment Advocate. Leading Royal Icon, QIS, and digital empowerment across Kenya's 47 counties.",
+    keywords: "Mohammed Abbas, Mohammed Abbas model Kenya, Mr Face of Kitui, Man of Africa Kenya, modeling Kenya, youth leader Africa, digital empowerment, Mr Chuka University, modeling titles, Kenya fashion, leadership Kenya, Royal Icon events, Idah Apule, QIS, Quantum Impact Syndicate",
+    ogTitle: "Mohammed Abbas — Model • Leader • Tech Visionary | Empowering Youth Across Africa",
+    ogDescription: "13 modeling titles, university president candidate, NGO founder, digital empowerment visionary. Building Royal Icon (talent discovery), QIS (research), and fighting for the rights of the youth in Kenya and Africa."
   },
 
   googleAnalyticsId: "",
