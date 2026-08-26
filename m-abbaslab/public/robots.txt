@@ -1,0 +1,23 @@
+# Robots.txt for M-AbbasLab
+# Allow all crawlers
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /.next
+Disallow: /node_modules
+
+# Google Search Console verification
+User-agent: Googlebot
+Allow: /
+
+# Bing
+User-agent: Bingbot
+Allow: /
+
+# Sitemap
+Sitemap: https://m-abbaslab.com/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1
