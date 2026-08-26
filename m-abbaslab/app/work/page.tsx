@@ -295,7 +295,7 @@ export default function WorkPage() {
                 </div>
               ))}
             </div>
-            <a href="mailto:hello@m-abbaslab.com" className="mt-8 inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#00f0ff] to-[#7000ff] text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all">
+            <a href="mailto:hello@www.mohammedabbas.tech" className="mt-8 inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#00f0ff] to-[#7000ff] text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all">
               <Mail className="w-4 h-4" />Contact for Collaboration
             </a>
           </div>

@@ -44,14 +44,14 @@ export const metadata: Metadata = {
     email: false,
     address: false,
   },
-  metadataBase: new URL('https://m-abbaslab.com'),
+  metadataBase: new URL('https://www.mohammedabbas.tech'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://m-abbaslab.com',
+    url: 'https://www.mohammedabbas.tech',
     title: 'M-AbbasLab | Personal Operating Platform',
     description: 'Research · Economics · Technology · Creation - The digital workspace of Mohammed Abbas',
     siteName: 'M-AbbasLab',
@@ -99,8 +99,8 @@ export default function RootLayout({
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: 'Mohammed Abbas',
-    url: 'https://m-abbaslab.com',
-    image: 'https://m-abbaslab.com/images/hero-3d-avatar.png',
+    url: 'https://www.mohammedabbas.tech',
+    image: 'https://www.mohammedabbas.tech/images/hero-3d-avatar.png',
     jobTitle: 'Researcher and Technologist',
     worksFor: {
       '@type': 'Organization',

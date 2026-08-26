@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Mohammed Abbas — Full-Stack Engineer & Data Scientist',
     description: 'Building intelligent systems that combine full-stack development, data science, and strategic thinking.',
-    url: 'https://m-abbaslab.com/about',
+    url: 'https://www.mohammedabbas.tech/about',
   },
 }
 

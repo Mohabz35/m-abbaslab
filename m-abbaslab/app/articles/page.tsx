@@ -157,11 +157,11 @@ export default function ArticlesPage() {
     '@type': 'CollectionPage',
     name: 'Articles & Research — M-AbbasLab',
     description: 'Insights, research findings, and technical guides on economics, technology, and data science.',
-    url: 'https://m-abbaslab.com/articles',
+    url: 'https://www.mohammedabbas.tech/articles',
     publisher: {
       '@type': 'Organization',
       name: 'M-AbbasLab',
-      url: 'https://m-abbaslab.com',
+      url: 'https://www.mohammedabbas.tech',
     },
   }
 

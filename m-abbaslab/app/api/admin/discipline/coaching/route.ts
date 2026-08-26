@@ -62,7 +62,7 @@ ${JSON.stringify(context, null, 2)}`
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://m-abbaslab.com',
+        'HTTP-Referer': 'https://www.mohammedabbas.tech',
         'X-Title': 'M-AbbasLab Discipline OS',
       },
       body: JSON.stringify({

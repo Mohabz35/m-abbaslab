@@ -4,7 +4,7 @@
 export const personalConfig: any = {
   name: "Mohammed Abbas",
   brandName: "M-AbbasLab",
-  email: "hello@m-abbaslab.com",
+  email: "hello@www.mohammedabbas.tech",
   phone: "+254700000000",
   title: "Software Engineer • Model • Advocate",
   tagline: "Building systems. Leading youth. Empowering all.",

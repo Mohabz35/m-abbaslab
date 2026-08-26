@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: '/',
             disallow: ['/admin/', '/api/'],
         },
-        sitemap: 'https://m-abbaslab.com/sitemap.xml',
+        sitemap: 'https://www.mohammedabbas.tech/sitemap.xml',
     }
 }

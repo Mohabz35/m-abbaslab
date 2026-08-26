@@ -205,7 +205,7 @@ export default function AdvocacyPage() {
             <ExternalLink className="w-4 h-4 ml-2" />
           </Link>
           <a
-            href="mailto:hello@m-abbaslab.com"
+            href="mailto:hello@www.mohammedabbas.tech"
             className="inline-flex items-center justify-center px-8 py-4 bg-white/5 text-white font-bold rounded-xl border border-white/10 hover:bg-white/10 transition-all"
           >
             <Send className="w-4 h-4 mr-2" />

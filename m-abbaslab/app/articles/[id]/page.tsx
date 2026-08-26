@@ -291,19 +291,19 @@ export default function ArticleDetailPage() {
     author: {
       '@type': 'Person',
       name: personalConfig.name,
-      url: 'https://m-abbaslab.com',
+      url: 'https://www.mohammedabbas.tech',
     },
     publisher: {
       '@type': 'Organization',
       name: 'M-AbbasLab',
-      url: 'https://m-abbaslab.com',
+      url: 'https://www.mohammedabbas.tech',
     },
     datePublished: article.published_at || article.created_at,
     dateModified: article.updated_at || article.published_at || article.created_at,
     image: article.cover_image || undefined,
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://m-abbaslab.com/articles/${article.id}`,
+      '@id': `https://www.mohammedabbas.tech/articles/${article.id}`,
     },
     keywords: article.tags?.join(', ') || undefined,
     articleSection: label,
