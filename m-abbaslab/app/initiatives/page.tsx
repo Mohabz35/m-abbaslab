@@ -35,7 +35,7 @@ export default function InitiativesPage() {
         { label: 'Features', value: 'AI+Adaptive', icon: Brain },
         { label: 'Status', value: 'Live', icon: CheckCircle2 },
       ],
-      problem: 'Traditional learning management systems are static and don't adapt to individual student needs.',
+      problem: 'Traditional learning management systems are static and lack adaptation to individual student needs.',
       solution: 'Intelligent LMS with AI assistant, adaptive learning paths, real-time student analytics, and personalized recommendations.',
       impact: ['Adaptive learning paths', 'AI virtual assistant', 'Real-time analytics', 'Personalized student experience'],
       tech: ['Next.js', 'AI/ML', 'PostgreSQL', 'React']
@@ -203,7 +203,7 @@ export default function InitiativesPage() {
       >
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Building Africa's AI-First Ecosystem</h2>
         <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
-          These systems represent a vision: technology can solve real problems, empower communities, and build nations. Let's continue building.
+          These systems represent a vision: technology can solve real problems, empower communities, and build nations. Let us continue building.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link

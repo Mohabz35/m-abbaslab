@@ -1,14 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Award, Users, Heart, Brain, Zap, Shield, Target, Trophy, ExternalLink, ChevronDown, ChevronUp, Send } from 'lucide-react'
 import Link from 'next/link'
 import { personalConfig } from '@/config/personal'
 
 export default function AdvocacyPage() {
-  const [expandedPillar, setExpandedPillar] = useState(0)
-  const [selectedTitle, setSelectedTitle] = useState(0)
+  const [expandedPillar, setExpandedPillar] = useState<number | null>(0)
+  const [selectedTitle, setSelectedTitle] = useState<number | null>(0)
 
   const titles = personalConfig.fashionTitles || []
   const pillars = personalConfig.advocacyPillars || []
@@ -122,7 +122,7 @@ export default function AdvocacyPage() {
               transition={{ delay: i * 0.05 }}
             >
               <button
-                onClick={() => setExpandedPillar(expandedPillar === i ? -1 : i)}
+                onClick={() => setExpandedPillar(expandedPillar === i ? null : i)}
                 className="w-full glass-panel p-6 rounded-2xl border border-rose-500/20 hover:border-rose-500/50 transition-all text-left group"
               >
                 <div className="flex items-center justify-between">
@@ -155,7 +155,7 @@ export default function AdvocacyPage() {
                         <div className="mb-4">
                           <h4 className="text-white font-semibold mb-2">Initiatives:</h4>
                           <ul className="space-y-2">
-                            {pillar.initiatives.map((init) => (
+                            {pillar.initiatives.map((init: string) => (
                               <li key={init} className="text-gray-300 text-sm flex items-start">
                                 <span className="text-rose-500 mr-2">▸</span>
                                 {init}
@@ -168,7 +168,7 @@ export default function AdvocacyPage() {
                         <div>
                           <h4 className="text-white font-semibold mb-2">Counties Visited:</h4>
                           <div className="flex flex-wrap gap-2">
-                            {pillar.visited.map((county) => (
+                            {pillar.visited.map((county: string) => (
                               <span key={county} className="px-3 py-1 rounded-full text-xs bg-rose-500/20 text-rose-300 border border-rose-500/30">
                                 {county}
                               </span>
@@ -194,7 +194,7 @@ export default function AdvocacyPage() {
       >
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Join the Movement</h2>
         <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
-          We're building a nation where youth are empowered, systems are equitable, and every voice matters. Let's change Kenya together.
+          We are building a nation where youth are empowered, systems are equitable, and every voice matters. Let us change Kenya together.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
