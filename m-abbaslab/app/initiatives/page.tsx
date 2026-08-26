@@ -93,7 +93,7 @@ export default function InitiativesPage() {
 
       {/* INITIATIVES GRID */}
       <div className="space-y-16 mb-24">
-        {initiatives.map((initiative, i) => {
+        {initiatives.map((initiative: any, i: number) => {
           const details = systemDetails[initiative.name]
           const IconComponent = details.icon
 

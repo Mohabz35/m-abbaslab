@@ -43,7 +43,7 @@ export default function AdvocacyPage() {
           <div className="h-px bg-white/10 flex-1 ml-8" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {titles.map((title, i) => (
+          {titles.map((title: any, i: number) => (
             <motion.div
               key={title.title}
               initial={{ opacity: 0, y: 20 }}
@@ -77,7 +77,7 @@ export default function AdvocacyPage() {
           <div className="h-px bg-white/10 flex-1 ml-8" />
         </div>
         <div className="relative border-l-2 border-blue-500/30 ml-4 md:ml-10 space-y-12">
-          {journey.map((item, i) => (
+          {journey.map((item: any, i: number) => (
             <motion.div
               key={item.title}
               initial={{ opacity: 0, x: -20 }}
@@ -113,7 +113,7 @@ export default function AdvocacyPage() {
           <div className="h-px bg-white/10 flex-1 ml-8" />
         </div>
         <div className="space-y-4">
-          {pillars.map((pillar, i) => (
+          {pillars.map((pillar: any, i: number) => (
             <motion.div
               key={pillar.pillar}
               initial={{ opacity: 0, y: 10 }}
