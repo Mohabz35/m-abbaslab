@@ -229,7 +229,7 @@ export async function POST(request: NextRequest) {
                 .insert({
                   alpha_id: stored.id,
                   notification_type: 'alpha_passed',
-                  message_text: `🧠 WORLD QUANT LAB ALERT\n\nAlpha PASSED with REAL BACKTEST!\n\nCode: ${alpha.code}\nSharpe: ${metrics.sharpe_ratio}\nReturn: ${(metrics.annual_return * 100).toFixed(1)}%\nDrawdown: ${(metrics.max_drawdown * 100).toFixed(1)}%\nWin Rate: ${(metrics.win_rate * 100).toFixed(1)}%\n\nReview: https://m-abbaslab.vercel.app/admin/dashboard`,
+                  message_text: `🧠 WORLD QUANT LAB ALERT\n\nAlpha PASSED with REAL BACKTEST!\n\nCode: ${alpha.code}\nSharpe: ${metrics.sharpe_ratio}\nReturn: ${(metrics.annual_return * 100).toFixed(1)}%\nDrawdown: ${(metrics.max_drawdown * 100).toFixed(1)}%\nWin Rate: ${(metrics.win_rate * 100).toFixed(1)}%\n\nReview: https://www.mohammedabbas.tech/admin/dashboard`,
                   status: 'pending'
                 })
             } else if (stored && !metrics.is_passed) {

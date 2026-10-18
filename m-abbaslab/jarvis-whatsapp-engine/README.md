@@ -5,7 +5,7 @@ An always-on WhatsApp bot for Mohammed Abbas, powered by Baileys and Supabase.
 ## Architecture
 
 ```
-Your WhatsApp Messages → M-JARVIS Engine (Render.com) → Supabase DB → m-abbaslab.vercel.app Dashboard
+Your WhatsApp Messages → M-JARVIS Engine (Render.com) → Supabase DB → www.mohammedabbas.tech Dashboard
 ```
 
 ## Quick Start

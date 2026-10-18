@@ -182,7 +182,7 @@ async function getJarvisResponse(senderName, messageText, sender) {
     } catch (e) {}
   }
 
-  return "Mohammed is currently busy, but I've logged your message! Visit m-abbaslab.vercel.app for more."
+  return "Mohammed is currently busy, but I've logged your message! Visit www.mohammedabbas.tech for more."
 }
 
 async function startJarvis() {

@@ -150,7 +150,7 @@ class GroupMonitor {
             headers: {
               Authorization: `Bearer ${openRouterKey}`,
               'Content-Type': 'application/json',
-              'HTTP-Referer': 'https://m-abbaslab.vercel.app',
+              'HTTP-Referer': 'https://www.mohammedabbas.tech',
               'X-Title': 'M-AbbasLab Jarvis Status Analyzer'
             },
             body: JSON.stringify({
@@ -314,7 +314,7 @@ Return JSON output ONLY in this format:
             headers: {
               Authorization: `Bearer ${openRouterKey}`,
               'Content-Type': 'application/json',
-              'HTTP-Referer': 'https://m-abbaslab.vercel.app',
+              'HTTP-Referer': 'https://www.mohammedabbas.tech',
               'X-Title': 'M-AbbasLab Jarvis Group Bot'
             },
             body: JSON.stringify({

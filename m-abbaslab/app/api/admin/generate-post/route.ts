@@ -105,7 +105,7 @@ async function generateViaOpenRouter(config: AIConfig): Promise<Record<string, s
     headers: {
       Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
       'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://m-abbaslab.vercel.app',
+      'HTTP-Referer': 'https://www.mohammedabbas.tech',
       'X-Title': 'M-AbbasLab Social Generator',
     },
     body: JSON.stringify({

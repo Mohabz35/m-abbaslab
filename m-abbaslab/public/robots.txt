@@ -17,7 +17,7 @@ User-agent: Bingbot
 Allow: /
 
 # Sitemap
-Sitemap: https://m-abbaslab.com/sitemap.xml
+Sitemap: https://www.mohammedabbas.tech/sitemap.xml
 
 # Crawl delay (optional)
 Crawl-delay: 1

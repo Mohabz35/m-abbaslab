@@ -55,7 +55,7 @@ const ZAP_TEMPLATES: ZapTemplate[] = [
     icon: FileText,
     color: '#E4405F',
     zapierAction: 'Post to Twitter + LinkedIn + Discord channel',
-    payload: { title: 'My New Research Article', slug: 'my-new-research-article', excerpt: 'Key findings from...', url: 'https://m-abbaslab.vercel.app/articles/my-new-research-article' }
+    payload: { title: 'My New Research Article', slug: 'my-new-research-article', excerpt: 'Key findings from...', url: 'https://www.mohammedabbas.tech/articles/my-new-research-article' }
   },
   {
     id: 'finance_alert',

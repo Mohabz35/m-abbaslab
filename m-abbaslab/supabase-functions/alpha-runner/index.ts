@@ -67,7 +67,7 @@ function simulateBacktest() {
 }
 
 async function notifyAlphaFound(supabase: any, alphaId: string, metrics: any) {
-  const message = `🧠 *WORLD QUANT LAB ALERT*\n\nAlpha PASSED all criteria!\n\nCode: ${metrics.alpha_code}\nSharpe: ${metrics.sharpe_ratio}\nReturn: ${(metrics.annual_return * 100).toFixed(1)}%\nDrawdown: ${(metrics.max_drawdown * 100).toFixed(1)}%\nWin Rate: ${(metrics.win_rate * 100).toFixed(1)}%\n\nReview: https://m-abbaslab.vercel.app/admin/dashboard`
+  const message = `🧠 *WORLD QUANT LAB ALERT*\n\nAlpha PASSED all criteria!\n\nCode: ${metrics.alpha_code}\nSharpe: ${metrics.sharpe_ratio}\nReturn: ${(metrics.annual_return * 100).toFixed(1)}%\nDrawdown: ${(metrics.max_drawdown * 100).toFixed(1)}%\nWin Rate: ${(metrics.win_rate * 100).toFixed(1)}%\n\nReview: https://www.mohammedabbas.tech/admin/dashboard`
 
   await supabase.from("wq_notifications").insert({
     alpha_id: alphaId,

@@ -109,7 +109,7 @@ export default function RootLayout({
     sameAs: [
       'https://github.com/Mohabz35',
       'https://linkedin.com/in/mohammed-abbas-490385369',
-      'https://x.com/MohabzMabz',
+      'https://x.com/mohammedabbasKE',
       'https://www.instagram.com/mohammedabbas_ke/',
     ],
   }

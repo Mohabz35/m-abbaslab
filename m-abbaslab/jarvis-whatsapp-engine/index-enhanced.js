@@ -268,7 +268,7 @@ Mohammed's profile:
 - Roles: ${JSON.stringify(configData?.roles || ['Economist', 'Engineer', 'Data Scientist'])}
 - Projects: ${JSON.stringify((configData?.projects || []).slice(0, 4).map((p) => ({ title: p.title, description: p.description, status: p.status })))}
 - Modeling Titles: ${JSON.stringify((configData?.fashion?.titles || []).slice(0, 3).map((t) => ({ title: t.title, year: t.year })))}
-- Contact: Email ${configData?.email || 'mohammedabbasofficial100@gmail.com'}, WhatsApp: +254702894309, Web: m-abbaslab.vercel.app
+- Contact: Email ${configData?.email || 'mohammedabbasofficial100@gmail.com'}, WhatsApp: +254702894309, Web: www.mohammedabbas.tech
 
 IMPORTANT: You are conversing with ${senderName}. Study the conversation history above (especially any [Mohammed's personal reply] entries) to match his tone and style closely. Respond ONLY to the latest message.`
 
@@ -277,7 +277,7 @@ IMPORTANT: You are conversing with ${senderName}. Study the conversation history
         headers: {
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://m-abbaslab.vercel.app',
+          'HTTP-Referer': 'https://www.mohammedabbas.tech',
           'X-Title': 'M-AbbasLab Jarvis WhatsApp',
         },
         body: JSON.stringify({
@@ -313,7 +313,7 @@ IMPORTANT: You are conversing with ${senderName}. Study the conversation history
         .slice(0, 3)
         .map((p) => `• *${p.title}*: ${p.description}`)
         .join('\n')
-      return `Mohammed has built several outstanding systems. Here are a few recent ones:\n\n${topProjects || '• M-AbbasLab Platform'}\n\nExplore them all at: *m-abbaslab.vercel.app*`
+      return `Mohammed has built several outstanding systems. Here are a few recent ones:\n\n${topProjects || '• M-AbbasLab Platform'}\n\nExplore them all at: *www.mohammedabbas.tech*`
     }
 
     if (lowerMsg.includes('model') || lowerMsg.includes('fashion') || lowerMsg.includes('title')) {
@@ -325,7 +325,7 @@ IMPORTANT: You are conversing with ${senderName}. Study the conversation history
     }
 
     if (lowerMsg.includes('contact') || lowerMsg.includes('email') || lowerMsg.includes('phone')) {
-      return `You can connect with Mohammed directly at:\nEmail: ${configData.email || 'mohammedabbasofficial100@gmail.com'}\nPhone/WhatsApp: +254 702 894 309\nWeb: *m-abbaslab.vercel.app*`
+      return `You can connect with Mohammed directly at:\nEmail: ${configData.email || 'mohammedabbasofficial100@gmail.com'}\nPhone/WhatsApp: +254 702 894 309\nWeb: *www.mohammedabbas.tech*`
     }
   }
 
@@ -342,7 +342,7 @@ IMPORTANT: You are conversing with ${senderName}. Study the conversation history
     return `You're most welcome. Is there anything else I can assist you with?`
   }
 
-  return `Thank you for reaching out to Mohammed. I've logged your message and he will respond personally. In the meantime, visit *m-abbaslab.vercel.app* to explore his work.`
+  return `Thank you for reaching out to Mohammed. I've logged your message and he will respond personally. In the meantime, visit *www.mohammedabbas.tech* to explore his work.`
 }
 
 async function logMessageToSupabase(sender, senderName, message, reply) {

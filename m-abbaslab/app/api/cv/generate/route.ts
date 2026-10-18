@@ -115,7 +115,7 @@ Return the response in this exact JSON format:
         headers: {
           'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://m-abbaslab.vercel.app',
+          'HTTP-Referer': 'https://www.mohammedabbas.tech',
           'X-Title': 'M-AbbasLab CV Generator',
         },
         body: JSON.stringify({
