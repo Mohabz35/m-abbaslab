@@ -4,7 +4,7 @@
 export const personalConfig: any = {
   name: "Mohammed Abbas",
   brandName: "M-AbbasLab",
-  email: "hello@mohammedabbas.tech",
+  email: "mohammedabbasofficial100@gmail.com",
   phone: "+254702894309",
   title: "Software Engineer • Model • Advocate",
   tagline: "Building systems. Leading youth. Empowering all.",
@@ -14,7 +14,7 @@ export const personalConfig: any = {
   // ============================================
   social: {
     github: "https://github.com/Mohabz35",
-    linkedin: "https://linkedin.com/in/mohabz35",
+    linkedin: "https://linkedin.com/in/mohammed-abbas-490385369",
     twitter: "https://twitter.com/mohammedabbasKE",
     instagram: "https://instagram.com/mohammedabbas_ke",
     tiktok: "https://tiktok.com/@mohammedabbas_ke",

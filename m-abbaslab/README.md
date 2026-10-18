@@ -173,9 +173,7 @@ Visit `http://localhost:3000` — your site is live.
 
 ### 5. Admin Panel
 
-Navigate to `/admin/login` and log in with:
-- **Username:** `admin`
-- **Password:** `Mohabmabz@35*`
+Navigate to `/admin/login` and log in with your admin credentials (set in **Admin → Settings**; never commit passwords to this repo).
 
 ---
 

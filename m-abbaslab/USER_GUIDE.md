@@ -34,7 +34,7 @@
 #### Logging In
 
 1. Go to `/admin/login`
-2. Enter credentials: `admin` / `Mohabmabz@35*`
+2. Enter your admin credentials (set in **Admin → Settings**)
 3. You'll be redirected to the dashboard
 
 #### Dashboard Overview
