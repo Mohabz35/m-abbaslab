@@ -2,9 +2,11 @@ import fs from 'fs'
 import path from 'path'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { ArrowLeft, ChevronLeft, ChevronRight, Brain, Info } from 'lucide-react'
 import MarkdownRenderer from '@/components/ui/MarkdownRenderer'
 import HolographicBook from '@/components/ui/HolographicBook'
+import { pageMeta } from '@/lib/seo'
 
 const chapters = [
     { id: 'chapter-1', title: 'Academic Analysis & Validation' },
@@ -12,6 +14,18 @@ const chapters = [
     { id: 'chapter-3', title: 'System Documentation & Architecture' },
     { id: 'chapter-4', title: 'The Evolution Engine (Prompt Guide)' },
 ]
+
+export async function generateMetadata({ params }: { params: Promise<{ chapter: string }> }): Promise<Metadata> {
+    const { chapter } = await params
+    const found = chapters.find(c => c.id === chapter)
+    if (!found) return {}
+    return pageMeta({
+        title: `${found.title} — SkillSync Chapter`,
+        description: `Chapter of the SkillSync academic documentation by Mohammed Abbas: ${found.title}.`,
+        keywords: ['SkillSync', 'skills validation', 'academic documentation', found.title.toLowerCase()],
+        path: `/work/academic/skillsync/${chapter}`,
+    })
+}
 
 export default async function SkillSyncChapterPage({ params }: { params: Promise<{ chapter: string }> }) {
     const resolvedParams = await params;

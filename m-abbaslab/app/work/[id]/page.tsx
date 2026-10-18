@@ -1,195 +1,48 @@
-'use client'
+import type { Metadata } from 'next'
+import { supabase, hasSupabaseKeys } from '@/lib/supabase'
+import { pageMeta } from '@/lib/seo'
+import ProjectDetailClient from './ProjectDetailClient'
 
-import { useEffect, useState } from 'react'
-import { useParams, notFound } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { ExternalLink, Github, Code, ArrowLeft, Layers, Calendar, CheckCircle2, Loader2, Share2 } from 'lucide-react'
-import Link from 'next/link'
-
-export default function ProjectDetailPage() {
-    const params = useParams()
-    const id = params.id as string
-    const [project, setProject] = useState<any | null>(null)
-    const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        const load = async () => {
-            try {
-                const res = await fetch('/api/public/projects', { cache: 'no-store' })
-                if (res.ok) {
-                    const data = await res.json()
-                    const found = (data.projects || []).find((p: any) => p.id === id)
-                    if (found) {
-                        setProject(found)
-                        setLoading(false)
-                        return
-                    }
-                }
-            } catch { /* fallback handled below */ }
-            notFound()
-        }
-        load()
-    }, [id])
-
-    if (loading) {
-        return (
-            <div className="max-w-7xl mx-auto px-4 py-20">
-                <div className="flex items-center justify-center min-h-[60vh]">
-                    <Loader2 className="w-8 h-8 text-[#00f0ff] animate-spin" />
-                </div>
-            </div>
-        )
+async function getProject(id: string): Promise<any | null> {
+    if (!hasSupabaseKeys) return null
+    try {
+        const { data, error } = await supabase
+            .from('projects')
+            .select('id, title, description, category, tech_stack, image_url')
+            .eq('id', id)
+            .single()
+        if (error || !data) return null
+        return data
+    } catch {
+        return null
     }
+}
 
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+    const { id } = await params
+    const project = await getProject(id)
     if (!project) {
-        notFound()
+        return pageMeta({
+            title: 'Project',
+            description: 'Project case study by Mohammed Abbas.',
+            path: `/work/${id}`,
+        })
     }
+    return pageMeta({
+        title: project.title,
+        description: project.description || `${project.title} — project by Mohammed Abbas.`,
+        keywords: [
+            project.title,
+            project.category,
+            'Mohammed Abbas project',
+            'M-AbbasLab',
+            ...(Array.isArray(project.tech_stack) ? project.tech_stack : []),
+        ].filter(Boolean),
+        path: `/work/${project.id}`,
+        image: project.image_url || undefined,
+    })
+}
 
-    return (
-        <div className="max-w-7xl mx-auto px-4 py-20">
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-            >
-                <Link
-                    href="/work"
-                    className="inline-flex items-center text-gray-400 hover:text-[#00f0ff] mb-12 transition-colors group"
-                >
-                    <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-                    Back to Projects
-                </Link>
-
-                {/* Hero Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
-                    <div>
-                        <div className="flex items-center gap-4 mb-6">
-                            <span className="px-4 py-1.5 rounded-full text-xs font-bold bg-[#00f0ff]/10 text-[#00f0ff] border border-[#00f0ff]/20">
-                                {String(project.category).toUpperCase()}
-                            </span>
-                            <div className="flex items-center text-sm text-gray-500 font-mono">
-                                <Calendar className="w-4 h-4 mr-2" />
-                                {project.year || '2024'}
-                            </div>
-                        </div>
-
-                        <h1 className="text-5xl md:text-7xl font-bold mb-8 text-white leading-tight">
-                            {project.title}
-                        </h1>
-
-                        <p className="text-xl text-gray-400 mb-10 leading-relaxed max-w-2xl">
-                            {project.description}
-                        </p>
-
-                        <div className="flex flex-wrap gap-4">
-                            {project.live_url && project.live_url !== '#' && (
-                                <a
-                                    href={project.live_url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-8 py-4 bg-[#00f0ff] text-black font-bold rounded-xl flex items-center gap-3 hover:shadow-[0_0_25px_rgba(0,240,255,0.6)] transition-all"
-                                >
-                                    View Live <ExternalLink className="w-5 h-5" />
-                                </a>
-                            )}
-                            {project.github_url && project.github_url !== '#' && (
-                                <a
-                                    href={project.github_url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-8 py-4 bg-white/5 text-white font-bold rounded-xl border border-white/10 flex items-center gap-3 hover:bg-white/10 transition-all"
-                                >
-                                    Source Code <Github className="w-5 h-5" />
-                                </a>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="relative">
-                        {/* Mockups / Placeholder Illustration */}
-                        <div className="aspect-square glass-panel rounded-[3rem] border border-white/5 flex items-center justify-center p-12 relative overflow-hidden group">
-                            <div className="absolute inset-0 bg-gradient-to-br from-[#00f0ff]/20 via-transparent to-[#7000ff]/20" />
-                            <div className="relative z-10 w-full aspect-video bg-black/60 rounded-2xl border border-white/10 shadow-2xl flex items-center justify-center">
-                                <Code className="w-16 h-16 text-[#00f0ff] animate-pulse" />
-                            </div>
-
-                            {/* Floating elements */}
-                            <div className="absolute top-12 right-12 w-24 h-24 bg-[#7000ff]/20 rounded-full blur-3xl animate-pulse-slow" />
-                            <div className="absolute bottom-12 left-12 w-32 h-32 bg-[#00f0ff]/20 rounded-full blur-3xl animate-pulse-slow delay-1000" />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Content Tabs / Info Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-                    <div className="lg:col-span-2 space-y-12">
-                        <section>
-                            <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-                                <Layers className="w-6 h-6 text-[#7000ff]" />
-                                System Overview
-                            </h2>
-                            <div className="text-gray-300 text-lg leading-loose space-y-6">
-                                {project.longDescription ? (
-                                    String(project.longDescription).split('\n\n').map((para: string, i: number) => (
-                                        <p key={i}>{para}</p>
-                                    ))
-                                ) : (
-                                    <p>Detailed architecture and methodology for the {project.title} are focused on bridging {project.category} with modern statistical approaches.</p>
-                                )}
-                            </div>
-                        </section>
-
-                        <section>
-                            <h2 className="text-3xl font-bold text-white mb-6">Key Features</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {['Real-time dynamic analysis', 'Statistical validation', 'Cloud-native architecture', 'Interactive visualization'].map((item) => (
-                                    <div key={item} className="p-6 glass-panel rounded-2xl border border-white/5 flex items-start gap-4">
-                                        <CheckCircle2 className="w-6 h-6 text-[#00f0ff] shrink-0" />
-                                        <div>
-                                            <h4 className="font-bold text-white">{item}</h4>
-                                            <p className="text-sm text-gray-500">Implemented with high performance and accessibility in mind.</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
-                    </div>
-
-                    <aside className="space-y-8">
-                        <div className="p-8 glass-panel rounded-3xl border border-white/10 bg-white/5">
-                            <h3 className="text-xl font-bold text-white mb-6">Technologies</h3>
-                            <div className="flex flex-wrap gap-2">
-                                {(project.technologies as any[]).map((tech: string) => (
-                                    <span
-                                        key={tech}
-                                        className="px-4 py-2 bg-black/40 text-[#00f0ff] border border-[#00f0ff]/20 rounded-xl text-sm font-medium"
-                                    >
-                                        {tech}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="p-8 glass-panel rounded-3xl border border-white/10">
-                            <h3 className="text-xl font-bold text-white mb-4">Project Status</h3>
-                            <div className="flex items-center gap-3">
-                                <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                                <span className="text-white font-medium">{project.status || 'Active'}</span>
-                            </div>
-                        </div>
-
-                        <div className="p-8 glass-panel rounded-3xl border border-white/10">
-                            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2"><Share2 className="w-5 h-5 text-[#00f0ff]" /> Share Project</h3>
-                            <div className="flex flex-wrap gap-2">
-                                <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out "${project.title}" by ${typeof window !== 'undefined' ? window.location.hostname : 'www.mohammedabbas.tech'}`)}&url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-[#1DA1F2]/10 border border-[#1DA1F2]/20 rounded-lg text-[#1DA1F2] text-xs font-bold hover:bg-[#1DA1F2]/20 transition-colors">Twitter</a>
-                                <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-[#0A66C2]/10 border border-[#0A66C2]/20 rounded-lg text-[#0A66C2] text-xs font-bold hover:bg-[#0A66C2]/20 transition-colors">LinkedIn</a>
-                                <a href={`https://substack.com/share?publication_url=&p=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}&utm_source=substack`} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-[#FF6719]/10 border border-[#FF6719]/20 rounded-lg text-[#FF6719] text-xs font-bold hover:bg-[#FF6719]/20 transition-colors">Substack</a>
-                                <a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Check out "${project.title}": ${typeof window !== 'undefined' ? window.location.href : ''}`)}`} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-[#25D366]/10 border border-[#25D366]/20 rounded-lg text-[#25D366] text-xs font-bold hover:bg-[#25D366]/20 transition-colors">WhatsApp</a>
-                            </div>
-                        </div>
-                    </aside>
-                </div>
-            </motion.div>
-        </div>
-    )
+export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
+    return <ProjectDetailClient />
 }

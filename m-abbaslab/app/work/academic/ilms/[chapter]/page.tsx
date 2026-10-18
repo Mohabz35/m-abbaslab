@@ -2,9 +2,11 @@ import fs from 'fs'
 import path from 'path'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { ArrowLeft, ChevronLeft, ChevronRight, BookOpen, List } from 'lucide-react'
 import MarkdownRenderer from '@/components/ui/MarkdownRenderer'
 import HolographicBook from '@/components/ui/HolographicBook'
+import { pageMeta } from '@/lib/seo'
 
 const chapters = [
     { id: 'chapter-1', title: 'System Context, Vision, and Scope' },
@@ -23,6 +25,18 @@ const chapters = [
     { id: 'chapter-14', title: 'Security, Compliance, and Data Protection' },
     { id: 'chapter-15', title: 'Implementation Plan and Tech Stack' },
 ]
+
+export async function generateMetadata({ params }: { params: Promise<{ chapter: string }> }): Promise<Metadata> {
+    const { chapter } = await params
+    const found = chapters.find(c => c.id === chapter)
+    if (!found) return {}
+    return pageMeta({
+        title: `${found.title} — ILMS Chapter`,
+        description: `Chapter of the ILMS (Intelligent Learning Management System) academic blueprint by Mohammed Abbas: ${found.title}.`,
+        keywords: ['ILMS', 'learning management system', 'education technology', found.title.toLowerCase()],
+        path: `/work/academic/ilms/${chapter}`,
+    })
+}
 
 export default async function ChapterPage({ params }: { params: Promise<{ chapter: string }> }) {
     const resolvedParams = await params;

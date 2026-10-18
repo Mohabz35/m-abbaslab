@@ -2,9 +2,11 @@ import fs from 'fs'
 import path from 'path'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { ArrowLeft, ChevronLeft, ChevronRight, LineChart, Info, BarChart3 } from 'lucide-react'
 import MarkdownRenderer from '@/components/ui/MarkdownRenderer'
 import HolographicBook from '@/components/ui/HolographicBook'
+import { pageMeta } from '@/lib/seo'
 
 const chapters = [
     { id: 'chapter-1', title: 'Introduction & Background' },
@@ -19,6 +21,18 @@ const chapters = [
     { id: 'chapter-10', title: 'Security, Ethics & Limitations' },
     { id: 'chapter-11', title: 'Conclusion & Future Work' },
 ]
+
+export async function generateMetadata({ params }: { params: Promise<{ chapter: string }> }): Promise<Metadata> {
+    const { chapter } = await params
+    const found = chapters.find(c => c.id === chapter)
+    if (!found) return {}
+    return pageMeta({
+        title: `${found.title} — Economics Forecasting System Chapter`,
+        description: `Chapter of the economics forecasting system blueprint by Mohammed Abbas: ${found.title}.`,
+        keywords: ['economic forecasting', 'machine learning economics', 'econometrics', found.title.toLowerCase()],
+        path: `/work/academic/economics/${chapter}`,
+    })
+}
 
 export default async function EconomicsChapterPage({ params }: { params: Promise<{ chapter: string }> }) {
     const resolvedParams = await params;

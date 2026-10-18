@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'M-AbbasLab | Personal Operating Platform',
     description: 'Research · Economics · Technology · Creation - The digital workspace of Mohammed Abbas',
-    creator: '@m_abbas_official',
+    creator: '@mohammedabbasKE',
     images: ['/og-image.jpg'],
   },
   icons: {
